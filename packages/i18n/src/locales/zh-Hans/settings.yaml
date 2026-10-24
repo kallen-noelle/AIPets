@@ -784,52 +784,7 @@ pages:
               required-description: 此模型必须启用思考。
               provider-default-description: AIRI 未提供此模型的推理设置，将使用 OpenRouter 的默认设置。
       title: 意识
-    description: 思维，视觉，言语综合，游戏等
-    gaming-factorio:
-      description: 一起玩 Factorio！
-      title: 异星工厂 Factorio
-      enable: 启用异星工厂集成
-      enable-description: 允许AIRI与异星工厂游戏互动
-      server-address: 服务器地址
-      server-address-description: 异星工厂服务器的IP地址或主机名
-      server-address-placeholder: 输入服务器地址（例如：localhost或192.168.1.100）
-      server-port: 服务器端口
-      server-port-description: 异星工厂服务器的端口号（默认 34197）
-      username: 用户名
-      username-description: 您在异星工厂服务器中的用户名
-      username-placeholder: 输入您的异星工厂用户名
-      configured: 异星工厂已正确配置！
-    gaming-minecraft:
-      description: 一起玩 Minecraft！
-      title: 我的世界 Minecraft
-      enable: 启用我的世界集成
-      enable-description: >-
-        在 Chat 界面 中包含 Minecraft 自己的上下文和认知，并保持 Passive runtime visibility 启用。
-      configured: 我的世界已正确配置！
-      read-only:
-        title: 只读外壳
-        description: >-
-          目前此 Minecraft 管理界面将作为一个被动的外壳。你可以在这里观察运行状态，但服务配置仍然存在于 Minecraft 服务文件中。
-      setup:
-        title: 配置
-        description: >-
-          你可以在下面的文件中找到设置 Minecraft bot 的说明
-      runtime:
-        title: 可观测
-        connection: 连接
-        latest-context: 最后的 Bot 状态
-        waiting: 等待一个新的 Bot 上下文推送。
-        unknown: 未知
-      debug:
-        title: Minecraft流量
-        empty: 还没有观察到任何 Minecraft 流量。
-        source: '来源: {source}'
-      status:
-        service-online: 服务已上线
-        service-offline: 服务已离线
-        no-runtime-context: 尚未观察到 Bot 状态
-        last-context-seconds: '最后一次 Bot 状态更新：{seconds} 秒之前'
-        last-context-stale: '最后一次 Bot 状态：挂起'
+    description: 思维，视觉，言语综合等
     hearing:
       description: 语音识别
       title: 听觉
@@ -2509,3 +2464,157 @@ wip:
 streamer-mode:
   title: 直播模式
   description: 隐藏角色窗口中的麦克风和登录提示。
+
+reactShell:
+  backToStage: 返回舞台
+  openSettings: 设置
+  language: 语言
+  theme: 主题
+  themeDark: 深色
+  themeLight: 浅色
+  migrating: 该页面正在迁移到 React
+  migratingDescription: 在 React 版本完成之前，Vue 版本仍提供该页面。
+  planned: 待迁移
+  ready: 已可用
+  configured: 已配置
+  notConfigured: 未配置
+  save: 保存
+  remove: 移除
+  backToProviders: 返回服务商列表
+  formNotReady: 配置表单尚未就绪。
+  speechSource: 语音服务
+  noSpeechProvider: 还没有配置语音服务商。
+  manageProviders: 管理服务商
+  model: 模型
+  voice: 音色
+  speechPreviewPending: 音色列表与试听将在后续接入，当前选择会保存在本地。
+  transcriptionSource: 转写服务
+  noTranscriptionProvider: 还没有配置转写服务商。
+  activeProvider: 当前服务商
+  provider: 服务商
+  rephrase: 转写润色
+  transcriber: 转写器
+  wakeWords: 唤醒词
+  modelsDescription: 透明视频动画包取代原来的 Live2D 与 VRM 模型。
+  importPack: 导入动画包（.zip）
+  importing: 导入中…
+  importHint: 压缩包内需包含 manifest.json 及其片段文件。
+  noPacks: 还没有安装动画包。
+  active: 当前使用
+  canvas: 画布
+  clips: 片段数
+  setActive: 设为当前
+  chatTitle: 对话
+  chatEmpty: 说点什么开始吧。
+  chatPlaceholder: 输入消息
+  chatSend: 发送
+  chatClear: 清空
+  chatNoProvider: 请先在设置里配置一个对话服务商。
+  chatThinking: 思考中…
+  chatNew: 新对话
+  chatUntitled: 未命名对话
+  chatDelete: 删除
+  chatStop: 停止
+  chatRegenerate: 重新生成
+  chatTts: 朗读回复
+  chatListen: 听写
+  chatStopListening: 停止听写
+  chatAttach: 图片
+  chatDraw: 作画
+  chatDrawing: 作画中…
+  chatRemoveImage: 移除图片
+  cardDescription: 助手在对话中使用的名字与人格设定。
+  characterName: 名字
+  characterPersona: 人格设定
+  characterPersonaPlaceholder: 描述角色的说话方式与行为习惯。
+  memoryDescription: 控制模型能够看到的对话历史长度。
+  memoryEnabled: 发送对话历史
+  memoryWindow: 保留消息数
+  memoryLongTermNote: 长期记忆存储尚未加入 React 版本。
+  sceneDescription: 角色身后的背景画面。
+  noBackground: 尚未选择背景。
+  chooseBackground: 选择图片
+  clearBackground: 清除背景
+  dataDescription: 导出、导入与删除本应用存在浏览器里的数据。
+  dataChatsTitle: 对话记录
+  dataChatsDescription: 所有对话会话都保存在本浏览器中，可导出 JSON 备份。
+  dataExport: 导出
+  dataImport: 导入
+  dataDeleteChats: 删除对话
+  dataDangerTitle: 危险操作
+  dataDangerDescription: 以下操作无法撤销。
+  dataProvidersTitle: 服务商配置
+  dataResetProviders: 重置服务商
+  dataAllTitle: 全部 React 数据
+  dataDeleteAll: 删除全部数据
+  dataExported: 对话已导出。
+  dataImported: 对话已导入。
+  dataChatsDeleted: 全部对话已删除。
+  dataProvidersReset: 服务商配置已重置。
+  dataAllDeleted: React 数据已删除。
+  confirmYes: 确认删除
+  confirmNo: 取消
+  connectionDescription: 用于在模块之间转发事件的 WebSocket 服务。
+  connectionUrl: 服务器地址
+  connectionUrlHint: 使用 ws:// 或 wss://，默认为 ws://localhost:6121/ws。
+  connectionToken: 认证令牌（可选）
+  connectionTest: 测试连接
+  connectionIdle: 尚未检测。
+  connectionChecking: 检测中…
+  connectionConnected: 已连接。
+  connectionFailed: 无法连接到该地址。
+  accountDescription: 云端登录使用托管的 AIRI 认证服务。
+  accountLoading: 正在检查登录状态…
+  accountSignedOut: 当前未登录，不登录也可以使用全部本地功能。
+  accountSigningIn: 登录中…
+  accountSignOut: 退出登录
+  accountServer: 认证服务
+  accountCallbackWorking: 正在登录…
+  accountCallbackMissingCode: 登录回调缺少授权码。
+  backToAccount: 返回账号页
+  providerNone: 无
+  providerLabel: 服务商
+  modelLabel: 模型
+  samplingHint: 仅当模型支持该参数时再开启。
+  temperature: 温度
+  temperatureValue: 数值
+  topP: Top P
+  topPValue: 数值
+  visionNote: 对话会直接读取附加图片，单独配置视觉模型是可选项。
+  visionUseForChat: 用该模型读取对话图片
+  visionUseForToolImages: 用该模型读取工具图片
+  notInChat: 配置已保存，React 对话暂时还不会调用该工具。
+  stickersLibraryNote: 表情包图片与表情包对话尚未加入 React 版本。
+  artistryModel: 绘图模型
+  artistryModelDescription: DashScope 默认使用 wanx2.1-t2i-turbo。
+  artistryProviderNote: 绘图会复用你在对话中选择的服务商 API Key。
+  memoryEntries: 已保存的记忆
+  memoryRecipesNote: 记忆配方尚未加入 React 版本。
+  memoryEntriesEmpty: 还没有保存的记忆。
+  deleteEntry: 删除
+  beatSyncParameters: 检测参数
+  beatSyncNote: Beat Sync 用于音频可视化，React 舞台暂未运行该模块。
+  beatSyncSensitivity: 灵敏度
+  beatSyncMinInterval: 最小节拍间隔（秒）
+  beatSyncBuffer: 缓冲时长（秒）
+  beatSyncLowpass: 低通滤波（Hz）
+  beatSyncHighpass: 高通滤波（Hz）
+  beatSyncEnvelope: 包络滤波（Hz）
+  beatSyncAdaptive: 自适应阈值
+  beatSyncSpectralFlux: 频谱通量
+  beatSyncWarmup: 预热
+  beatSyncSpectrum: 频谱刻度
+  beatSyncLogarithm: 对数
+  beatSyncLinear: 线性
+  mcpCommand: 服务端命令
+  mcpCommandHint: 例如 npx，或本地可执行文件路径。
+  mcpArgs: 启动参数
+  mcpArgsHint: 以空格分隔，例如 -y @modelcontextprotocol/server-filesystem。
+  mcpNote: React 版本会保存该配置，MCP 工具仅在桌面端加载。
+  homeAssistantBaseUrl: 基础地址
+  homeAssistantToken: 访问令牌
+  homeAssistantExposure: 实体暴露范围
+  exposureAll: 全部实体
+  exposureAllow: 仅允许列表
+  exposureDeny: 除拒绝列表外全部
+  messagingRuntimeNote: 机器人在桌面端连接，本页仅保存令牌。

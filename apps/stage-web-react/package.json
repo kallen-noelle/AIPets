@@ -1,0 +1,43 @@
+{
+  "name": "@proj-airi/stage-web-react",
+  "type": "module",
+  "private": true,
+  "description": "React frontend for the AIRI stage",
+  "author": {
+    "name": "Moeru AI Project AIRI Team",
+    "email": "airi@moeru.ai",
+    "url": "https://github.com/moeru-ai"
+  },
+  "license": "MIT",
+  "scripts": {
+    "build": "vite build",
+    "dev": "vite --host",
+    "lint": "eslint .",
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@moeru/std": "catalog:",
+    "@proj-airi/character-animation": "workspace:^",
+    "@proj-airi/i18n": "workspace:^",
+    "@proj-airi/provider-inference": "workspace:^",
+    "@unocss/reset": "catalog:",
+    "i18next": "catalog:",
+    "idb-keyval": "catalog:",
+    "jszip": "catalog:",
+    "react": "catalog:",
+    "react-dom": "catalog:",
+    "react-i18next": "catalog:",
+    "react-router": "catalog:"
+  },
+  "devDependencies": {
+    "@iconify-json/simple-icons": "catalog:",
+    "@iconify-json/solar": "catalog:",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
+    "@vitejs/plugin-react": "catalog:",
+    "typescript": "catalog:",
+    "unocss": "catalog:",
+    "vite": "catalog:"
+  }
+}

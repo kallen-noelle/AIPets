@@ -829,56 +829,7 @@ pages:
               required-description: This model requires Thinking.
               provider-default-description: AIRI has no reasoning settings for this model. OpenRouter applies its default.
       title: Consciousness
-    description: Thinking, vision, speech synthesis, gaming, etc.
-    gaming-factorio:
-      description: Playing Factorio!
-      title: Factorio
-      enable: Enable Factorio Integration
-      enable-description: Allow AIRI to interact with Factorio game
-      server-address: Server Address
-      server-address-description: The IP address or hostname of the Factorio server
-      server-address-placeholder: Enter server address (e.g., localhost or 192.168.1.100)
-      server-port: Server Port
-      server-port-description: The port number of the Factorio server (default 34197)
-      username: Username
-      username-description: Your username in the Factorio server
-      username-placeholder: Enter your Factorio username
-      configured: Factorio is properly configured!
-    gaming-minecraft:
-      description: Playing Minecraft!
-      title: Minecraft
-      enable: Enable Minecraft Integration
-      enable-description: >-
-        Include Minecraft self-knowledge in Stage chat turns and keep passive
-        runtime visibility enabled.
-      configured: Minecraft is properly configured!
-      read-only:
-        title: Read-only shell
-        description: >-
-          Stage currently exposes Minecraft as a passive shell. Runtime status
-          and traffic are visible here, but service configuration stays in the
-          Minecraft service files.
-      setup:
-        title: Setup
-        description: >-
-          You can find the instructions for setting up the bot in the following
-          file
-      runtime:
-        title: Observed runtime
-        connection: Connection
-        latest-context: Latest bot context
-        waiting: Waiting for a fresh bot-originated context push.
-        unknown: Unknown
-      debug:
-        title: Minecraft traffic
-        empty: No Minecraft traffic observed yet.
-        source: 'Source: {source}'
-      status:
-        service-online: Service online
-        service-offline: Service offline
-        no-runtime-context: No bot context observed yet
-        last-context-seconds: 'Last bot context: {seconds}s ago'
-        last-context-stale: 'Last bot context: Stale'
+    description: Thinking, vision, speech synthesis, etc.
     hearing:
       description: Configure how speech recognition works
       title: Hearing
@@ -2729,3 +2680,157 @@ wip:
 streamer-mode:
   title: Streamer mode
   description: Hide microphone and sign-in indicators on the character window.
+
+reactShell:
+  backToStage: Back to stage
+  openSettings: Settings
+  language: Language
+  theme: Theme
+  themeDark: Dark
+  themeLight: Light
+  migrating: This page is moving to React
+  migratingDescription: The Vue version still serves this page until its React port lands.
+  planned: Planned
+  ready: Available
+  configured: Configured
+  notConfigured: Not configured
+  save: Save
+  remove: Remove
+  backToProviders: Back to providers
+  formNotReady: The configuration form is not ready.
+  speechSource: Speech provider
+  noSpeechProvider: No speech provider configured yet.
+  manageProviders: Manage providers
+  model: Model
+  voice: Voice
+  speechPreviewPending: Voice listing and preview come later. These values are saved locally.
+  transcriptionSource: Transcription provider
+  noTranscriptionProvider: No transcription provider configured yet.
+  activeProvider: Active provider
+  provider: Provider
+  rephrase: Transcript rephrase
+  transcriber: Transcriber
+  wakeWords: Wake words
+  modelsDescription: Transparent video animation packs replace the old Live2D and VRM models.
+  importPack: Import pack (.zip)
+  importing: Importing...
+  importHint: The ZIP must contain a manifest.json and its clip files.
+  noPacks: No animation packs installed yet.
+  active: Active
+  canvas: Canvas
+  clips: Clips
+  setActive: Set active
+  chatTitle: Chat
+  chatEmpty: Say something to start.
+  chatPlaceholder: Type a message
+  chatSend: Send
+  chatClear: Clear
+  chatNoProvider: Configure a chat provider in settings first.
+  chatThinking: Thinking...
+  chatNew: New chat
+  chatUntitled: New chat
+  chatDelete: Delete
+  chatStop: Stop
+  chatRegenerate: Regenerate
+  chatTts: Read replies
+  chatListen: Listen
+  chatStopListening: Stop listening
+  chatAttach: Image
+  chatDraw: Draw
+  chatDrawing: Drawing...
+  chatRemoveImage: Remove image
+  cardDescription: The name and persona the assistant uses in chat.
+  characterName: Name
+  characterPersona: Persona
+  characterPersonaPlaceholder: Describe how the character speaks and behaves.
+  memoryDescription: Controls how much conversation history the model receives.
+  memoryEnabled: Send conversation history
+  memoryWindow: Messages to keep
+  memoryLongTermNote: Long-term memory storage is not part of the React app yet.
+  sceneDescription: Background shown behind the character.
+  noBackground: No background selected.
+  chooseBackground: Choose image
+  clearBackground: Clear background
+  dataDescription: Export, import, and delete the data this app stores in the browser.
+  dataChatsTitle: Chats
+  dataChatsDescription: Every chat session lives in this browser. Export a JSON file to back it up.
+  dataExport: Export
+  dataImport: Import
+  dataDeleteChats: Delete chats
+  dataDangerTitle: Danger zone
+  dataDangerDescription: These actions cannot be undone.
+  dataProvidersTitle: Provider settings
+  dataResetProviders: Reset providers
+  dataAllTitle: All React app data
+  dataDeleteAll: Delete all data
+  dataExported: Chats exported.
+  dataImported: Chats imported.
+  dataChatsDeleted: All chats deleted.
+  dataProvidersReset: Provider settings reset.
+  dataAllDeleted: React app data deleted.
+  confirmYes: Yes, delete
+  confirmNo: Cancel
+  connectionDescription: The WebSocket server that relays events between modules.
+  connectionUrl: Server address
+  connectionUrlHint: Use ws:// or wss://. The default is ws://localhost:6121/ws.
+  connectionToken: Auth token (optional)
+  connectionTest: Test connection
+  connectionIdle: Not checked yet.
+  connectionChecking: Checking...
+  connectionConnected: Connected.
+  connectionFailed: Cannot connect to this address.
+  accountDescription: Cloud sign-in uses the hosted AIRI auth service.
+  accountLoading: Checking your session...
+  accountSignedOut: You are signed out. Local features keep working without an account.
+  accountSigningIn: Signing in...
+  accountSignOut: Sign out
+  accountServer: Auth service
+  accountCallbackWorking: Signing in...
+  accountCallbackMissingCode: The sign-in callback has no code.
+  backToAccount: Back to account
+  providerNone: None
+  providerLabel: Provider
+  modelLabel: Model
+  samplingHint: Turn an option on only when the model supports that parameter.
+  temperature: Temperature
+  temperatureValue: Value
+  topP: Top P
+  topPValue: Value
+  visionNote: Chat reads an attached image directly. A separate vision model is optional.
+  visionUseForChat: Use this model for chat images
+  visionUseForToolImages: Use this model for tool images
+  notInChat: The value is saved now. The React chat does not call this tool yet.
+  stickersLibraryNote: Sticker artwork and chatting with stickers are not part of the React app yet.
+  artistryModel: Image model
+  artistryModelDescription: DashScope uses wanx2.1-t2i-turbo by default.
+  artistryProviderNote: Image generation reuses the API key of the chat provider you select in chat.
+  memoryEntries: Stored memories
+  memoryRecipesNote: Memory recipes are not part of the React app yet.
+  memoryEntriesEmpty: No memories stored yet.
+  deleteEntry: Delete
+  beatSyncParameters: Detection parameters
+  beatSyncNote: Beat Sync visualizes audio. The React stage does not run it yet.
+  beatSyncSensitivity: Sensitivity
+  beatSyncMinInterval: Minimum beat interval (s)
+  beatSyncBuffer: Buffer duration (s)
+  beatSyncLowpass: Lowpass filter (Hz)
+  beatSyncHighpass: Highpass filter (Hz)
+  beatSyncEnvelope: Envelope filter (Hz)
+  beatSyncAdaptive: Adaptive threshold
+  beatSyncSpectralFlux: Spectral flux
+  beatSyncWarmup: Warmup
+  beatSyncSpectrum: Spectrum scale
+  beatSyncLogarithm: Logarithmic
+  beatSyncLinear: Linear
+  mcpCommand: Server command
+  mcpCommandHint: For example npx, or the path of a local executable.
+  mcpArgs: Arguments
+  mcpArgsHint: Space separated. For example -y @modelcontextprotocol/server-filesystem.
+  mcpNote: The React app stores this config. MCP tools load only in the desktop app.
+  homeAssistantBaseUrl: Base URL
+  homeAssistantToken: Access token
+  homeAssistantExposure: Entity exposure
+  exposureAll: All entities
+  exposureAllow: Allowed list only
+  exposureDeny: All except denied
+  messagingRuntimeNote: The bot connects in the desktop app. This page stores the token.

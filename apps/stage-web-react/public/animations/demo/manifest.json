@@ -1,0 +1,33 @@
+{
+  "manifestVersion": 1,
+  "id": "demo",
+  "name": "Demo Pet",
+  "canvas": {
+    "width": 720,
+    "height": 1280
+  },
+  "transition": {
+    "fadeMs": 220
+  },
+  "animations": {
+    "idle": [
+      { "src": "idle-breathing.webm", "weight": 1, "loop": true }
+    ],
+    "talk": [
+      { "src": "talk-murmur.webm", "weight": 1, "loop": true }
+    ],
+    "thinking": [
+      { "src": "thinking-bubble.webm", "weight": 1, "loop": true }
+    ],
+    "click": [
+      { "src": "click-happy.webm", "weight": 1, "loop": false },
+      { "src": "click-wave.webm", "weight": 1, "loop": false }
+    ],
+    "emotion": {
+      "happy": [
+        { "src": "click-happy.webm", "weight": 1, "loop": false },
+        { "src": "click-wave.webm", "weight": 1, "loop": false }
+      ]
+    }
+  }
+}

@@ -1,0 +1,31 @@
+html,
+body,
+#root {
+  height: 100%;
+}
+
+:root {
+  --airi-bg: #05070d;
+  --airi-fg: #e2e8f0;
+  --airi-muted: #94a3b8;
+  --airi-card: rgb(255 255 255 / 6%);
+  --airi-border: rgb(255 255 255 / 12%);
+  --airi-hover: rgb(255 255 255 / 10%);
+}
+
+:root[data-theme='light'] {
+  --airi-bg: #f5f6fa;
+  --airi-fg: #0f172a;
+  --airi-muted: #64748b;
+  --airi-card: rgb(15 23 42 / 4%);
+  --airi-border: rgb(15 23 42 / 12%);
+  --airi-hover: rgb(15 23 42 / 8%);
+}
+
+body {
+  margin: 0;
+  background: var(--airi-bg);
+  color: var(--airi-fg);
+  font-family: Nunito, 'Segoe UI', system-ui, sans-serif;
+  transition: background-color 200ms ease, color 200ms ease;
+}
