@@ -12,6 +12,8 @@ import { useMouse } from '@vueuse/core'
 import { storeToRefs } from 'pinia'
 import { computed, ref, watch } from 'vue'
 
+import VideoAnimationScene from '../../../scenes/VideoAnimationScene.vue'
+
 import { useSharedLive2DExpressionPreview } from '../../../../stores/live2d'
 import { useAiriCardStore } from '../../../../stores/modules/airi-card'
 import { useSettings } from '../../../../stores/settings'
@@ -42,7 +44,9 @@ const vrmSceneRef = ref<{ canvasElement: () => HTMLCanvasElement | undefined }>(
 const spineSceneRef = ref<{ canvasElement: () => HTMLCanvasElement | undefined }>()
 const tachieSceneRef = ref<{ canvasElement: () => HTMLCanvasElement | undefined }>()
 const mmdSceneRef = ref<{ canvasElement: () => HTMLCanvasElement | undefined }>()
+const animationSceneRef = ref<{ captureFrame: () => Promise<Blob | null> }>()
 const live2dComponentState = ref<'pending' | 'loading' | 'mounted'>('pending')
+const animationComponentState = ref<'pending' | 'loading' | 'mounted'>('pending')
 const spineComponentState = ref<'pending' | 'loading' | 'mounted'>('pending')
 const tachieComponentState = ref<'pending' | 'loading' | 'mounted'>('pending')
 const mmdComponentState = ref<'pending' | 'loading' | 'mounted'>('pending')
@@ -88,6 +92,9 @@ function captureCanvasFrame(canvas?: HTMLCanvasElement) {
 }
 
 async function capturePreviewFrame() {
+  if (stageModelRenderer.value === 'animation')
+    return (await animationSceneRef.value?.captureFrame()) ?? undefined
+
   if (stageModelRenderer.value === 'live2d')
     return captureCanvasFrame(live2dSceneRef.value?.canvasElement())
 
@@ -108,6 +115,20 @@ async function capturePreviewFrame() {
 
 const runtimeSnapshot = computed<ModelSettingsRuntimeSnapshot>(() => {
   const hasModel = !!stageModelSelectedUrl.value
+
+  if (stageModelRenderer.value === 'animation') {
+    const phase = resolveComponentStateToRuntimePhase(animationComponentState.value, { hasModel })
+
+    return createEmptyModelSettingsRuntimeSnapshot({
+      ownerInstanceId: vrmPreviewStageInstanceId,
+      renderer: 'animation',
+      phase,
+      controlsLocked: hasModel ? phase !== 'mounted' : false,
+      previewAvailable: hasModel,
+      canCapturePreview: phase === 'mounted',
+      updatedAt: Date.now(),
+    })
+  }
 
   if (stageModelRenderer.value === 'live2d') {
     const phase = resolveComponentStateToRuntimePhase(live2dComponentState.value, { hasModel })
@@ -209,6 +230,14 @@ const cursorPosition = computed(() => ({
 </script>
 
 <template>
+  <template v-if="stageModelRenderer === 'animation'">
+    <VideoAnimationScene
+      ref="animationSceneRef"
+      v-model:state="animationComponentState"
+      :model-src="stageModelSelectedUrl"
+      :model-id="stageModelSelected"
+    />
+  </template>
   <template v-if="stageModelRenderer === 'live2d'">
     <div :class="live2dSceneClassList">
       <Live2DScene

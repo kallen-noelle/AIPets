@@ -26,6 +26,9 @@ export function createAvatarModelReference(displayModelId: string, format: Displ
     case DisplayModelFormat.PMD:
       type = 'mmd'
       break
+    case DisplayModelFormat.AnimationZip:
+      type = 'animation'
+      break
   }
 
   if (type === 'live2d') {

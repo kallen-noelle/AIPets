@@ -48,6 +48,7 @@ import { provideFullscreenLayout } from '../composables/use-fullscreen-layout'
 import { usePushToTalkShortcut } from '../composables/use-push-to-talk-shortcut'
 import { useScreenAmbientLight } from '../composables/use-screen-ambient-light'
 import { stageOpaqueAttribute } from '../composables/use-stage-painted-mask'
+import { useStageWindowDrag } from '../composables/use-stage-window-drag'
 import { useControlsIslandStore } from '../stores/controls-island'
 import { useFullscreenStore } from '../stores/fullscreen'
 import { useStageWindowLifecycleStore } from '../stores/stage-window-lifecycle'
@@ -66,6 +67,7 @@ const widgetStageRef = ref<InstanceType<typeof WidgetStage>>()
 // paints, so it can read the desktop showing through behind the character.
 useScreenAmbientLight({ stageCanvas: () => widgetStageRef.value?.canvasElement() })
 const stageCanvas = toRef(() => widgetStageRef.value?.canvasElement())
+const stageSurface = toRef(() => widgetStageRef.value?.stageSurfaceElement?.() ?? null)
 const componentStateStage = ref<'pending' | 'loading' | 'mounted'>('pending')
 const stageMounted = computed(() => componentStateStage.value === 'mounted')
 // A stage that fails to render never reaches `mounted`, so the loading overlay would
@@ -157,9 +159,16 @@ const isTransparent = computed(() => {
  * the cursor instead. This is a hit test, not an event, so it still answers while the
  * window is click-through.
  */
-const isPointerOverStageCanvas = computed(() =>
-  document.elementFromPoint(relativeMouseX.value, relativeMouseY.value) === stageCanvas.value,
-)
+const isPointerOverStageCanvas = computed(() => {
+  const element = document.elementFromPoint(relativeMouseX.value, relativeMouseY.value)
+  if (!element)
+    return false
+  if (element === stageCanvas.value)
+    return true
+
+  // A video renderer draws no canvas in the DOM, so it reports its own surface.
+  return stageSurface.value?.contains(element) ?? false
+})
 /**
  * Drives native click-through, and runs whether or not Auto Hide is on.
  *
@@ -201,6 +210,12 @@ useElectronEventaInvoke(electronAppIsWayland)()
 const cursorAwayFromWindow = computed(() => !isWayland.value && isOutsideWindow.value && !isAroundWindowBorder.value)
 
 const setIgnoreMouseEvents = useElectronEventaInvoke(electron.window.setIgnoreMouseEvents)
+
+// Pressing the character and moving drags the window. A press without movement
+// stays a click, so the renderer still receives the poke.
+useStageWindowDrag({
+  canStartDrag: () => !stagePaused.value && stageMounted.value && isPointerOverStageCanvas.value,
+})
 
 const controlsOverlayActive = computed(() => controlsIslandRef.value?.overlayActive ?? false)
 

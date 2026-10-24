@@ -3,7 +3,7 @@ import type { Live2DAvatarModelReference } from '@proj-airi/stage-ui-live2d/type
 
 /** Configuration placeholder for Avatar Model types without an editor contract. */
 export type UnconfiguredAvatarModelReference<
-  TType extends 'vrm' | 'mmd' | 'spine' | 'tachie',
+  TType extends 'vrm' | 'mmd' | 'spine' | 'tachie' | 'animation',
 > = AvatarModelReference<TType, Record<string, never>>
 
 /** Avatar Model references that the current Character format can store. */
@@ -13,3 +13,4 @@ export type CharacterAvatarModelReference
     | UnconfiguredAvatarModelReference<'mmd'>
     | UnconfiguredAvatarModelReference<'spine'>
     | UnconfiguredAvatarModelReference<'tachie'>
+    | UnconfiguredAvatarModelReference<'animation'>

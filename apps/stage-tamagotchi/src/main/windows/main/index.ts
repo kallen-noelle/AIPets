@@ -108,12 +108,44 @@ export async function setupMainWindow(params: {
 
   const mainWindowConfig = getConfig().windows?.find(w => w.title === 'AIRI' && w.tag === 'main')
 
+  /**
+   * Drops a saved position that no display shows.
+   *
+   * A monitor can be removed or a resolution can change between launches, which
+   * leaves a saved position outside every work area. Restoring it would open the
+   * window where the user cannot reach it.
+   */
+  function resolveRestoredPosition(bounds: { x?: number, y?: number, width?: number, height?: number }) {
+    const { x, y } = bounds
+    if (x === undefined || y === undefined)
+      return undefined
+
+    const width = bounds.width ?? 450
+    const height = bounds.height ?? 600
+    const visible = screen.getAllDisplays().some((display) => {
+      const area = display.workArea
+      const overlapWidth = Math.min(x + width, area.x + area.width) - Math.max(x, area.x)
+      const overlapHeight = Math.min(y + height, area.y + area.height) - Math.max(y, area.y)
+      // A real overlap keeps the window grabbable. A one pixel touch does not.
+      return overlapWidth >= 80 && overlapHeight >= 80
+    })
+
+    return visible ? { x, y } : undefined
+  }
+
+  const restoredPosition = resolveRestoredPosition({
+    x: mainWindowConfig?.x,
+    y: mainWindowConfig?.y,
+    width: mainWindowConfig?.width,
+    height: mainWindowConfig?.height,
+  })
+
   const window = new BrowserWindow({
     title: 'AIRI',
     width: mainWindowConfig?.width ?? 450.0,
     height: mainWindowConfig?.height ?? 600.0,
-    x: mainWindowConfig?.x,
-    y: mainWindowConfig?.y,
+    x: restoredPosition?.x,
+    y: restoredPosition?.y,
     show: false,
     icon,
     webPreferences: {

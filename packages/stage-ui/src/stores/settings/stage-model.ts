@@ -3,12 +3,12 @@ import type {} from 'pinia-plugin-synced'
 import type { DisplayModel } from '../display-models'
 
 import { refManualReset, useEventListener } from '@vueuse/core'
-import { defineStore, getActivePinia, storeToRefs } from 'pinia'
-import { computed, onScopeDispose, shallowRef, watch } from 'vue'
+import { defineStore, storeToRefs } from 'pinia'
+import { computed, shallowRef, watch } from 'vue'
 
-import { DisplayModelFormat, useDisplayModelsStore } from '../display-models'
+import { DisplayModelFormat, presetAnimationPackId, useDisplayModelsStore } from '../display-models'
 
-export type StageModelRenderer = 'live2d' | 'vrm' | 'spine' | 'tachie' | 'mmd' | 'godot' | 'disabled' | undefined
+export type StageModelRenderer = 'animation' | 'live2d' | 'vrm' | 'spine' | 'tachie' | 'mmd' | 'godot' | 'disabled' | undefined
 type BuiltInStageModelRenderer = Exclude<StageModelRenderer, 'godot'>
 
 const useStageModelSelectionStore = defineStore('settings-stage-model-selection', () => {
@@ -35,14 +35,6 @@ export const useSettingsStageModel = defineStore('settings-stage-model', () => {
   const stageModelSelectionStore = useStageModelSelectionStore()
   const { selected: stageModelSelectedState } = storeToRefs(stageModelSelectionStore)
   let stageModelUpdateSequence = 0
-  let legacyModelIdentityResetPromise: Promise<void> | undefined
-  // The Three.js store loads after an await. By then another Pinia can be
-  // active, or this one can be disposed, so keep the Pinia that owns this store.
-  const pinia = getActivePinia()
-  let disposed = false
-  onScopeDispose(() => {
-    disposed = true
-  })
   const stageModelSelected = computed<string>({
     get: () => stageModelSelectedState.value,
     set: (value) => {
@@ -79,6 +71,8 @@ export const useSettingsStageModel = defineStore('settings-stage-model', () => {
     }
 
     switch (model.format) {
+      case DisplayModelFormat.AnimationZip:
+        return 'animation'
       case DisplayModelFormat.Live2dZip:
         return 'live2d'
       case DisplayModelFormat.VRM:
@@ -96,42 +90,10 @@ export const useSettingsStageModel = defineStore('settings-stage-model', () => {
     }
   }
 
-  function resetLegacyModelIdentity() {
-    if (typeof window === 'undefined')
-      return undefined
-
-    // The Three.js store is browser-only. Load it only during browser startup so
-    // Node consumers of the shared settings store do not evaluate rendering APIs.
-    legacyModelIdentityResetPromise ??= import('@proj-airi/stage-ui-three').then(({ useModelStore }) => {
-      // A disposed Pinia cannot create the Three.js store, and nothing renders it anymore.
-      if (disposed)
-        return
-      useModelStore(pinia).resetLegacyModelIdentity()
-    })
-
-    return legacyModelIdentityResetPromise
-  }
-
   async function updateStageModel() {
     const requestId = ++stageModelUpdateSequence
-    const selectedModelId = stageModelSelectedState.value
+    const selectedModelId = stageModelSelectedState.value || presetAnimationPackId
     stageModelUnavailable.value = false
-
-    const legacyModelIdentityReset = resetLegacyModelIdentity()
-    if (legacyModelIdentityReset) {
-      await legacyModelIdentityReset
-      if (requestId !== stageModelUpdateSequence)
-        return
-    }
-
-    if (!selectedModelId) {
-      replaceStageModelUrl(undefined)
-      stageModelSelectedDisplayModel.value = undefined
-      stageModelBuiltInRenderer.value = 'disabled'
-      if (stageModelRenderer.value !== 'godot')
-        stageModelRenderer.value = 'disabled'
-      return
-    }
 
     let model: Awaited<ReturnType<typeof displayModelsStore.ensureDisplayModelAvailable>>
     try {
@@ -153,6 +115,14 @@ export const useSettingsStageModel = defineStore('settings-stage-model', () => {
       if (stageModelRenderer.value !== 'godot')
         stageModelRenderer.value = 'disabled'
       return
+    }
+
+    // Only animation packs render now. A model saved with a removed format falls
+    // back to the packaged pack instead of leaving the stage blank.
+    if (model.format !== DisplayModelFormat.AnimationZip) {
+      model = await displayModelsStore.ensureDisplayModelAvailable(presetAnimationPackId)
+      if (!model || requestId !== stageModelUpdateSequence)
+        return
     }
 
     let nextUrl: string

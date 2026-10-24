@@ -25,6 +25,7 @@ import { useAuthStore } from './auth'
 import { useFeatureFlagsStore } from './feature-flags'
 
 export enum DisplayModelFormat {
+  AnimationZip = 'animation-zip',
   Live2dZip = 'live2d-zip',
   Live2dDirectory = 'live2d-directory',
   VRM = 'vrm',
@@ -46,6 +47,9 @@ const presetVrmAvatarAUrl = new URL('../assets/vrm/models/AvatarSample-A/AvatarS
 const presetVrmAvatarAPreview = new URL('../assets/vrm/models/AvatarSample-A/preview.png', import.meta.url).href
 const presetVrmAvatarBUrl = new URL('../assets/vrm/models/AvatarSample-B/AvatarSample_B.vrm', import.meta.url).href
 const presetVrmAvatarBPreview = new URL('../assets/vrm/models/AvatarSample-B/preview.png', import.meta.url).href
+/** The packaged animation pack, so a fresh install shows a character with no import step. */
+const presetAnimationPackUrl = new URL('../assets/animations/demo-pet.zip', import.meta.url).href
+export const presetAnimationPackId = 'preset-animation-1'
 
 export interface DisplayModelFile {
   id: string
@@ -71,11 +75,18 @@ export interface DisplayModelURL {
 
 export type DisplayModelSyncStatus = 'local-only' | 'queued' | 'uploading' | 'synced' | 'cloud-only' | 'downloading' | 'failed'
 
-const syncableFormats: string[] = [DisplayModelFormat.Live2dZip, DisplayModelFormat.VRM]
+// NOTICE:
+// Animation packs sync before the hosted API enum lists `animation-zip`.
+// Root cause: the server schema still allows only `live2d-zip` and `vrm`.
+// Source/context: display-model upload in this store and the role/display-model
+// schemas under server/apps/api. Removal condition: the server accepts
+// `animation-zip`, then delete this note.
+const syncableFormats: string[] = [DisplayModelFormat.AnimationZip, DisplayModelFormat.Live2dZip, DisplayModelFormat.VRM]
 const uploadTaskKind = 'upload-display-model'
 const UploadPayloadSchema = v.object({ modelId: v.string(), requestId: v.string() })
 
 const displayModelsPresets: DisplayModel[] = [
+  { id: presetAnimationPackId, format: DisplayModelFormat.AnimationZip, type: 'url', url: presetAnimationPackUrl, name: 'Demo Pet', importedAt: 1733113886841 },
   { id: 'preset-live2d-1', format: DisplayModelFormat.Live2dZip, type: 'url', url: presetLive2dProUrl, name: 'Hiyori (Pro)', previewImage: presetLive2dPreview, importedAt: 1733113886840 },
   { id: 'preset-live2d-2', format: DisplayModelFormat.Live2dZip, type: 'url', url: presetLive2dFreeUrl, name: 'Hiyori (Free)', previewImage: presetLive2dPreview, importedAt: 1733113886840 },
   { id: 'preset-vrm-1', format: DisplayModelFormat.VRM, type: 'url', url: presetVrmAvatarAUrl, name: 'AvatarSample_A', previewImage: presetVrmAvatarAPreview, importedAt: 1733113886840 },
@@ -114,11 +125,7 @@ export const useDisplayModelsStore = defineStore('display-models', () => {
     },
   )
 
-  let generateLive2DPreview: (file: File) => Promise<string | undefined>
-  let generateVrmPreview: (file: File) => Promise<string | undefined>
-  let generateSpinePreview: (file: File) => Promise<string | undefined>
-  let generateTachiePreview: (file: File) => Promise<string | undefined>
-  let generateMMDPreview: (file: File) => Promise<string | undefined>
+  let generateAnimationPreview: (file: File) => Promise<string | undefined>
 
   const displayModelsFromIndexedDBLoading = ref(false)
   let displayModelsLoadPromise: Promise<void> | undefined
@@ -160,11 +167,11 @@ export const useDisplayModelsStore = defineStore('display-models', () => {
   async function getDisplayModel(id: string) {
     await until(displayModelsFromIndexedDBLoading).toBe(false)
     // NOTICE:
-    // Newly imported file models are inserted into displayModels before callers pick them.
-    // Reading memory first keeps updateStageModel from racing an IndexedDB write and treating
-    // a just-imported display-model id as missing, which used to fall back to the default model.
-    // Source/context: model-selector confirmImport/handleAddVRMModel -> model-settings handleModelPick.
-    // Removal condition: custom model imports and selection are handled by a single transactional API.
+    // Imported file models enter displayModels before the caller picks them.
+    // Reading memory first stops updateStageModel from racing an IndexedDB write
+    // and treating a new id as missing.
+    // Source/context: model-selector confirmImport -> model-settings handleModelPick.
+    // Removal condition: imports and selection share one transactional API.
     const modelFromMemory = displayModels.value.find(model => model.id === id)
     if (modelFromMemory)
       return modelFromMemory
@@ -179,39 +186,13 @@ export const useDisplayModelsStore = defineStore('display-models', () => {
     return displayModelsPresets.find(model => model.id === id)
   }
 
-  const loadLive2DModelPreview = (file: File) => generateLive2DPreview(file)
-  const loadVrmModelPreview = (file: File) => generateVrmPreview(file)
-  const loadSpineModelPreview = (file: File) => generateSpinePreview(file)
-  const loadTachieModelPreview = (file: File) => generateTachiePreview(file)
-  const loadMMDModelPreview = (file: File) => generateMMDPreview(file)
-
   async function generatePreview(format: DisplayModelFormat, file: File): Promise<string | undefined> {
-    if (format === DisplayModelFormat.Live2dZip) {
-      return loadLive2DModelPreview(file)
-    }
-    else if (format === DisplayModelFormat.VRM) {
-      return loadVrmModelPreview(file)
-    }
-    else if (format === DisplayModelFormat.SpineZip) {
-      return loadSpineModelPreview(file)
-    }
-    else if (format === DisplayModelFormat.TachieZip) {
-      return loadTachieModelPreview(file)
-    }
-    else if (format === DisplayModelFormat.PMXZip || format === DisplayModelFormat.PMXDirectory || format === DisplayModelFormat.PMD) {
-      // NOTICE:
-      // Preview generation is best-effort and must not block the import.
-      // MMD preview spins up an offscreen WebGL context and the three-stdlib
-      // MMDLoader; if that throws (context limits, parse error, missing Ammo
-      // module), the model should still import — just without a thumbnail.
-      // Removal condition: preview generation is guaranteed non-throwing.
+    if (format === DisplayModelFormat.AnimationZip) {
       try {
-        if (!generateMMDPreview)
-          throw new Error('MMD preview module not initialized')
-        return await loadMMDModelPreview(file)
+        return await generateAnimationPreview(file)
       }
-      catch (err) {
-        console.error('[display-models] MMD preview generation failed; importing without a thumbnail:', err)
+      catch (error) {
+        console.error('[display-models] animation preview generation failed; importing without a thumbnail:', error)
       }
     }
     return undefined
@@ -226,12 +207,10 @@ export const useDisplayModelsStore = defineStore('display-models', () => {
     displayModels.value.unshift(newDisplayModel)
 
     // NOTICE:
-    // Keep this awaited. The settings model pick flow can call getDisplayModel immediately
-    // after import; fire-and-forget persistence creates a race where the selected custom model
-    // exists in the UI but is not yet readable from IndexedDB in a later route/render pass.
-    // Source/context: model-selector import flow -> settings-stage-model.updateStageModel().
-    // Removal condition: imported display models are persisted through a transactional queue
-    // that blocks pick/navigation until the write is durably complete.
+    // Keep this awaited. The pick flow can read the model right after import, so a
+    // fire-and-forget write can miss the IndexedDB copy in a later route pass.
+    // Source/context: model-selector import -> settings-stage-model.updateStageModel().
+    // Removal condition: persistence runs through a transactional queue that blocks navigation.
     await displayModelsRepo.save(newDisplayModel)
       .catch(err => console.error(err))
 
@@ -518,32 +497,9 @@ export const useDisplayModelsStore = defineStore('display-models', () => {
       { immediate: true },
     )
 
-    await import('@proj-airi/stage-ui-live2d/utils/live2d-zip-loader')
-    await import('@proj-airi/stage-ui-live2d/utils/live2d-opfs-registration')
+    const { loadAnimationPackPreview } = await import('../adapters/animation/preview')
 
-    const { loadLive2DModelPreview } = await import('@proj-airi/stage-ui-live2d/utils/live2d-preview')
-    const { loadVrmModelPreview } = await import('@proj-airi/stage-ui-three/utils/vrm-preview')
-    const { loadSpineModelPreview } = await import('@proj-airi/stage-ui-spine/utils/spine-preview')
-    const { loadTachieModelPreview } = await import('@proj-airi/stage-ui-tachie/utils/tachie-preview')
-
-    generateLive2DPreview = loadLive2DModelPreview
-    generateVrmPreview = loadVrmModelPreview
-    generateSpinePreview = loadSpineModelPreview
-    generateTachiePreview = loadTachieModelPreview
-
-    // NOTICE:
-    // Isolate the MMD preview import. It pulls in three-stdlib's MMD modules,
-    // and a module-evaluation failure here must not prevent the Live2D/VRM/
-    // Spine preview functions (assigned above) from being wired up. A thrown
-    // import previously aborted initialize() and silently broke all previews.
-    // Removal condition: the MMD preview module is guaranteed to import.
-    try {
-      const { loadMMDModelPreview } = await import('@proj-airi/stage-ui-mmd/utils/mmd-preview')
-      generateMMDPreview = loadMMDModelPreview
-    }
-    catch (err) {
-      console.error('[display-models] failed to load MMD preview module:', err)
-    }
+    generateAnimationPreview = loadAnimationPackPreview
   }
 
   return {
