@@ -37,54 +37,9 @@
       }
     ],
     "emotion": {
-      "happy": [
-        {
-          "src": "animations/待机观望.webm",
-          "weight": 1,
-          "loop": false
-        },
+      "angry": [
         {
           "src": "animations/傲娇表情.webm",
-          "weight": 1,
-          "loop": false
-        },
-        {
-          "src": "animations/扑腾小翅膀.webm",
-          "weight": 1,
-          "loop": false
-        },
-        {
-          "src": "animations/被大肥鱼骑.webm",
-          "weight": 1,
-          "loop": false
-        },
-        {
-          "src": "animations/挥手打招呼.webm",
-          "weight": 1,
-          "loop": false
-        },
-        {
-          "src": "animations/高兴飞起.webm",
-          "weight": 1,
-          "loop": false
-        },
-        {
-          "src": "animations/提裙转圈.webm",
-          "weight": 1,
-          "loop": false
-        },
-        {
-          "src": "animations/喷火冒烟.webm",
-          "weight": 1,
-          "loop": false
-        },
-        {
-          "src": "animations/额度耗尽.webm",
-          "weight": 1,
-          "loop": false
-        },
-        {
-          "src": "animations/变身Astra形态[非满血版本].webm",
           "weight": 1,
           "loop": false
         }

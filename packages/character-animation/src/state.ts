@@ -20,8 +20,10 @@ interface InternalState {
   base: BaseChain
   current: NormalizedClip | null
   oneShot: NormalizedClip | null
+  stateClip: NormalizedClip | null
   paused: boolean
   speaking: boolean
+  thinking: boolean
   lastByChain: Partial<Record<BaseChain, string>>
 }
 
@@ -57,8 +59,10 @@ export class AnimationController {
       base: 'idle',
       current: null,
       oneShot: null,
+      stateClip: null,
       paused: false,
       speaking: false,
+      thinking: false,
       lastByChain: {},
     }
   }
@@ -68,6 +72,7 @@ export class AnimationController {
       base: this.state.base,
       currentClipId: this.state.current?.id ?? null,
       oneShotClipId: this.state.oneShot?.id ?? null,
+      stateClipId: this.state.stateClip?.id ?? null,
       paused: this.state.paused,
     }
   }
@@ -88,6 +93,12 @@ export class AnimationController {
         return this.playOneShot(this.pack.expressions[event.name] ?? [])
       case 'click':
         return this.playOneShot(chooseClick(this.pack, event.area))
+      case 'playClip':
+        return this.playSpecifiedClip(event.clipId)
+      case 'setState':
+        return this.setStateClip(event.clipId)
+      case 'clearState':
+        return this.clearStateClip()
       case 'paused':
         return this.handlePaused(event.value)
     }
@@ -99,11 +110,14 @@ export class AnimationController {
 
     if (this.state.oneShot?.id === clipId) {
       this.state.oneShot = null
-      return this.playFromChain(this.state.base)
+      return this.resumeBase()
     }
 
-    if (this.state.current?.id === clipId)
+    if (this.state.current?.id === clipId) {
+      if (this.state.stateClip?.id === clipId)
+        return this.playStateClip()
       return this.playFromChain(this.state.base)
+    }
 
     return []
   }
@@ -120,6 +134,8 @@ export class AnimationController {
   }
 
   private handleThinking(value: boolean): AnimationCommand[] {
+    this.state.thinking = value
+
     if (value && !this.state.speaking) {
       this.state.oneShot = null
       return this.enterBase('thinking')
@@ -143,11 +159,101 @@ export class AnimationController {
     const chainChanged = this.state.base !== chain
     this.state.base = chain
 
+    if (chain === 'idle' && this.state.stateClip) {
+      if (!chainChanged && !this.state.oneShot && this.state.current?.id === this.state.stateClip.id)
+        return []
+
+      this.state.oneShot = null
+      return this.playStateClip()
+    }
+
     if (!chainChanged && !this.state.oneShot && this.state.current)
       return []
 
     this.state.oneShot = null
     return this.playFromChain(chain)
+  }
+
+  private resumeBase(): AnimationCommand[] {
+    if (this.state.speaking) {
+      this.state.base = 'talk'
+      return this.playFromChain('talk')
+    }
+
+    if (this.state.thinking) {
+      this.state.base = 'thinking'
+      return this.playFromChain('thinking')
+    }
+
+    this.state.base = 'idle'
+    if (this.state.stateClip)
+      return this.playStateClip()
+    return this.playFromChain('idle')
+  }
+
+  private findClip(clipId: string): NormalizedClip | undefined {
+    return this.pack.allClips.find(clip => clip.id === clipId)
+  }
+
+  private playSpecifiedClip(clipId: string): AnimationCommand[] {
+    const source = this.findClip(clipId)
+    if (!source)
+      return []
+
+    const clip = source.loop ? { ...source, loop: false } : source
+    this.state.oneShot = clip
+    this.state.current = clip
+    return [{ type: 'play', clip, fadeMs: this.fadeFor(clip) }]
+  }
+
+  private setStateClip(clipId: string): AnimationCommand[] {
+    const source = this.findClip(clipId)
+    if (!source)
+      return []
+
+    const clip = source.loop ? source : { ...source, loop: true }
+    this.state.stateClip = clip
+    this.state.base = 'idle'
+    this.state.oneShot = null
+
+    if (this.state.speaking || this.state.thinking)
+      return []
+    if (this.state.current?.id === clip.id)
+      return []
+
+    this.state.current = clip
+    return [{ type: 'play', clip, fadeMs: this.fadeFor(clip) }]
+  }
+
+  private clearStateClip(): AnimationCommand[] {
+    if (!this.state.stateClip)
+      return []
+
+    this.state.lastByChain.idle = this.state.stateClip.id
+    this.state.stateClip = null
+    this.state.oneShot = null
+
+    if (this.state.speaking) {
+      this.state.base = 'talk'
+      return []
+    }
+
+    if (this.state.thinking) {
+      this.state.base = 'thinking'
+      return []
+    }
+
+    this.state.current = null
+    return this.enterBase('idle')
+  }
+
+  private playStateClip(): AnimationCommand[] {
+    const clip = this.state.stateClip
+    if (!clip)
+      return []
+
+    this.state.current = clip
+    return [{ type: 'play', clip, fadeMs: this.fadeFor(clip) }]
   }
 
   private playOneShot(clips: NormalizedClip[]): AnimationCommand[] {

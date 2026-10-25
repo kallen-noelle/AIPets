@@ -1,12 +1,39 @@
-import type { LoadedPack, PackSummary } from '@proj-airi/character-animation'
+import type { CharacterCatalog, LoadedPack, PackSummary } from '@proj-airi/character-animation'
 
-import { parseAnimationManifest } from '@proj-airi/character-animation'
+import { parseAnimationManifest, parseCharacterCatalog } from '@proj-airi/character-animation'
 
 export interface LocalAnimationPack {
   pack: LoadedPack
+  /** Optional semantic catalog used by AI direction and explicit clip plans. */
+  catalog?: CharacterCatalog
   summary: PackSummary
   /** Turns a manifest-relative clip path into a URL the browser can load. */
   resolve: (src: string) => string
+}
+
+async function loadCatalog(base: URL): Promise<CharacterCatalog | undefined> {
+  let response: Response
+  try {
+    response = await fetch(new URL('catalog.json', base))
+  }
+  catch {
+    return undefined
+  }
+
+  if (!response.ok)
+    return undefined
+
+  // The Vite dev server and some static hosts return index.html with status
+  // 200 for an unknown path. A catalog must be JSON, so an HTML fallback means
+  // this pack has no catalog.
+  const contentType = response.headers.get('content-type') ?? ''
+  if (!contentType.includes('json'))
+    return undefined
+
+  const parsed = parseCharacterCatalog(await response.json())
+  if (!parsed.ok)
+    throw new Error(`Invalid animation catalog: ${parsed.issues.join('; ')}`)
+  return parsed.catalog
 }
 
 /**
@@ -27,9 +54,11 @@ export async function loadAnimationPackFromUrl(manifestUrl: string): Promise<Loc
 
   const base = new URL('.', url)
   const pack = parsed.pack
+  const catalog = await loadCatalog(base)
 
   return {
     pack,
+    ...(catalog ? { catalog } : {}),
     resolve: src => new URL(src, base).href,
     summary: {
       id: pack.manifest.id,

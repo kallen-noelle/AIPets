@@ -1,10 +1,19 @@
-import type { AnimationEvent, LoadedPack } from '@proj-airi/character-animation'
+import type {
+  AnimationClockPort,
+  AnimationEvent,
+  CharacterCatalog,
+  LoadedPack,
+  PerformanceCue,
+  PerformancePlan,
+  PlanAnchor,
+} from '@proj-airi/character-animation'
 
 import type { LoadedZipPack } from '../animation/zip-pack'
 import type { BuiltinCharacter } from '../character/characters'
 import type { StageSnapshot } from '../components/character-stage'
 
 import { errorMessageFrom } from '@moeru/std'
+import { PerformancePlanExecutor, validatePerformancePlan } from '@proj-airi/character-animation'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router'
@@ -31,12 +40,81 @@ const buttonClass = [
   'bg-[var(--airi-card)] text-[var(--airi-fg)] hover:bg-[var(--airi-hover)] active:scale-95',
 ].join(' ')
 
+const debugButtonClass = [
+  buttonClass,
+  'disabled:cursor-not-allowed disabled:opacity-50',
+].join(' ')
+
+const debugAnchors: PlanAnchor[] = [
+  { type: 'replyStart' },
+  { type: 'sentence', index: 1 },
+  { type: 'afterSpeech' },
+]
+
+function createDebugPlan(catalog: CharacterCatalog): PerformancePlan {
+  const used = new Set<string>()
+  const cues: PerformanceCue[] = []
+  const preferredTags = [['shy'], ['happy'], ['polite']]
+
+  for (const tags of preferredTags) {
+    if (cues.length >= debugAnchors.length)
+      break
+
+    const clip = catalog.clips.find(candidate =>
+      !used.has(candidate.id) && tags.some(tag => candidate.tags.includes(tag)),
+    )
+    if (!clip)
+      continue
+
+    used.add(clip.id)
+    cues.push({
+      anchor: debugAnchors[cues.length] ?? { type: 'afterSpeech' },
+      clipId: clip.id,
+      intensity: 0.7,
+    })
+  }
+
+  for (const clip of catalog.clips) {
+    if (cues.length >= debugAnchors.length)
+      break
+    if (used.has(clip.id) || clip.role === 'loop')
+      continue
+
+    used.add(clip.id)
+    cues.push({
+      anchor: debugAnchors[cues.length] ?? { type: 'afterSpeech' },
+      clipId: clip.id,
+      intensity: 0.7,
+    })
+  }
+
+  return {
+    affect: { valence: 0.05, arousal: 0.03 },
+    cues,
+  }
+}
+
+function createBrowserClock(): AnimationClockPort {
+  return {
+    now: () => performance.now(),
+    setTimer: (delayMs, callback) => {
+      const id = window.setTimeout(callback, delayMs)
+      return () => window.clearTimeout(id)
+    },
+  }
+}
+
 export function StagePage() {
   const { t } = useTranslation()
   const dispatchRef = useRef<((event: AnimationEvent) => void) | null>(null)
+  const executorRef = useRef<PerformancePlanExecutor | null>(null)
+  const planTimersRef = useRef<number[]>([])
 
   const [snapshot, setSnapshot] = useState<StageSnapshot>({ base: 'idle', clipId: null })
   const [packLabel, setPackLabel] = useState('Loading...')
+  const [catalog, setCatalog] = useState<CharacterCatalog | null>(null)
+  const [planText, setPlanText] = useState('')
+  const [planIssues, setPlanIssues] = useState<string[]>([])
   const [error, setError] = useState<string | null>(null)
   const [speaking, setSpeaking] = useState(false)
   const [thinking, setThinking] = useState(false)
@@ -114,8 +192,28 @@ export function StagePage() {
     setSnapshot(next)
   }, [])
 
-  const handleReady = useCallback((pack: LoadedPack) => {
+  const handleClipEnded = useCallback((clipId: string) => {
+    const executor = executorRef.current
+    if (!executor)
+      return
+
+    const result = executor.notifyClipEnded(clipId)
+    for (const cue of result.cues)
+      dispatchRef.current?.({ type: 'playClip', clipId: cue.clipId })
+  }, [])
+
+  const handleReady = useCallback((pack: LoadedPack, nextCatalog?: CharacterCatalog) => {
     setPackLabel(`${pack.manifest.name} · ${pack.allClips.length} clips`)
+    setCatalog(nextCatalog ?? null)
+    setPlanText(nextCatalog ? JSON.stringify(createDebugPlan(nextCatalog), null, 2) : '')
+  }, [])
+
+  useEffect(() => {
+    return () => {
+      executorRef.current?.interrupt()
+      for (const id of planTimersRef.current)
+        window.clearTimeout(id)
+    }
   }, [])
 
   const handleError = useCallback((nextMessage: string) => {
@@ -152,9 +250,69 @@ export function StagePage() {
     send({ type: 'idle' })
   }
 
+  const stopPlan = useCallback(() => {
+    executorRef.current?.interrupt()
+    executorRef.current = null
+    for (const id of planTimersRef.current)
+      window.clearTimeout(id)
+    planTimersRef.current = []
+    setPlanIssues([])
+  }, [])
+
+  const runPlan = () => {
+    if (!catalog)
+      return
+
+    let input: unknown
+    try {
+      input = JSON.parse(planText)
+    }
+    catch {
+      setPlanIssues(['Plan is not valid JSON'])
+      return
+    }
+
+    const validation = validatePerformancePlan(input, { catalog })
+    if (!validation.ok || !validation.plan) {
+      setPlanIssues(validation.issues)
+      return
+    }
+
+    stopPlan()
+    setPlanIssues(validation.issues)
+
+    const executor = new PerformancePlanExecutor({
+      clock: createBrowserClock(),
+      catalog,
+      onCue: cue => dispatchRef.current?.({ type: 'playClip', clipId: cue.clipId }),
+    })
+    executorRef.current = executor
+    executor.start(validation.plan)
+
+    const apply = (cues: PerformanceCue[]) => {
+      for (const cue of cues)
+        dispatchRef.current?.({ type: 'playClip', clipId: cue.clipId })
+    }
+
+    apply(executor.handle({ type: 'replyStart' }).cues)
+    planTimersRef.current.push(window.setTimeout(() => {
+      apply(executor.handle({ type: 'sentence', index: 1 }).cues)
+    }, 1200))
+    planTimersRef.current.push(window.setTimeout(() => {
+      apply(executor.handle({ type: 'sentence', index: 2 }).cues)
+    }, 2400))
+    planTimersRef.current.push(window.setTimeout(() => {
+      apply(executor.handle({ type: 'speechEnd' }).cues)
+    }, 3600))
+  }
+
   const activeCharacter = characters.find(character => character.id === activeCharacterId) ?? null
 
   const selectCharacter = (character: BuiltinCharacter) => {
+    stopPlan()
+    setCatalog(null)
+    setPlanText('')
+    setPlanIssues([])
     persistActiveCharacterId(character.id)
     setActiveCharacterId(character.id)
     activePack?.dispose()
@@ -241,6 +399,7 @@ export function StagePage() {
                     appearance={activeCharacter.appearance}
                     onController={handleController}
                     onSnapshot={handleSnapshot}
+                    onClipEnded={handleClipEnded}
                     onReady={handleReady}
                     onError={handleError}
                   />
@@ -252,6 +411,7 @@ export function StagePage() {
                       appearance={activePack.profile.appearance}
                       onController={handleController}
                       onSnapshot={handleSnapshot}
+                      onClipEnded={handleClipEnded}
                       onReady={handleReady}
                       onError={handleError}
                     />
@@ -261,6 +421,7 @@ export function StagePage() {
                       manifestUrl={demoManifestUrl}
                       onController={handleController}
                       onSnapshot={handleSnapshot}
+                      onClipEnded={handleClipEnded}
                       onReady={handleReady}
                       onError={handleError}
                     />
@@ -298,6 +459,49 @@ export function StagePage() {
                 {paused ? 'Resume' : 'Pause'}
               </button>
             </div>
+
+            <details className={[
+              'w-full max-w-xl rounded-2xl border p-4 text-sm',
+              'border-[var(--airi-border)] bg-[var(--airi-card)]/80',
+            ].join(' ')}
+            >
+              <summary className="cursor-pointer text-[var(--airi-muted)]">
+                Animation plan debug
+                {' · '}
+                {catalog ? `${catalog.clips.length} semantic clips` : 'no catalog'}
+              </summary>
+
+              <div className="mt-3 flex flex-col gap-3">
+                <textarea
+                  className={[
+                    'min-h-40 w-full resize-y rounded-xl border p-3 font-mono text-xs',
+                    'border-[var(--airi-border)] bg-[var(--airi-bg)] text-[var(--airi-fg)]',
+                  ].join(' ')}
+                  value={planText}
+                  onChange={event => setPlanText(event.target.value)}
+                  spellCheck={false}
+                  placeholder={catalog ? 'Paste a performance plan JSON' : 'Load a pack with catalog.json'}
+                  disabled={!catalog}
+                />
+
+                <div className="flex flex-wrap items-center gap-2">
+                  <button type="button" className={debugButtonClass} onClick={runPlan} disabled={!catalog}>
+                    Run plan
+                  </button>
+                  <button type="button" className={debugButtonClass} onClick={stopPlan}>
+                    Stop plan
+                  </button>
+                </div>
+
+                {planIssues.length > 0 && (
+                  <ul className="flex flex-col gap-1 text-xs text-rose-400">
+                    {planIssues.map((issue, index) => (
+                      <li key={`${index}-${issue}`}>{issue}</li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+            </details>
           </main>
 
           <aside className={[

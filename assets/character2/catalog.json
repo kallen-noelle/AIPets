@@ -1,0 +1,254 @@
+{
+  "catalogVersion": 1,
+  "packId": "character2",
+  "generatedAt": "2026-10-25T08:33:45.559Z",
+  "clips": [
+    {
+      "id": "animations/待机-翻书.webm",
+      "name": "待机-翻书",
+      "description": "安静地翻书，偶尔抬眼观察",
+      "tags": [
+        "loop",
+        "ambient",
+        "calm"
+      ],
+      "valence": 0.3,
+      "arousal": 0.35,
+      "role": "loop",
+      "source": "manual"
+    },
+    {
+      "id": "animations/吐槽大肥鱼.webm",
+      "name": "吐槽大肥鱼",
+      "description": "一脸嫌弃地吐槽",
+      "tags": [
+        "playful",
+        "happy"
+      ],
+      "valence": 0.25,
+      "arousal": 0.5,
+      "role": "oneShot",
+      "source": "manual"
+    },
+    {
+      "id": "animations/你号没了.webm",
+      "name": "你号没了",
+      "description": "半开玩笑地威胁对方",
+      "tags": [
+        "angry",
+        "playful"
+      ],
+      "valence": -0.2,
+      "arousal": 0.65,
+      "role": "oneShot",
+      "source": "manual"
+    },
+    {
+      "id": "animations/剪刀手.webm",
+      "name": "剪刀手",
+      "description": "对着镜头比剪刀手",
+      "tags": [
+        "happy",
+        "playful"
+      ],
+      "valence": 0.55,
+      "arousal": 0.55,
+      "role": "oneShot",
+      "source": "manual"
+    },
+    {
+      "id": "animations/钱多的烦恼.webm",
+      "name": "钱多的烦恼",
+      "description": "为钱太多而烦恼，语气得意",
+      "tags": [
+        "money",
+        "proud"
+      ],
+      "valence": 0.45,
+      "arousal": 0.45,
+      "role": "oneShot",
+      "source": "manual"
+    },
+    {
+      "id": "animations/戴学士帽.webm",
+      "name": "戴学士帽",
+      "description": "戴上学士帽，得意地展示",
+      "tags": [
+        "proud",
+        "work"
+      ],
+      "valence": 0.5,
+      "arousal": 0.4,
+      "role": "oneShot",
+      "source": "manual"
+    },
+    {
+      "id": "animations/查看发饰.webm",
+      "name": "查看发饰",
+      "description": "检查自己的发饰是否整齐",
+      "tags": [
+        "vanity",
+        "proud"
+      ],
+      "valence": 0.5,
+      "arousal": 0.4,
+      "role": "oneShot",
+      "source": "manual"
+    },
+    {
+      "id": "animations/变身Fable模型.webm",
+      "name": "变身Fable模型",
+      "description": "变身Fable模型",
+      "tags": [
+        "ambient"
+      ],
+      "valence": 0.2,
+      "arousal": 0.4,
+      "role": "oneShot",
+      "source": "inferred"
+    },
+    {
+      "id": "animations/优雅转圈.webm",
+      "name": "优雅转圈",
+      "description": "优雅地转一圈展示自己",
+      "tags": [
+        "perform",
+        "proud"
+      ],
+      "valence": 0.6,
+      "arousal": 0.55,
+      "role": "oneShot",
+      "source": "manual"
+    },
+    {
+      "id": "animations/生气转身.webm",
+      "name": "生气转身",
+      "description": "生气地转过身去",
+      "tags": [
+        "angry"
+      ],
+      "valence": -0.4,
+      "arousal": 0.65,
+      "role": "oneShot",
+      "source": "manual"
+    },
+    {
+      "id": "animations/吃蛋糕.webm",
+      "name": "吃蛋糕",
+      "description": "优雅地吃蛋糕，心情很好",
+      "tags": [
+        "food",
+        "happy"
+      ],
+      "valence": 0.55,
+      "arousal": 0.5,
+      "role": "oneShot",
+      "source": "manual"
+    },
+    {
+      "id": "animations/优雅舞蹈.webm",
+      "name": "优雅舞蹈",
+      "description": "跳一段优雅的舞蹈",
+      "tags": [
+        "perform",
+        "happy"
+      ],
+      "valence": 0.6,
+      "arousal": 0.55,
+      "role": "oneShot",
+      "source": "manual"
+    },
+    {
+      "id": "animations/欢快舞蹈.webm",
+      "name": "欢快舞蹈",
+      "description": "跳一段欢快的舞蹈",
+      "tags": [
+        "perform",
+        "excited"
+      ],
+      "valence": 0.75,
+      "arousal": 0.75,
+      "role": "oneShot",
+      "source": "manual"
+    },
+    {
+      "id": "animations/旋转转圈舞.webm",
+      "name": "旋转转圈舞",
+      "description": "旋转着转圈跳舞",
+      "tags": [
+        "perform",
+        "excited"
+      ],
+      "valence": 0.7,
+      "arousal": 0.75,
+      "role": "oneShot",
+      "source": "manual"
+    },
+    {
+      "id": "animations/送情书.webm",
+      "name": "送情书",
+      "description": "别扭地递出情书",
+      "tags": [
+        "shy",
+        "happy"
+      ],
+      "valence": 0.55,
+      "arousal": 0.55,
+      "role": "oneShot",
+      "source": "manual"
+    },
+    {
+      "id": "animations/对屏碎碎念.webm",
+      "name": "对屏碎碎念",
+      "description": "对着屏幕小声念叨",
+      "tags": [
+        "thinking"
+      ],
+      "valence": 0.2,
+      "arousal": 0.35,
+      "role": "oneShot",
+      "source": "manual"
+    },
+    {
+      "id": "animations/揪头发碎碎念.webm",
+      "name": "揪头发碎碎念",
+      "description": "揪头发碎碎念",
+      "tags": [
+        "loop",
+        "thinking",
+        "work"
+      ],
+      "valence": 0.2,
+      "arousal": 0.4,
+      "role": "loop",
+      "source": "inferred"
+    },
+    {
+      "id": "animations/翻书碎碎念.webm",
+      "name": "翻书碎碎念",
+      "description": "翻书碎碎念",
+      "tags": [
+        "loop",
+        "thinking",
+        "work"
+      ],
+      "valence": 0.2,
+      "arousal": 0.4,
+      "role": "loop",
+      "source": "inferred"
+    },
+    {
+      "id": "animations/傲娇碎碎念.webm",
+      "name": "傲娇碎碎念",
+      "description": "嘴硬地小声抱怨",
+      "tags": [
+        "proud",
+        "angry"
+      ],
+      "valence": -0.1,
+      "arousal": 0.55,
+      "role": "oneShot",
+      "source": "manual"
+    }
+  ]
+}

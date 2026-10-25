@@ -1,0 +1,105 @@
+{
+  "catalogVersion": 1,
+  "packId": "character3",
+  "generatedAt": "2026-10-24T13:05:42.749Z",
+  "clips": [
+    {
+      "id": "animations/左右观察.webm",
+      "name": "左右观察",
+      "description": "左右观察",
+      "tags": [
+        "loop",
+        "look"
+      ],
+      "valence": 0.3,
+      "arousal": 0.4,
+      "role": "loop",
+      "source": "inferred"
+    },
+    {
+      "id": "animations/叉腰嚣张.webm",
+      "name": "叉腰嚣张",
+      "description": "叉腰嚣张",
+      "tags": [
+        "loop",
+        "ambient"
+      ],
+      "valence": 0.2,
+      "arousal": 0.4,
+      "role": "loop",
+      "source": "inferred"
+    },
+    {
+      "id": "animations/哈哈大笑.webm",
+      "name": "哈哈大笑",
+      "description": "哈哈大笑",
+      "tags": [
+        "ambient"
+      ],
+      "valence": 0.2,
+      "arousal": 0.4,
+      "role": "oneShot",
+      "source": "inferred"
+    },
+    {
+      "id": "animations/打电话.webm",
+      "name": "打电话",
+      "description": "打电话",
+      "tags": [
+        "ambient"
+      ],
+      "valence": 0.2,
+      "arousal": 0.4,
+      "role": "oneShot",
+      "source": "inferred"
+    },
+    {
+      "id": "animations/转圈摔倒.webm",
+      "name": "转圈摔倒",
+      "description": "转圈摔倒",
+      "tags": [
+        "ambient"
+      ],
+      "valence": 0.2,
+      "arousal": 0.4,
+      "role": "oneShot",
+      "source": "inferred"
+    },
+    {
+      "id": "animations/下好片了.webm",
+      "name": "下好片了",
+      "description": "下好片了",
+      "tags": [
+        "ambient"
+      ],
+      "valence": 0.2,
+      "arousal": 0.4,
+      "role": "oneShot",
+      "source": "inferred"
+    },
+    {
+      "id": "animations/小汽车.webm",
+      "name": "小汽车",
+      "description": "小汽车",
+      "tags": [
+        "ambient"
+      ],
+      "valence": 0.2,
+      "arousal": 0.4,
+      "role": "oneShot",
+      "source": "inferred"
+    },
+    {
+      "id": "animations/飞去火星.webm",
+      "name": "飞去火星",
+      "description": "飞去火星",
+      "tags": [
+        "ambient"
+      ],
+      "valence": 0.2,
+      "arousal": 0.4,
+      "role": "oneShot",
+      "source": "inferred"
+    }
+  ]
+}

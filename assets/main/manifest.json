@@ -81,11 +81,6 @@
           "loop": false
         },
         {
-          "src": "animations/点击回应-傲娇生气.webm",
-          "weight": 1,
-          "loop": false
-        },
-        {
           "src": "animations/点击回应-挠痒咯咯笑.webm",
           "weight": 1,
           "loop": false
@@ -101,17 +96,38 @@
           "loop": false
         },
         {
+          "src": "animations/女仆屈膝礼仪.webm",
+          "weight": 1,
+          "loop": false
+        },
+        {
+          "src": "animations/工作状态-雀跃庆祝.webm",
+          "weight": 1,
+          "loop": false
+        }
+      ],
+      "shy": [
+        {
+          "src": "animations/点击回应-害羞惊讶.webm",
+          "weight": 1,
+          "loop": false
+        }
+      ],
+      "angry": [
+        {
+          "src": "animations/点击回应-傲娇生气.webm",
+          "weight": 1,
+          "loop": false
+        },
+        {
+          "src": "animations/玩游戏气急败坏.webm",
+          "weight": 1,
+          "loop": false
+        }
+      ],
+      "sleepy": [
+        {
           "src": "animations/超大伸懒腰.webm",
-          "weight": 1,
-          "loop": false
-        },
-        {
-          "src": "animations/原地敲击桌面互动.webm",
-          "weight": 1,
-          "loop": false
-        },
-        {
-          "src": "animations/原地重力下蹲压缩.webm",
           "weight": 1,
           "loop": false
         },
@@ -126,372 +142,14 @@
           "loop": false
         },
         {
-          "src": "animations/女仆屈膝礼仪.webm",
-          "weight": 1,
-          "loop": false
-        },
-        {
-          "src": "animations/被吓一跳.webm",
-          "weight": 1,
-          "loop": false
-        },
-        {
-          "src": "animations/小幅度原地360度旋转展示.webm",
-          "weight": 1,
-          "loop": false
-        },
-        {
-          "src": "animations/偷吃零食被抓住.webm",
-          "weight": 1,
-          "loop": false
-        },
-        {
-          "src": "animations/用鲸鱼尾巴拍打地面.webm",
-          "weight": 1,
-          "loop": false
-        },
-        {
           "src": "animations/打瞌睡被惊醒.webm",
           "weight": 1,
           "loop": false
-        },
-        {
-          "src": "animations/照镜子.webm",
-          "weight": 1,
-          "loop": false
-        },
-        {
-          "src": "animations/整体换装试色.webm",
-          "weight": 1,
-          "loop": false
-        },
-        {
-          "src": "animations/轻快记录.webm",
-          "weight": 1,
-          "loop": false
-        },
-        {
-          "src": "animations/写代码.webm",
-          "weight": 1,
-          "loop": false
-        },
-        {
-          "src": "animations/摇扇纳凉.webm",
-          "weight": 1,
-          "loop": false
-        },
-        {
-          "src": "animations/晨间刷牙.webm",
-          "weight": 1,
-          "loop": false
-        },
-        {
-          "src": "animations/原地专心玩魔方.webm",
-          "weight": 1,
-          "loop": false
-        },
-        {
-          "src": "animations/原地蹲下玩玩具汽车.webm",
-          "weight": 1,
-          "loop": false
-        },
-        {
-          "src": "animations/鲸鱼吐泡泡特效.webm",
-          "weight": 1,
-          "loop": false
-        },
-        {
-          "src": "animations/原地跳跃抓碎头顶物品.webm",
-          "weight": 1,
-          "loop": false
-        },
-        {
-          "src": "animations/玩游戏气急败坏.webm",
-          "weight": 1,
-          "loop": false
-        },
-        {
-          "src": "animations/玩水枪.webm",
-          "weight": 1,
-          "loop": false
-        },
-        {
-          "src": "animations/小提琴演奏.webm",
-          "weight": 1,
-          "loop": false
-        },
-        {
-          "src": "animations/蓝鲸现世.webm",
-          "weight": 1,
-          "loop": false
-        },
-        {
-          "src": "animations/优雅女仆舞.webm",
-          "weight": 1,
-          "loop": false
-        },
-        {
-          "src": "animations/轻快摇摆舞.webm",
-          "weight": 1,
-          "loop": false
-        },
-        {
-          "src": "animations/可爱宅舞.webm",
-          "weight": 1,
-          "loop": false
-        },
-        {
-          "src": "animations/吹气球.webm",
-          "weight": 1,
-          "loop": false
-        },
-        {
-          "src": "animations/动物环绕.webm",
-          "weight": 1,
-          "loop": false
-        },
-        {
-          "src": "animations/放风筝.webm",
-          "weight": 1,
-          "loop": false
-        },
-        {
-          "src": "animations/拆礼物.webm",
-          "weight": 1,
-          "loop": false
-        },
-        {
-          "src": "animations/变鸽子.webm",
-          "weight": 1,
-          "loop": false
-        },
-        {
-          "src": "animations/扑克魔术.webm",
-          "weight": 1,
-          "loop": false
-        },
-        {
-          "src": "animations/抽陀螺.webm",
-          "weight": 1,
-          "loop": false
-        },
-        {
-          "src": "animations/吹笛子.webm",
-          "weight": 1,
-          "loop": false
-        },
-        {
-          "src": "animations/蝴蝶蜜蜂环绕头顶开花.webm",
-          "weight": 1,
-          "loop": false
-        },
-        {
-          "src": "animations/撸猫.webm",
-          "weight": 1,
-          "loop": false
-        },
-        {
-          "src": "animations/凭空生花.webm",
-          "weight": 1,
-          "loop": false
-        },
-        {
-          "src": "animations/骑木马.webm",
-          "weight": 1,
-          "loop": false
-        },
-        {
-          "src": "animations/三球抛接.webm",
-          "weight": 1,
-          "loop": false
-        },
-        {
-          "src": "animations/踢毽子.webm",
-          "weight": 1,
-          "loop": false
-        },
-        {
-          "src": "animations/下五子棋.webm",
-          "weight": 1,
-          "loop": false
-        },
-        {
-          "src": "animations/荡秋千.webm",
-          "weight": 1,
-          "loop": false
-        },
-        {
-          "src": "animations/吃白饭.webm",
-          "weight": 1,
-          "loop": false
-        },
-        {
-          "src": "animations/大口吃零食.webm",
-          "weight": 1,
-          "loop": false
-        },
-        {
-          "src": "animations/吃Token.webm",
-          "weight": 1,
-          "loop": false
-        },
-        {
-          "src": "animations/吃早餐.webm",
-          "weight": 1,
-          "loop": false
-        },
-        {
-          "src": "animations/吃午餐.webm",
-          "weight": 1,
-          "loop": false
-        },
-        {
-          "src": "animations/吃晚餐.webm",
-          "weight": 1,
-          "loop": false
-        },
-        {
-          "src": "animations/吃冰淇淋融化.webm",
-          "weight": 1,
-          "loop": false
-        },
-        {
-          "src": "animations/吃大闸蟹.webm",
-          "weight": 1,
-          "loop": false
-        },
-        {
-          "src": "animations/吃糖葫芦.webm",
-          "weight": 1,
-          "loop": false
-        },
-        {
-          "src": "animations/吃长寿面.webm",
-          "weight": 1,
-          "loop": false
-        },
-        {
-          "src": "animations/吃西瓜.webm",
-          "weight": 1,
-          "loop": false
-        },
-        {
-          "src": "animations/涮火锅.webm",
-          "weight": 1,
-          "loop": false
-        },
-        {
-          "src": "animations/被落叶淹没.webm",
-          "weight": 1,
-          "loop": false
-        },
-        {
-          "src": "animations/中秋赏月吃月饼.webm",
-          "weight": 1,
-          "loop": false
-        },
-        {
-          "src": "animations/堆雪人.webm",
-          "weight": 1,
-          "loop": false
-        },
-        {
-          "src": "animations/放烟花.webm",
-          "weight": 1,
-          "loop": false
-        },
-        {
-          "src": "animations/吃粽子.webm",
-          "weight": 1,
-          "loop": false
-        },
-        {
-          "src": "animations/吃年糕.webm",
-          "weight": 1,
-          "loop": false
-        },
-        {
-          "src": "animations/吃青团.webm",
-          "weight": 1,
-          "loop": false
-        },
-        {
-          "src": "animations/吃腊八粥.webm",
-          "weight": 1,
-          "loop": false
-        },
-        {
-          "src": "animations/吃重阳糕.webm",
-          "weight": 1,
-          "loop": false
-        },
-        {
-          "src": "animations/收红包.webm",
-          "weight": 1,
-          "loop": false
-        },
-        {
-          "src": "animations/写福字.webm",
-          "weight": 1,
-          "loop": false
-        },
-        {
-          "src": "animations/穿针乞巧.webm",
-          "weight": 1,
-          "loop": false
-        },
-        {
-          "src": "animations/舞狮头.webm",
-          "weight": 1,
-          "loop": false
-        },
-        {
-          "src": "animations/讨糖南瓜灯.webm",
-          "weight": 1,
-          "loop": false
-        },
-        {
-          "src": "animations/插茱萸赏菊.webm",
-          "weight": 1,
-          "loop": false
-        },
-        {
-          "src": "animations/放河灯.webm",
-          "weight": 1,
-          "loop": false
-        },
-        {
-          "src": "animations/萌化小幽灵.webm",
-          "weight": 1,
-          "loop": false
-        },
-        {
-          "src": "animations/装点圣诞树.webm",
-          "weight": 1,
-          "loop": false
-        },
-        {
-          "src": "animations/放孔明灯.webm",
-          "weight": 1,
-          "loop": false
-        },
-        {
-          "src": "animations/吃汤圆.webm",
-          "weight": 1,
-          "loop": false
-        },
-        {
-          "src": "animations/吃饺子.webm",
-          "weight": 1,
-          "loop": false
-        },
-        {
-          "src": "animations/是啊，吃什么.webm",
-          "weight": 1,
-          "loop": false
-        },
-        {
-          "src": "animations/深度思考碎碎念.webm",
+        }
+      ],
+      "sad": [
+        {
+          "src": "animations/工作状态-垂头叹气冒汗.webm",
           "weight": 1,
           "loop": false
         }

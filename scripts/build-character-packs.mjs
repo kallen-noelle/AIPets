@@ -61,6 +61,156 @@ function clipList(names, loop) {
   return unique(names).map(name => clipEntry(name, loop))
 }
 
+const semanticTagDefaults = {
+  shy: { valence: 0.45, arousal: 0.55 },
+  happy: { valence: 0.7, arousal: 0.65 },
+  excited: { valence: 0.75, arousal: 0.8 },
+  angry: { valence: -0.4, arousal: 0.7 },
+  sad: { valence: -0.5, arousal: 0.3 },
+  sleepy: { valence: 0.1, arousal: 0.15 },
+  surprised: { valence: 0.2, arousal: 0.75 },
+  thinking: { valence: 0.2, arousal: 0.4 },
+  work: { valence: 0.3, arousal: 0.5 },
+  food: { valence: 0.35, arousal: 0.5 },
+  perform: { valence: 0.6, arousal: 0.65 },
+  magic: { valence: 0.65, arousal: 0.7 },
+  polite: { valence: 0.5, arousal: 0.4 },
+  vanity: { valence: 0.5, arousal: 0.5 },
+  play: { valence: 0.6, arousal: 0.65 },
+  animal: { valence: 0.5, arousal: 0.5 },
+  seasonal: { valence: 0.6, arousal: 0.6 },
+  look: { valence: 0.3, arousal: 0.4 },
+  drag: { valence: 0.2, arousal: 0.6 },
+  money: { valence: 0.1, arousal: 0.5 },
+  click: { valence: 0.3, arousal: 0.5 },
+  ambient: { valence: 0.2, arousal: 0.4 },
+}
+
+const semanticKeywordRules = [
+  { tags: ['shy', 'happy'], keywords: ['害羞', '脸红', '羞涩'] },
+  { tags: ['happy', 'excited'], keywords: ['开心', '雀跃', '庆祝', '欢呼', '元气', '咯咯笑'] },
+  { tags: ['angry'], keywords: ['生气', '傲娇', '气急败坏', '凶'] },
+  { tags: ['sad'], keywords: ['难过', '垂头', '叹气', '哭', '失落'] },
+  { tags: ['sleepy'], keywords: ['哈欠', '困', '小憩', '睡', '打瞌睡'] },
+  { tags: ['surprised'], keywords: ['吓', '惊', '突然'] },
+  { tags: ['thinking', 'work'], keywords: ['思考', '碎碎念', '写代码', '记录', '大脑'] },
+  { tags: ['work'], keywords: ['工作', '忙碌', '归档', '清点', '整理', '擦桌'] },
+  { tags: ['food'], keywords: ['吃', '零食', '火锅', '饭', '月饼', '粽子', '冰淇淋'] },
+  { tags: ['perform'], keywords: ['舞', '演奏', '小提琴', '笛', '唱', '摇摆'] },
+  { tags: ['magic'], keywords: ['魔法', '魔术', '鸽子', '生花', '扑克'] },
+  { tags: ['polite'], keywords: ['礼仪', '屈膝', '鞠躬'] },
+  { tags: ['vanity'], keywords: ['镜子', '换装', '试色'] },
+  { tags: ['play'], keywords: ['玩', '游戏', '魔方', '玩具', '陀螺', '风筝', '秋千', '抛接', '毽子'] },
+  { tags: ['animal'], keywords: ['猫', '动物', '鲸鱼', '蝴蝶', '蜜蜂'] },
+  { tags: ['seasonal'], keywords: ['中秋', '粽子', '烟花', '圣诞', '红包', '雪人', '汤圆', '饺子', '福字', '南瓜'] },
+  { tags: ['look'], keywords: ['东张西望', '张望', '观察'] },
+  { tags: ['drag'], keywords: ['拖拽'] },
+  { tags: ['money'], keywords: ['余额', '钱袋'] },
+]
+
+function inferTags(name, role) {
+  const tags = []
+  if (role === 'loop')
+    tags.push('loop')
+  if (name.startsWith('点击回应'))
+    tags.push('click')
+
+  for (const rule of semanticKeywordRules) {
+    if (rule.keywords.some(keyword => name.includes(keyword)))
+      tags.push(...rule.tags)
+  }
+
+  const semanticTags = unique(tags).filter(tag => semanticTagDefaults[tag])
+  if (!semanticTags.length)
+    semanticTags.push('ambient')
+
+  return unique([...tags, ...semanticTags])
+}
+
+function inferSemantics(name, role) {
+  const tags = inferTags(name, role)
+  const primaryTag = tags.find(tag => semanticTagDefaults[tag]) ?? 'ambient'
+  const defaults = semanticTagDefaults[primaryTag]
+
+  return {
+    id: clipPath(name),
+    name,
+    description: name,
+    tags,
+    valence: defaults.valence,
+    arousal: defaults.arousal,
+    role,
+    source: 'inferred',
+  }
+}
+
+function readSemantics(config, id) {
+  const input = config.semantics
+  if (input === undefined)
+    return {}
+
+  if (typeof input !== 'object' || input === null || Array.isArray(input))
+    throw new Error(`${id}: semantics must be an object`)
+
+  const semantics = {}
+  for (const [name, entry] of Object.entries(input)) {
+    if (!entry || typeof entry !== 'object' || Array.isArray(entry))
+      throw new Error(`${id}: semantics.${name} must be an object`)
+
+    if (entry.description !== undefined && (typeof entry.description !== 'string' || !entry.description))
+      throw new Error(`${id}: semantics.${name}.description must be a non-empty string`)
+    if (entry.tags !== undefined) {
+      if (!Array.isArray(entry.tags) || entry.tags.some(tag => typeof tag !== 'string' || !tag))
+        throw new Error(`${id}: semantics.${name}.tags must be a string array`)
+    }
+    if (entry.valence !== undefined && (typeof entry.valence !== 'number' || entry.valence < -1 || entry.valence > 1))
+      throw new Error(`${id}: semantics.${name}.valence must be between -1 and 1`)
+    if (entry.arousal !== undefined && (typeof entry.arousal !== 'number' || entry.arousal < 0 || entry.arousal > 1))
+      throw new Error(`${id}: semantics.${name}.arousal must be between 0 and 1`)
+    if (entry.role !== undefined && !['loop', 'oneShot', 'transition'].includes(entry.role))
+      throw new Error(`${id}: semantics.${name}.role is invalid`)
+
+    semantics[name] = entry
+  }
+
+  return semantics
+}
+
+function buildCatalog(id, clipNames, roleByName, config, generatedAt) {
+  const overrides = readSemantics(config, id)
+  const unknown = Object.keys(overrides).filter(name => !clipNames.includes(name))
+  if (unknown.length)
+    throw new Error(`${id}: semantics references unknown clips: ${unknown.join(', ')}`)
+
+  const clips = clipNames.map((name) => {
+    const inferred = inferSemantics(name, roleByName[name] ?? 'oneShot')
+    const override = overrides[name]
+    if (!override)
+      return inferred
+
+    const tags = override.tags ?? inferred.tags
+    const primaryTag = tags.find(tag => semanticTagDefaults[tag]) ?? 'ambient'
+    const defaults = semanticTagDefaults[primaryTag]
+
+    return {
+      ...inferred,
+      description: override.description ?? inferred.description,
+      tags,
+      valence: override.valence ?? defaults.valence,
+      arousal: override.arousal ?? defaults.arousal,
+      role: override.role ?? inferred.role,
+      source: 'manual',
+    }
+  })
+
+  return {
+    catalogVersion: 1,
+    packId: id,
+    generatedAt,
+    clips,
+  }
+}
+
 function readJson(path) {
   return JSON.parse(readFileSync(path, 'utf8'))
 }
@@ -168,10 +318,35 @@ function buildManifest(id, directory, config, appearance, preview, name) {
   for (const action of actionNames)
     actions[action] = clipEntry(action, false)
 
-  const happy = unique([
-    ...click,
-    ...categories.flatMap(category => category.actions ?? []),
+  const loopNames = new Set([
+    ...idle,
+    ...talk,
+    ...(animations.turn ?? []),
   ])
+  const roleByName = Object.fromEntries(
+    actionNames.map(action => [action, loopNames.has(action) ? 'loop' : 'oneShot']),
+  )
+
+  const catalog = buildCatalog(
+    id,
+    actionNames,
+    roleByName,
+    config,
+    statSync(join(directory, 'config.json')).mtime.toISOString(),
+  )
+
+  const emotionGroups = {}
+  for (const clip of catalog.clips) {
+    for (const emotion of ['happy', 'shy', 'angry', 'sad', 'sleepy']) {
+      if (!clip.tags.includes(emotion))
+        continue
+      emotionGroups[emotion] ??= []
+      emotionGroups[emotion].push(clip.name)
+    }
+  }
+  const emotions = Object.fromEntries(
+    Object.entries(emotionGroups).map(([emotion, names]) => [emotion, clipList(names, false)]),
+  )
 
   const manifest = {
     manifestVersion: 1,
@@ -185,12 +360,12 @@ function buildManifest(id, directory, config, appearance, preview, name) {
       ...(talk.length ? { talk: clipList(talk, true) } : {}),
       ...(thinking.length ? { thinking: clipList(thinking, true) } : {}),
       ...(click.length ? { click: clipList(click, false) } : {}),
-      ...(happy.length ? { emotion: { happy: clipList(happy, false) } } : {}),
+      ...(Object.keys(emotions).length ? { emotion: emotions } : {}),
       actions,
     },
   }
 
-  return { manifest, actionCount: actionNames.length }
+  return { manifest, actionCount: actionNames.length, catalog }
 }
 
 function copyShowcase(id, directory, showcase) {
@@ -244,7 +419,7 @@ function readCharacter(definition) {
   const personaPath = join(directory, '人设.json')
   const persona = existsSync(personaPath) ? readJson(personaPath) : null
   const preview = findPreview(directory)
-  const { manifest, actionCount } = buildManifest(
+  const { manifest, actionCount, catalog } = buildManifest(
     id,
     directory,
     config,
@@ -254,6 +429,7 @@ function readCharacter(definition) {
   )
 
   writeFileSync(join(directory, 'manifest.json'), `${JSON.stringify(manifest, null, 2)}\n`)
+  writeFileSync(join(directory, 'catalog.json'), `${JSON.stringify(catalog, null, 2)}\n`)
 
   const showcase = copyShowcase(id, directory, definition.showcase)
 
@@ -285,7 +461,7 @@ function readCharacter(definition) {
     actionLabel: showcase.actionLabel,
   }
 
-  stdout.write(`${id}: ${actionCount} actions from assets/${id}/character.json\n`)
+  stdout.write(`${id}: ${actionCount} actions and ${catalog.clips.length} catalog clips from assets/${id}/character.json\n`)
 
   return { appEntry, siteEntry }
 }

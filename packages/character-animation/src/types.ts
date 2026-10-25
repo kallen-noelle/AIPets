@@ -59,6 +59,9 @@ export type AnimationEvent
     | { type: 'action', name: string }
     | { type: 'expression', name: string }
     | { type: 'click', area?: ClickArea }
+    | { type: 'playClip', clipId: string }
+    | { type: 'setState', clipId: string }
+    | { type: 'clearState' }
     | { type: 'paused', value: boolean }
 
 export type AnimationCommand
@@ -70,6 +73,7 @@ export interface AnimationPlaybackSnapshot {
   base: BaseChain
   currentClipId: string | null
   oneShotClipId: string | null
+  stateClipId: string | null
   paused: boolean
 }
 

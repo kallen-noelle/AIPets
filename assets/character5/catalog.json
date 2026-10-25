@@ -1,0 +1,61 @@
+{
+  "catalogVersion": 1,
+  "packId": "character5",
+  "generatedAt": "2026-10-25T08:33:18.526Z",
+  "clips": [
+    {
+      "id": "animations/东张西望.webm",
+      "name": "东张西望",
+      "description": "警惕地左右张望，观察周围动静",
+      "tags": [
+        "look",
+        "curious",
+        "loop"
+      ],
+      "valence": 0.25,
+      "arousal": 0.35,
+      "role": "loop",
+      "source": "manual"
+    },
+    {
+      "id": "animations/追蝴蝶.webm",
+      "name": "追蝴蝶",
+      "description": "追着蝴蝶跑，尾巴跟着晃动",
+      "tags": [
+        "play",
+        "animal",
+        "happy"
+      ],
+      "valence": 0.65,
+      "arousal": 0.7,
+      "role": "oneShot",
+      "source": "manual"
+    },
+    {
+      "id": "animations/不许碰尾巴.webm",
+      "name": "不许碰尾巴",
+      "description": "被碰到尾巴后炸毛，护住尾巴抗议",
+      "tags": [
+        "angry",
+        "defensive"
+      ],
+      "valence": -0.4,
+      "arousal": 0.7,
+      "role": "oneShot",
+      "source": "manual"
+    },
+    {
+      "id": "animations/耳朵也不许摸.webm",
+      "name": "耳朵也不许摸",
+      "description": "被摸耳朵后更生气，缩起耳朵后退",
+      "tags": [
+        "angry",
+        "defensive"
+      ],
+      "valence": -0.45,
+      "arousal": 0.75,
+      "role": "oneShot",
+      "source": "manual"
+    }
+  ]
+}

@@ -1,0 +1,1319 @@
+{
+  "catalogVersion": 1,
+  "packId": "main",
+  "generatedAt": "2026-10-25T08:32:43.540Z",
+  "clips": [
+    {
+      "id": "animations/待机呼吸休闲.webm",
+      "name": "待机呼吸休闲",
+      "description": "待机呼吸休闲",
+      "tags": [
+        "loop",
+        "ambient"
+      ],
+      "valence": 0.2,
+      "arousal": 0.4,
+      "role": "loop",
+      "source": "inferred"
+    },
+    {
+      "id": "animations/东张西望.webm",
+      "name": "东张西望",
+      "description": "好奇地左右张望",
+      "tags": [
+        "look",
+        "curious"
+      ],
+      "valence": 0.3,
+      "arousal": 0.35,
+      "role": "loop",
+      "source": "manual"
+    },
+    {
+      "id": "animations/被鼠标拖拽悬空反馈.webm",
+      "name": "被鼠标拖拽悬空反馈",
+      "description": "被鼠标拖拽悬空反馈",
+      "tags": [
+        "drag"
+      ],
+      "valence": 0.2,
+      "arousal": 0.6,
+      "role": "oneShot",
+      "source": "inferred"
+    },
+    {
+      "id": "animations/点击回应-开心跃动.webm",
+      "name": "点击回应-开心跃动",
+      "description": "听到好消息后开心地跳一下",
+      "tags": [
+        "happy",
+        "excited",
+        "click"
+      ],
+      "valence": 0.8,
+      "arousal": 0.8,
+      "role": "oneShot",
+      "source": "manual"
+    },
+    {
+      "id": "animations/点击回应-害羞惊讶.webm",
+      "name": "点击回应-害羞惊讶",
+      "description": "被夸奖后低头、缩肩，露出害羞的反应",
+      "tags": [
+        "shy",
+        "happy",
+        "click"
+      ],
+      "valence": 0.45,
+      "arousal": 0.55,
+      "role": "oneShot",
+      "source": "manual"
+    },
+    {
+      "id": "animations/点击回应-傲娇生气.webm",
+      "name": "点击回应-傲娇生气",
+      "description": "被逗弄后别过头，嘴上不饶人",
+      "tags": [
+        "angry",
+        "proud",
+        "click"
+      ],
+      "valence": -0.35,
+      "arousal": 0.65,
+      "role": "oneShot",
+      "source": "manual"
+    },
+    {
+      "id": "animations/点击回应-挠痒咯咯笑.webm",
+      "name": "点击回应-挠痒咯咯笑",
+      "description": "被挠痒后忍不住笑出声",
+      "tags": [
+        "happy",
+        "play",
+        "click"
+      ],
+      "valence": 0.7,
+      "arousal": 0.7,
+      "role": "oneShot",
+      "source": "manual"
+    },
+    {
+      "id": "animations/点击回应-元气挥手.webm",
+      "name": "点击回应-元气挥手",
+      "description": "元气满满地挥手打招呼",
+      "tags": [
+        "happy",
+        "greeting",
+        "click"
+      ],
+      "valence": 0.6,
+      "arousal": 0.6,
+      "role": "oneShot",
+      "source": "manual"
+    },
+    {
+      "id": "animations/螃蟹走路.webm",
+      "name": "螃蟹走路",
+      "description": "螃蟹走路",
+      "tags": [
+        "ambient"
+      ],
+      "valence": 0.2,
+      "arousal": 0.4,
+      "role": "oneShot",
+      "source": "inferred"
+    },
+    {
+      "id": "animations/原地漂浮踏步.webm",
+      "name": "原地漂浮踏步",
+      "description": "原地漂浮踏步",
+      "tags": [
+        "ambient"
+      ],
+      "valence": 0.2,
+      "arousal": 0.4,
+      "role": "oneShot",
+      "source": "inferred"
+    },
+    {
+      "id": "animations/原地左转奔跑.webm",
+      "name": "原地左转奔跑",
+      "description": "原地左转奔跑",
+      "tags": [
+        "ambient"
+      ],
+      "valence": 0.2,
+      "arousal": 0.4,
+      "role": "oneShot",
+      "source": "inferred"
+    },
+    {
+      "id": "animations/悠闲哼歌.webm",
+      "name": "悠闲哼歌",
+      "description": "心情不错，悠闲地哼着歌",
+      "tags": [
+        "happy",
+        "ambient"
+      ],
+      "valence": 0.55,
+      "arousal": 0.4,
+      "role": "loop",
+      "source": "manual"
+    },
+    {
+      "id": "animations/超大伸懒腰.webm",
+      "name": "超大伸懒腰",
+      "description": "睡醒或久坐后伸一个大懒腰",
+      "tags": [
+        "sleepy",
+        "rest"
+      ],
+      "valence": 0.3,
+      "arousal": 0.3,
+      "role": "oneShot",
+      "source": "manual"
+    },
+    {
+      "id": "animations/原地敲击桌面互动.webm",
+      "name": "原地敲击桌面互动",
+      "description": "原地敲击桌面互动",
+      "tags": [
+        "ambient"
+      ],
+      "valence": 0.2,
+      "arousal": 0.4,
+      "role": "oneShot",
+      "source": "inferred"
+    },
+    {
+      "id": "animations/原地重力下蹲压缩.webm",
+      "name": "原地重力下蹲压缩",
+      "description": "原地重力下蹲压缩",
+      "tags": [
+        "ambient"
+      ],
+      "valence": 0.2,
+      "arousal": 0.4,
+      "role": "oneShot",
+      "source": "inferred"
+    },
+    {
+      "id": "animations/哈欠连天.webm",
+      "name": "哈欠连天",
+      "description": "困得连续打哈欠",
+      "tags": [
+        "sleepy",
+        "rest"
+      ],
+      "valence": 0.1,
+      "arousal": 0.2,
+      "role": "oneShot",
+      "source": "manual"
+    },
+    {
+      "id": "animations/原地小憩沉眠.webm",
+      "name": "原地小憩沉眠",
+      "description": "缩成一团安静地睡着",
+      "tags": [
+        "sleepy",
+        "rest",
+        "loop"
+      ],
+      "valence": 0.1,
+      "arousal": 0.1,
+      "role": "loop",
+      "source": "manual"
+    },
+    {
+      "id": "animations/女仆屈膝礼仪.webm",
+      "name": "女仆屈膝礼仪",
+      "description": "提起裙摆，优雅地屈膝行礼",
+      "tags": [
+        "polite",
+        "happy"
+      ],
+      "valence": 0.5,
+      "arousal": 0.35,
+      "role": "oneShot",
+      "source": "manual"
+    },
+    {
+      "id": "animations/被吓一跳.webm",
+      "name": "被吓一跳",
+      "description": "被突然出现的东西吓得一颤",
+      "tags": [
+        "surprised"
+      ],
+      "valence": 0.2,
+      "arousal": 0.8,
+      "role": "oneShot",
+      "source": "manual"
+    },
+    {
+      "id": "animations/小幅度原地360度旋转展示.webm",
+      "name": "小幅度原地360度旋转展示",
+      "description": "小幅度原地360度旋转展示",
+      "tags": [
+        "ambient"
+      ],
+      "valence": 0.2,
+      "arousal": 0.4,
+      "role": "oneShot",
+      "source": "inferred"
+    },
+    {
+      "id": "animations/偷吃零食被抓住.webm",
+      "name": "偷吃零食被抓住",
+      "description": "偷吃零食时被当场抓住",
+      "tags": [
+        "food",
+        "surprised"
+      ],
+      "valence": 0.3,
+      "arousal": 0.7,
+      "role": "oneShot",
+      "source": "manual"
+    },
+    {
+      "id": "animations/用鲸鱼尾巴拍打地面.webm",
+      "name": "用鲸鱼尾巴拍打地面",
+      "description": "用鲸鱼尾巴拍打地面",
+      "tags": [
+        "animal"
+      ],
+      "valence": 0.5,
+      "arousal": 0.5,
+      "role": "oneShot",
+      "source": "inferred"
+    },
+    {
+      "id": "animations/打瞌睡被惊醒.webm",
+      "name": "打瞌睡被惊醒",
+      "description": "打瞌睡时突然惊醒",
+      "tags": [
+        "sleepy",
+        "surprised"
+      ],
+      "valence": 0.1,
+      "arousal": 0.7,
+      "role": "oneShot",
+      "source": "manual"
+    },
+    {
+      "id": "animations/照镜子.webm",
+      "name": "照镜子",
+      "description": "对着镜子整理仪容，自我欣赏",
+      "tags": [
+        "vanity",
+        "proud"
+      ],
+      "valence": 0.55,
+      "arousal": 0.45,
+      "role": "oneShot",
+      "source": "manual"
+    },
+    {
+      "id": "animations/整体换装试色.webm",
+      "name": "整体换装试色",
+      "description": "整体换装试色",
+      "tags": [
+        "vanity"
+      ],
+      "valence": 0.5,
+      "arousal": 0.5,
+      "role": "oneShot",
+      "source": "inferred"
+    },
+    {
+      "id": "animations/轻快记录.webm",
+      "name": "轻快记录",
+      "description": "轻快地记下要点",
+      "tags": [
+        "thinking",
+        "work"
+      ],
+      "valence": 0.4,
+      "arousal": 0.45,
+      "role": "oneShot",
+      "source": "manual"
+    },
+    {
+      "id": "animations/写代码.webm",
+      "name": "写代码",
+      "description": "专注地敲键盘写代码",
+      "tags": [
+        "thinking",
+        "work"
+      ],
+      "valence": 0.35,
+      "arousal": 0.45,
+      "role": "oneShot",
+      "source": "manual"
+    },
+    {
+      "id": "animations/摇扇纳凉.webm",
+      "name": "摇扇纳凉",
+      "description": "摇扇纳凉",
+      "tags": [
+        "ambient"
+      ],
+      "valence": 0.2,
+      "arousal": 0.4,
+      "role": "oneShot",
+      "source": "inferred"
+    },
+    {
+      "id": "animations/晨间刷牙.webm",
+      "name": "晨间刷牙",
+      "description": "晨间刷牙",
+      "tags": [
+        "ambient"
+      ],
+      "valence": 0.2,
+      "arousal": 0.4,
+      "role": "oneShot",
+      "source": "inferred"
+    },
+    {
+      "id": "animations/原地专心玩魔方.webm",
+      "name": "原地专心玩魔方",
+      "description": "原地专心玩魔方",
+      "tags": [
+        "play"
+      ],
+      "valence": 0.6,
+      "arousal": 0.65,
+      "role": "oneShot",
+      "source": "inferred"
+    },
+    {
+      "id": "animations/原地蹲下玩玩具汽车.webm",
+      "name": "原地蹲下玩玩具汽车",
+      "description": "原地蹲下玩玩具汽车",
+      "tags": [
+        "play"
+      ],
+      "valence": 0.6,
+      "arousal": 0.65,
+      "role": "oneShot",
+      "source": "inferred"
+    },
+    {
+      "id": "animations/鲸鱼吐泡泡特效.webm",
+      "name": "鲸鱼吐泡泡特效",
+      "description": "鲸鱼吐泡泡特效",
+      "tags": [
+        "animal"
+      ],
+      "valence": 0.5,
+      "arousal": 0.5,
+      "role": "oneShot",
+      "source": "inferred"
+    },
+    {
+      "id": "animations/原地跳跃抓碎头顶物品.webm",
+      "name": "原地跳跃抓碎头顶物品",
+      "description": "原地跳跃抓碎头顶物品",
+      "tags": [
+        "ambient"
+      ],
+      "valence": 0.2,
+      "arousal": 0.4,
+      "role": "oneShot",
+      "source": "inferred"
+    },
+    {
+      "id": "animations/玩游戏气急败坏.webm",
+      "name": "玩游戏气急败坏",
+      "description": "玩游戏气急败坏",
+      "tags": [
+        "angry",
+        "play"
+      ],
+      "valence": -0.4,
+      "arousal": 0.7,
+      "role": "oneShot",
+      "source": "inferred"
+    },
+    {
+      "id": "animations/玩水枪.webm",
+      "name": "玩水枪",
+      "description": "玩水枪",
+      "tags": [
+        "play"
+      ],
+      "valence": 0.6,
+      "arousal": 0.65,
+      "role": "oneShot",
+      "source": "inferred"
+    },
+    {
+      "id": "animations/小提琴演奏.webm",
+      "name": "小提琴演奏",
+      "description": "小提琴演奏",
+      "tags": [
+        "perform"
+      ],
+      "valence": 0.6,
+      "arousal": 0.65,
+      "role": "oneShot",
+      "source": "inferred"
+    },
+    {
+      "id": "animations/蓝鲸现世.webm",
+      "name": "蓝鲸现世",
+      "description": "蓝鲸现世",
+      "tags": [
+        "ambient"
+      ],
+      "valence": 0.2,
+      "arousal": 0.4,
+      "role": "oneShot",
+      "source": "inferred"
+    },
+    {
+      "id": "animations/优雅女仆舞.webm",
+      "name": "优雅女仆舞",
+      "description": "优雅女仆舞",
+      "tags": [
+        "perform"
+      ],
+      "valence": 0.6,
+      "arousal": 0.65,
+      "role": "oneShot",
+      "source": "inferred"
+    },
+    {
+      "id": "animations/轻快摇摆舞.webm",
+      "name": "轻快摇摆舞",
+      "description": "轻快摇摆舞",
+      "tags": [
+        "perform"
+      ],
+      "valence": 0.6,
+      "arousal": 0.65,
+      "role": "oneShot",
+      "source": "inferred"
+    },
+    {
+      "id": "animations/可爱宅舞.webm",
+      "name": "可爱宅舞",
+      "description": "可爱宅舞",
+      "tags": [
+        "perform"
+      ],
+      "valence": 0.6,
+      "arousal": 0.65,
+      "role": "oneShot",
+      "source": "inferred"
+    },
+    {
+      "id": "animations/吹气球.webm",
+      "name": "吹气球",
+      "description": "吹气球",
+      "tags": [
+        "ambient"
+      ],
+      "valence": 0.2,
+      "arousal": 0.4,
+      "role": "oneShot",
+      "source": "inferred"
+    },
+    {
+      "id": "animations/动物环绕.webm",
+      "name": "动物环绕",
+      "description": "动物环绕",
+      "tags": [
+        "animal"
+      ],
+      "valence": 0.5,
+      "arousal": 0.5,
+      "role": "oneShot",
+      "source": "inferred"
+    },
+    {
+      "id": "animations/放风筝.webm",
+      "name": "放风筝",
+      "description": "放风筝",
+      "tags": [
+        "play"
+      ],
+      "valence": 0.6,
+      "arousal": 0.65,
+      "role": "oneShot",
+      "source": "inferred"
+    },
+    {
+      "id": "animations/拆礼物.webm",
+      "name": "拆礼物",
+      "description": "拆礼物",
+      "tags": [
+        "ambient"
+      ],
+      "valence": 0.2,
+      "arousal": 0.4,
+      "role": "oneShot",
+      "source": "inferred"
+    },
+    {
+      "id": "animations/变鸽子.webm",
+      "name": "变鸽子",
+      "description": "变鸽子",
+      "tags": [
+        "magic"
+      ],
+      "valence": 0.65,
+      "arousal": 0.7,
+      "role": "oneShot",
+      "source": "inferred"
+    },
+    {
+      "id": "animations/扑克魔术.webm",
+      "name": "扑克魔术",
+      "description": "扑克魔术",
+      "tags": [
+        "magic"
+      ],
+      "valence": 0.65,
+      "arousal": 0.7,
+      "role": "oneShot",
+      "source": "inferred"
+    },
+    {
+      "id": "animations/抽陀螺.webm",
+      "name": "抽陀螺",
+      "description": "抽陀螺",
+      "tags": [
+        "play"
+      ],
+      "valence": 0.6,
+      "arousal": 0.65,
+      "role": "oneShot",
+      "source": "inferred"
+    },
+    {
+      "id": "animations/吹笛子.webm",
+      "name": "吹笛子",
+      "description": "吹笛子",
+      "tags": [
+        "perform"
+      ],
+      "valence": 0.6,
+      "arousal": 0.65,
+      "role": "oneShot",
+      "source": "inferred"
+    },
+    {
+      "id": "animations/蝴蝶蜜蜂环绕头顶开花.webm",
+      "name": "蝴蝶蜜蜂环绕头顶开花",
+      "description": "蝴蝶蜜蜂环绕头顶开花",
+      "tags": [
+        "animal"
+      ],
+      "valence": 0.5,
+      "arousal": 0.5,
+      "role": "oneShot",
+      "source": "inferred"
+    },
+    {
+      "id": "animations/撸猫.webm",
+      "name": "撸猫",
+      "description": "撸猫",
+      "tags": [
+        "animal"
+      ],
+      "valence": 0.5,
+      "arousal": 0.5,
+      "role": "oneShot",
+      "source": "inferred"
+    },
+    {
+      "id": "animations/凭空生花.webm",
+      "name": "凭空生花",
+      "description": "凭空生花",
+      "tags": [
+        "magic"
+      ],
+      "valence": 0.65,
+      "arousal": 0.7,
+      "role": "oneShot",
+      "source": "inferred"
+    },
+    {
+      "id": "animations/骑木马.webm",
+      "name": "骑木马",
+      "description": "骑木马",
+      "tags": [
+        "ambient"
+      ],
+      "valence": 0.2,
+      "arousal": 0.4,
+      "role": "oneShot",
+      "source": "inferred"
+    },
+    {
+      "id": "animations/三球抛接.webm",
+      "name": "三球抛接",
+      "description": "三球抛接",
+      "tags": [
+        "play"
+      ],
+      "valence": 0.6,
+      "arousal": 0.65,
+      "role": "oneShot",
+      "source": "inferred"
+    },
+    {
+      "id": "animations/踢毽子.webm",
+      "name": "踢毽子",
+      "description": "踢毽子",
+      "tags": [
+        "play"
+      ],
+      "valence": 0.6,
+      "arousal": 0.65,
+      "role": "oneShot",
+      "source": "inferred"
+    },
+    {
+      "id": "animations/下五子棋.webm",
+      "name": "下五子棋",
+      "description": "下五子棋",
+      "tags": [
+        "ambient"
+      ],
+      "valence": 0.2,
+      "arousal": 0.4,
+      "role": "oneShot",
+      "source": "inferred"
+    },
+    {
+      "id": "animations/荡秋千.webm",
+      "name": "荡秋千",
+      "description": "荡秋千",
+      "tags": [
+        "play"
+      ],
+      "valence": 0.6,
+      "arousal": 0.65,
+      "role": "oneShot",
+      "source": "inferred"
+    },
+    {
+      "id": "animations/吃白饭.webm",
+      "name": "吃白饭",
+      "description": "吃白饭",
+      "tags": [
+        "food"
+      ],
+      "valence": 0.35,
+      "arousal": 0.5,
+      "role": "oneShot",
+      "source": "inferred"
+    },
+    {
+      "id": "animations/大口吃零食.webm",
+      "name": "大口吃零食",
+      "description": "大口吃零食",
+      "tags": [
+        "food"
+      ],
+      "valence": 0.35,
+      "arousal": 0.5,
+      "role": "oneShot",
+      "source": "inferred"
+    },
+    {
+      "id": "animations/吃Token.webm",
+      "name": "吃Token",
+      "description": "吃Token",
+      "tags": [
+        "food"
+      ],
+      "valence": 0.35,
+      "arousal": 0.5,
+      "role": "oneShot",
+      "source": "inferred"
+    },
+    {
+      "id": "animations/吃早餐.webm",
+      "name": "吃早餐",
+      "description": "吃早餐",
+      "tags": [
+        "food"
+      ],
+      "valence": 0.35,
+      "arousal": 0.5,
+      "role": "oneShot",
+      "source": "inferred"
+    },
+    {
+      "id": "animations/吃午餐.webm",
+      "name": "吃午餐",
+      "description": "吃午餐",
+      "tags": [
+        "food"
+      ],
+      "valence": 0.35,
+      "arousal": 0.5,
+      "role": "oneShot",
+      "source": "inferred"
+    },
+    {
+      "id": "animations/吃晚餐.webm",
+      "name": "吃晚餐",
+      "description": "吃晚餐",
+      "tags": [
+        "food"
+      ],
+      "valence": 0.35,
+      "arousal": 0.5,
+      "role": "oneShot",
+      "source": "inferred"
+    },
+    {
+      "id": "animations/吃冰淇淋融化.webm",
+      "name": "吃冰淇淋融化",
+      "description": "吃冰淇淋融化",
+      "tags": [
+        "food"
+      ],
+      "valence": 0.35,
+      "arousal": 0.5,
+      "role": "oneShot",
+      "source": "inferred"
+    },
+    {
+      "id": "animations/吃大闸蟹.webm",
+      "name": "吃大闸蟹",
+      "description": "吃大闸蟹",
+      "tags": [
+        "food"
+      ],
+      "valence": 0.35,
+      "arousal": 0.5,
+      "role": "oneShot",
+      "source": "inferred"
+    },
+    {
+      "id": "animations/吃糖葫芦.webm",
+      "name": "吃糖葫芦",
+      "description": "吃糖葫芦",
+      "tags": [
+        "food"
+      ],
+      "valence": 0.35,
+      "arousal": 0.5,
+      "role": "oneShot",
+      "source": "inferred"
+    },
+    {
+      "id": "animations/吃长寿面.webm",
+      "name": "吃长寿面",
+      "description": "吃长寿面",
+      "tags": [
+        "food"
+      ],
+      "valence": 0.35,
+      "arousal": 0.5,
+      "role": "oneShot",
+      "source": "inferred"
+    },
+    {
+      "id": "animations/吃西瓜.webm",
+      "name": "吃西瓜",
+      "description": "吃西瓜",
+      "tags": [
+        "food"
+      ],
+      "valence": 0.35,
+      "arousal": 0.5,
+      "role": "oneShot",
+      "source": "inferred"
+    },
+    {
+      "id": "animations/涮火锅.webm",
+      "name": "涮火锅",
+      "description": "涮火锅",
+      "tags": [
+        "food"
+      ],
+      "valence": 0.35,
+      "arousal": 0.5,
+      "role": "oneShot",
+      "source": "inferred"
+    },
+    {
+      "id": "animations/被落叶淹没.webm",
+      "name": "被落叶淹没",
+      "description": "被落叶淹没",
+      "tags": [
+        "ambient"
+      ],
+      "valence": 0.2,
+      "arousal": 0.4,
+      "role": "oneShot",
+      "source": "inferred"
+    },
+    {
+      "id": "animations/中秋赏月吃月饼.webm",
+      "name": "中秋赏月吃月饼",
+      "description": "中秋赏月吃月饼",
+      "tags": [
+        "food",
+        "seasonal"
+      ],
+      "valence": 0.35,
+      "arousal": 0.5,
+      "role": "oneShot",
+      "source": "inferred"
+    },
+    {
+      "id": "animations/堆雪人.webm",
+      "name": "堆雪人",
+      "description": "堆雪人",
+      "tags": [
+        "seasonal"
+      ],
+      "valence": 0.6,
+      "arousal": 0.6,
+      "role": "oneShot",
+      "source": "inferred"
+    },
+    {
+      "id": "animations/放烟花.webm",
+      "name": "放烟花",
+      "description": "放烟花",
+      "tags": [
+        "seasonal"
+      ],
+      "valence": 0.6,
+      "arousal": 0.6,
+      "role": "oneShot",
+      "source": "inferred"
+    },
+    {
+      "id": "animations/吃粽子.webm",
+      "name": "吃粽子",
+      "description": "吃粽子",
+      "tags": [
+        "food",
+        "seasonal"
+      ],
+      "valence": 0.35,
+      "arousal": 0.5,
+      "role": "oneShot",
+      "source": "inferred"
+    },
+    {
+      "id": "animations/吃年糕.webm",
+      "name": "吃年糕",
+      "description": "吃年糕",
+      "tags": [
+        "food"
+      ],
+      "valence": 0.35,
+      "arousal": 0.5,
+      "role": "oneShot",
+      "source": "inferred"
+    },
+    {
+      "id": "animations/吃青团.webm",
+      "name": "吃青团",
+      "description": "吃青团",
+      "tags": [
+        "food"
+      ],
+      "valence": 0.35,
+      "arousal": 0.5,
+      "role": "oneShot",
+      "source": "inferred"
+    },
+    {
+      "id": "animations/吃腊八粥.webm",
+      "name": "吃腊八粥",
+      "description": "吃腊八粥",
+      "tags": [
+        "food"
+      ],
+      "valence": 0.35,
+      "arousal": 0.5,
+      "role": "oneShot",
+      "source": "inferred"
+    },
+    {
+      "id": "animations/吃重阳糕.webm",
+      "name": "吃重阳糕",
+      "description": "吃重阳糕",
+      "tags": [
+        "food"
+      ],
+      "valence": 0.35,
+      "arousal": 0.5,
+      "role": "oneShot",
+      "source": "inferred"
+    },
+    {
+      "id": "animations/收红包.webm",
+      "name": "收红包",
+      "description": "收红包",
+      "tags": [
+        "seasonal"
+      ],
+      "valence": 0.6,
+      "arousal": 0.6,
+      "role": "oneShot",
+      "source": "inferred"
+    },
+    {
+      "id": "animations/写福字.webm",
+      "name": "写福字",
+      "description": "写福字",
+      "tags": [
+        "seasonal"
+      ],
+      "valence": 0.6,
+      "arousal": 0.6,
+      "role": "oneShot",
+      "source": "inferred"
+    },
+    {
+      "id": "animations/穿针乞巧.webm",
+      "name": "穿针乞巧",
+      "description": "穿针乞巧",
+      "tags": [
+        "ambient"
+      ],
+      "valence": 0.2,
+      "arousal": 0.4,
+      "role": "oneShot",
+      "source": "inferred"
+    },
+    {
+      "id": "animations/舞狮头.webm",
+      "name": "舞狮头",
+      "description": "舞狮头",
+      "tags": [
+        "perform"
+      ],
+      "valence": 0.6,
+      "arousal": 0.65,
+      "role": "oneShot",
+      "source": "inferred"
+    },
+    {
+      "id": "animations/讨糖南瓜灯.webm",
+      "name": "讨糖南瓜灯",
+      "description": "讨糖南瓜灯",
+      "tags": [
+        "seasonal"
+      ],
+      "valence": 0.6,
+      "arousal": 0.6,
+      "role": "oneShot",
+      "source": "inferred"
+    },
+    {
+      "id": "animations/插茱萸赏菊.webm",
+      "name": "插茱萸赏菊",
+      "description": "插茱萸赏菊",
+      "tags": [
+        "ambient"
+      ],
+      "valence": 0.2,
+      "arousal": 0.4,
+      "role": "oneShot",
+      "source": "inferred"
+    },
+    {
+      "id": "animations/放河灯.webm",
+      "name": "放河灯",
+      "description": "放河灯",
+      "tags": [
+        "ambient"
+      ],
+      "valence": 0.2,
+      "arousal": 0.4,
+      "role": "oneShot",
+      "source": "inferred"
+    },
+    {
+      "id": "animations/萌化小幽灵.webm",
+      "name": "萌化小幽灵",
+      "description": "萌化小幽灵",
+      "tags": [
+        "ambient"
+      ],
+      "valence": 0.2,
+      "arousal": 0.4,
+      "role": "oneShot",
+      "source": "inferred"
+    },
+    {
+      "id": "animations/装点圣诞树.webm",
+      "name": "装点圣诞树",
+      "description": "装点圣诞树",
+      "tags": [
+        "seasonal"
+      ],
+      "valence": 0.6,
+      "arousal": 0.6,
+      "role": "oneShot",
+      "source": "inferred"
+    },
+    {
+      "id": "animations/放孔明灯.webm",
+      "name": "放孔明灯",
+      "description": "放孔明灯",
+      "tags": [
+        "ambient"
+      ],
+      "valence": 0.2,
+      "arousal": 0.4,
+      "role": "oneShot",
+      "source": "inferred"
+    },
+    {
+      "id": "animations/吃汤圆.webm",
+      "name": "吃汤圆",
+      "description": "吃汤圆",
+      "tags": [
+        "food",
+        "seasonal"
+      ],
+      "valence": 0.35,
+      "arousal": 0.5,
+      "role": "oneShot",
+      "source": "inferred"
+    },
+    {
+      "id": "animations/吃饺子.webm",
+      "name": "吃饺子",
+      "description": "吃饺子",
+      "tags": [
+        "food",
+        "seasonal"
+      ],
+      "valence": 0.35,
+      "arousal": 0.5,
+      "role": "oneShot",
+      "source": "inferred"
+    },
+    {
+      "id": "animations/是啊，吃什么.webm",
+      "name": "是啊，吃什么",
+      "description": "是啊，吃什么",
+      "tags": [
+        "food"
+      ],
+      "valence": 0.35,
+      "arousal": 0.5,
+      "role": "oneShot",
+      "source": "inferred"
+    },
+    {
+      "id": "animations/深度思考碎碎念.webm",
+      "name": "深度思考碎碎念",
+      "description": "深度思考碎碎念",
+      "tags": [
+        "thinking",
+        "work"
+      ],
+      "valence": 0.2,
+      "arousal": 0.4,
+      "role": "oneShot",
+      "source": "inferred"
+    },
+    {
+      "id": "animations/碎碎念-擦桌碎碎念.webm",
+      "name": "碎碎念-擦桌碎碎念",
+      "description": "碎碎念-擦桌碎碎念",
+      "tags": [
+        "loop",
+        "thinking",
+        "work"
+      ],
+      "valence": 0.2,
+      "arousal": 0.4,
+      "role": "loop",
+      "source": "inferred"
+    },
+    {
+      "id": "animations/碎碎念-发呆碎碎念.webm",
+      "name": "碎碎念-发呆碎碎念",
+      "description": "碎碎念-发呆碎碎念",
+      "tags": [
+        "loop",
+        "thinking",
+        "work"
+      ],
+      "valence": 0.2,
+      "arousal": 0.4,
+      "role": "loop",
+      "source": "inferred"
+    },
+    {
+      "id": "animations/碎碎念-对屏碎碎念.webm",
+      "name": "碎碎念-对屏碎碎念",
+      "description": "碎碎念-对屏碎碎念",
+      "tags": [
+        "loop",
+        "thinking",
+        "work"
+      ],
+      "valence": 0.2,
+      "arousal": 0.4,
+      "role": "loop",
+      "source": "inferred"
+    },
+    {
+      "id": "animations/余额-钱袋满溢.webm",
+      "name": "余额-钱袋满溢",
+      "description": "余额-钱袋满溢",
+      "tags": [
+        "money"
+      ],
+      "valence": 0.1,
+      "arousal": 0.5,
+      "role": "oneShot",
+      "source": "inferred"
+    },
+    {
+      "id": "animations/余额-金袋叮当.webm",
+      "name": "余额-金袋叮当",
+      "description": "余额-金袋叮当",
+      "tags": [
+        "money"
+      ],
+      "valence": 0.1,
+      "arousal": 0.5,
+      "role": "oneShot",
+      "source": "inferred"
+    },
+    {
+      "id": "animations/余额-钱袋如常.webm",
+      "name": "余额-钱袋如常",
+      "description": "余额-钱袋如常",
+      "tags": [
+        "money"
+      ],
+      "valence": 0.1,
+      "arousal": 0.5,
+      "role": "oneShot",
+      "source": "inferred"
+    },
+    {
+      "id": "animations/余额-数金皱眉.webm",
+      "name": "余额-数金皱眉",
+      "description": "余额-数金皱眉",
+      "tags": [
+        "money"
+      ],
+      "valence": 0.1,
+      "arousal": 0.5,
+      "role": "oneShot",
+      "source": "inferred"
+    },
+    {
+      "id": "animations/余额-袋空如洗.webm",
+      "name": "余额-袋空如洗",
+      "description": "余额-袋空如洗",
+      "tags": [
+        "money"
+      ],
+      "valence": 0.1,
+      "arousal": 0.5,
+      "role": "oneShot",
+      "source": "inferred"
+    },
+    {
+      "id": "animations/余额-分文不剩.webm",
+      "name": "余额-分文不剩",
+      "description": "余额-分文不剩",
+      "tags": [
+        "money"
+      ],
+      "valence": 0.1,
+      "arousal": 0.5,
+      "role": "oneShot",
+      "source": "inferred"
+    },
+    {
+      "id": "animations/工作状态-思考冒泡.webm",
+      "name": "工作状态-思考冒泡",
+      "description": "工作状态-思考冒泡",
+      "tags": [
+        "thinking",
+        "work"
+      ],
+      "valence": 0.2,
+      "arousal": 0.4,
+      "role": "oneShot",
+      "source": "inferred"
+    },
+    {
+      "id": "animations/工作状态-忙碌点按.webm",
+      "name": "工作状态-忙碌点按",
+      "description": "工作状态-忙碌点按",
+      "tags": [
+        "work"
+      ],
+      "valence": 0.3,
+      "arousal": 0.5,
+      "role": "oneShot",
+      "source": "inferred"
+    },
+    {
+      "id": "animations/工作状态-清点归档.webm",
+      "name": "工作状态-清点归档",
+      "description": "工作状态-清点归档",
+      "tags": [
+        "work"
+      ],
+      "valence": 0.3,
+      "arousal": 0.5,
+      "role": "oneShot",
+      "source": "inferred"
+    },
+    {
+      "id": "animations/工作状态-原地踱步张望.webm",
+      "name": "工作状态-原地踱步张望",
+      "description": "工作状态-原地踱步张望",
+      "tags": [
+        "work",
+        "look"
+      ],
+      "valence": 0.3,
+      "arousal": 0.5,
+      "role": "oneShot",
+      "source": "inferred"
+    },
+    {
+      "id": "animations/工作状态-雀跃庆祝.webm",
+      "name": "工作状态-雀跃庆祝",
+      "description": "工作状态-雀跃庆祝",
+      "tags": [
+        "happy",
+        "excited",
+        "work"
+      ],
+      "valence": 0.7,
+      "arousal": 0.65,
+      "role": "oneShot",
+      "source": "inferred"
+    },
+    {
+      "id": "animations/工作状态-垂头叹气冒汗.webm",
+      "name": "工作状态-垂头叹气冒汗",
+      "description": "工作状态-垂头叹气冒汗",
+      "tags": [
+        "sad",
+        "work"
+      ],
+      "valence": -0.5,
+      "arousal": 0.3,
+      "role": "oneShot",
+      "source": "inferred"
+    }
+  ]
+}

@@ -1,16 +1,18 @@
-import type { LoadedPack } from '@proj-airi/character-animation'
+import type { CharacterCatalog, LoadedPack } from '@proj-airi/character-animation'
 
 import type { CharacterProfile } from '../character/characters'
 
 import JSZip from 'jszip'
 
-import { parseAnimationManifest } from '@proj-airi/character-animation'
+import { parseAnimationManifest, parseCharacterCatalog } from '@proj-airi/character-animation'
 import { del, get, set } from 'idb-keyval'
 
 import { normalizeCharacterProfile } from '../character/characters'
 
 export interface LoadedZipPack {
   pack: LoadedPack
+  /** Optional semantic catalog for AI direction and explicit clip plans. */
+  catalog?: CharacterCatalog
   /** Presentation from `character.json`, or defaults from the manifest. */
   profile: CharacterProfile
   /** Object URL per normalized clip path. */
@@ -72,6 +74,17 @@ export async function loadPackFromZip(blob: Blob): Promise<LoadedZipPack> {
     name: pack.manifest.name,
   })
 
+  // The catalog is optional. A pack without one still plays through the
+  // existing weighted state machine, but AI direction stays disabled.
+  const catalogFile = zip.file(`${root}catalog.json`)
+  let catalog: CharacterCatalog | undefined
+  if (catalogFile) {
+    const parsedCatalog = parseCharacterCatalog(JSON.parse(await catalogFile.async('text')))
+    if (!parsedCatalog.ok)
+      throw new Error(`Invalid animation catalog: ${parsedCatalog.issues.join('; ')}`)
+    catalog = parsedCatalog.catalog
+  }
+
   const sources: Record<string, string> = {}
 
   for (const clip of pack.allClips) {
@@ -83,6 +96,7 @@ export async function loadPackFromZip(blob: Blob): Promise<LoadedZipPack> {
 
   return {
     pack,
+    ...(catalog ? { catalog } : {}),
     profile,
     sources,
     dispose: () => {

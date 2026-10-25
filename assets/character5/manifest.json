@@ -34,15 +34,12 @@
     "emotion": {
       "happy": [
         {
-          "src": "animations/东张西望.webm",
-          "weight": 1,
-          "loop": false
-        },
-        {
           "src": "animations/追蝴蝶.webm",
           "weight": 1,
           "loop": false
-        },
+        }
+      ],
+      "angry": [
         {
           "src": "animations/不许碰尾巴.webm",
           "weight": 1,

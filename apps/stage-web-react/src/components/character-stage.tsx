@@ -1,4 +1,4 @@
-import type { AnimationCommand, AnimationEvent, LoadedPack } from '@proj-airi/character-animation'
+import type { AnimationCommand, AnimationEvent, CharacterCatalog, LoadedPack } from '@proj-airi/character-animation'
 import type { MouseEvent } from 'react'
 
 import type { VideoSlot } from '../animation/video-player'
@@ -25,8 +25,9 @@ export interface CharacterStageProps {
   pack?: LoadedZipPack
   /** Per-character presentation from the generated registry. */
   appearance?: CharacterAppearance
-  onReady?: (pack: LoadedPack) => void
+  onReady?: (pack: LoadedPack, catalog?: CharacterCatalog) => void
   onSnapshot?: (snapshot: StageSnapshot) => void
+  onClipEnded?: (clipId: string) => void
   onError?: (message: string) => void
   onController?: (dispatch: (event: AnimationEvent) => void) => void
 }
@@ -38,13 +39,14 @@ export interface CharacterStageProps {
  * The React layer only owns DOM playback and input. Clip choice, chain
  * weights, and one-shot recovery stay inside `@proj-airi/character-animation`.
  */
-export function CharacterStage({ manifestUrl, pack, appearance, onReady, onSnapshot, onError, onController }: CharacterStageProps) {
+export function CharacterStage({ manifestUrl, pack, appearance, onReady, onSnapshot, onClipEnded, onError, onController }: CharacterStageProps) {
   const videoARef = useRef<HTMLVideoElement>(null)
   const videoBRef = useRef<HTMLVideoElement>(null)
   const stageRef = useRef<HTMLDivElement>(null)
   const controllerRef = useRef<AnimationController | null>(null)
   const playerRef = useRef<CrossfadeVideoPlayer | null>(null)
   const resolveRef = useRef<(src: string) => string>(src => src)
+  const onClipEndedRef = useRef(onClipEnded)
   const drag = useDragPhysics(stageRef)
   const view = appearance ?? defaultCharacterAppearance
 
@@ -81,6 +83,10 @@ export function CharacterStage({ manifestUrl, pack, appearance, onReady, onSnaps
   }, [applyCommands])
 
   useEffect(() => {
+    onClipEndedRef.current = onClipEnded
+  }, [onClipEnded])
+
+  useEffect(() => {
     const videos = [videoARef.current, videoBRef.current]
 
     const handleEnded = (event: Event) => {
@@ -94,6 +100,7 @@ export function CharacterStage({ manifestUrl, pack, appearance, onReady, onSnaps
         return
 
       applyCommandsRef.current(controller.clipEnded(clipId))
+      onClipEndedRef.current?.(clipId)
     }
 
     for (const video of videos)
@@ -120,19 +127,19 @@ export function CharacterStage({ manifestUrl, pack, appearance, onReady, onSnaps
     })
     playerRef.current = player
 
-    const start = (loadedPack: LoadedPack, resolve: (src: string) => string) => {
+    const start = (loadedPack: LoadedPack, resolve: (src: string) => string, loadedCatalog?: CharacterCatalog) => {
       resolveRef.current = resolve
       const controller = new AnimationController(loadedPack)
       controllerRef.current = controller
 
       setCanvas(loadedPack.manifest.canvas)
       setStatus('ready')
-      onReady?.(loadedPack)
+      onReady?.(loadedPack, loadedCatalog)
       applyCommandsRef.current(controller.dispatch({ type: 'idle' }))
     }
 
     if (pack) {
-      start(pack.pack, src => pack.sources[src] ?? src)
+      start(pack.pack, src => pack.sources[src] ?? src, pack.catalog)
     }
     else if (manifestUrl) {
       void loadAnimationPackFromUrl(manifestUrl)
@@ -140,7 +147,7 @@ export function CharacterStage({ manifestUrl, pack, appearance, onReady, onSnaps
           if (cancelled)
             return
 
-          start(loaded.pack, loaded.resolve)
+          start(loaded.pack, loaded.resolve, loaded.catalog)
         })
         .catch((error: unknown) => {
           if (cancelled)

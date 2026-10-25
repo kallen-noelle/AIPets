@@ -1,0 +1,128 @@
+{
+  "catalogVersion": 1,
+  "packId": "character4",
+  "generatedAt": "2026-10-24T13:05:43.487Z",
+  "clips": [
+    {
+      "id": "animations/待机观望.webm",
+      "name": "待机观望",
+      "description": "待机观望",
+      "tags": [
+        "loop",
+        "ambient"
+      ],
+      "valence": 0.2,
+      "arousal": 0.4,
+      "role": "loop",
+      "source": "inferred"
+    },
+    {
+      "id": "animations/傲娇表情.webm",
+      "name": "傲娇表情",
+      "description": "傲娇表情",
+      "tags": [
+        "angry"
+      ],
+      "valence": -0.4,
+      "arousal": 0.7,
+      "role": "oneShot",
+      "source": "inferred"
+    },
+    {
+      "id": "animations/扑腾小翅膀.webm",
+      "name": "扑腾小翅膀",
+      "description": "扑腾小翅膀",
+      "tags": [
+        "ambient"
+      ],
+      "valence": 0.2,
+      "arousal": 0.4,
+      "role": "oneShot",
+      "source": "inferred"
+    },
+    {
+      "id": "animations/被大肥鱼骑.webm",
+      "name": "被大肥鱼骑",
+      "description": "被大肥鱼骑",
+      "tags": [
+        "ambient"
+      ],
+      "valence": 0.2,
+      "arousal": 0.4,
+      "role": "oneShot",
+      "source": "inferred"
+    },
+    {
+      "id": "animations/挥手打招呼.webm",
+      "name": "挥手打招呼",
+      "description": "挥手打招呼",
+      "tags": [
+        "ambient"
+      ],
+      "valence": 0.2,
+      "arousal": 0.4,
+      "role": "oneShot",
+      "source": "inferred"
+    },
+    {
+      "id": "animations/高兴飞起.webm",
+      "name": "高兴飞起",
+      "description": "高兴飞起",
+      "tags": [
+        "ambient"
+      ],
+      "valence": 0.2,
+      "arousal": 0.4,
+      "role": "oneShot",
+      "source": "inferred"
+    },
+    {
+      "id": "animations/提裙转圈.webm",
+      "name": "提裙转圈",
+      "description": "提裙转圈",
+      "tags": [
+        "ambient"
+      ],
+      "valence": 0.2,
+      "arousal": 0.4,
+      "role": "oneShot",
+      "source": "inferred"
+    },
+    {
+      "id": "animations/喷火冒烟.webm",
+      "name": "喷火冒烟",
+      "description": "喷火冒烟",
+      "tags": [
+        "ambient"
+      ],
+      "valence": 0.2,
+      "arousal": 0.4,
+      "role": "oneShot",
+      "source": "inferred"
+    },
+    {
+      "id": "animations/额度耗尽.webm",
+      "name": "额度耗尽",
+      "description": "额度耗尽",
+      "tags": [
+        "ambient"
+      ],
+      "valence": 0.2,
+      "arousal": 0.4,
+      "role": "oneShot",
+      "source": "inferred"
+    },
+    {
+      "id": "animations/变身Astra形态[非满血版本].webm",
+      "name": "变身Astra形态[非满血版本]",
+      "description": "变身Astra形态[非满血版本]",
+      "tags": [
+        "ambient"
+      ],
+      "valence": 0.2,
+      "arousal": 0.4,
+      "role": "oneShot",
+      "source": "inferred"
+    }
+  ]
+}
