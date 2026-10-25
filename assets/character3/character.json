@@ -1,0 +1,22 @@
+{
+  "id": "character3",
+  "name": "黄毛该溜子",
+  "roman": "GAL",
+  "role": "活泼 · 大方",
+  "description": "伙伴里最大方的一个。爱开玩笑、爱分享，热闹永远不嫌多。",
+  "accent": "#ffe066",
+  "order": 2,
+  "appearance": {
+    "scale": 1,
+    "offsetX": 0,
+    "offsetY": 0,
+    "fadeMs": 180,
+    "mirror": false,
+    "clickEnabled": true
+  },
+  "showcase": {
+    "idle": "左右观察",
+    "action": "转圈摔倒",
+    "actionLabel": "转圈摔倒"
+  }
+}

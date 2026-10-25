@@ -1,0 +1,22 @@
+{
+  "id": "main",
+  "name": "蓝毛小女仆",
+  "roman": "MAID",
+  "role": "温柔 · 俏皮",
+  "description": "最早住进桌面的小女仆。温柔勤快，也有点调皮，遇到麻烦会去找大小姐撑腰。",
+  "accent": "#7dd3fc",
+  "order": 0,
+  "appearance": {
+    "scale": 1,
+    "offsetX": 0,
+    "offsetY": 0,
+    "fadeMs": 180,
+    "mirror": false,
+    "clickEnabled": true
+  },
+  "showcase": {
+    "idle": "待机呼吸休闲",
+    "action": "优雅女仆舞",
+    "actionLabel": "优雅女仆舞"
+  }
+}

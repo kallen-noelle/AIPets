@@ -1,0 +1,22 @@
+{
+  "id": "character4",
+  "name": "白毛小龙娘",
+  "roman": "DRAGON",
+  "role": "温柔 · 逞强",
+  "description": "说话轻轻的龙娘。喜欢黏人，也喜欢逗人，被反过来捉弄会鼓脸。",
+  "accent": "#8fd8ff",
+  "order": 3,
+  "appearance": {
+    "scale": 1,
+    "offsetX": 0,
+    "offsetY": 0,
+    "fadeMs": 180,
+    "mirror": false,
+    "clickEnabled": true
+  },
+  "showcase": {
+    "idle": "待机观望",
+    "action": "挥手打招呼",
+    "actionLabel": "挥手打招呼"
+  }
+}

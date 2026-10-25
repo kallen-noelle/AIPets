@@ -1,0 +1,238 @@
+{
+  "manifestVersion": 1,
+  "id": "character2",
+  "name": "橙毛大小姐",
+  "canvas": {
+    "width": 640,
+    "height": 360
+  },
+  "transition": {
+    "fadeMs": 180
+  },
+  "animations": {
+    "idle": [
+      {
+        "src": "animations/待机-翻书.webm",
+        "weight": 1,
+        "loop": true
+      }
+    ],
+    "talk": [
+      {
+        "src": "animations/对屏碎碎念.webm",
+        "weight": 1,
+        "loop": true
+      },
+      {
+        "src": "animations/揪头发碎碎念.webm",
+        "weight": 1,
+        "loop": true
+      },
+      {
+        "src": "animations/翻书碎碎念.webm",
+        "weight": 1,
+        "loop": true
+      },
+      {
+        "src": "animations/傲娇碎碎念.webm",
+        "weight": 1,
+        "loop": true
+      }
+    ],
+    "thinking": [
+      {
+        "src": "animations/待机-翻书.webm",
+        "weight": 1,
+        "loop": true
+      }
+    ],
+    "click": [
+      {
+        "src": "animations/待机-翻书.webm",
+        "weight": 1,
+        "loop": false
+      },
+      {
+        "src": "animations/吐槽大肥鱼.webm",
+        "weight": 1,
+        "loop": false
+      }
+    ],
+    "emotion": {
+      "happy": [
+        {
+          "src": "animations/待机-翻书.webm",
+          "weight": 1,
+          "loop": false
+        },
+        {
+          "src": "animations/吐槽大肥鱼.webm",
+          "weight": 1,
+          "loop": false
+        },
+        {
+          "src": "animations/你号没了.webm",
+          "weight": 1,
+          "loop": false
+        },
+        {
+          "src": "animations/剪刀手.webm",
+          "weight": 1,
+          "loop": false
+        },
+        {
+          "src": "animations/钱多的烦恼.webm",
+          "weight": 1,
+          "loop": false
+        },
+        {
+          "src": "animations/戴学士帽.webm",
+          "weight": 1,
+          "loop": false
+        },
+        {
+          "src": "animations/查看发饰.webm",
+          "weight": 1,
+          "loop": false
+        },
+        {
+          "src": "animations/变身Fable模型.webm",
+          "weight": 1,
+          "loop": false
+        },
+        {
+          "src": "animations/优雅转圈.webm",
+          "weight": 1,
+          "loop": false
+        },
+        {
+          "src": "animations/生气转身.webm",
+          "weight": 1,
+          "loop": false
+        },
+        {
+          "src": "animations/吃蛋糕.webm",
+          "weight": 1,
+          "loop": false
+        },
+        {
+          "src": "animations/优雅舞蹈.webm",
+          "weight": 1,
+          "loop": false
+        },
+        {
+          "src": "animations/欢快舞蹈.webm",
+          "weight": 1,
+          "loop": false
+        },
+        {
+          "src": "animations/旋转转圈舞.webm",
+          "weight": 1,
+          "loop": false
+        },
+        {
+          "src": "animations/送情书.webm",
+          "weight": 1,
+          "loop": false
+        }
+      ]
+    },
+    "actions": {
+      "待机-翻书": {
+        "src": "animations/待机-翻书.webm",
+        "weight": 1,
+        "loop": false
+      },
+      "吐槽大肥鱼": {
+        "src": "animations/吐槽大肥鱼.webm",
+        "weight": 1,
+        "loop": false
+      },
+      "你号没了": {
+        "src": "animations/你号没了.webm",
+        "weight": 1,
+        "loop": false
+      },
+      "剪刀手": {
+        "src": "animations/剪刀手.webm",
+        "weight": 1,
+        "loop": false
+      },
+      "钱多的烦恼": {
+        "src": "animations/钱多的烦恼.webm",
+        "weight": 1,
+        "loop": false
+      },
+      "戴学士帽": {
+        "src": "animations/戴学士帽.webm",
+        "weight": 1,
+        "loop": false
+      },
+      "查看发饰": {
+        "src": "animations/查看发饰.webm",
+        "weight": 1,
+        "loop": false
+      },
+      "变身Fable模型": {
+        "src": "animations/变身Fable模型.webm",
+        "weight": 1,
+        "loop": false
+      },
+      "优雅转圈": {
+        "src": "animations/优雅转圈.webm",
+        "weight": 1,
+        "loop": false
+      },
+      "生气转身": {
+        "src": "animations/生气转身.webm",
+        "weight": 1,
+        "loop": false
+      },
+      "吃蛋糕": {
+        "src": "animations/吃蛋糕.webm",
+        "weight": 1,
+        "loop": false
+      },
+      "优雅舞蹈": {
+        "src": "animations/优雅舞蹈.webm",
+        "weight": 1,
+        "loop": false
+      },
+      "欢快舞蹈": {
+        "src": "animations/欢快舞蹈.webm",
+        "weight": 1,
+        "loop": false
+      },
+      "旋转转圈舞": {
+        "src": "animations/旋转转圈舞.webm",
+        "weight": 1,
+        "loop": false
+      },
+      "送情书": {
+        "src": "animations/送情书.webm",
+        "weight": 1,
+        "loop": false
+      },
+      "对屏碎碎念": {
+        "src": "animations/对屏碎碎念.webm",
+        "weight": 1,
+        "loop": false
+      },
+      "揪头发碎碎念": {
+        "src": "animations/揪头发碎碎念.webm",
+        "weight": 1,
+        "loop": false
+      },
+      "翻书碎碎念": {
+        "src": "animations/翻书碎碎念.webm",
+        "weight": 1,
+        "loop": false
+      },
+      "傲娇碎碎念": {
+        "src": "animations/傲娇碎碎念.webm",
+        "weight": 1,
+        "loop": false
+      }
+    }
+  }
+}

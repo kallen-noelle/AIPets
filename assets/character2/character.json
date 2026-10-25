@@ -1,0 +1,22 @@
+{
+  "id": "character2",
+  "name": "橙毛大小姐",
+  "roman": "OJOU-SAMA",
+  "role": "优雅 · 傲娇",
+  "description": "嘴硬心软的大小姐。待机时安静翻书，被戳中会先回嘴，再偷偷关心你。",
+  "accent": "#ffb168",
+  "order": 1,
+  "appearance": {
+    "scale": 1,
+    "offsetX": 0,
+    "offsetY": 0,
+    "fadeMs": 180,
+    "mirror": false,
+    "clickEnabled": true
+  },
+  "showcase": {
+    "idle": "待机-翻书",
+    "action": "送情书",
+    "actionLabel": "送情书"
+  }
+}

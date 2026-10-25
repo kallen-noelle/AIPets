@@ -1,0 +1,102 @@
+[
+  {
+    "id": "main",
+    "name": "蓝毛小女仆",
+    "roman": "MAID",
+    "role": "温柔 · 俏皮",
+    "description": "最早住进桌面的小女仆。温柔勤快，也有点调皮，遇到麻烦会去找大小姐撑腰。",
+    "accent": "#7dd3fc",
+    "order": 0,
+    "manifest": "main/manifest.json",
+    "persona": "main/人设.json",
+    "appearance": {
+      "scale": 1,
+      "offsetX": 0,
+      "offsetY": 0,
+      "fadeMs": 180,
+      "mirror": false,
+      "clickEnabled": true
+    },
+    "clipCount": 106
+  },
+  {
+    "id": "character2",
+    "name": "橙毛大小姐",
+    "roman": "OJOU-SAMA",
+    "role": "优雅 · 傲娇",
+    "description": "嘴硬心软的大小姐。待机时安静翻书，被戳中会先回嘴，再偷偷关心你。",
+    "accent": "#ffb168",
+    "order": 1,
+    "manifest": "character2/manifest.json",
+    "persona": "character2/人设.json",
+    "appearance": {
+      "scale": 1,
+      "offsetX": 0,
+      "offsetY": 0,
+      "fadeMs": 180,
+      "mirror": false,
+      "clickEnabled": true
+    },
+    "clipCount": 19
+  },
+  {
+    "id": "character3",
+    "name": "黄毛该溜子",
+    "roman": "GAL",
+    "role": "活泼 · 大方",
+    "description": "伙伴里最大方的一个。爱开玩笑、爱分享，热闹永远不嫌多。",
+    "accent": "#ffe066",
+    "order": 2,
+    "manifest": "character3/manifest.json",
+    "persona": "character3/人设.json",
+    "appearance": {
+      "scale": 1,
+      "offsetX": 0,
+      "offsetY": 0,
+      "fadeMs": 180,
+      "mirror": false,
+      "clickEnabled": true
+    },
+    "clipCount": 8
+  },
+  {
+    "id": "character4",
+    "name": "白毛小龙娘",
+    "roman": "DRAGON",
+    "role": "温柔 · 逞强",
+    "description": "说话轻轻的龙娘。喜欢黏人，也喜欢逗人，被反过来捉弄会鼓脸。",
+    "accent": "#8fd8ff",
+    "order": 3,
+    "manifest": "character4/manifest.json",
+    "persona": "character4/人设.json",
+    "appearance": {
+      "scale": 1,
+      "offsetX": 0,
+      "offsetY": 0,
+      "fadeMs": 180,
+      "mirror": false,
+      "clickEnabled": true
+    },
+    "clipCount": 10
+  },
+  {
+    "id": "character5",
+    "name": "黑毛小狐狸",
+    "roman": "FOX",
+    "role": "狡黠 · 分寸",
+    "description": "聪明的小狐狸。爱搞善意的小恶作剧，发现你真的不高兴就收手。",
+    "accent": "#ff9a8b",
+    "order": 4,
+    "manifest": "character5/manifest.json",
+    "persona": "character5/人设.json",
+    "appearance": {
+      "scale": 1,
+      "offsetX": 0,
+      "offsetY": 0,
+      "fadeMs": 180,
+      "mirror": false,
+      "clickEnabled": true
+    },
+    "clipCount": 4
+  }
+]

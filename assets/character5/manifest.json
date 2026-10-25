@@ -1,0 +1,81 @@
+{
+  "manifestVersion": 1,
+  "id": "character5",
+  "name": "黑毛小狐狸",
+  "canvas": {
+    "width": 640,
+    "height": 360
+  },
+  "transition": {
+    "fadeMs": 180
+  },
+  "animations": {
+    "idle": [
+      {
+        "src": "animations/东张西望.webm",
+        "weight": 1,
+        "loop": true
+      }
+    ],
+    "thinking": [
+      {
+        "src": "animations/东张西望.webm",
+        "weight": 1,
+        "loop": true
+      }
+    ],
+    "click": [
+      {
+        "src": "animations/东张西望.webm",
+        "weight": 1,
+        "loop": false
+      }
+    ],
+    "emotion": {
+      "happy": [
+        {
+          "src": "animations/东张西望.webm",
+          "weight": 1,
+          "loop": false
+        },
+        {
+          "src": "animations/追蝴蝶.webm",
+          "weight": 1,
+          "loop": false
+        },
+        {
+          "src": "animations/不许碰尾巴.webm",
+          "weight": 1,
+          "loop": false
+        },
+        {
+          "src": "animations/耳朵也不许摸.webm",
+          "weight": 1,
+          "loop": false
+        }
+      ]
+    },
+    "actions": {
+      "东张西望": {
+        "src": "animations/东张西望.webm",
+        "weight": 1,
+        "loop": false
+      },
+      "追蝴蝶": {
+        "src": "animations/追蝴蝶.webm",
+        "weight": 1,
+        "loop": false
+      },
+      "不许碰尾巴": {
+        "src": "animations/不许碰尾巴.webm",
+        "weight": 1,
+        "loop": false
+      },
+      "耳朵也不许摸": {
+        "src": "animations/耳朵也不许摸.webm",
+        "weight": 1,
+        "loop": false
+      }
+    }
+  }
+}

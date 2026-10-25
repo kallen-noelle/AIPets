@@ -1,0 +1,22 @@
+{
+  "id": "character5",
+  "name": "黑毛小狐狸",
+  "roman": "FOX",
+  "role": "狡黠 · 分寸",
+  "description": "聪明的小狐狸。爱搞善意的小恶作剧，发现你真的不高兴就收手。",
+  "accent": "#ff9a8b",
+  "order": 4,
+  "appearance": {
+    "scale": 1,
+    "offsetX": 0,
+    "offsetY": 0,
+    "fadeMs": 180,
+    "mirror": false,
+    "clickEnabled": true
+  },
+  "showcase": {
+    "idle": "东张西望",
+    "action": "不许碰尾巴",
+    "actionLabel": "不许碰尾巴"
+  }
+}

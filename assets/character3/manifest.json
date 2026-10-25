@@ -1,0 +1,126 @@
+{
+  "manifestVersion": 1,
+  "id": "character3",
+  "name": "黄毛该溜子",
+  "canvas": {
+    "width": 640,
+    "height": 360
+  },
+  "transition": {
+    "fadeMs": 180
+  },
+  "animations": {
+    "idle": [
+      {
+        "src": "animations/左右观察.webm",
+        "weight": 1,
+        "loop": true
+      }
+    ],
+    "thinking": [
+      {
+        "src": "animations/叉腰嚣张.webm",
+        "weight": 1,
+        "loop": true
+      }
+    ],
+    "click": [
+      {
+        "src": "animations/叉腰嚣张.webm",
+        "weight": 1,
+        "loop": false
+      },
+      {
+        "src": "animations/哈哈大笑.webm",
+        "weight": 1,
+        "loop": false
+      }
+    ],
+    "emotion": {
+      "happy": [
+        {
+          "src": "animations/叉腰嚣张.webm",
+          "weight": 1,
+          "loop": false
+        },
+        {
+          "src": "animations/哈哈大笑.webm",
+          "weight": 1,
+          "loop": false
+        },
+        {
+          "src": "animations/打电话.webm",
+          "weight": 1,
+          "loop": false
+        },
+        {
+          "src": "animations/左右观察.webm",
+          "weight": 1,
+          "loop": false
+        },
+        {
+          "src": "animations/转圈摔倒.webm",
+          "weight": 1,
+          "loop": false
+        },
+        {
+          "src": "animations/下好片了.webm",
+          "weight": 1,
+          "loop": false
+        },
+        {
+          "src": "animations/小汽车.webm",
+          "weight": 1,
+          "loop": false
+        },
+        {
+          "src": "animations/飞去火星.webm",
+          "weight": 1,
+          "loop": false
+        }
+      ]
+    },
+    "actions": {
+      "左右观察": {
+        "src": "animations/左右观察.webm",
+        "weight": 1,
+        "loop": false
+      },
+      "叉腰嚣张": {
+        "src": "animations/叉腰嚣张.webm",
+        "weight": 1,
+        "loop": false
+      },
+      "哈哈大笑": {
+        "src": "animations/哈哈大笑.webm",
+        "weight": 1,
+        "loop": false
+      },
+      "打电话": {
+        "src": "animations/打电话.webm",
+        "weight": 1,
+        "loop": false
+      },
+      "转圈摔倒": {
+        "src": "animations/转圈摔倒.webm",
+        "weight": 1,
+        "loop": false
+      },
+      "下好片了": {
+        "src": "animations/下好片了.webm",
+        "weight": 1,
+        "loop": false
+      },
+      "小汽车": {
+        "src": "animations/小汽车.webm",
+        "weight": 1,
+        "loop": false
+      },
+      "飞去火星": {
+        "src": "animations/飞去火星.webm",
+        "weight": 1,
+        "loop": false
+      }
+    }
+  }
+}
