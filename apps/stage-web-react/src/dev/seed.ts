@@ -73,4 +73,19 @@ export function seedDevSettings() {
   writeDefault('airi:react:speech/voice', 'Cherry')
   writeDefault('airi:react:image/model', 'wanx2.1-t2i-turbo')
   writeDefault('airi:react:chat/tts', true)
+
+  // The omni chat model has no audio output, so browser speech is the
+  // working default. It needs no provider and keeps the test URL usable
+  // without any extra setup.
+  writeDefault('airi:react:speech/local', true)
+  writeDefault('airi:react:speech/local-language', 'zh-CN')
+  writeDefault('airi:react:speech/local-voice', '')
+  writeDefault('airi:react:speech/local-rate', 1)
+  writeDefault('airi:react:speech/local-pitch', 1)
+
+  // DashScope has no `/audio/transcriptions`. Its omni chat models read audio
+  // directly, so dictation goes through the selected chat model.
+  localStorage.removeItem('airi:react:hearing/local')
+  writeDefault('airi:react:hearing/mode', 'omni')
+  writeDefault('airi:react:hearing/local-language', 'zh-CN')
 }

@@ -1,6 +1,7 @@
 import type { Recorder } from '../audio/recorder'
 import type { ChatSession } from '../chat/sessions'
 import type { ChatMessage } from '../chat/types'
+import type { LocalRecognitionHandle } from '../speech/local-recognition'
 
 import { errorMessageFrom } from '@moeru/std'
 import { portableProviderDefinitions } from '@proj-airi/provider-inference'
@@ -22,7 +23,9 @@ import {
 import { generateImage } from '../image/generation'
 import { useProviders } from '../providers/store'
 import { readStored, useStoredValue } from '../settings/persisted'
-import { speak, stopSpeaking } from '../speech/playback'
+import { isLocalRecognitionAvailable, startLocalRecognition } from '../speech/local-recognition'
+import { transcribeWithOmni } from '../speech/omni-transcription'
+import { speak, speakLocally, stopSpeaking } from '../speech/playback'
 import { transcribeAudio } from '../speech/recognition'
 
 const fieldClass = [
@@ -51,7 +54,7 @@ export function ChatPanel({ variant = 'page' }: ChatPanelProps) {
   const [providerId, setProviderId] = useStoredValue(chatProviderKey, '')
   const [ttsEnabled, setTtsEnabled] = useStoredValue('airi:react:chat/tts', false)
   const [speechProviderId] = useStoredValue('airi:react:speech/provider', '')
-  const [characterName] = useStoredValue(characterNameKey, 'AIRI')
+  const [characterName] = useStoredValue(characterNameKey, 'aipetdex')
   const [persona] = useStoredValue(characterPersonaKey, '')
   const [memoryEnabled] = useStoredValue(memoryEnabledKey, true)
   const [memoryWindow] = useStoredValue(memoryWindowKey, 10)
@@ -61,9 +64,13 @@ export function ChatPanel({ variant = 'page' }: ChatPanelProps) {
   const [error, setError] = useState<string | null>(null)
   const [pendingImage, setPendingImage] = useState<string | null>(null)
   const [recording, setRecording] = useState(false)
+  const [starting, setStarting] = useState(false)
+  const [transcribing, setTranscribing] = useState(false)
   const [drawing, setDrawing] = useState(false)
   const abortRef = useRef<AbortController | null>(null)
   const recorderRef = useRef<Recorder | null>(null)
+  const localRecognitionRef = useRef<LocalRecognitionHandle | null>(null)
+  const recordingKindRef = useRef<'browser' | 'omni' | 'provider' | null>(null)
   const imageInputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
@@ -166,20 +173,34 @@ export function ChatPanel({ variant = 'page' }: ChatPanelProps) {
         updatedAt: Date.now(),
       }))
 
-      if (ttsEnabled && speechProvider) {
-        const speechConfig = speechProvider.config
-        const speechBaseUrl = typeof speechConfig.baseUrl === 'string' && speechConfig.baseUrl
-          ? speechConfig.baseUrl
-          : 'https://api.openai.com/v1'
+      if (ttsEnabled) {
+        const localSpeech = readStored('airi:react:speech/local', true)
 
-        void speak(accumulated, {
-          baseUrl: speechBaseUrl,
-          apiKey: typeof speechConfig.apiKey === 'string' ? speechConfig.apiKey : '',
-          model: readStored('airi:react:speech/model', ''),
-          voice: readStored('airi:react:speech/voice', ''),
-        }).catch((speechError: unknown) => {
-          setError(errorMessageFrom(speechError) ?? 'Speech playback failed')
-        })
+        if (localSpeech || !speechProvider) {
+          void speakLocally(accumulated, {
+            lang: readStored('airi:react:speech/local-language', 'zh-CN'),
+            voiceURI: readStored('airi:react:speech/local-voice', ''),
+            rate: readStored('airi:react:speech/local-rate', 1),
+            pitch: readStored('airi:react:speech/local-pitch', 1),
+          }).catch((speechError: unknown) => {
+            setError(errorMessageFrom(speechError) ?? 'Speech playback failed')
+          })
+        }
+        else {
+          const speechConfig = speechProvider.config
+          const speechBaseUrl = typeof speechConfig.baseUrl === 'string' && speechConfig.baseUrl
+            ? speechConfig.baseUrl
+            : 'https://api.openai.com/v1'
+
+          void speak(accumulated, {
+            baseUrl: speechBaseUrl,
+            apiKey: typeof speechConfig.apiKey === 'string' ? speechConfig.apiKey : '',
+            model: readStored('airi:react:speech/model', ''),
+            voice: readStored('airi:react:speech/voice', ''),
+          }).catch((speechError: unknown) => {
+            setError(errorMessageFrom(speechError) ?? 'Speech playback failed')
+          })
+        }
       }
     }
     catch (cause) {
@@ -229,40 +250,109 @@ export function ChatPanel({ variant = 'page' }: ChatPanelProps) {
   }
 
   const toggleRecording = async () => {
-    if (!selected || !model)
-      return
-
-    const config = selected.config
-    const baseUrl = typeof config.baseUrl === 'string' && config.baseUrl
-      ? config.baseUrl
-      : 'https://api.openai.com/v1'
-
     try {
       if (recording) {
+        const kind = recordingKindRef.current
+        recordingKindRef.current = null
+
+        if (kind === 'browser' && localRecognitionRef.current) {
+          const handle = localRecognitionRef.current
+          localRecognitionRef.current = null
+          setRecording(false)
+
+          const text = (await handle.stop()).trim()
+          if (text)
+            setInput(current => (current ? `${current} ${text}` : text))
+
+          return
+        }
+
         const recordingResult = await recorderRef.current?.stop()
         recorderRef.current = null
         setRecording(false)
 
-        if (!recordingResult)
+        if (!recordingResult || !selected)
           return
 
-        const text = await transcribeAudio(recordingResult.data, {
-          baseUrl,
-          apiKey: typeof config.apiKey === 'string' ? config.apiKey : '',
-          model,
-        })
-        setInput(current => (current ? `${current} ${text}` : text))
+        const config = selected.config
+        const baseUrl = typeof config.baseUrl === 'string' && config.baseUrl
+          ? config.baseUrl
+          : 'https://api.openai.com/v1'
+        const apiKey = typeof config.apiKey === 'string' ? config.apiKey : ''
+
+        setTranscribing(true)
+
+        try {
+          const text = kind === 'omni'
+            ? await transcribeWithOmni(recordingResult.data, { baseUrl, apiKey, model: model || 'qwen3.8-omni-flash' })
+            : await transcribeAudio(recordingResult.data, { baseUrl, apiKey, model })
+
+          if (text)
+            setInput(current => (current ? `${current} ${text}` : text))
+        }
+        finally {
+          setTranscribing(false)
+        }
+
         return
       }
 
+      const hearingMode = readStored<'omni' | 'browser' | 'provider'>('airi:react:hearing/mode', 'omni')
+
+      if (hearingMode === 'browser' && isLocalRecognitionAvailable()) {
+        localRecognitionRef.current = startLocalRecognition({
+          lang: readStored('airi:react:hearing/local-language', 'zh-CN'),
+        })
+        recordingKindRef.current = 'browser'
+        setRecording(true)
+        setError(null)
+        return
+      }
+
+      if (!selected) {
+        setError(t('settings.reactShell.chatNeedProvider', {
+          defaultValue: 'Add a chat provider before you use the microphone.',
+        }))
+        return
+      }
+
+      if (hearingMode !== 'omni' && !model) {
+        setError(t('settings.reactShell.chatNeedModel', {
+          defaultValue: 'Select a chat model before you use the microphone.',
+        }))
+        return
+      }
+
+      setStarting(true)
+
       recorderRef.current = await startRecording()
+      recordingKindRef.current = hearingMode === 'provider' ? 'provider' : 'omni'
+      setStarting(false)
       setRecording(true)
       setError(null)
     }
     catch (cause) {
+      setStarting(false)
       setRecording(false)
       recorderRef.current = null
-      setError(errorMessageFrom(cause) ?? 'Recording failed')
+      localRecognitionRef.current = null
+      recordingKindRef.current = null
+
+      const message = errorMessageFrom(cause) ?? ''
+
+      if (/permission|denied|notallowed/i.test(message)) {
+        setError(t('settings.reactShell.chatMicDenied', {
+          defaultValue: 'Microphone permission was denied. Allow it in the browser address bar and try again.',
+        }))
+      }
+      else if (/notfound|requested device|no microphone/i.test(message)) {
+        setError(t('settings.reactShell.chatMicMissing', {
+          defaultValue: 'No microphone was found on this device.',
+        }))
+      }
+      else {
+        setError(message || 'Recording failed')
+      }
     }
   }
 
@@ -336,6 +426,10 @@ export function ChatPanel({ variant = 'page' }: ChatPanelProps) {
 
   const stop = () => {
     abortRef.current?.abort()
+    localRecognitionRef.current?.cancel()
+    localRecognitionRef.current = null
+    recordingKindRef.current = null
+    setRecording(false)
     stopSpeaking()
   }
 
@@ -523,12 +617,16 @@ export function ChatPanel({ variant = 'page' }: ChatPanelProps) {
             <button
               type="button"
               className={toolButtonClass}
-              disabled={!ready || sending}
+              disabled={!ready || sending || starting || transcribing}
               onClick={() => void toggleRecording()}
             >
-              {recording
-                ? t('settings.reactShell.chatStopListening', { defaultValue: 'Stop listening' })
-                : t('settings.reactShell.chatListen', { defaultValue: 'Listen' })}
+              {transcribing
+                ? t('settings.reactShell.chatTranscribing', { defaultValue: 'Transcribing...' })
+                : starting
+                  ? t('settings.reactShell.chatPreparing', { defaultValue: 'Opening the microphone...' })
+                  : recording
+                    ? t('settings.reactShell.chatStopListening', { defaultValue: 'Stop listening' })
+                    : t('settings.reactShell.chatListen', { defaultValue: 'Listen' })}
             </button>
 
             <button

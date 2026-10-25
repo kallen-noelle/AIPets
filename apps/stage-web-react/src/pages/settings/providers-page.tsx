@@ -6,7 +6,27 @@ import { useNavigate } from 'react-router'
 
 import { createProvider, useProviders } from '../../providers/store'
 
-const taskOrder = ['chat', 'vision', 'transcription', 'speech', 'embedding'] as const
+const taskGroups = [
+  { id: 'chat', label: 'chat', tasks: ['chat'] },
+  { id: 'speech', label: 'speech', tasks: ['text-to-speech', 'tts'] },
+  { id: 'transcription', label: 'transcription', tasks: ['speech-to-text', 'automatic-speech-recognition', 'asr', 'stt'] },
+]
+
+// Claude has no standalone provider. The Anthropic card covers it.
+const priorityProviderIds = [
+  'deepseek',
+  'anthropic',
+  'openai',
+  'byteplus',
+  'byteplus-coding-plan',
+  'volcengine-coding-plan',
+  'alibaba-cloud-model-studio',
+]
+
+function priorityIndex(id: string): number {
+  const index = priorityProviderIds.indexOf(id)
+  return index === -1 ? priorityProviderIds.length : index
+}
 
 function providerIcon(definition: ProviderDefinition): string {
   // Lobe icon packs are not installed in this app yet.
@@ -23,10 +43,12 @@ export function ProvidersPage() {
 
   const translate = (key: string) => String(t(key, { defaultValue: key }))
 
-  const groups = taskOrder
-    .map(task => ({
-      task,
-      definitions: portableProviderDefinitions.filter(definition => definition.tasks.includes(task)),
+  const groups = taskGroups
+    .map(group => ({
+      ...group,
+      definitions: portableProviderDefinitions
+        .filter(definition => definition.tasks.some(task => group.tasks.includes(task)))
+        .sort((left, right) => priorityIndex(left.id) - priorityIndex(right.id)),
     }))
     .filter(group => group.definitions.length > 0)
 
@@ -48,9 +70,9 @@ export function ProvidersPage() {
       </header>
 
       {groups.map(group => (
-        <div key={group.task} className="flex flex-col gap-3">
+        <div key={group.id} className="flex flex-col gap-3">
           <h2 className="text-xs text-[var(--airi-muted)] font-semibold tracking-wider uppercase">
-            {group.task}
+            {group.label}
           </h2>
 
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">

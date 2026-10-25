@@ -23,6 +23,32 @@ export function readStored<T>(key: string, fallback: T): T {
 /** Writes a string as raw text so Vue reads it back. Other values use JSON. */
 export function writeStored<T>(key: string, value: T) {
   localStorage.setItem(key, typeof value === 'string' ? value : JSON.stringify(value))
+  notifyStored(key)
+}
+
+const storedListeners = new Map<string, Set<() => void>>()
+
+function notifyStored(key: string) {
+  for (const listener of storedListeners.get(key) ?? [])
+    listener()
+}
+
+/**
+ * Subscribes to writes of one key inside the current tab.
+ *
+ * The `storage` event only fires in other tabs, so components that share a
+ * key need this to see a write from a sibling component.
+ */
+function subscribeStored(key: string, listener: () => void): () => void {
+  const listeners = storedListeners.get(key) ?? new Set<() => void>()
+  storedListeners.set(key, listeners)
+  listeners.add(listener)
+
+  return () => {
+    listeners.delete(listener)
+    if (!listeners.size)
+      storedListeners.delete(key)
+  }
 }
 
 /**
@@ -42,9 +68,12 @@ export function useStoredValue<T>(key: string, fallback: T) {
         setValue(readStored(key, fallback))
     }
 
+    const unsubscribe = subscribeStored(key, () => setValue(readStored(key, fallback)))
+
     window.addEventListener('storage', onStorage)
     return () => {
       window.removeEventListener('storage', onStorage)
+      unsubscribe()
     }
   }, [key, fallback])
 

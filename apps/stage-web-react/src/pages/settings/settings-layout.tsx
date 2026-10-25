@@ -28,16 +28,34 @@ export function SettingsLayout() {
           </div>
 
           <nav className="flex gap-1 overflow-x-auto pb-2 lg:flex-col lg:overflow-visible lg:pb-0">
-            {settingsEntries.map(entry => (
-              <NavLink
-                key={entry.id}
-                to={entry.path}
-                className={({ isActive }) => `${navItemClass} ${isActive ? navItemActiveClass : ''}`}
-              >
-                <span className={`${entry.icon} text-base`} />
-                <span className="whitespace-nowrap">{t(entry.titleKey, { defaultValue: entry.id })}</span>
-              </NavLink>
-            ))}
+            {settingsEntries.map((entry) => {
+              const label = t(entry.titleKey, { defaultValue: entry.id })
+
+              if (entry.disabled) {
+                return (
+                  <span
+                    key={entry.id}
+                    aria-disabled="true"
+                    title={t('settings.reactShell.accountUnavailable', { defaultValue: 'Sign-in is not available yet.' })}
+                    className="flex cursor-not-allowed items-center gap-2.5 rounded-xl px-3 py-2 text-sm text-[var(--airi-muted)] opacity-40"
+                  >
+                    <span className={`${entry.icon} text-base`} />
+                    <span className="whitespace-nowrap">{label}</span>
+                  </span>
+                )
+              }
+
+              return (
+                <NavLink
+                  key={entry.id}
+                  to={entry.path}
+                  className={({ isActive }) => `${navItemClass} ${isActive ? navItemActiveClass : ''}`}
+                >
+                  <span className={`${entry.icon} text-base`} />
+                  <span className="whitespace-nowrap">{label}</span>
+                </NavLink>
+              )
+            })}
           </nav>
         </aside>
 

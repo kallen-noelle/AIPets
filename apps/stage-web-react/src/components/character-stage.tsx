@@ -3,6 +3,7 @@ import type { MouseEvent } from 'react'
 
 import type { VideoSlot } from '../animation/video-player'
 import type { LoadedZipPack } from '../animation/zip-pack'
+import type { CharacterAppearance } from '../character/characters'
 
 import { errorMessageFrom } from '@moeru/std'
 import { AnimationController } from '@proj-airi/character-animation'
@@ -11,6 +12,7 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { useDragPhysics } from '../animation/drag-physics'
 import { loadAnimationPackFromUrl } from '../animation/pack'
 import { CrossfadeVideoPlayer } from '../animation/video-player'
+import { defaultCharacterAppearance } from '../character/characters'
 
 export interface StageSnapshot {
   base: string
@@ -21,6 +23,8 @@ export interface CharacterStageProps {
   manifestUrl?: string
   /** Already extracted pack whose clips live behind object URLs. */
   pack?: LoadedZipPack
+  /** Per-character presentation from the generated registry. */
+  appearance?: CharacterAppearance
   onReady?: (pack: LoadedPack) => void
   onSnapshot?: (snapshot: StageSnapshot) => void
   onError?: (message: string) => void
@@ -34,7 +38,7 @@ export interface CharacterStageProps {
  * The React layer only owns DOM playback and input. Clip choice, chain
  * weights, and one-shot recovery stay inside `@proj-airi/character-animation`.
  */
-export function CharacterStage({ manifestUrl, pack, onReady, onSnapshot, onError, onController }: CharacterStageProps) {
+export function CharacterStage({ manifestUrl, pack, appearance, onReady, onSnapshot, onError, onController }: CharacterStageProps) {
   const videoARef = useRef<HTMLVideoElement>(null)
   const videoBRef = useRef<HTMLVideoElement>(null)
   const stageRef = useRef<HTMLDivElement>(null)
@@ -42,9 +46,10 @@ export function CharacterStage({ manifestUrl, pack, onReady, onSnapshot, onError
   const playerRef = useRef<CrossfadeVideoPlayer | null>(null)
   const resolveRef = useRef<(src: string) => string>(src => src)
   const drag = useDragPhysics(stageRef)
+  const view = appearance ?? defaultCharacterAppearance
 
   const [slot, setSlot] = useState<VideoSlot>('a')
-  const [fadeMs, setFadeMs] = useState(180)
+  const [fadeMs, setFadeMs] = useState(view.fadeMs)
   const [status, setStatus] = useState<'loading' | 'ready' | 'error'>('loading')
   const [message, setMessage] = useState<string | null>(null)
   const [canvas, setCanvas] = useState({ width: 720, height: 1280 })
@@ -170,7 +175,7 @@ export function CharacterStage({ manifestUrl, pack, onReady, onSnapshot, onError
   }, [onController])
 
   const handleClick = (event: MouseEvent<HTMLDivElement>) => {
-    if (drag.didDrag())
+    if (!view.clickEnabled || drag.didDrag())
       return
 
     const controller = controllerRef.current
@@ -195,22 +200,29 @@ export function CharacterStage({ manifestUrl, pack, onReady, onSnapshot, onError
       onClick={handleClick}
       {...drag.handlers}
     >
-      <video
-        ref={videoARef}
-        className="absolute inset-0 h-full w-full object-contain transition-opacity ease-out"
-        style={{ opacity: slot === 'a' ? 1 : 0, transitionDuration: `${fadeMs}ms` }}
-        muted
-        playsInline
-        preload="auto"
-      />
-      <video
-        ref={videoBRef}
-        className="absolute inset-0 h-full w-full object-contain transition-opacity ease-out"
-        style={{ opacity: slot === 'b' ? 1 : 0, transitionDuration: `${fadeMs}ms` }}
-        muted
-        playsInline
-        preload="auto"
-      />
+      <div
+        className="pointer-events-none absolute inset-0"
+        style={{
+          transform: `translate(${view.offsetX}%, ${view.offsetY}%) scale(${view.scale})${view.mirror ? ' scaleX(-1)' : ''}`,
+        }}
+      >
+        <video
+          ref={videoARef}
+          className="absolute inset-0 h-full w-full object-contain transition-opacity ease-out"
+          style={{ opacity: slot === 'a' ? 1 : 0, transitionDuration: `${fadeMs}ms` }}
+          muted
+          playsInline
+          preload="auto"
+        />
+        <video
+          ref={videoBRef}
+          className="absolute inset-0 h-full w-full object-contain transition-opacity ease-out"
+          style={{ opacity: slot === 'b' ? 1 : 0, transitionDuration: `${fadeMs}ms` }}
+          muted
+          playsInline
+          preload="auto"
+        />
+      </div>
 
       {status !== 'ready' && (
         <div className="absolute inset-0 flex items-center justify-center bg-slate-950/80 px-6 text-center text-sm text-slate-200">

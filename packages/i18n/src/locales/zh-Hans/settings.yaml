@@ -448,7 +448,7 @@ pages:
     delete: 删除
     delete_card: 删除角色卡
     delete_confirmation: 确定要删除这张角色卡吗？
-    description: 使用 AIRI 角色卡预设
+    description: 使用角色卡预设
     description_label: 描述
     drop_here: 放开以上传文件
     create_card: 创建新角色卡
@@ -547,7 +547,7 @@ pages:
       model: 声音 / 模型
       voice: 声音 / 声线
     systemprompt: 系统提示词
-    title: AIRI 角色卡
+    title: 角色卡
     try_different_search: 尝试使用其他关键词搜索
     export: 导出
     exported: 卡片包已导出
@@ -556,7 +556,7 @@ pages:
     import_missing_file: 卡片包缺少必需文件
     import_invalid_file: 卡片包文件无效
     upload: 上传
-    upload_desc: 点击或拖动 AIRI 角色卡包以导入
+    upload_desc: 点击或拖动角色卡包以导入
   memory:
     description: 存放记忆的地方，以及策略
     title: 记忆体
@@ -1845,7 +1845,7 @@ pages:
             remove: 移除
             config_snippet: 绘图配置片段
             copy_json: 复制 JSON
-            paste_hint: 将其粘贴到 AIRI 角色卡绘图配置中，以覆盖这些节点。
+            paste_hint: 将其粘贴到角色卡绘图配置中，以覆盖这些节点。
           upload:
             prompt: 拖放或选择 workflow_api.json 文件
             invalid_json: 无效的 JSON
@@ -2563,7 +2563,8 @@ reactShell:
   connectionChecking: 检测中…
   connectionConnected: 已连接。
   connectionFailed: 无法连接到该地址。
-  accountDescription: 云端登录使用托管的 AIRI 认证服务。
+  accountDescription: 不登录也可以使用全部本地功能。
+  accountUnavailable: 登录功能暂未开放。本地模型、API Key、角色与动画都可以正常使用。
   accountLoading: 正在检查登录状态…
   accountSignedOut: 当前未登录，不登录也可以使用全部本地功能。
   accountSigningIn: 登录中…
@@ -2618,3 +2619,35 @@ reactShell:
   exposureAllow: 仅允许列表
   exposureDeny: 除拒绝列表外全部
   messagingRuntimeNote: 机器人在桌面端连接，本页仅保存令牌。
+  speechLocalTitle: 浏览器本地朗读
+  speechLocalDescription: 使用当前浏览器自带的语音引擎，不需要 API Key，也不发起网络请求。
+  speechLocalUnavailable: 当前浏览器不支持语音合成。
+  speechLocalEnable: 用浏览器朗读回复
+  speechLocalEnableDescription: 开启后，聊天会用当前浏览器朗读每条回复，并忽略远程服务商。
+  speechLocalLanguage: 语言
+  speechLocalVoice: 音色
+  speechLocalVoiceDescription: 音色列表来自操作系统，可在系统设置中安装更多语音。
+  speechLocalVoiceAuto: 自动
+  speechLocalRate: 语速
+  speechLocalPitch: 音调
+  speechRemoteTitle: 远程语音服务商
+  speechRemoteDescription: 仅在关闭浏览器本地朗读时使用。
+  hearingLocalTitle: 浏览器本地语音识别
+  hearingLocalDescription: 使用当前浏览器自带的识别引擎，不需要 API Key，也不依赖转录接口。
+  hearingLocalUnavailable: 当前浏览器不支持语音识别。Chrome、Edge 与 Safari 支持该能力。
+  hearingLocalEnable: 用浏览器语音识别听写
+  hearingLocalEnableDescription: 开启后，麦克风按钮会使用当前浏览器，并忽略下方的转录服务商。
+  hearingLocalLanguage: 识别语言
+  hearingModeTitle: 语音输入方式
+  hearingModeDescription: 选择麦克风把语音转成文字的方式。
+  hearingMode: 识别方式
+  hearingModeOmni: Omni 模型转写
+  hearingModeBrowser: 浏览器语音识别
+  hearingModeProvider: 远程转录服务商
+  hearingModeOmniDescription: 录音会交给当前选择的对话模型转写，不依赖转录接口，Windows 上推荐。
+  chatNeedProvider: 请先添加对话服务商，再使用麦克风。
+  chatNeedModel: 请先选择对话模型，再使用麦克风。
+  chatTranscribing: 转写中…
+  chatPreparing: 正在打开麦克风…
+  chatMicDenied: 麦克风权限被拒绝。请在浏览器地址栏允许麦克风权限后重试。
+  chatMicMissing: 当前设备没有检测到麦克风。

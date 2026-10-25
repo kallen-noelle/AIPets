@@ -10,7 +10,7 @@ const fieldClass = [
 
 export function CardPage() {
   const { t } = useTranslation()
-  const [name, setName] = useStoredValue(characterNameKey, 'AIRI')
+  const [name, setName] = useStoredValue(characterNameKey, 'aipetdex')
   const [persona, setPersona] = useStoredValue(characterPersonaKey, '')
 
   return (

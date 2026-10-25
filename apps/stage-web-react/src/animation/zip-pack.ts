@@ -1,12 +1,18 @@
 import type { LoadedPack } from '@proj-airi/character-animation'
 
+import type { CharacterProfile } from '../character/characters'
+
 import JSZip from 'jszip'
 
 import { parseAnimationManifest } from '@proj-airi/character-animation'
 import { del, get, set } from 'idb-keyval'
 
+import { normalizeCharacterProfile } from '../character/characters'
+
 export interface LoadedZipPack {
   pack: LoadedPack
+  /** Presentation from `character.json`, or defaults from the manifest. */
+  profile: CharacterProfile
   /** Object URL per normalized clip path. */
   sources: Record<string, string>
   dispose: () => void
@@ -47,6 +53,25 @@ export async function loadPackFromZip(blob: Blob): Promise<LoadedZipPack> {
   }
 
   const pack = parsed.pack
+
+  // A ZIP pack can ship `character.json` next to `manifest.json`. Missing or
+  // malformed presentation config falls back to the manifest name and defaults.
+  const characterFile = zip.file(`${root}character.json`)
+  let profileInput: unknown = null
+  if (characterFile) {
+    try {
+      profileInput = JSON.parse(await characterFile.async('text'))
+    }
+    catch {
+      profileInput = null
+    }
+  }
+
+  const profile = normalizeCharacterProfile(profileInput, {
+    id: pack.manifest.id,
+    name: pack.manifest.name,
+  })
+
   const sources: Record<string, string> = {}
 
   for (const clip of pack.allClips) {
@@ -58,6 +83,7 @@ export async function loadPackFromZip(blob: Blob): Promise<LoadedZipPack> {
 
   return {
     pack,
+    profile,
     sources,
     dispose: () => {
       for (const url of urls)
@@ -74,15 +100,47 @@ const blobKey = (id: string) => `airi-react-pack-${id}`
 export interface PackMeta {
   id: string
   name: string
+  profile: CharacterProfile
   canvas: { width: number, height: number }
   clipCount: number
   addedAt: number
 }
 
+interface PackMetaInput {
+  id: string
+  name: string
+  canvas: { width: number, height: number }
+  clipCount: number
+  addedAt: number
+  profile?: unknown
+}
+
+function isPackMetaInput(value: unknown): value is PackMetaInput {
+  if (typeof value !== 'object' || value === null)
+    return false
+
+  const entry = value as Partial<PackMetaInput>
+  return typeof entry.id === 'string'
+    && typeof entry.name === 'string'
+    && typeof entry.clipCount === 'number'
+    && typeof entry.canvas === 'object'
+    && entry.canvas !== null
+}
+
 export function listPackMeta(): PackMeta[] {
   try {
     const raw = localStorage.getItem(packsMetaKey)
-    return raw ? JSON.parse(raw) as PackMeta[] : []
+    if (!raw)
+      return []
+
+    const parsed: unknown = JSON.parse(raw)
+    if (!Array.isArray(parsed))
+      return []
+
+    return parsed.filter(isPackMetaInput).map(pack => ({
+      ...pack,
+      profile: normalizeCharacterProfile(pack.profile, { id: pack.id, name: pack.name }),
+    }))
   }
   catch {
     return []
@@ -101,7 +159,8 @@ export async function importPack(file: File): Promise<PackMeta> {
 
   const meta: PackMeta = {
     id,
-    name: loaded.pack.manifest.name,
+    name: loaded.profile.name,
+    profile: loaded.profile,
     canvas: loaded.pack.manifest.canvas,
     clipCount: loaded.pack.allClips.length,
     addedAt: Date.now(),

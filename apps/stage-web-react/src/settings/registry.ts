@@ -7,6 +7,8 @@ export interface SettingsEntry {
   descriptionKey?: string
   icon: string
   status: SettingsEntryStatus
+  /** Grayed out and not clickable until the feature is available. */
+  disabled?: boolean
 }
 
 /**
@@ -23,6 +25,7 @@ export const settingsEntries: SettingsEntry[] = [
     descriptionKey: 'settings.pages.account.description',
     icon: 'i-solar:user-circle-bold-duotone',
     status: 'ready',
+    disabled: true,
   },
   {
     id: 'card',

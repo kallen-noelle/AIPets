@@ -45,7 +45,81 @@ function releaseAudio() {
 
 export function stopSpeaking() {
   releaseAudio()
+  stopLocalSpeech()
   setSpeaking(false)
+}
+
+let localUtterance: SpeechSynthesisUtterance | null = null
+
+function stopLocalSpeech() {
+  if (typeof window === 'undefined' || !('speechSynthesis' in window))
+    return
+
+  window.speechSynthesis.cancel()
+  localUtterance = null
+}
+
+/** True when the browser can read text with its own speech engine. */
+export function isLocalSpeechAvailable(): boolean {
+  return typeof window !== 'undefined' && 'speechSynthesis' in window
+}
+
+export interface LocalSpeechOptions {
+  lang: string
+  voiceURI: string
+  rate: number
+  pitch: number
+}
+
+/**
+ * Reads text with the browser speech engine.
+ *
+ * This path needs no provider, API key, or network request, so the chat page
+ * can speak out of the box on a fresh profile.
+ */
+export function speakLocally(text: string, options: LocalSpeechOptions): Promise<void> {
+  stopSpeaking()
+
+  if (!isLocalSpeechAvailable())
+    return Promise.reject(new Error('This browser has no speech synthesis support'))
+
+  const utterance = new SpeechSynthesisUtterance(text)
+  utterance.lang = options.lang || 'zh-CN'
+  utterance.rate = options.rate || 1
+  utterance.pitch = options.pitch || 1
+
+  const voice = window.speechSynthesis.getVoices().find(item => item.voiceURI === options.voiceURI)
+  if (voice)
+    utterance.voice = voice
+
+  localUtterance = utterance
+
+  return new Promise<void>((resolve, reject) => {
+    utterance.onend = () => {
+      if (localUtterance === utterance) {
+        localUtterance = null
+        setSpeaking(false)
+      }
+      resolve()
+    }
+
+    utterance.onerror = (event) => {
+      if (localUtterance === utterance) {
+        localUtterance = null
+        setSpeaking(false)
+      }
+
+      if (event.error === 'interrupted' || event.error === 'canceled') {
+        resolve()
+        return
+      }
+
+      reject(new Error(`Browser speech synthesis failed: ${event.error}`))
+    }
+
+    setSpeaking(true)
+    window.speechSynthesis.speak(utterance)
+  })
 }
 
 export interface SpeechOptions {

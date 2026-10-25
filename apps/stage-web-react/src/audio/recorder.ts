@@ -58,7 +58,20 @@ export interface Recorder {
  * clip is decoded and re-encoded before sending.
  */
 export async function startRecording(): Promise<Recorder> {
-  const stream = await navigator.mediaDevices.getUserMedia({ audio: true })
+  const access = navigator.mediaDevices.getUserMedia({ audio: true })
+  const stream = await new Promise<MediaStream>((resolve, reject) => {
+    // A browser can keep the request pending while the user ignores the
+    // permission prompt. The timeout turns that silence into an error.
+    const timer = setTimeout(() => reject(new Error('The microphone did not respond in 30 seconds')), 30_000)
+    access.then((value) => {
+      clearTimeout(timer)
+      resolve(value)
+    }, (error) => {
+      clearTimeout(timer)
+      reject(error)
+    })
+  })
+
   const recorder = new MediaRecorder(stream)
   const chunks: Blob[] = []
 

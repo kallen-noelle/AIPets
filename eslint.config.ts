@@ -22,6 +22,7 @@ export default defineConfig({
     'packages/cloud-client/openapi.yaml', // Generated from the Cloud protobuf contract.
     '**/assets/live2d/models/**',
     'apps/stage-tamagotchi/out/**',
+    'apps/stage-web-react/dist/**',
     'apps/stage-tamagotchi-kirie/addons/**',
     'apps/stage-tamagotchi-kirie/tests/**/bin/**',
     'apps/stage-tamagotchi-kirie/tests/**/obj/**',

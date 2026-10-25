@@ -1,4 +1,4 @@
-import { createBrowserRouter } from 'react-router'
+import { createHashRouter } from 'react-router'
 
 import { AuthCallbackPage } from './pages/auth-callback-page'
 import { ChatPage } from './pages/chat-page'
@@ -33,7 +33,7 @@ import { WebSearchPage } from './pages/settings/web-search-page'
 import { XPage } from './pages/settings/x-page'
 import { StagePage } from './pages/stage-page'
 
-export const router = createBrowserRouter([
+export const router = createHashRouter([
   {
     path: '/',
     element: <StagePage />,

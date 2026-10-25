@@ -2,7 +2,7 @@
   "name": "@proj-airi/stage-web-react",
   "type": "module",
   "private": true,
-  "description": "React frontend for the AIRI stage",
+  "description": "React frontend for aipetdex",
   "author": {
     "name": "Moeru AI Project AIRI Team",
     "email": "airi@moeru.ai",
@@ -12,6 +12,9 @@
   "scripts": {
     "build": "vite build",
     "dev": "vite --host",
+    "dev:electron": "vite --host",
+    "electron": "electron electron/main.cjs",
+    "electron:build": "vite build && electron electron/main.cjs",
     "lint": "eslint .",
     "preview": "vite preview",
     "typecheck": "tsc --noEmit"
@@ -36,6 +39,7 @@
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
     "@vitejs/plugin-react": "catalog:",
+    "electron": "catalog:",
     "typescript": "catalog:",
     "unocss": "catalog:",
     "vite": "catalog:"
