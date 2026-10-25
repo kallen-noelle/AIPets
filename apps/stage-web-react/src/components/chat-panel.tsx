@@ -10,6 +10,7 @@ import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router'
 
 import { startRecording } from '../audio/recorder'
+import { applyUserMessageAffect } from '../character/affect-store'
 import { streamChatCompletion } from '../chat/client'
 import { chatActiveSessionKey, chatSessionsKey, createSession, migrateLegacyMessages, sessionTitle } from '../chat/sessions'
 import {
@@ -243,6 +244,7 @@ export function ChatPanel({ variant = 'page' }: ChatPanelProps) {
     }
     const history = [...messages, userMessage]
 
+    applyUserMessageAffect(text)
     patchSession(active.id, session => ({ ...session, messages: history, updatedAt: Date.now() }))
     setInput('')
     setPendingImage(null)
@@ -620,12 +622,19 @@ export function ChatPanel({ variant = 'page' }: ChatPanelProps) {
               disabled={!ready || sending || starting || transcribing}
               onClick={() => void toggleRecording()}
             >
+              <span className={[
+                'i-solar:',
+                recording || starting || transcribing
+                  ? 'microphone-off-bold-duotone'
+                  : 'microphone-bold-duotone',
+              ].join('')}
+              />
               {transcribing
                 ? t('settings.reactShell.chatTranscribing', { defaultValue: 'Transcribing...' })
                 : starting
-                  ? t('settings.reactShell.chatPreparing', { defaultValue: 'Opening the microphone...' })
+                  ? t('settings.reactShell.chatPreparing', { defaultValue: 'Opening...' })
                   : recording
-                    ? t('settings.reactShell.chatStopListening', { defaultValue: 'Stop listening' })
+                    ? t('settings.reactShell.chatStopListening', { defaultValue: 'Stop' })
                     : t('settings.reactShell.chatListen', { defaultValue: 'Listen' })}
             </button>
 
@@ -635,6 +644,7 @@ export function ChatPanel({ variant = 'page' }: ChatPanelProps) {
               disabled={!ready || sending}
               onClick={() => imageInputRef.current?.click()}
             >
+              <span className="i-solar:gallery-bold-duotone" />
               {t('settings.reactShell.chatAttach', { defaultValue: 'Image' })}
             </button>
 
@@ -644,6 +654,7 @@ export function ChatPanel({ variant = 'page' }: ChatPanelProps) {
               disabled={!ready || sending || drawing || !input.trim()}
               onClick={() => void draw()}
             >
+              <span className="i-solar:palette-bold-duotone" />
               {drawing
                 ? t('settings.reactShell.chatDrawing', { defaultValue: 'Drawing...' })
                 : t('settings.reactShell.chatDraw', { defaultValue: 'Draw' })}
@@ -652,6 +663,7 @@ export function ChatPanel({ variant = 'page' }: ChatPanelProps) {
             {sending
               ? (
                   <button type="button" className={toolButtonClass} onClick={stop}>
+                    <span className="i-solar:stop-bold-duotone" />
                     {t('settings.reactShell.chatStop', { defaultValue: 'Stop' })}
                   </button>
                 )
@@ -662,6 +674,7 @@ export function ChatPanel({ variant = 'page' }: ChatPanelProps) {
                     disabled={!ready || messages.length === 0}
                     onClick={regenerate}
                   >
+                    <span className="i-solar:refresh-bold-duotone" />
                     {t('settings.reactShell.chatRegenerate', { defaultValue: 'Regenerate' })}
                   </button>
                 )}
@@ -672,6 +685,7 @@ export function ChatPanel({ variant = 'page' }: ChatPanelProps) {
               disabled={!active || messages.length === 0}
               onClick={() => active && patchSession(active.id, session => ({ ...session, messages: [] }))}
             >
+              <span className="i-solar:trash-bin-trash-bold-duotone" />
               {t('settings.reactShell.chatClear', { defaultValue: 'Clear' })}
             </button>
           </div>
@@ -707,6 +721,8 @@ export function ChatPanel({ variant = 'page' }: ChatPanelProps) {
               onClick={send}
               className="rounded-xl bg-[var(--airi-fg)] px-4 py-2 text-sm text-[var(--airi-bg)] font-medium disabled:opacity-40"
             >
+              <span className="i-solar:send-bold-duotone" />
+              {' '}
               {t('settings.reactShell.chatSend', { defaultValue: 'Send' })}
             </button>
           </div>

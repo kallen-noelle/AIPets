@@ -1,4 +1,4 @@
-import type { AnimationCommand, AnimationEvent, CharacterCatalog, LoadedPack } from '@proj-airi/character-animation'
+import type { AnimationCommand, AnimationEvent, CharacterCatalog, ClickArea, LoadedPack } from '@proj-airi/character-animation'
 import type { MouseEvent } from 'react'
 
 import type { VideoSlot } from '../animation/video-player'
@@ -28,6 +28,7 @@ export interface CharacterStageProps {
   onReady?: (pack: LoadedPack, catalog?: CharacterCatalog) => void
   onSnapshot?: (snapshot: StageSnapshot) => void
   onClipEnded?: (clipId: string) => void
+  onUserClick?: (area: ClickArea) => void
   onError?: (message: string) => void
   onController?: (dispatch: (event: AnimationEvent) => void) => void
 }
@@ -39,7 +40,7 @@ export interface CharacterStageProps {
  * The React layer only owns DOM playback and input. Clip choice, chain
  * weights, and one-shot recovery stay inside `@proj-airi/character-animation`.
  */
-export function CharacterStage({ manifestUrl, pack, appearance, onReady, onSnapshot, onClipEnded, onError, onController }: CharacterStageProps) {
+export function CharacterStage({ manifestUrl, pack, appearance, onReady, onSnapshot, onClipEnded, onUserClick, onError, onController }: CharacterStageProps) {
   const videoARef = useRef<HTMLVideoElement>(null)
   const videoBRef = useRef<HTMLVideoElement>(null)
   const stageRef = useRef<HTMLDivElement>(null)
@@ -190,14 +191,15 @@ export function CharacterStage({ manifestUrl, pack, appearance, onReady, onSnaps
       return
 
     const rect = event.currentTarget.getBoundingClientRect()
-    const area = event.clientY - rect.top < rect.height * 0.35 ? 'head' : 'body'
+    const area: ClickArea = event.clientY - rect.top < rect.height * 0.35 ? 'head' : 'body'
     applyCommandsRef.current(controller.dispatch({ type: 'click', area }))
+    onUserClick?.(area)
   }
 
   return (
     <div
       ref={stageRef}
-      className="relative touch-none select-none overflow-hidden rounded-3xl bg-slate-950/60 shadow-2xl ring-1 ring-white/10"
+      className="relative touch-none select-none overflow-hidden bg-[var(--airi-bg)]"
       style={{
         aspectRatio: `${canvas.width} / ${canvas.height}`,
         width: 'min(360px, 82vw)',

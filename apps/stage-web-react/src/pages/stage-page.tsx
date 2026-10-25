@@ -1,4 +1,5 @@
 import type {
+  AffectLabel,
   AnimationClockPort,
   AnimationEvent,
   CharacterCatalog,
@@ -19,6 +20,7 @@ import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router'
 
 import { getActivePackId, loadStoredPack, setActivePackId } from '../animation/zip-pack'
+import { affectStore, useAffect } from '../character/affect-store'
 import {
   applyCharacterPersona,
   characterManifestUrl,
@@ -50,6 +52,28 @@ const debugAnchors: PlanAnchor[] = [
   { type: 'sentence', index: 1 },
   { type: 'afterSpeech' },
 ]
+
+const ambientTags: Record<AffectLabel, string[]> = {
+  excited: ['excited', 'happy', 'play'],
+  content: ['happy', 'ambient', 'play'],
+  calm: ['ambient', 'look'],
+  shy: ['shy'],
+  proud: ['proud', 'vanity'],
+  sad: ['sad'],
+  angry: ['angry'],
+  sleepy: ['sleepy'],
+}
+
+const ambientIntervals: Record<AffectLabel, number> = {
+  excited: 18_000,
+  content: 25_000,
+  calm: 35_000,
+  shy: 30_000,
+  proud: 30_000,
+  sad: 45_000,
+  angry: 40_000,
+  sleepy: 60_000,
+}
 
 function createDebugPlan(catalog: CharacterCatalog): PerformancePlan {
   const used = new Set<string>()
@@ -109,6 +133,7 @@ export function StagePage() {
   const dispatchRef = useRef<((event: AnimationEvent) => void) | null>(null)
   const executorRef = useRef<PerformancePlanExecutor | null>(null)
   const planTimersRef = useRef<number[]>([])
+  const planCooldownUntilRef = useRef(0)
 
   const [snapshot, setSnapshot] = useState<StageSnapshot>({ base: 'idle', clipId: null })
   const [packLabel, setPackLabel] = useState('Loading...')
@@ -123,6 +148,10 @@ export function StagePage() {
   const [characters, setCharacters] = useState<BuiltinCharacter[]>([])
   const [activeCharacterId, setActiveCharacterId] = useState<string | null>(() => getActiveCharacterId())
   const [background] = useStoredValue(sceneBackgroundKey, '')
+
+  const characterId = activeCharacterId ?? activePack?.pack.manifest.id ?? 'demo'
+  const affect = useAffect(characterId)
+  const affectLabel = affect.state?.label ?? null
 
   useEffect(() => {
     let disposed = false
@@ -183,6 +212,29 @@ export function StagePage() {
     dispatchRef.current?.({ type: 'speaking', value: voiceSpeaking })
   }, [voiceSpeaking])
 
+  useEffect(() => {
+    if (!catalog || !affectLabel || speaking || thinking || paused || voiceSpeaking)
+      return
+
+    const tags = ambientTags[affectLabel]
+    const candidates = catalog.clips.filter(clip =>
+      clip.role !== 'loop' && tags.some(tag => clip.tags.includes(tag)),
+    )
+    if (!candidates.length)
+      return
+
+    const timer = window.setInterval(() => {
+      if (document.visibilityState !== 'visible' || Date.now() < planCooldownUntilRef.current)
+        return
+
+      const clip = candidates[Math.floor(Math.random() * candidates.length)]
+      if (clip)
+        dispatchRef.current?.({ type: 'playClip', clipId: clip.id })
+    }, ambientIntervals[affectLabel])
+
+    return () => window.clearInterval(timer)
+  }, [catalog, affectLabel, speaking, thinking, paused, voiceSpeaking])
+
   const handleController = useCallback((dispatch: (event: AnimationEvent) => void) => {
     dispatchRef.current = dispatch
     dispatch({ type: 'speaking', value: getSpeaking() })
@@ -200,6 +252,10 @@ export function StagePage() {
     const result = executor.notifyClipEnded(clipId)
     for (const cue of result.cues)
       dispatchRef.current?.({ type: 'playClip', clipId: cue.clipId })
+  }, [])
+
+  const handleUserClick = useCallback(() => {
+    affectStore.applyEvent('click')
   }, [])
 
   const handleReady = useCallback((pack: LoadedPack, nextCatalog?: CharacterCatalog) => {
@@ -257,6 +313,7 @@ export function StagePage() {
       window.clearTimeout(id)
     planTimersRef.current = []
     setPlanIssues([])
+    planCooldownUntilRef.current = 0
   }, [])
 
   const runPlan = () => {
@@ -288,6 +345,7 @@ export function StagePage() {
     })
     executorRef.current = executor
     executor.start(validation.plan)
+    planCooldownUntilRef.current = Date.now() + 6000
 
     const apply = (cues: PerformanceCue[]) => {
       for (const cue of cues)
@@ -400,6 +458,7 @@ export function StagePage() {
                     onController={handleController}
                     onSnapshot={handleSnapshot}
                     onClipEnded={handleClipEnded}
+                    onUserClick={handleUserClick}
                     onReady={handleReady}
                     onError={handleError}
                   />
@@ -412,6 +471,7 @@ export function StagePage() {
                       onController={handleController}
                       onSnapshot={handleSnapshot}
                       onClipEnded={handleClipEnded}
+                      onUserClick={handleUserClick}
                       onReady={handleReady}
                       onError={handleError}
                     />
@@ -422,6 +482,7 @@ export function StagePage() {
                       onController={handleController}
                       onSnapshot={handleSnapshot}
                       onClipEnded={handleClipEnded}
+                      onUserClick={handleUserClick}
                       onReady={handleReady}
                       onError={handleError}
                     />
@@ -472,6 +533,41 @@ export function StagePage() {
               </summary>
 
               <div className="mt-3 flex flex-col gap-3">
+                <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-[var(--airi-muted)]">
+                  <span>
+                    mood
+                    {' '}
+                    <span className="text-[var(--airi-fg)]">{affect.state?.label ?? 'none'}</span>
+                  </span>
+                  <span>
+                    v
+                    {' '}
+                    {affect.state ? affect.state.valence.toFixed(2) : '—'}
+                  </span>
+                  <span>
+                    a
+                    {' '}
+                    {affect.state ? affect.state.arousal.toFixed(2) : '—'}
+                  </span>
+                  <span>
+                    affinity
+                    {' '}
+                    {affect.state ? Math.round(affect.state.affinity) : '—'}
+                  </span>
+                </div>
+
+                <div className="flex flex-wrap items-center gap-2">
+                  <button type="button" className={debugButtonClass} onClick={() => affectStore.applyEvent('praise')}>
+                    Praise
+                  </button>
+                  <button type="button" className={debugButtonClass} onClick={() => affectStore.applyEvent('insult')}>
+                    Scold
+                  </button>
+                  <button type="button" className={debugButtonClass} onClick={() => affectStore.reset()}>
+                    Reset mood
+                  </button>
+                </div>
+
                 <textarea
                   className={[
                     'min-h-40 w-full resize-y rounded-xl border p-3 font-mono text-xs',

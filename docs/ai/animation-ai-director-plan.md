@@ -1,7 +1,7 @@
 # AI 主导的角色动画控制计划书
 
 - 分支：`kallen/feat/ai-animation-director`
-- 状态：Phase 0、Phase 1 已完成；Phase 2 待开始
+- 状态：Phase 0–2 已完成；Phase 3 待开始
 - 关联文档：`docs/ai/animation-video-stage-plan.md`（透明视频动画包与渲染器替换）
 - 本期范围：`packages/character-animation` + `apps/stage-web-react`
 - 不在本期：Vue 遗留端、stage-tamagotchi、游戏对局接入、云同步
@@ -208,18 +208,18 @@
 | --- | --- |
 | 基线 | main `(+0.20, 0.45)`；character2 `(+0.10, 0.50)`；其余按人设微调 |
 | 单轮上限 | valence ±0.20，arousal ±0.15 |
-| 单事件上限 | valence ±0.30 |
+| 单事件上限 | valence ±0.35 |
 | 半衰期 | valence 60 分钟，arousal 20 分钟 |
 | 标签迟滞 | 0.08 |
-| 标签最短停留 | 30 秒 |
+| 标签最短停留 | 30 秒；只约束相邻标签对，跨类切换立即生效 |
 | 好感每轮 | 最多 +2 / −3，范围 0 ~ 100 |
 
 规则增量示例：
 
 | 事件 | valence | arousal | 备注 |
 | --- | --- | --- | --- |
-| 夸奖 | +0.12 | +0.03 | 人设敏感度系数缩放 |
-| 批评 | −0.20 | +0.08 | main 偏 sad，character2 偏 angry |
+| 夸奖 | +0.12 | +0.05 | 人设敏感度系数缩放 |
+| 批评 | −0.35 | +0.06 | main 偏 sad，character2 偏 angry |
 | 道歉 | +0.08 | −0.02 | 仅当上轮为负面 |
 | 点击 | +0.02 | +0.02 | 需冷却 |
 | 15 分钟无交互 | −0.02 | −0.01 | 每 15 分钟一次 |
@@ -231,20 +231,20 @@
 | --- | --- |
 | valence ≥ 0.45 且 arousal ≥ 0.55 | `excited` |
 | valence ≥ 0.45 且 arousal < 0.55 | `content` |
-| valence ≤ −0.25 且 arousal ≥ 0.55 | `angry` |
-| valence ≤ −0.25 且 arousal < 0.55 | `sad` |
+| valence ≤ −0.10 且 arousal ≥ 0.55 | `angry` |
+| valence ≤ −0.10 且 arousal < 0.55 | `sad` |
 | 睡眠度 ≥ 0.75 或模式为 sleepy | `sleepy` |
 | valence ≥ 0.20、arousal 0.30 ~ 0.60、shyness ≥ 0.6 | `shy` |
 | valence ≥ 0.30 且 pride ≥ 0.6 | `proud` |
 
-人设覆盖优先于通用映射。标签切换必须先满足迟滞与最短停留。
+人设覆盖优先于通用映射。规则顺序为 sleepy → proud → excited → shy → content → angry → sad → calm。只有 content/excited 与 sad/angry 这两对相邻标签受最短停留约束。
 
 ### 6.4 合并顺序
 
 1. 规则增量。
 2. 导演增量。
 3. 单轮限幅。
-4. 接近边界时按 `1 − |value|` 压缩增益，避免饱和抖动。
+4. 接近边界时按 `1 − |value| × 0.5` 压缩增益，最低保留 0.35。
 5. 全局范围裁剪。
 6. 派生标签并做迟滞判断。
 
@@ -586,9 +586,26 @@ Phase 1 已完成：
 - 已用 Playwright 无头浏览器验证实际播放：debug 计划在 replyStart 播放害羞片段，sentence 1 切换开心片段，afterSpeech 切换行礼片段。
 - 执行器对更晚锚点的线索采用替换而不是排队，避免长片段跨过下一个锚点后才播放。
 
+Phase 2 已完成：
+
+- 新增 `apps/stage-web-react/src/character/affect-store.ts`，按角色持久化情绪到 `airi:react:character/<id>/affect`。
+- 每个角色有独立基线与特质；支持夸奖、批评、道歉、点击、对话与 5 分钟衰减。
+- 启动时按 `updatedAt` 补算离线衰减。
+- 聊天输入接入本地规则词表；点击舞台也会更新情绪。
+- 空闲行为按情绪标签选择候选片段，并调整触发间隔。
+- 调试面板显示 mood、valence、arousal、affinity，并提供 Praise、Scold、Reset mood 按钮。
+
+实测结果：
+
+- main 连续三次夸奖：`shy → shy → excited`，valence 0.20 → 0.53，arousal 0.45 → 0.60。
+- main 重置后批评：`sad`，valence −0.11，arousal 0.51。
+- character2 重置后批评：`angry`，valence −0.20，arousal 0.55。
+- character2 的 `updatedAt` 回拨 8 小时后重载：`angry` 衰减为 `calm`，valence −0.20 → 0.10，arousal 0.55 → 0.50。
+- 本地规则词表：`你真可爱/谢谢你 → praise`，`你好笨 → insult`，`你不笨 → null`，`对不起 → apology`。
+
 尚未完成：
 
-- Phase 2 的情绪状态持久化与规则层接入尚未开始。
+- Phase 3 的 AI 导演调用、候选检索与设置页尚未开始。
 
 ## 20. 计划文件清单
 

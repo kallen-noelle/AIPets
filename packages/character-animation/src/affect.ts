@@ -68,8 +68,8 @@ export const affectLimits = {
 } as const
 
 const affectEventDeltas: Record<AffectEventKind, AffectDelta> = {
-  praise: { valence: 0.12, arousal: 0.03, affinity: 2 },
-  insult: { valence: -0.2, arousal: 0.08, affinity: -3 },
+  praise: { valence: 0.12, arousal: 0.05, affinity: 2 },
+  insult: { valence: -0.35, arousal: 0.06, affinity: -3 },
   apology: { valence: 0.08, arousal: -0.02, affinity: 1 },
   click: { valence: 0.02, arousal: 0.02, affinity: 0 },
   ignored: { valence: -0.02, arousal: -0.01, affinity: 0 },
@@ -88,15 +88,6 @@ const arousalSplit = 0.55
 // flicker on every small value change.
 const labelRules: LabelRule[] = [
   {
-    label: 'shy',
-    test: (valence, arousal, traits) =>
-      traits.shyness >= 0.6
-      && valence >= 0.2
-      && valence <= 0.7
-      && arousal >= 0.25
-      && arousal <= 0.65,
-  },
-  {
     label: 'proud',
     test: (valence, arousal, traits) =>
       traits.pride >= 0.6
@@ -110,6 +101,15 @@ const labelRules: LabelRule[] = [
       && arousal >= arousalSplit,
   },
   {
+    label: 'shy',
+    test: (valence, arousal, traits) =>
+      traits.shyness >= 0.6
+      && valence >= 0.2
+      && valence <= 0.7
+      && arousal >= 0.25
+      && arousal <= 0.65,
+  },
+  {
     label: 'content',
     test: (valence, arousal) =>
       valence >= 0.45
@@ -118,19 +118,19 @@ const labelRules: LabelRule[] = [
   {
     label: 'angry',
     test: (valence, arousal) =>
-      valence <= -0.25
+      valence <= -0.1
       && arousal >= arousalSplit,
   },
   {
     label: 'sad',
     test: (valence, arousal) =>
-      valence <= -0.25
+      valence <= -0.1
       && arousal < arousalSplit,
   },
   {
     label: 'calm',
     test: (valence, arousal) =>
-      valence > -0.25
+      valence > -0.1
       && valence < 0.45
       && arousal < arousalSplit,
   },
@@ -142,6 +142,13 @@ function isNearArousalSplit(previous: AffectLabel, next: AffectLabel, arousal: n
     || (previous === 'sad' && next === 'angry')
     || (previous === 'angry' && next === 'sad')
   return oppositePair && Math.abs(arousal - arousalSplit) <= affectLimits.labelHysteresis
+}
+
+function isAdjacentLabelPair(previous: AffectLabel, next: AffectLabel): boolean {
+  return (previous === 'content' && next === 'excited')
+    || (previous === 'excited' && next === 'content')
+    || (previous === 'sad' && next === 'angry')
+    || (previous === 'angry' && next === 'sad')
 }
 
 function clamp(value: number, min: number, max: number): number {
@@ -248,14 +255,16 @@ export function applyAffectDelta(
   const requestedValence = clamp(Number.isFinite(delta.valence) ? delta.valence : 0, -maxValence, maxValence)
   const requestedArousal = clamp(Number.isFinite(delta.arousal) ? delta.arousal : 0, -maxArousal, maxArousal)
 
-  const valenceGain = Math.max(0.2, 1 - Math.abs(state.valence))
-  const arousalGain = Math.max(0.2, 1 - Math.abs(state.arousal - 0.5) * 2)
+  const valenceGain = Math.max(0.35, 1 - Math.abs(state.valence) * 0.5)
+  const arousalGain = Math.max(0.35, 1 - Math.abs(state.arousal - 0.5) * 2)
   const valence = clamp(state.valence + requestedValence * valenceGain, -1, 1)
   const arousal = clamp(state.arousal + requestedArousal * arousalGain, 0, 1)
 
   const candidate = resolveAffectLabel({ valence, arousal }, traits, state.label, options.sleepiness)
-  const strongChange = Math.abs(requestedValence) >= 0.25
-  const canChangeLabel = strongChange || options.now - state.labelChangedAt >= minDwellMs
+  const strongChange = Math.abs(requestedValence) >= 0.2
+  const canChangeLabel = strongChange
+    || !isAdjacentLabelPair(state.label, candidate)
+    || options.now - state.labelChangedAt >= minDwellMs
   const label = candidate === state.label || canChangeLabel ? candidate : state.label
   const labelChangedAt = label === state.label ? state.labelChangedAt : options.now
 
@@ -298,7 +307,13 @@ export function applyAffectEvent(
     valence: base.valence * traits.sensitivity,
     arousal: base.arousal * traits.sensitivity,
     affinity: base.affinity,
-  }, traits, options)
+  }, traits, {
+    ...options,
+    // Strong rule events use the single-event cap, not the smaller director
+    // cap. The merge cap still limits a whole turn.
+    maxValenceDelta: 0.35,
+    maxArousalDelta: 0.2,
+  })
 }
 
 /**
@@ -331,7 +346,8 @@ export function decayAffect(
   const valence = clamp(baseline.valence + (state.valence - baseline.valence) * valenceFactor, -1, 1)
   const arousal = clamp(baseline.arousal + (state.arousal - baseline.arousal) * arousalFactor, 0, 1)
   const candidate = resolveAffectLabel({ valence, arousal }, options.traits, state.label, options.sleepiness)
-  const canChangeLabel = options.now - state.labelChangedAt >= affectLimits.labelMinDwellMs
+  const canChangeLabel = !isAdjacentLabelPair(state.label, candidate)
+    || options.now - state.labelChangedAt >= affectLimits.labelMinDwellMs
   const label = candidate === state.label || canChangeLabel ? candidate : state.label
 
   return {
