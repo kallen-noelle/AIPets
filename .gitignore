@@ -84,9 +84,6 @@ components.d.ts
 **/.netlify/functions-serve/*
 
 **/server/public/*
-**/public/assets/js/*
-**/assets/live2d/models/*
-**/assets/vrm/models/*
 
 # Serving fonts locally
 **/public/assets/fonts/
@@ -130,8 +127,6 @@ plugins/development
 plugins-local
 plugins-development
 
-apps/stage-pocket/ios/buildServer.json
-apps/stage-pocket/airi-pocket.jks
 apps/stage-tamagotchi/electron.vite.config.*.mjs
 docs/superpowers
 docs/research

@@ -26,7 +26,6 @@ packages:
   - integrations/**
   - services/**
   - examples/**
-  - engines/**
   - evals/**
   - apps/**
   - server/**
@@ -51,7 +50,6 @@ overrides:
   string.prototype.matchall: npm:@nolyfill/string.prototype.matchall@^1.0.44
 patchedDependencies:
   '@xsai-ext/responses@0.5.1': patches/@xsai-ext__responses@0.5.1.patch
-  pixi-live2d-display: patches/pixi-live2d-display.patch
   sponsorkit@17.1.0: patches/sponsorkit@17.1.0.patch
   tab-election@4.6.2: patches/tab-election@4.6.2.patch
   uiohook-napi@1.5.5: patches/uiohook-napi@1.5.5.patch
@@ -72,17 +70,8 @@ catalog:
   '@better-auth/drizzle-adapter': 1.6.25
   '@better-auth/oauth-provider': 1.6.25
   '@better-fetch/fetch': ^1.3.1
-  '@capacitor/android': ^8.5.0
-  '@capacitor/app': ^8.1.1
-  '@capacitor/barcode-scanner': ^3.1.1
-  '@capacitor/cli': ^8.5.0
-  '@capacitor/core': ^8.5.0
-  '@capacitor/ios': ^8.5.0
-  '@capacitor/keyboard': ^8.0.5
-  '@capacitor/local-notifications': ^8.3.1
   '@cortex-js/compute-engine': ^0.153.0
   '@date-fns/utc': ^2.1.1
-  '@discordjs/voice': ^0.19.2
   '@dotenvx/dotenvx': ^2.21.0
   '@duckdb/duckdb-wasm': 1.29.1-dev68.0
   '@electric-sql/pglite': ^0.5.6
@@ -92,10 +81,6 @@ catalog:
   '@electron-toolkit/tsconfig': ^2.0.0
   '@electron-toolkit/utils': ^4.0.0
   '@electron/notarize': ^3.1.1
-  '@esotericsoftware/spine-webgl': ~4.2.0
-  '@esotericsoftware/spine-webgl-4-0': npm:@esotericsoftware/spine-webgl@~4.0.31
-  '@esotericsoftware/spine-webgl-4-1': npm:@esotericsoftware/spine-webgl@~4.1.56
-  '@ffmpeg-installer/ffmpeg': ^1.1.0
   '@fontsource-variable/comfortaa': ^5.3.0
   '@fontsource-variable/dm-sans': ^5.3.0
   '@fontsource-variable/jura': ^5.3.0
@@ -109,7 +94,6 @@ catalog:
   '@fontsource/m-plus-rounded-1c': ^5.3.0
   '@formkit/auto-animate': ^0.10.0
   '@google/genai': ^2.30.0
-  '@grammyjs/files': ^1.2.0
   '@guiiai/logg': ^1.2.12
   '@histoire/plugin-vue': 1.0.0-beta.1
   '@hono/node-server': ^2.1.1
@@ -135,21 +119,17 @@ catalog:
   '@intlify/unplugin-vue-i18n': ^11.2.5
   '@laplace.live/event-bridge-sdk': ^1.1.0
   '@laplace.live/event-types': ^2.0.21
-  '@lemonneko/crop-empty-pixels': 0.1.1
   '@mediapipe/tasks-vision': ^1.0.1
   '@modelcontextprotocol/sdk': ^1.30.0
   '@moeru/eslint-config': 0.1.0-beta.19
   '@moeru/eventa': 1.0.2
   '@moeru/std': 0.1.0-beta.17
-  '@moeru/three-mmd': 0.2.0-beta.2
-  '@moeru/three-mmd-physics-ammo': 0.2.0-beta.2
   '@napi-rs/image': ^1.14.0
   '@nekopaw/tempora': 0.4.0-alpha.1
   '@openpanel/sdk': 1.3.1
   '@openpanel/web': 1.4.1
   '@opentelemetry/api': ^1.9.1
   '@opentelemetry/api-logs': ^0.221.0
-  '@opentelemetry/auto-instrumentations-node': ^0.79.0
   '@opentelemetry/core': ^2.10.0
   '@opentelemetry/exporter-logs-otlp-proto': ^0.221.0
   '@opentelemetry/exporter-metrics-otlp-proto': ^0.221.0
@@ -170,19 +150,6 @@ catalog:
   '@openuidev/lang-core': 0.4.1
   '@pinia/colada': ^1.4.2
   '@pinia/testing': ^2.0.1
-  '@pixi/app': ^6.5.10
-  '@pixi/constants': ^6.5.10
-  '@pixi/core': ^6.5.10
-  '@pixi/display': ^6.5.10
-  '@pixi/extensions': ^6.5.10
-  '@pixi/interaction': ^6.5.10
-  '@pixi/loaders': ^6.5.10
-  '@pixi/math': ^6.5.10
-  '@pixi/runner': ^6.5.10
-  '@pixi/settings': ^6.5.10
-  '@pixi/sprite': ^6.5.10
-  '@pixi/ticker': ^6.5.10
-  '@pixi/utils': ^6.5.10
   '@pixiv/three-vrm': ^3.5.5
   '@pixiv/three-vrm-animation': ^3.5.5
   '@pixiv/three-vrm-core': ^3.5.5
@@ -193,7 +160,6 @@ catalog:
   '@proj-airi/lobe-icons': ^1.0.19
   '@proj-airi/unocss-preset-chromatic': ^1.1.4
   '@proj-airi/unplugin-fetch': ^0.2.3
-  '@proj-airi/unplugin-live2d-sdk': ^0.1.7
   '@revenuecat/purchases-js': ^1.15.0
   '@rive-app/canvas-lite': ^2.40.1
   '@sherpaw/asr': 0.3.0
@@ -203,7 +169,6 @@ catalog:
   '@shikijs/markdown-it': ^4.4.3
   '@shikijs/rehype': ^4.4.3
   '@shopify/draggable': ^1.2.1
-  '@snazzah/davey': ^0.1.12
   '@tresjs/cientos': ^5.8.1
   '@tresjs/core': ^5.8.3
   '@tresjs/post-processing': ^3.7.4
@@ -282,7 +247,6 @@ catalog:
   builder-util-runtime: ^9.7.0
   bumpp: ^12.2.1
   cac: ^7.0.0
-  capacitor-native-settings: ^8.2.0
   chess.js: ^1.4.0
   clustr: ^1.0.2
   colorjs.io: ^0.7.1
@@ -294,7 +258,6 @@ catalog:
   debug: ^4.4.3
   defu: ^6.1.7
   destr: ^2.0.5
-  discord.js: ^14.27.0
   dockview-vue: ^8.2.0
   dompurify: ^3.4.14
   driver.js: ^1.8.0
@@ -314,12 +277,9 @@ catalog:
   eslint-plugin-oxlint: ^1.79.0
   eslint-plugin-perfectionist: ^5.10.1
   eslint-plugin-slop: 0.1.3
-  fflate: ^0.8.3
   floating-vue: ^5.2.2
-  fluent-ffmpeg: ^2.1.3
   get-port-please: ^3.2.0
   gpuu: ^1.0.7
-  grammy: ^1.45.1
   h3: 2.0.1-rc.29
   hfup: ^1.0.4
   histoire: 1.0.0-beta.1
@@ -340,7 +300,6 @@ catalog:
   kokoro-js: ^1.2.1
   kysely: 0.29.5
   less: ^4.9.0
-  libsodium-wrappers: ^0.8.4
   localforage: ^1.10.0
   mediabunny: ^1.55.2
   meta-png: ^1.0.6
@@ -354,15 +313,11 @@ catalog:
   nprogress: ^0.2.0
   ofetch: ^1.5.1
   onnxruntime-web: ^1.27.0
-  opusscript: ^0.1.1
   oxc-minify: ^0.146.0
   oxlint: ^1.79.0
-  p-limit: ^7.3.1
   pg: ^8.23.0
   pinia: ^4.0.3
   pinia-plugin-synced: ^0.1.5
-  pixi-filters: ^4.2.0
-  pixi-live2d-display: ^0.4.0
   playwright: ^1.62.1
   popmotion: ^11.0.5
   postgres: ^3.4.9
@@ -395,9 +350,7 @@ catalog:
   stripe: ^22.5.0
   superjson: ^2.2.6
   taze: ^21.1.0
-  telegram: ^2.26.22
   three: ^0.185.1
-  three-stdlib: ^2.36.1
   tinyexec: ^1.3.0
   tsdown: ^0.22.14
   tsx: ^4.23.12
@@ -441,7 +394,6 @@ catalog:
   vue-router: ^5.2.0
   vue-sonner: ^2.0.9
   vue-tsc: ^3.3.11
-  wavefile: ^11.0.0
   web-haptics: ^0.0.6
   web-worker: ^1.5.0
   whatwg-mimetype: ^5.0.0
@@ -468,7 +420,6 @@ catalogs:
 allowBuilds:
   '@anthropic-ai/claude-code': true
   '@ax-llm/ax': false
-  '@discordjs/opus': true
   '@ffmpeg-installer/darwin-arm64': true
   '@ffmpeg-installer/darwin-x64': true
   '@ffmpeg-installer/linux-arm64': true

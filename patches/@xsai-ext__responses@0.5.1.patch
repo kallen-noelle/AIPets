@@ -1,5 +1,5 @@
 diff --git a/dist/index.d.ts b/dist/index.d.ts
-index 469b5b267da6abfcd008fb55ced6e198034429d2..74238973cb1938fbc5e17829cb2d8b2cd3188a90 100644
+index 469b5b2..7423897 100644
 --- a/dist/index.d.ts
 +++ b/dist/index.d.ts
 @@ -250,7 +250,16 @@ type FunctionCallOutputItemParam = {
@@ -46,11 +46,14 @@ index 469b5b267da6abfcd008fb55ced6e198034429d2..74238973cb1938fbc5e17829cb2d8b2c
      onFinish?: (step?: CompletionStep) => Promise<unknown> | unknown;
      onStepFinish?: (step: CompletionStep) => Promise<unknown> | unknown;
      postToolCall?: PostToolCall;
-@@ -1649 +1659 @@ interface ResponsesResult {
+@@ -1646,4 +1656,4 @@ interface ResponsesResult {
+ declare const responses: (options: ResponsesOptions) => ResponsesResult;
+ 
+ export { responses };
 -export type { FullEvent, FullEventType, ItemParam, OpenResponsesOptions, ResponseReasoningTextDeltaStreamingEvent, ResponseReasoningTextDoneStreamingEvent, ResponsesOptions, ResponsesResult, StopCondition, StopContext };
 +export type { FullEvent, FullEventType, ItemParam, OpenResponsesOptions, ResponseReasoningTextDeltaStreamingEvent, ResponseReasoningTextDoneStreamingEvent, ResponsesOptions, ResponsesResult, StopCondition, StopContext, WebSearchCall, WebSearchTool };
 diff --git a/dist/index.js b/dist/index.js
-index 25f6fafd8533cde3f8728aad01ebaf958421f1b4..c3facb0f54da85f57ce590f772d5d1525af98b4e 100644
+index 25f6faf..32d7764 100644
 --- a/dist/index.js
 +++ b/dist/index.js
 @@ -93,7 +93,7 @@ const responses = (options) => {
