@@ -289,7 +289,6 @@ Use the two surfaces differently:
 - `pnpm -F @proj-airi/computer-use-mcp smoke:stdio`
 - `pnpm -F @proj-airi/computer-use-mcp smoke:macos`
 - `pnpm -F @proj-airi/computer-use-mcp e2e:airi-chat`
-- `pnpm -F @proj-airi/computer-use-mcp e2e:airi-discord`
 
 Legacy remote validation remains available:
 
@@ -318,24 +317,6 @@ Good first demos:
 - open a workspace, confirm `pwd`, inspect local changes, and run `pnpm typecheck`
 - create and run a Python hello-world project through `terminal_exec`
 - use desktop control for AIRI or native apps and use `browser_dom_*` only when the task truly moves into a browser page
-
-### Discord integration demo
-
-For a management-readable AIRI demo, the Discord settings flow is more representative than a generic hello-world reply:
-
-1. start AIRI desktop and `integrations/discord-bot`
-2. open `/settings/modules/messaging-discord`
-3. enable the module and save settings
-4. verify that the Discord bot receives the forwarded config from AIRI and reconnects itself
-5. finish by opening `report.json`, screenshots, audit log, and `discord-bot.log`
-
-Notes:
-
-- for a pure local-secret run, set `AIRI_E2E_DISCORD_TOKEN`
-- for a more agentic run, set `AIRI_E2E_DISCORD_TOKEN_SOURCE=portal` or `auto` and let AIRI retrieve the token from the live browser / Discord Developer Portal session
-- `clipboard_read_text` / `clipboard_write_text` are the intended bridge when AIRI must move a copied token from the browser back into AIRI settings
-- the observable harness keeps the token out of the desktop audit trail by applying the secret through the renderer instead of typing it through Quartz key events
-- if you only want to validate the AIRI → Discord bot configuration plumbing without a real token, set `AIRI_E2E_DISCORD_ALLOW_LOGIN_FAILURE=true`
 
 Less convincing demos:
 

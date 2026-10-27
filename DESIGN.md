@@ -1,8 +1,8 @@
-# AIRI Design Guide
+# aipets Design Guide
 
 ## Overview
 
-AIRI is a character companion interface. The stage gives the character room to remain present while conversation and controls stay within reach.
+aipets is a character companion interface. The stage gives the character room to remain present while conversation and controls stay within reach.
 
 Rounded controls, soft neutral surfaces, and a configurable accent give the interface a friendly, personal character. Clear labels and visible states keep configuration tasks understandable.
 
@@ -10,15 +10,15 @@ Treat the stage as a space for the character, with compact floating controls aro
 
 Use translucency to relate floating controls to the stage. Use stable neutral surfaces where users read descriptions, enter values, or compare options.
 
-This guide applies to shared interfaces in `stage-web`, `stage-tamagotchi`, and `stage-pocket`. Its visual patterns come from `packages/ui` and the existing application layouts.
+This guide applies to shared interfaces in `stage-web-react` and `stage-tamagotchi`. Its visual patterns come from `packages/ui` and the existing application layouts.
 
 For unspecified details, reuse the nearest shared component and layout. Preserve its theme behavior, proportions, and interaction states.
 
 This document follows the section structure of the [Google DESIGN.md specification](https://github.com/google-labs-code/design.md/blob/main/docs/spec.md).
 
-The optional YAML token block is omitted. AIRI's dynamic palette and existing component values remain authoritative in their source files.
+The optional YAML token block is omitted. The dynamic palette and existing component values remain authoritative in their source files.
 
-API details belong in the [component reference](./docs/ai/context/ui-components.md). Source limitations and delivery procedures belong in the [implementation notes](./docs/ai/context/design-implementation.md).
+API details belong in the [component reference](./packages/ui/README.md).
 
 ## Colors
 

@@ -1,4 +1,4 @@
-import openRouterModels from 'model-bank/openrouter'
+import deepSeekModels from 'model-bank/deepseek'
 
 import { openaiChatModels } from 'model-bank/openai'
 import { afterEach, describe, expect, it, vi } from 'vitest'
@@ -46,17 +46,17 @@ describe('model-bank catalogs', () => {
     expect(catalog.models[0].metadata).toBeUndefined()
   })
 
-  it('uses the OpenRouter model-bank catalog with one endpoint discovery request', async () => {
-    const models = openRouterModels.filter(model => model.type === 'chat')
+  it('uses the DeepSeek model-bank catalog with one endpoint discovery request', async () => {
+    const models = deepSeekModels
     const model = models[0]
     if (!model)
-      throw new Error('Expected OpenRouter chat models in model-bank')
+      throw new Error('Expected DeepSeek chat models in model-bank')
     const fetch = vi.fn<typeof globalThis.fetch>(async () => Response.json({ data: [{ id: model.id }] }))
     vi.stubGlobal('fetch', fetch)
-    const catalog = await listModelCatalog({ apiKey: 'test-key', baseURL: 'https://openrouter.ai/api/v1/' }, {
+    const catalog = await listModelCatalog({ apiKey: 'test-key', baseURL: 'https://api.deepseek.com/v1/' }, {
       models,
-      providerId: 'openrouter-ai',
-      baseURL: 'https://openrouter.ai/api/v1/',
+      providerId: 'deepseek',
+      baseURL: 'https://api.deepseek.com/v1/',
     })
     expect(catalog.models[0]).toMatchObject({ name: model.displayName ?? model.id, metadata: { abilities: model.abilities, pricing: model.pricing } })
     expect(fetch).toHaveBeenCalledTimes(1)

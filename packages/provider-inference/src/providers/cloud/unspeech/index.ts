@@ -1,8 +1,6 @@
 import type {
   ListVoicesOptions,
   UnAlibabaCloudOptions,
-  UnDeepgramOptions,
-  UnMicrosoftOptions,
   UnVolcengineOptions,
   VoiceProviderWithExtraOptions,
 } from 'unspeech'
@@ -11,8 +9,6 @@ import type { ProviderContext, ProviderTranslator } from '../../../types'
 
 import {
   createUnAlibabaCloud,
-  createUnDeepgram,
-  createUnMicrosoft,
   createUnVolcengine,
   listVoices,
 } from 'unspeech'
@@ -25,23 +21,17 @@ const unspeechConfigSchema = z.object({
   baseUrl: z.string().default('https://unspeech.hyp3r.link/v1/'),
 })
 
-const microsoftSpeechConfigSchema = unspeechConfigSchema.extend({
-  region: z.string().optional(),
-})
-
 const volcengineSpeechConfigSchema = unspeechConfigSchema.extend({
   app: z.object({ appId: z.string() }),
 })
 
 type UnspeechConfig = z.input<typeof unspeechConfigSchema>
-type MicrosoftSpeechConfig = z.input<typeof microsoftSpeechConfigSchema>
 type VolcengineSpeechConfig = z.input<typeof volcengineSpeechConfigSchema>
 
 function createUnspeechConfigSchema(schema: typeof volcengineSpeechConfigSchema, t: ProviderTranslator): typeof volcengineSpeechConfigSchema
-function createUnspeechConfigSchema(schema: typeof microsoftSpeechConfigSchema, t: ProviderTranslator): typeof microsoftSpeechConfigSchema
 function createUnspeechConfigSchema(schema: typeof unspeechConfigSchema, t: ProviderTranslator): typeof unspeechConfigSchema
 function createUnspeechConfigSchema(
-  schema: typeof unspeechConfigSchema | typeof microsoftSpeechConfigSchema | typeof volcengineSpeechConfigSchema,
+  schema: typeof unspeechConfigSchema | typeof volcengineSpeechConfigSchema,
   t: ProviderTranslator,
 ) {
   return schema.extend({
@@ -114,70 +104,6 @@ function createUnspeechValidators<TConfig extends UnspeechConfig>(id: string, re
     ],
   }
 }
-
-export const providerDeepgramTts = defineProvider<UnspeechConfig, 'deepgram-tts'>({
-  id: 'deepgram-tts',
-  name: 'Deepgram',
-  nameLocalize: ({ t }) => t('settings.pages.providers.provider.deepgram-tts.title'),
-  description: 'deepgram.com',
-  descriptionLocalize: ({ t }) => t('settings.pages.providers.provider.deepgram-tts.description'),
-  tasks: ['text-to-speech'],
-  icon: 'i-simple-icons:deepgram',
-  createProviderConfig: ({ t }) => createUnspeechConfigSchema(unspeechConfigSchema, t),
-  createProvider: config => createUnDeepgram(config.apiKey.trim(), config.baseUrl?.trim() ?? ''),
-  validationRequiredWhen: config => Boolean(config.apiKey?.trim() && config.baseUrl?.trim()),
-  validators: createUnspeechValidators('deepgram-tts'),
-  extraMethods: {
-    listModels: async () => [
-      { id: 'aura-2', name: 'Aura 2', provider: 'deepgram-tts', description: 'Latest generation Aura model', deprecated: false },
-      { id: 'aura-1', name: 'Aura 1', provider: 'deepgram-tts', description: 'First generation Aura model', deprecated: false },
-      { id: 'aura', name: 'Aura (Legacy)', provider: 'deepgram-tts', description: 'Original Aura model', deprecated: true },
-    ],
-    voiceCatalogConfig: ({ apiKey, baseUrl }) => ({ apiKey, baseUrl }),
-    listVoices: async (config) => {
-      const provider = createUnDeepgram(config.apiKey.trim(), config.baseUrl?.trim() ?? '') as VoiceProviderWithExtraOptions<UnDeepgramOptions>
-      const voices = await listVoices(toListVoicesOptions(provider))
-      return voices.map(voice => ({
-        id: voice.id,
-        name: voice.name,
-        provider: 'deepgram-tts',
-        description: voice.description,
-        languages: voice.languages,
-        gender: voice.labels?.gender,
-      }))
-    },
-  },
-})
-
-export const providerMicrosoftSpeech = defineProvider<MicrosoftSpeechConfig, 'microsoft-speech'>({
-  id: 'microsoft-speech',
-  name: 'Microsoft / Azure Speech',
-  nameLocalize: ({ t }) => t('settings.pages.providers.provider.microsoft-speech.title'),
-  description: 'speech.microsoft.com',
-  descriptionLocalize: ({ t }) => t('settings.pages.providers.provider.microsoft-speech.description'),
-  tasks: ['text-to-speech'],
-  iconColor: 'i-lobe-icons:microsoft',
-  createProviderConfig: ({ t }) => createUnspeechConfigSchema(microsoftSpeechConfigSchema, t),
-  createProvider: config => createUnMicrosoft(config.apiKey.trim(), config.baseUrl?.trim() ?? ''),
-  validationRequiredWhen: config => Boolean(config.apiKey?.trim() && config.baseUrl?.trim()),
-  validators: createUnspeechValidators('microsoft-speech'),
-  extraMethods: {
-    listModels: async () => [{ id: 'v1', name: 'v1', provider: 'microsoft-speech', description: '', deprecated: false }],
-    voiceCatalogConfig: ({ apiKey, baseUrl, region }) => ({ apiKey, baseUrl, region }),
-    listVoices: async (config) => {
-      const provider = createUnMicrosoft(config.apiKey.trim(), config.baseUrl?.trim() ?? '') as VoiceProviderWithExtraOptions<UnMicrosoftOptions>
-      const voices = await listVoices(toListVoicesOptions(provider, { region: config.region ?? '' }))
-      return voices.map(voice => ({
-        id: voice.id,
-        name: voice.name,
-        provider: 'microsoft-speech',
-        previewURL: voice.preview_audio_url,
-        languages: voice.languages,
-        gender: voice.labels?.gender,
-      }))
-    },
-  },
-})
 
 export const providerAlibabaCloudModelStudio = defineProvider<UnspeechConfig, 'alibaba-cloud-model-studio'>({
   id: 'alibaba-cloud-model-studio',

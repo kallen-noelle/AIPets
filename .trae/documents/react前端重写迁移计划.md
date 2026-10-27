@@ -2,7 +2,7 @@
 
 ## Context
 
-AIRI 目前是全 Vue 3 技术栈：`apps/stage-web`、`apps/stage-tamagotchi`、`apps/stage-pocket` 三端，加 `packages/stage-ui`（264 个 `.vue`、3.15 万行）、`packages/stage-pages`（142 个 `.vue`，其中 107 个设置页）、`packages/ui`（57 个基于 reka-ui 的原语）、`packages/stage-layouts`（32 个）。项目维护者要求把前端完整改写为 React，同时保留已批准的动画方案替换（透明视频动画包）。
+AIRI 目前是全 Vue 3 技术栈：`apps/stage-web`、`apps/stage-tamagotchi` 两端，加 `packages/stage-ui`（264 个 `.vue`、3.15 万行）、`packages/stage-pages`（142 个 `.vue`，其中 107 个设置页）、`packages/ui`（57 个基于 reka-ui 的原语）、`packages/stage-layouts`（32 个）。项目维护者要求把前端完整改写为 React，同时保留已批准的动画方案替换（透明视频动画包）。
 
 两条工作线合并执行：
 
@@ -15,7 +15,7 @@ AIRI 目前是全 Vue 3 技术栈：`apps/stage-web`、`apps/stage-tamagotchi`�
 
 | 决策 | 选择 |
 |---|---|
-| 迁移范围 | 三端全部，Web 优先 |
+| 迁移范围 | 两端全部（Web + Electron），Web 优先 |
 | 迁移方式 | 并行新建 React 应用，功能对齐后再删除 Vue 版 |
 | React 技术栈 | React 19 + React Router 7 + Zustand 5 + TanStack Query 5 + UnoCSS + Radix（shadcn 风格）+ react-i18next |
 | 旧渲染器 | 全部丢弃，只保留透明视频动画 |
@@ -30,7 +30,6 @@ packages/stage-ui-react        # React 组件、hooks、查询、i18n、布局�
 packages/stage-pages-react     # P3 之后抽取的设置页注册表
 apps/stage-web-react           # P1
 apps/stage-tamagotchi-react    # P5
-apps/stage-pocket-react        # P6
 ```
 
 原样复用：`packages/stage-shared`、`packages/character-animation`、`packages/core-character`、`packages/i18n`（只作为消息源）、`packages/audio`、`packages/server-sdk`、非渲染类 `model-driver-*`、`packages/provider-inference`。
@@ -90,9 +89,9 @@ apps/stage-pocket-react        # P6
 
 主进程与 preload 不动（均为框架无关 TS）。新增 `apps/stage-tamagotchi-react`，渲染入口 `src/renderer/main.tsx`。Eventa 契约继续使用 `apps/stage-tamagotchi/src/shared/eventa`。
 
-### P6 Pocket 与清理
+### P6 清理
 
-`apps/stage-pocket-react` 接入 Capacitor，删除 Vue 应用、Vue 包与 Vue 依赖，改 `AGENTS.md`、CI、`eslint.config.ts`。
+删除 Vue 应用、Vue 包与 Vue 依赖，改 `AGENTS.md`、CI、`eslint.config.ts`。移动端已从仓库移除，不再有 React 版。
 
 ## 四个硬缺口
 

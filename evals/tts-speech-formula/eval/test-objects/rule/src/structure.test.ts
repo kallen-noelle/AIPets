@@ -10,8 +10,8 @@ import { formulaSpeechCases } from '../../../cases/formula-speech'
 const reader = new MathSpeech()
 
 /**
- * The standard MathJSON heads that both trees use with one meaning. Other heads differ by design, see
- * docs/ai/adr/2026-10-20-speech-text-preprocessor.md: Compute Engine reads `AB` as a product and folds `50\%`, and the
+ * The standard MathJSON heads that both trees use with one meaning. Other heads differ by design:
+ * Compute Engine reads `AB` as a product and folds `50\%`, and the
  * speech tree keeps names, percents, units, and groups.
  */
 const sharedHeads = new Set([

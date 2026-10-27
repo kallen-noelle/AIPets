@@ -31,8 +31,6 @@
     "e2e:airi-chat": "tsx ./src/bin/e2e-airi-chat-observable.ts",
     "e2e:airi-chat-terminal-self-acquire": "tsx ./src/bin/e2e-airi-chat-terminal-self-acquire.ts",
     "demo:terminal-self-acquire": "tsx ./src/bin/e2e-airi-chat-terminal-self-acquire.ts",
-    "e2e:airi-discord": "tsx ./src/bin/e2e-airi-discord-observable.ts",
-    "e2e:airi-discord-agentic": "tsx ./src/bin/e2e-airi-discord-agentic.ts",
     "e2e:developer-workflow": "tsx ./src/bin/e2e-developer-workflow.ts",
     "e2e:browser-reroute": "tsx ./src/bin/e2e-browser-reroute.ts",
     "e2e:terminal-exec": "tsx ./src/bin/e2e-terminal-exec.ts",

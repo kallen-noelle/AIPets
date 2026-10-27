@@ -7,12 +7,8 @@ import { portableProviderDefinitions } from '.'
 const translate: ProviderTranslator = key => key
 const browserOnlyProviderIds = new Set(['browser-web-speech-api'])
 const localApiProviderIds = new Set([
-  'aivis-speech',
-  'index-tts-vllm',
   'lm-studio',
   'ollama',
-  'player2-speech',
-  'voicevox',
 ])
 const localRunProviderIds = new Set([
   'browser-web-speech-api',

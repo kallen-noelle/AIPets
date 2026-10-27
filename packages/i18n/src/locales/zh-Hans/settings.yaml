@@ -1009,14 +1009,6 @@ pages:
     memory-short-term:
       description: 短期记忆
       title: 短期记忆
-    messaging-discord:
-      description: Discord 发消息和语音聊天
-      enable: 启用Discord集成
-      enable-description: 允许AIRI通过Discord进行互动
-      token: 机器人令牌
-      token-description: 您的Discord机器人令牌
-      token-placeholder: 输入您的Discord机器人令牌
-      configured: Discord已正确配置！
     speech:
       description: 语音合成
       sections:
@@ -1092,23 +1084,6 @@ pages:
         thinking:
           label: 思考（Ollama）
           description: '开启时，通过 Ollama 发送的视觉请求带有 `think: true`；关闭时带有 `think: false`。'
-    x:
-      description: X / Twitter 的浏览和使用
-      enable: 启用X / Twitter集成
-      enable-description: 允许AIRI与X / Twitter互动
-      api-key: API密钥
-      api-key-description: 您的X / Twitter API密钥
-      api-key-placeholder: 输入您的X / Twitter API密钥
-      api-secret: API密钥密文
-      api-secret-description: 您的X / Twitter API密钥密文
-      api-secret-placeholder: 输入您的X / Twitter API密钥密文
-      access-token: 访问令牌
-      access-token-description: 您的X / Twitter访问令牌
-      access-token-placeholder: 输入您的X / Twitter访问令牌
-      access-token-secret: 访问令牌密文
-      access-token-secret-description: 您的X / Twitter访问令牌密文
-      access-token-secret-placeholder: 输入您的X / Twitter访问令牌密文
-      configured: X / Twitter已正确配置！
     stickers:
       frequency: 表情包频率
       frequency-description: 按此比例允许回复发送表情包。角色仍会判断表情是否适合当前对话。

@@ -5,7 +5,6 @@ import { compatibleProtocols, generationProtocolOptions, openAIProtocols } from 
 import { getGenerationProvider, isGenerationProvider, withReasoning } from '../types'
 import { providerOpenAI } from './cloud/openai'
 import { providerOpenAICompatible } from './cloud/openai-compatible'
-import { providerOpenRouterAI } from './cloud/openrouter-ai'
 
 describe('generation selection', () => {
   it('builds protocol options from the shared protocol registry in provider order', () => {
@@ -68,22 +67,22 @@ describe('generation selection', () => {
 })
 
 it('adapts existing SDK instances once without replacing their provider definitions', async () => {
-  const definition = providerOpenRouterAI
+  const definition = providerOpenAI
   const instance = await definition.createProvider({ apiKey: 'test' })
   const inference = getGenerationProvider(instance)
-  expect(inference?.generation('model')).toMatchObject({ protocol: 'chat-completions', config: { model: 'model' } })
+  expect(inference?.generation('gpt-4.1')).toMatchObject({ protocol: 'responses', config: { model: 'gpt-4.1' } })
   if (!inference)
     throw new Error('Expected a chat inference provider')
   expect(getGenerationProvider(inference)).toBe(inference)
 })
 
 it('applies one reasoning choice to every request', async () => {
-  const inference = getGenerationProvider(await providerOpenRouterAI.createProvider({ apiKey: 'test' }))
+  const inference = getGenerationProvider(await providerOpenAI.createProvider({ apiKey: 'test' }))
   if (!inference)
     throw new Error('Expected a chat inference provider')
 
-  expect(withReasoning(inference, { reasoning: 'disabled' }).generation('model').config).toMatchObject({ reasoning: { effort: 'none' } })
-  expect(withReasoning(inference, undefined).generation('model').config).not.toHaveProperty('reasoning')
+  expect(withReasoning(inference, { reasoning: 'disabled' }).generation('gpt-5.1').config).toMatchObject({ reasoning: { effort: 'none' } })
+  expect(withReasoning(inference, undefined).generation('gpt-5.1').config).not.toHaveProperty('reasoning')
 })
 
 it('declares protocol and search settings without rendering a settings page', async () => {
