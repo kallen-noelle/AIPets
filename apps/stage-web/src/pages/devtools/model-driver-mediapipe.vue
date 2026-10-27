@@ -1,14 +1,9 @@
 <script setup lang="ts">
-import type { PerceptionState, VrmPoseTargets } from '@proj-airi/model-driver-mediapipe'
-import type { Vector3Like } from 'three'
+import type { PerceptionState } from '@proj-airi/model-driver-mediapipe'
 
-import { createMediaPipeBackend, createMocapEngine, createVrmPoseApplier, drawOverlay, poseToVrmTargets } from '@proj-airi/model-driver-mediapipe'
+import { createMediaPipeBackend, createMocapEngine, drawOverlay } from '@proj-airi/model-driver-mediapipe'
 import { errorMessageFromValue } from '@proj-airi/stage-shared'
-import { ThreeScene } from '@proj-airi/stage-ui-three'
-import { animations } from '@proj-airi/stage-ui-three/assets/vrm'
-import { useSettings } from '@proj-airi/stage-ui/stores/settings'
 import { Checkbox } from '@proj-airi/ui'
-import { storeToRefs } from 'pinia'
 import { computed, onMounted, onUnmounted, ref, toRaw, watch } from 'vue'
 
 const status = ref<'idle' | 'starting' | 'running' | 'error'>('idle')
@@ -19,7 +14,6 @@ const ignoreErrorsUntil = ref(0)
 
 const videoRef = ref<HTMLVideoElement>()
 const canvasRef = ref<HTMLCanvasElement>()
-const sceneRef = ref<InstanceType<typeof ThreeScene>>()
 let stream: MediaStream | undefined
 let engine: ReturnType<typeof createMocapEngine> | undefined
 
@@ -38,34 +32,8 @@ const config = ref({
   maxPeople: 1 as const, // Fixed to 1 for simplicity
 })
 
-const vrmMapping = ref({
-  flipX: true,
-  flipY: true,
-  flipZ: false,
-})
-
-const poseFiltering = ref({
-  minVisibility: 0.5,
-})
-
 // MediaPipe assets config
 const latestState = ref<PerceptionState>()
-const latestPoseTargets = ref<VrmPoseTargets>()
-const prevPoseTargets = ref<VrmPoseTargets>()
-const prevPoseForward = ref<Vector3Like>()
-
-const vrmPoseApplier = createVrmPoseApplier({ alpha: 1 })
-function onVrmFrame(vrm: Parameters<typeof vrmPoseApplier.applyPoseDirectionsToVrm>[0]) {
-  const targets = latestPoseTargets.value
-  if (!targets)
-    return
-
-  vrmPoseApplier.applyPoseTargetsToVrm(vrm, targets)
-}
-const vrmFrameHook = (vrm: Parameters<typeof vrmPoseApplier.applyPoseDirectionsToVrm>[0], _delta: number) => onVrmFrame(vrm)
-
-const settingsStore = useSettings()
-const { stageModelRenderer, stageModelSelected, stageModelSelectedUrl, stageViewControlsEnabled } = storeToRefs(settingsStore)
 
 // Snapshot summary of the running state
 const summary = computed(() => {
@@ -154,31 +122,6 @@ async function startPipeline() {
     { getFrame: () => videoRef.value as HTMLVideoElement },
     (state) => {
       latestState.value = state
-      const axis = {
-        x: vrmMapping.value.flipX ? -1 : 1,
-        y: vrmMapping.value.flipY ? -1 : 1,
-        z: vrmMapping.value.flipZ ? -1 : 1,
-      } as const
-
-      const poseTargets = (config.value.enabled.pose && state.pose?.worldLandmarks?.length)
-        ? poseToVrmTargets(state.pose, {
-            axis,
-            confidence: { minVisibility: poseFiltering.value.minVisibility },
-            stabilize: {
-              previousTargets: prevPoseTargets.value,
-              previousForward: prevPoseForward.value,
-            },
-          })
-        : {}
-
-      const hasAny = Object.keys(poseTargets).length > 0
-      latestPoseTargets.value = hasAny ? poseTargets : undefined
-      if (hasAny) {
-        prevPoseTargets.value = poseTargets
-        const derivedForward = poseTargets.hips?.pole ?? poseTargets.spine?.pole
-        if (derivedForward)
-          prevPoseForward.value = derivedForward
-      }
 
       const canvas = canvasRef.value
       const video = videoRef.value
@@ -219,9 +162,6 @@ function stopPipeline() {
   engine?.stop()
   engine = undefined
   latestState.value = undefined
-  latestPoseTargets.value = undefined
-  prevPoseTargets.value = undefined
-  prevPoseForward.value = undefined
 }
 
 function stop() {
@@ -247,11 +187,6 @@ watch(config, (val) => {
   engine?.updateConfig(toRaw(val))
 }, { deep: true })
 
-watch(sceneRef, (scene, prev) => {
-  prev?.setVrmFrameHook(undefined)
-  scene?.setVrmFrameHook(vrmFrameHook)
-}, { immediate: true })
-
 watch(pipelineEnabled, async (enabled) => {
   if (syncingToggleState.value)
     return
@@ -263,22 +198,12 @@ watch(pipelineEnabled, async (enabled) => {
 })
 
 onMounted(() => {
-  // Ensure a VRM model is selected for the viewer (preserve existing selection if already VRM).
-  const needsFallback = !stageModelSelectedUrl.value || stageModelRenderer.value !== 'vrm'
-  if (needsFallback)
-    stageModelSelected.value = 'preset-vrm-1'
-
-  settingsStore.updateStageModel().catch((err) => {
-    console.error('Failed to init VRM model:', err)
-  })
-
   // Autostart for convenience
   if (pipelineEnabled.value)
     startCamera()
 })
 
 onUnmounted(() => {
-  sceneRef.value?.setVrmFrameHook(undefined)
   stop()
 })
 </script>
@@ -370,51 +295,6 @@ onUnmounted(() => {
         </div>
       </div>
 
-      <div :class="['flex', 'items-center', 'justify-between', 'gap-4', 'flex-wrap']">
-        <div :class="['text-sm', 'text-neutral-600', 'dark:text-neutral-300']">
-          VRM Mapping
-        </div>
-        <div :class="['flex', 'items-center', 'gap-6', 'flex-wrap']">
-          <label :class="['flex', 'items-center', 'gap-3']">
-            <div :class="['text-sm', 'text-neutral-600', 'dark:text-neutral-300']">
-              Flip X
-            </div>
-            <Checkbox v-model="vrmMapping.flipX" />
-          </label>
-          <label :class="['flex', 'items-center', 'gap-3']">
-            <div :class="['text-sm', 'text-neutral-600', 'dark:text-neutral-300']">
-              Flip Y
-            </div>
-            <Checkbox v-model="vrmMapping.flipY" />
-          </label>
-          <label :class="['flex', 'items-center', 'gap-3']">
-            <div :class="['text-sm', 'text-neutral-600', 'dark:text-neutral-300']">
-              Flip Z
-            </div>
-            <Checkbox v-model="vrmMapping.flipZ" />
-          </label>
-        </div>
-      </div>
-
-      <div :class="['flex', 'items-center', 'justify-between', 'gap-4', 'flex-wrap']">
-        <div :class="['text-sm', 'text-neutral-600', 'dark:text-neutral-300']">
-          Pose Filtering
-        </div>
-        <label :class="['flex', 'items-center', 'gap-3']">
-          <div :class="['text-sm', 'text-neutral-600', 'dark:text-neutral-300']">
-            Min Visibility
-          </div>
-          <input
-            v-model.number="poseFiltering.minVisibility"
-            type="number"
-            min="0"
-            max="1"
-            step="0.05"
-            :class="['w-24', 'rounded-lg', 'border', 'border-neutral-300/60', 'bg-white', 'px-2', 'py-1', 'text-sm', 'dark:bg-neutral-900/60', 'dark:border-neutral-700/60']"
-          >
-        </label>
-      </div>
-
       <div :class="['text-xs', 'text-neutral-500']">
         Note: `@mediapipe/tasks-vision` runs sync and may block the main thread. This workshop drops frames when busy to keep UI responsive.
       </div>
@@ -423,57 +303,37 @@ onUnmounted(() => {
       </div>
     </div>
 
-    <!-- Main: camera + VRM -->
-    <div :class="['grid', 'gap-4', 'lg:grid-cols-2']">
-      <div :class="['rounded-2xl', 'border', 'border-neutral-300/40', 'dark:border-neutral-700/40', 'overflow-hidden']">
-        <div :class="['relative', 'aspect-video', 'bg-black']">
-          <video
-            ref="videoRef"
-            muted
-            playsinline
-            :class="['absolute', 'inset-0', 'h-full', 'w-full', 'object-cover', 'opacity-70']"
-          />
-          <canvas
-            ref="canvasRef"
-            :class="['absolute', 'inset-0', 'h-full', 'w-full', 'object-cover', 'opacity-70']"
-          />
+    <!-- Main: camera + overlay -->
+    <div :class="['rounded-2xl', 'border', 'border-neutral-300/40', 'dark:border-neutral-700/40', 'overflow-hidden']">
+      <div :class="['relative', 'aspect-video', 'bg-black']">
+        <video
+          ref="videoRef"
+          muted
+          playsinline
+          :class="['absolute', 'inset-0', 'h-full', 'w-full', 'object-cover', 'opacity-70']"
+        />
+        <canvas
+          ref="canvasRef"
+          :class="['absolute', 'inset-0', 'h-full', 'w-full', 'object-cover', 'opacity-70']"
+        />
 
-          <div
-            :class="[
-              'absolute',
-              'left-3',
-              'top-3',
-              'rounded-lg',
-              'bg-black/50',
-              'px-2',
-              'py-1',
-              'text-xs',
-              'text-white',
-              'backdrop-blur',
-            ]"
-          >
-            <div>Status: {{ status }}</div>
-            <div v-if="status === 'error'" :class="['text-red-300']">
-              {{ errorMessage }}
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div :class="['rounded-2xl', 'border', 'border-neutral-300/40', 'dark:border-neutral-700/40', 'overflow-hidden']">
-        <div :class="['h-full', 'min-h-80']">
-          <ThreeScene
-            v-if="stageModelRenderer === 'vrm'"
-            ref="sceneRef"
-            :model-id="stageModelSelected"
-            :model-src="stageModelSelectedUrl"
-            :idle-animation="animations.idleLoop.toString()"
-            :show-axes="stageViewControlsEnabled"
-            :paused="false"
-            @error="console.error"
-          />
-          <div v-else :class="['p-4', 'text-sm', 'text-red-500']">
-            请选择 VRM 模型（当前模型类型不支持）。
+        <div
+          :class="[
+            'absolute',
+            'left-3',
+            'top-3',
+            'rounded-lg',
+            'bg-black/50',
+            'px-2',
+            'py-1',
+            'text-xs',
+            'text-white',
+            'backdrop-blur',
+          ]"
+        >
+          <div>Status: {{ status }}</div>
+          <div v-if="status === 'error'" :class="['text-red-300']">
+            {{ errorMessage }}
           </div>
         </div>
       </div>

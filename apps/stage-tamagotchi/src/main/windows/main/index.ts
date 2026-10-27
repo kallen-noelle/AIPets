@@ -4,7 +4,6 @@ import type { InferOutput } from 'valibot'
 import type { FullscreenMode, FullscreenOpenRequest, FullscreenSurfaceId } from '../../../shared/eventa'
 import type { I18n } from '../../libs/i18n'
 import type { ServerChannel } from '../../services/airi/channel-server'
-import type { GodotStageManager } from '../../services/airi/godot-stage'
 import type { IOTraceRecordingService } from '../../services/airi/io-trace-recording'
 import type { McpManager } from '../../services/airi/mcp-servers'
 import type { AutoUpdater } from '../../services/electron/auto-updater'
@@ -65,7 +64,6 @@ export async function setupMainWindow(params: {
   autoUpdater: AutoUpdater
   onWindowCreated?: (window: BrowserWindow) => void
   serverChannel: ServerChannel
-  godotStageManager: GodotStageManager
   mcpManager: McpManager
   i18n: I18n
   onboardingWindowManager: OnboardingWindowManager
@@ -269,7 +267,6 @@ export async function setupMainWindow(params: {
     noticeWindow: params.noticeWindow,
     autoUpdater: params.autoUpdater,
     serverChannel: params.serverChannel,
-    godotStageManager: params.godotStageManager,
     mcpManager: params.mcpManager,
     i18n: params.i18n,
     onboardingWindowManager: params.onboardingWindowManager,

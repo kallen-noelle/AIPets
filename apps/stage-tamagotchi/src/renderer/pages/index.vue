@@ -12,7 +12,6 @@ import {
   useElectronMouseInWindow,
   useElectronRelativeMouse,
 } from '@proj-airi/electron-vueuse'
-import { useModelStore, useThreeSceneIsTransparentAtPoint } from '@proj-airi/stage-ui-three'
 import { HearingStatus, HoloCoupon } from '@proj-airi/stage-ui/components'
 import {
   createEmptyModelSettingsRuntimeSnapshot,
@@ -54,7 +53,6 @@ import { useFullscreenStore } from '../stores/fullscreen'
 import { useStageWindowLifecycleStore } from '../stores/stage-window-lifecycle'
 import { useToolSelectionStore } from '../stores/tools'
 import { resolveFadeOnHoverInteraction } from '../utils/fade-on-hover'
-import { shouldSampleStageTransparency } from '../utils/stage-three-transparency'
 
 const hearingStatusElement = ref<HTMLElement>()
 const authStatusElement = ref<HTMLElement>()
@@ -97,19 +95,8 @@ const isTransparentByPixels = useCanvasPixelIsTransparentAtPoint(
   relativeMouseY,
   { regionRadius: 25 },
 )
-const isTransparentByThree = useThreeSceneIsTransparentAtPoint(
-  widgetStageRef,
-  relativeMouseX,
-  relativeMouseY,
-  { regionRadius: 25 },
-)
 const isTransparentByPixelsExact = useCanvasPixelIsTransparentAtPoint(
   stageCanvas,
-  relativeMouseX,
-  relativeMouseY,
-)
-const isTransparentByThreeExact = useThreeSceneIsTransparentAtPoint(
-  widgetStageRef,
   relativeMouseX,
   relativeMouseY,
 )
@@ -124,16 +111,9 @@ function handleStageRenderError(error: Error) {
 function handleStageReset() {
   stageError.value = undefined
 }
-const modelStore = useModelStore()
-const { sceneMutationLocked, scenePhase } = storeToRefs(modelStore)
 const { stagePaused } = storeToRefs(useStageWindowLifecycleStore())
 const { fadeOnHoverEnabled } = storeToRefs(useControlsIslandStore())
 const modelSettingsRuntimeOwnerInstanceId = `tamagotchi-main-stage:${Math.random().toString(36).slice(2, 10)}`
-const shouldUseThreeTransparencyHitTest = computed(() => shouldSampleStageTransparency({
-  componentState: componentStateStage.value,
-  stageModelRenderer: stageModelRenderer.value,
-  stagePaused: stagePaused.value,
-}))
 /**
  * Drives the Auto Hide fade. `true` means "do not fade", so any case without a usable
  * region sampler reports `true` and the stage stays visible.
@@ -141,12 +121,6 @@ const shouldUseThreeTransparencyHitTest = computed(() => shouldSampleStageTransp
 const isTransparent = computed(() => {
   if (stagePaused.value || componentStateStage.value !== 'mounted' || !fadeOnHoverEnabled.value)
     return true
-
-  // TresCanvas leaves preserveDrawingBuffer off, so VRM's canvas reads back empty and
-  // has to sample an offscreen render target. Every other renderer keeps its last frame
-  // readable, and a renderer with no canvas samples nothing and stays visible.
-  if (stageModelRenderer.value === 'vrm')
-    return shouldUseThreeTransparencyHitTest.value ? isTransparentByThree.value : true
 
   return isTransparentByPixels.value
 })
@@ -174,8 +148,7 @@ const isPointerOverStageCanvas = computed(() => {
  *
  * `true` surrenders the pixel to the app below, the opposite sense of
  * {@link isTransparent}. The samplers report a missing canvas as transparent, so the
- * guards below are what keep the window interactive when nothing can answer. Godot
- * lands there: it draws a DOM panel and exposes no canvas to read.
+ * guards below are what keep the window interactive when nothing can answer.
  */
 const isTransparentForMouseEvents = computed(() => {
   if (stagePaused.value || componentStateStage.value !== 'mounted')
@@ -189,9 +162,6 @@ const isTransparentForMouseEvents = computed(() => {
 
   if (!isPointerOverStageCanvas.value)
     return false
-
-  if (stageModelRenderer.value === 'vrm')
-    return shouldUseThreeTransparencyHitTest.value ? isTransparentByThreeExact.value : false
 
   return isTransparentByPixelsExact.value
 })
@@ -222,83 +192,15 @@ const controlsOverlayActive = computed(() => controlsIslandRef.value?.overlayAct
 const modelSettingsRuntimeSnapshot = computed<ModelSettingsRuntimeSnapshot>(() => {
   const hasModel = !!stageModelSelectedUrl.value
 
-  if (stageModelRenderer.value === 'live2d') {
+  if (stageModelRenderer.value === 'animation') {
     const phase = resolveComponentStateToRuntimePhase(componentStateStage.value, { hasModel })
 
     return createEmptyModelSettingsRuntimeSnapshot({
       ownerInstanceId: modelSettingsRuntimeOwnerInstanceId,
-      renderer: 'live2d',
+      renderer: 'animation',
       phase,
       controlsLocked: hasModel ? phase !== 'mounted' : false,
       previewAvailable: hasModel,
-      canCapturePreview: false,
-      updatedAt: Date.now(),
-    })
-  }
-
-  if (stageModelRenderer.value === 'vrm') {
-    return createEmptyModelSettingsRuntimeSnapshot({
-      ownerInstanceId: modelSettingsRuntimeOwnerInstanceId,
-      renderer: 'vrm',
-      phase: hasModel ? scenePhase.value : 'no-model',
-      controlsLocked: hasModel
-        ? (!stageMounted.value || sceneMutationLocked.value)
-        : false,
-      previewAvailable: hasModel,
-      canCapturePreview: false,
-      updatedAt: Date.now(),
-    })
-  }
-
-  if (stageModelRenderer.value === 'spine') {
-    const phase = resolveComponentStateToRuntimePhase(componentStateStage.value, { hasModel })
-
-    return createEmptyModelSettingsRuntimeSnapshot({
-      ownerInstanceId: modelSettingsRuntimeOwnerInstanceId,
-      renderer: 'spine',
-      phase,
-      controlsLocked: hasModel ? phase !== 'mounted' : false,
-      previewAvailable: hasModel,
-      canCapturePreview: false,
-      updatedAt: Date.now(),
-    })
-  }
-
-  if (stageModelRenderer.value === 'tachie') {
-    const phase = resolveComponentStateToRuntimePhase(componentStateStage.value, { hasModel })
-
-    return createEmptyModelSettingsRuntimeSnapshot({
-      ownerInstanceId: modelSettingsRuntimeOwnerInstanceId,
-      renderer: 'tachie',
-      phase,
-      controlsLocked: hasModel ? phase !== 'mounted' : false,
-      previewAvailable: hasModel,
-      canCapturePreview: false,
-      updatedAt: Date.now(),
-    })
-  }
-
-  if (stageModelRenderer.value === 'mmd') {
-    const phase = resolveComponentStateToRuntimePhase(componentStateStage.value, { hasModel })
-
-    return createEmptyModelSettingsRuntimeSnapshot({
-      ownerInstanceId: modelSettingsRuntimeOwnerInstanceId,
-      renderer: 'mmd',
-      phase,
-      controlsLocked: hasModel ? phase !== 'mounted' : false,
-      previewAvailable: hasModel,
-      canCapturePreview: false,
-      updatedAt: Date.now(),
-    })
-  }
-
-  if (stageModelRenderer.value === 'godot') {
-    return createEmptyModelSettingsRuntimeSnapshot({
-      ownerInstanceId: modelSettingsRuntimeOwnerInstanceId,
-      renderer: 'godot',
-      phase: hasModel ? 'mounted' : 'no-model',
-      controlsLocked: false,
-      previewAvailable: false,
       canCapturePreview: false,
       updatedAt: Date.now(),
     })

@@ -1,4 +1,4 @@
-export type ModuleCategory = 'essential' | 'messaging'
+export type ModuleCategory = 'essential'
 
 export interface ModuleEntry {
   id: string
@@ -123,22 +123,6 @@ export const modules: ModuleEntry[] = [
     category: 'essential',
   },
   {
-    id: 'messaging-discord',
-    titleKey: 'settings.pages.modules.messaging-discord.title',
-    descriptionKey: 'settings.pages.modules.messaging-discord.description',
-    icon: 'i-simple-icons:discord',
-    path: '/settings/modules/messaging-discord',
-    category: 'messaging',
-  },
-  {
-    id: 'x',
-    titleKey: 'settings.pages.modules.x.title',
-    descriptionKey: 'settings.pages.modules.x.description',
-    icon: 'i-simple-icons:x',
-    path: '/settings/modules/x',
-    category: 'messaging',
-  },
-  {
     id: 'home-assistant',
     titleKey: 'settings.pages.modules.home-assistant.title',
     descriptionKey: 'settings.pages.modules.home-assistant.description',
@@ -164,7 +148,7 @@ export const modules: ModuleEntry[] = [
   },
 ]
 
-export const moduleCategories: ModuleCategory[] = ['essential', 'messaging']
+export const moduleCategories: ModuleCategory[] = ['essential']
 
 export function findModuleByPath(pathname: string): ModuleEntry | undefined {
   return modules.find(entry => pathname === entry.path || pathname.startsWith(`${entry.path}/`))

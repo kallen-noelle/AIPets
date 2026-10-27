@@ -17,8 +17,6 @@ const priorityProviderIds = [
   'anthropic',
   'openai',
   'byteplus',
-  'byteplus-coding-plan',
-  'volcengine-coding-plan',
   'alibaba-cloud-model-studio',
 ]
 

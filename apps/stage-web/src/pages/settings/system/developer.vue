@@ -59,12 +59,6 @@ const menu = computed(() => [
     to: '/devtools/image',
   },
   {
-    title: 'Polaroid',
-    description: 'Utility for taking shots of models',
-    icon: 'i-solar:sledgehammer-bold-duotone',
-    to: '/devtools/polaroid',
-  },
-  {
     title: t('tamagotchi.settings.devtools.pages.context-flow.title'),
     description: 'Inspect incoming context updates and outgoing chat stream events',
     icon: 'i-solar:chat-square-call-bold-duotone',
@@ -105,12 +99,6 @@ const menu = computed(() => [
     description: 'Stream microphone audio to Aliyun NLS and inspect live transcripts',
     icon: 'i-solar:sledgehammer-bold-duotone',
     to: '/devtools/providers-transcription-realtime-aliyun-nls',
-  },
-  {
-    title: 'Performance Playground',
-    description: 'VRM expressions + TTS lip sync playground',
-    icon: 'i-solar:sledgehammer-bold-duotone',
-    to: '/devtools/performance-playground',
   },
   {
     title: 'MediaPipe Workshop',

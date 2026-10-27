@@ -13,9 +13,9 @@ import { trackAccountDeletionCompleted } from '../modules/analytics'
 // Source: node_modules/better-auth/dist/api/routes/update-user.mjs L380.
 //
 // No "back to home" button: this page lives on the API-server origin and has
-// no reliable way to point at the calling app (stage-web / stage-tamagotchi /
-// stage-pocket) — the API server doesn't know where the product UI is
-// deployed. Asking the user to close the tab is the simplest correct thing.
+// no reliable way to point at the calling app (stage-web / stage-tamagotchi)
+// — the API server doesn't know where the product UI is deployed. Asking the
+// user to close the tab is the simplest correct thing.
 //
 // Failure case (e.g. token expired, or `beforeDelete` handler threw): the
 // server returns a JSON error response from `/delete-user/callback` instead

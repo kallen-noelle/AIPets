@@ -17,12 +17,9 @@ import VueRouter from 'vue-router/vite'
 import { paraformerBilingualZhEn, xAsrBilingualZhEnInt8, zipformerMultilingual } from '@proj-airi/provider-inference/sherpaw-transcription/models'
 import { speakerModel } from '@proj-airi/stage-shared/speaker-model'
 import { kwsModel } from '@proj-airi/stage-ui/libs/voice/kws-model-info'
-import { Download } from '@proj-airi/unplugin-fetch'
-import { DownloadLive2DSDK } from '@proj-airi/unplugin-live2d-sdk'
 import { resolveModelEndpoint, Sherpaw } from '@proj-airi/vite-plugin-sherpaw'
 import { defineConfig } from 'electron-vite'
 
-const stageUIAssetsRoot = resolve(join(import.meta.dirname, '..', '..', 'packages', 'stage-ui', 'src', 'assets'))
 const sharedCacheDir = resolve(join(import.meta.dirname, '..', '..', '.cache'))
 const sherpawModels = [paraformerBilingualZhEn, zipformerMultilingual, xAsrBilingualZhEnInt8]
 /** Main downloads remote Sherpaw models. It must use the endpoint that the renderer plugin uses. */
@@ -157,22 +154,6 @@ export default defineConfig({
 
         // Static Assets: Models, Images, etc.
         'src/renderer/public/assets/*',
-
-        // Live2D SDK
-        '@framework/live2dcubismframework',
-        '@framework/math/cubismmatrix44',
-        '@framework/type/csmvector',
-        '@framework/math/cubismviewmatrix',
-        '@framework/cubismdefaultparameterid',
-        '@framework/cubismmodelsettingjson',
-        '@framework/effect/cubismbreath',
-        '@framework/effect/cubismeyeblink',
-        '@framework/model/cubismusermodel',
-        '@framework/motion/acubismmotion',
-        '@framework/motion/cubismmotionqueuemanager',
-        '@framework/type/csmmap',
-        '@framework/utils/cubismdebug',
-        '@framework/model/cubismmoc',
       ],
     },
 
@@ -303,11 +284,6 @@ export default defineConfig({
         cacheDir: sharedCacheDir,
         endpoint: sherpawModelEndpoint,
       }),
-      DownloadLive2DSDK(),
-      Download('https://dist.ayaka.moe/live2d-models/hiyori_free_zh.zip', 'hiyori_free_zh.zip', 'live2d/models', { parentDir: stageUIAssetsRoot, cacheDir: sharedCacheDir }),
-      Download('https://dist.ayaka.moe/live2d-models/hiyori_pro_zh.zip', 'hiyori_pro_zh.zip', 'live2d/models', { parentDir: stageUIAssetsRoot, cacheDir: sharedCacheDir }),
-      Download('https://dist.ayaka.moe/vrm-models/VRoid-Hub/AvatarSample-A/AvatarSample_A.vrm', 'AvatarSample_A.vrm', 'vrm/models/AvatarSample-A', { parentDir: stageUIAssetsRoot, cacheDir: sharedCacheDir }),
-      Download('https://dist.ayaka.moe/vrm-models/VRoid-Hub/AvatarSample-B/AvatarSample_B.vrm', 'AvatarSample_B.vrm', 'vrm/models/AvatarSample-B', { parentDir: stageUIAssetsRoot, cacheDir: sharedCacheDir }),
     ],
   },
 })

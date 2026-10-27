@@ -112,13 +112,6 @@ export default {
     '**/*.node',
     '**/node_modules/@auv-js/cli-*/bin/**',
   ],
-  extraResources: [
-    {
-      from: '../../engines/stage-tamagotchi-godot/out/${os}',
-      to: 'godot-stage',
-      filter: ['**/*'],
-    },
-  ],
   extraMetadata: {
     name: 'ai.moeru.airi',
     main: 'out/main/index.js',

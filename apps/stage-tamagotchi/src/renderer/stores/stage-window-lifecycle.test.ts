@@ -1,6 +1,5 @@
 import { describe, expect, it } from 'vitest'
 
-import { shouldSampleStageTransparency } from '../utils/stage-three-transparency'
 import { createDefaultWindowLifecycleState, shouldPauseStageFromLifecycle } from './stage-window-lifecycle'
 
 describe('stage window lifecycle helpers', () => {
@@ -28,31 +27,5 @@ describe('stage window lifecycle helpers', () => {
       minimized: true,
       reason: 'minimize',
     })).toBe(true)
-  })
-
-  it('samples stage transparency for a mounted vrm stage regardless of Auto Hide', () => {
-    expect(shouldSampleStageTransparency({
-      componentState: 'mounted',
-      stageModelRenderer: 'vrm',
-      stagePaused: false,
-    })).toBe(true)
-
-    expect(shouldSampleStageTransparency({
-      componentState: 'loading',
-      stageModelRenderer: 'vrm',
-      stagePaused: false,
-    })).toBe(false)
-
-    expect(shouldSampleStageTransparency({
-      componentState: 'mounted',
-      stageModelRenderer: 'live2d',
-      stagePaused: false,
-    })).toBe(false)
-
-    expect(shouldSampleStageTransparency({
-      componentState: 'mounted',
-      stageModelRenderer: 'vrm',
-      stagePaused: true,
-    })).toBe(false)
   })
 })

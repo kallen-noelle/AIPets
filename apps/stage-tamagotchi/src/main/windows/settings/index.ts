@@ -1,6 +1,5 @@
 import type { I18n } from '../../libs/i18n'
 import type { ServerChannel } from '../../services/airi/channel-server'
-import type { GodotStageManager } from '../../services/airi/godot-stage'
 import type { IOTraceRecordingService } from '../../services/airi/io-trace-recording'
 import type { McpManager } from '../../services/airi/mcp-servers'
 import type { AutoUpdater } from '../../services/electron/auto-updater'
@@ -40,7 +39,6 @@ export function setupSettingsWindowReusableFunc(params: {
   getMainWindow?: () => BrowserWindow | undefined
   onWindowCreated?: (window: BrowserWindow) => void
   serverChannel: ServerChannel
-  godotStageManager: GodotStageManager
   mcpManager: McpManager
   i18n: I18n
   globalShortcut: GlobalShortcutService
@@ -79,7 +77,6 @@ export function setupSettingsWindowReusableFunc(params: {
       editorWindow: params.editorWindow,
       getMainWindow: params.getMainWindow,
       serverChannel: params.serverChannel,
-      godotStageManager: params.godotStageManager,
       mcpManager: params.mcpManager,
       i18n: params.i18n,
       globalShortcut: params.globalShortcut,

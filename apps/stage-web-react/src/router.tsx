@@ -11,7 +11,6 @@ import { CardPage } from './pages/settings/card-page'
 import { ConnectionPage } from './pages/settings/connection-page'
 import { ConsciousnessPage } from './pages/settings/consciousness-page'
 import { DataPage } from './pages/settings/data-page'
-import { DiscordPage } from './pages/settings/discord-page'
 import { HearingPage } from './pages/settings/hearing-page'
 import { HomeAssistantPage } from './pages/settings/home-assistant-page'
 import { McpPage } from './pages/settings/mcp-page'
@@ -32,7 +31,6 @@ import { SystemPage } from './pages/settings/system-page'
 import { ToolCardsPage } from './pages/settings/tool-cards-page'
 import { VisionPage } from './pages/settings/vision-page'
 import { WebSearchPage } from './pages/settings/web-search-page'
-import { XPage } from './pages/settings/x-page'
 import { StagePage } from './pages/stage-page'
 
 export const router = createHashRouter([
@@ -88,8 +86,6 @@ export const router = createHashRouter([
       { path: 'modules/memory-short-term', element: <MemoryShortTermPage /> },
       { path: 'modules/memory-long-term', element: <MemoryLongTermPage /> },
       { path: 'modules/memory-long-term/recipes', element: <PendingPage title="recipes" /> },
-      { path: 'modules/messaging-discord', element: <DiscordPage /> },
-      { path: 'modules/x', element: <XPage /> },
       { path: 'modules/home-assistant', element: <HomeAssistantPage /> },
       { path: 'modules/mcp', element: <McpPage /> },
       { path: 'modules/beat-sync', element: <BeatSyncPage /> },
