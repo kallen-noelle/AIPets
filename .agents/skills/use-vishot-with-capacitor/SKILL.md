@@ -11,7 +11,7 @@ Capture the locally served WebView through Vishot by default. Add native evidenc
 
 1. Identify the route, state, platform mode, orientation, viewport, theme, locale, and output directory supplied by the caller.
 2. Ensure Vishot's Playwright Chromium runtime exists. If Vishot reports a missing executable, run `pnpm exec playwright install chromium` once and retry.
-3. Start the app's web development command. In AIRI, use `VITE_SKIP_MKCERT=1 pnpm -F @proj-airi/stage-pocket dev:web` for a local HTTP origin.
+3. Start the app's web development command against a local HTTP origin. The repository has no Capacitor app today, so the caller supplies the command.
 4. Wait until the development server reports that it is listening, then let Vishot handle WebView reload stability with an explicit `--settle-ms 2500`. Vishot intentionally has no default delay because it serves projects with different readiness contracts.
 5. Capture the route at the requested mobile viewport:
 

@@ -87,7 +87,7 @@ Distinguish verified facts, assumptions, and unverified conditions. Do not write
 4. Use `$use-vishot` to capture the same scenario from the merge base and proposed HEAD. It delegates by runtime:
    - `$use-vishot-with-electron` for Electron windows.
    - `$use-vishot-with-web` for browser routes.
-   - `$use-vishot-with-capacitor` for Stage Pocket or another Capacitor app.
+   - `$use-vishot-with-capacitor` for a Capacitor app.
 5. Use identical scenario definitions, viewports, locale, theme, fixture data, and readiness conditions for both revisions.
 6. Construct explicit Vishot output directories using the repository-owned `.vishot/[branch/][group/]` convention. Omit the branch segment for the default branch and use a filesystem-safe segment for other branches. Keep capture group and name identical across revisions.
 7. Inspect every image. Reject blank, loading, error, permission, onboarding, or unstable captures unless that is the documented state.
