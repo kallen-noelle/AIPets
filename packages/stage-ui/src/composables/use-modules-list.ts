@@ -7,12 +7,10 @@ import { useI18n } from 'vue-i18n'
 import { useMemoryStore } from '../stores/memory'
 import { useArtistryStore } from '../stores/modules/artistry'
 import { useConsciousnessStore } from '../stores/modules/consciousness'
-import { useDiscordStore } from '../stores/modules/discord'
 import { useHearingStore } from '../stores/modules/hearing'
 import { useHomeAssistantStore } from '../stores/modules/home-assistant'
 import { useSpeechStore } from '../stores/modules/speech'
 import { useStickersStore } from '../stores/modules/stickers'
-import { useTwitterStore } from '../stores/modules/twitter'
 import { useVisionStore } from '../stores/modules/vision'
 import { useWebSearchStore } from '../stores/modules/web-search'
 import { useToolCardsStore } from '../stores/tool-cards'
@@ -38,8 +36,6 @@ export function useModulesList() {
   const stickersStore = useStickersStore()
   const hearingStore = useHearingStore()
   const visionStore = useVisionStore()
-  const discordStore = useDiscordStore()
-  const twitterStore = useTwitterStore()
   const webSearchStore = useWebSearchStore()
   const homeAssistantStore = useHomeAssistantStore()
   const artistryStore = useArtistryStore()
@@ -138,24 +134,6 @@ export function useModulesList() {
       to: '/settings/modules/tool-cards',
       configured: toolCardsStore.enabled || toolCardsStore.replyCardsEnabled,
       category: 'essential',
-    },
-    {
-      id: 'messaging-discord',
-      name: t('settings.pages.modules.messaging-discord.title'),
-      description: t('settings.pages.modules.messaging-discord.description'),
-      icon: 'i-simple-icons:discord',
-      to: '/settings/modules/messaging-discord',
-      configured: discordStore.configured,
-      category: 'messaging',
-    },
-    {
-      id: 'x',
-      name: t('settings.pages.modules.x.title'),
-      description: t('settings.pages.modules.x.description'),
-      icon: 'i-simple-icons:x',
-      to: '/settings/modules/x',
-      configured: twitterStore.configured,
-      category: 'messaging',
     },
     {
       id: 'home-assistant',

@@ -359,7 +359,7 @@ export const useProviderStore = defineStore('provider', () => {
         providerRuntimeState.value[providerId].validatedCredentialHash = configString
         providerConfigStore.setProviderStatus(providerId, validationResult.valid ? 'configured' : 'invalid')
         // Auto-mark Web Speech API as added if valid and available
-        if (validationResult.valid && ['browser-web-speech-api', 'player2'].includes(providerId)) {
+        if (validationResult.valid && providerId === 'browser-web-speech-api') {
           markProviderAdded(providerId)
         }
       }

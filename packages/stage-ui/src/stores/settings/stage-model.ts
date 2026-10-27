@@ -8,8 +8,7 @@ import { computed, shallowRef, watch } from 'vue'
 
 import { DisplayModelFormat, presetAnimationPackId, useDisplayModelsStore } from '../display-models'
 
-export type StageModelRenderer = 'animation' | 'live2d' | 'vrm' | 'spine' | 'tachie' | 'mmd' | 'godot' | 'disabled' | undefined
-type BuiltInStageModelRenderer = Exclude<StageModelRenderer, 'godot'>
+export type StageModelRenderer = 'animation' | 'disabled' | undefined
 
 const useStageModelSelectionStore = defineStore('settings-stage-model-selection', () => {
   // The active Character owns the durable Avatar Model references. This store
@@ -44,7 +43,8 @@ export const useSettingsStageModel = defineStore('settings-stage-model', () => {
   const stageModelSelectedDisplayModel = refManualReset<DisplayModel | undefined>(undefined)
   const stageModelSelectedUrl = refManualReset<string | undefined>(undefined)
   const stageModelRenderer = refManualReset<StageModelRenderer>(undefined)
-  const stageModelBuiltInRenderer = refManualReset<BuiltInStageModelRenderer>(undefined)
+  /** The renderer that the selected model uses. `restoreBuiltInStageModelRenderer` returns to it. */
+  const stageModelBuiltInRenderer = refManualReset<StageModelRenderer>(undefined)
   // True when the selected model is not on this device and the account cannot download it.
   // The Stage then asks the user to select another model. A download in progress or a failed
   // download keeps it false, because the model still exists.
@@ -65,7 +65,7 @@ export const useSettingsStageModel = defineStore('settings-stage-model', () => {
     stageModelSelectedUrl.value = nextUrl
   }
 
-  function resolveBuiltInStageModelRenderer(model?: DisplayModel): BuiltInStageModelRenderer {
+  function resolveBuiltInStageModelRenderer(model?: DisplayModel): StageModelRenderer {
     if (!model) {
       return 'disabled'
     }
@@ -73,18 +73,6 @@ export const useSettingsStageModel = defineStore('settings-stage-model', () => {
     switch (model.format) {
       case DisplayModelFormat.AnimationZip:
         return 'animation'
-      case DisplayModelFormat.Live2dZip:
-        return 'live2d'
-      case DisplayModelFormat.VRM:
-        return 'vrm'
-      case DisplayModelFormat.SpineZip:
-        return 'spine'
-      case DisplayModelFormat.TachieZip:
-        return 'tachie'
-      case DisplayModelFormat.PMXZip:
-      case DisplayModelFormat.PMXDirectory:
-      case DisplayModelFormat.PMD:
-        return 'mmd'
       default:
         return 'disabled'
     }
@@ -111,9 +99,7 @@ export const useSettingsStageModel = defineStore('settings-stage-model', () => {
       replaceStageModelUrl(undefined)
       stageModelSelectedDisplayModel.value = undefined
       stageModelUnavailable.value = true
-      stageModelBuiltInRenderer.value = 'disabled'
-      if (stageModelRenderer.value !== 'godot')
-        stageModelRenderer.value = 'disabled'
+      stageModelRenderer.value = 'disabled'
       return
     }
 
@@ -142,8 +128,7 @@ export const useSettingsStageModel = defineStore('settings-stage-model', () => {
     // Browser startup consumes the one-time legacy reset before these refs publish.
     // Direct ThreeScene routes mount from the refs and cannot start with stale identity state.
     stageModelBuiltInRenderer.value = builtInRenderer
-    if (stageModelRenderer.value !== 'godot')
-      stageModelRenderer.value = builtInRenderer
+    stageModelRenderer.value = builtInRenderer
     replaceStageModelUrl(nextUrl)
     stageModelSelectedDisplayModel.value = model
   }

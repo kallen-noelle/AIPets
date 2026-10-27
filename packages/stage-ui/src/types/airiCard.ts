@@ -41,18 +41,6 @@ export interface AiriExtension {
       language?: string
     }
 
-    vrm?: {
-      source?: 'file' | 'url'
-      file?: string
-      url?: string
-    }
-
-    live2d?: {
-      source?: 'file' | 'url'
-      file?: string
-      url?: string
-    }
-
     activeBackgroundId?: string
 
     artistry?: {

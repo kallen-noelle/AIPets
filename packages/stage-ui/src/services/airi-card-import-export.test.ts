@@ -31,13 +31,13 @@ describe('airi card package import/export', () => {
 
   it('exports shareable fields, sanitizes runtime state, and restores display models', async () => {
     const displayModelsStore = useDisplayModelsStore()
-    const fetch = vi.fn(async () => new Response('preset-vrm-model'))
+    const fetch = vi.fn(async () => new Response('preset-animation-model'))
     vi.stubGlobal('fetch', fetch)
     vi.spyOn(displayModelsStore, 'getDisplayModel').mockResolvedValue({
-      id: 'preset-vrm-1',
-      format: DisplayModelFormat.VRM,
+      id: 'preset-animation-1',
+      format: DisplayModelFormat.AnimationZip,
       type: 'url' as const,
-      url: '/assets/avatar.vrm',
+      url: '/assets/avatar.zip',
       name: 'AvatarSample_A',
       importedAt: 1,
     })
@@ -49,66 +49,22 @@ describe('airi card package import/export', () => {
     const imported = await importAiriCardPackage({ file: new File([exported], 'card.zip'), displayModelsStore })
     const airi = airiFrom(cardJson)
 
-    expect(fetch).toHaveBeenCalledWith('/assets/avatar.vrm')
-    expect(await readJson(zip, 'manifest.json')).toMatchObject({ format: 'airi-character-card', version: 1, resources: { displayModel: { path: 'models/body-model.vrm', format: DisplayModelFormat.VRM, name: 'AvatarSample_A.vrm' } } })
-    expect(await zip.file('models/body-model.vrm')?.async('string')).toBe('preset-vrm-model')
+    expect(fetch).toHaveBeenCalledWith('/assets/avatar.zip')
+    expect(await readJson(zip, 'manifest.json')).toMatchObject({ format: 'airi-character-card', version: 1, resources: { displayModel: { path: 'models/body-model.zip', format: DisplayModelFormat.AnimationZip, name: 'AvatarSample_A.zip' } } })
+    expect(await zip.file('models/body-model.zip')?.async('string')).toBe('preset-animation-model')
     expect(cardJson.data).toMatchObject({ name: 'AIRI / Test Card', creator: '', tags: [], mes_example: '' })
-    expect(airi.modules).toMatchObject({ consciousness: { provider: 'openai', model: 'gpt-4o' }, speech: { provider: 'elevenlabs', model: 'eleven', voice_id: 'alloy' } })
+    expect(airi.modules).toMatchObject({ consciousness: { provider: 'openai', model: 'gpt-4o' }, speech: { provider: 'alibaba-cloud-model-studio', model: 'cosyvoice-v2', voice_id: 'alloy' } })
     expect(airi.modules).not.toHaveProperty('activeBackgroundId')
     expect(airi.modules.artistry).not.toHaveProperty('workflowId')
     expect(airi.agents).toEqual({})
-    expect(displayModelsStore.addDisplayModel).toHaveBeenCalledWith(DisplayModelFormat.VRM, expect.objectContaining({ name: 'AvatarSample_A.vrm' }))
-    expect(airiFrom(imported).avatarModels[0]).toMatchObject({ displayModelId: 'display-model-imported', type: 'vrm' })
+    expect(displayModelsStore.addDisplayModel).toHaveBeenCalledWith(DisplayModelFormat.AnimationZip, expect.objectContaining({ name: 'AvatarSample_A.zip' }))
+    expect(airiFrom(imported).avatarModels[0]).toMatchObject({ displayModelId: 'display-model-imported', type: 'animation' })
     expect(airiFrom(imported).defaultAvatarModelId).toBe(airiFrom(imported).avatarModels[0].id)
-  })
-
-  it('keeps the selected Live2D control policy through package transfer', async () => {
-    const displayModelsStore = useDisplayModelsStore()
-    const card = createCard('local-live2d')
-    card.extensions.airi.avatarModels = [{
-      id: 'selected-avatar-model',
-      displayModelId: 'local-live2d',
-      type: 'live2d',
-      config: { controls: {
-        disabledExpressions: ['smile'],
-        disabledMotions: ['motions/idle.motion3.json'],
-      } },
-    }]
-    vi.spyOn(displayModelsStore, 'getDisplayModel').mockResolvedValue({
-      id: 'local-live2d',
-      format: DisplayModelFormat.Live2dZip,
-      type: 'file',
-      file: new File(['live2d-archive'], 'model.zip'),
-      name: 'model.zip',
-      importedAt: 1,
-    })
-    mockAddDisplayModel(displayModelsStore, 'imported-live2d')
-
-    const exported = await exportAiriCardPackage({ card, displayModelsStore })
-    const zip = await JSZip.loadAsync(await exported.arrayBuffer())
-    expect(await readJson(zip, 'manifest.json')).toMatchObject({
-      resources: { displayModel: { controls: {
-        disabledExpressions: ['smile'],
-        disabledMotions: ['motions/idle.motion3.json'],
-      } } },
-    })
-    expect(airiFrom(await readJson<ccv3.CharacterCardV3>(zip, 'card.json')).avatarModels).toEqual([])
-
-    const imported = await importAiriCardPackage({ file: new File([exported], 'card.zip'), displayModelsStore })
-    expect(airiFrom(imported).avatarModels[0]).toMatchObject({
-      displayModelId: 'imported-live2d',
-      type: 'live2d',
-      config: { controls: {
-        disabledExpressions: ['smile'],
-        disabledMotions: ['motions/idle.motion3.json'],
-      } },
-    })
-    expect(airiFrom(imported).avatarModels[0].id).not.toBe('selected-avatar-model')
   })
 
   it('applies the share-field whitelist to externally edited package JSON', async () => {
     const displayModelsStore = useDisplayModelsStore()
-    const source = exportToJSON(createCard('preset-live2d-1'))
+    const source = exportToJSON(createCard('preset-animation-1'))
     source.data.extensions.third_party = { token: 'do-not-import' }
 
     const imported = await importAiriCardPackage({
@@ -148,20 +104,20 @@ describe('airi card package import/export', () => {
       await expect(importAiriCardPackage({ file, displayModelsStore })).rejects.toMatchObject(expected)
   })
 
-  it('preserves Tachie archives and their compound extension', async () => {
+  it('preserves animation archives and their package extension', async () => {
     const displayModelsStore = useDisplayModelsStore()
     vi.spyOn(displayModelsStore, 'getDisplayModel').mockResolvedValue({
-      id: 'tachie-model',
-      format: DisplayModelFormat.TachieZip,
+      id: 'animation-model',
+      format: DisplayModelFormat.AnimationZip,
       type: 'file',
-      file: new File(['tachie-model'], 'character.tachie.zip'),
-      name: 'character.tachie.zip',
+      file: new File(['animation-model'], 'character.zip'),
+      name: 'character.zip',
       importedAt: 1,
     })
-    mockAddDisplayModel(displayModelsStore, 'imported-tachie')
+    mockAddDisplayModel(displayModelsStore, 'imported-animation')
 
     const exported = await exportAiriCardPackage({
-      card: createCard('tachie-model'),
+      card: createCard('animation-model'),
       displayModelsStore,
     })
     const zip = await JSZip.loadAsync(await exported.arrayBuffer())
@@ -173,18 +129,18 @@ describe('airi card package import/export', () => {
     expect(await readJson(zip, 'manifest.json')).toMatchObject({
       resources: {
         displayModel: {
-          path: 'models/body-model.tachie.zip',
-          format: DisplayModelFormat.TachieZip,
-          name: 'character.tachie.zip',
+          path: 'models/body-model.zip',
+          format: DisplayModelFormat.AnimationZip,
+          name: 'character.zip',
         },
       },
     })
-    expect(await zip.file('models/body-model.tachie.zip')?.async('string')).toBe('tachie-model')
+    expect(await zip.file('models/body-model.zip')?.async('string')).toBe('animation-model')
     expect(displayModelsStore.addDisplayModel).toHaveBeenCalledWith(
-      DisplayModelFormat.TachieZip,
-      expect.objectContaining({ name: 'character.tachie.zip' }),
+      DisplayModelFormat.AnimationZip,
+      expect.objectContaining({ name: 'character.zip' }),
     )
-    expect(airiFrom(imported).avatarModels[0]).toMatchObject({ displayModelId: 'imported-tachie', type: 'tachie' })
+    expect(airiFrom(imported).avatarModels[0]).toMatchObject({ displayModelId: 'imported-animation', type: 'animation' })
     expect(airiFrom(imported).defaultAvatarModelId).toBe(airiFrom(imported).avatarModels[0].id)
   })
 })
@@ -200,7 +156,7 @@ function mockAddDisplayModel(store: ReturnType<typeof useDisplayModelsStore>, id
   }))
 }
 
-function createCard(displayModelId = 'preset-vrm-1'): AiriCard {
+function createCard(displayModelId = 'preset-animation-1'): AiriCard {
   return {
     name: 'AIRI / Test Card',
     nickname: 'Tester',
@@ -211,12 +167,12 @@ function createCard(displayModelId = 'preset-vrm-1'): AiriCard {
     tags: ['hidden'],
     extensions: {
       airi: {
-        avatarModels: [{ id: 'selected-avatar-model', displayModelId, type: displayModelId === 'tachie-model' ? 'tachie' : 'vrm', config: {} }],
+        avatarModels: [{ id: 'selected-avatar-model', displayModelId, type: 'animation', config: {} }],
         defaultAvatarModelId: 'selected-avatar-model',
         modules: {
           consciousness: { provider: 'openai', model: 'gpt-4o' },
           vision: { provider: 'ollama', model: 'llava' },
-          speech: { provider: 'elevenlabs', model: 'eleven', voice_id: 'alloy', pitch: 1 },
+          speech: { provider: 'alibaba-cloud-model-studio', model: 'cosyvoice-v2', voice_id: 'alloy', pitch: 1 },
           activeBackgroundId: 'background-secret',
           artistry: { provider: 'replicate', model: 'flux', workflowId: 'workflow-secret' },
         },

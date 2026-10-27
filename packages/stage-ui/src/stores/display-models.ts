@@ -26,27 +26,12 @@ import { useFeatureFlagsStore } from './feature-flags'
 
 export enum DisplayModelFormat {
   AnimationZip = 'animation-zip',
-  Live2dZip = 'live2d-zip',
-  Live2dDirectory = 'live2d-directory',
-  VRM = 'vrm',
-  SpineZip = 'spine-zip',
-  TachieZip = 'tachie-zip',
-  PMXZip = 'pmx-zip',
-  PMXDirectory = 'pmx-directory',
-  PMD = 'pmd',
 }
 
 export type DisplayModel
   = | DisplayModelFile
     | DisplayModelURL
 
-const presetLive2dProUrl = new URL('../assets/live2d/models/hiyori_pro_zh.zip', import.meta.url).href
-const presetLive2dFreeUrl = new URL('../assets/live2d/models/hiyori_free_zh.zip', import.meta.url).href
-const presetLive2dPreview = new URL('../assets/live2d/models/hiyori/preview.png', import.meta.url).href
-const presetVrmAvatarAUrl = new URL('../assets/vrm/models/AvatarSample-A/AvatarSample_A.vrm', import.meta.url).href
-const presetVrmAvatarAPreview = new URL('../assets/vrm/models/AvatarSample-A/preview.png', import.meta.url).href
-const presetVrmAvatarBUrl = new URL('../assets/vrm/models/AvatarSample-B/AvatarSample_B.vrm', import.meta.url).href
-const presetVrmAvatarBPreview = new URL('../assets/vrm/models/AvatarSample-B/preview.png', import.meta.url).href
 /** The packaged animation pack, so a fresh install shows a character with no import step. */
 const presetAnimationPackUrl = new URL('../assets/animations/demo-pet.zip', import.meta.url).href
 export const presetAnimationPackId = 'preset-animation-1'
@@ -77,20 +62,16 @@ export type DisplayModelSyncStatus = 'local-only' | 'queued' | 'uploading' | 'sy
 
 // NOTICE:
 // Animation packs sync before the hosted API enum lists `animation-zip`.
-// Root cause: the server schema still allows only `live2d-zip` and `vrm`.
+// Root cause: the server schema has no `animation-zip` member yet.
 // Source/context: display-model upload in this store and the role/display-model
 // schemas under server/apps/api. Removal condition: the server accepts
 // `animation-zip`, then delete this note.
-const syncableFormats: string[] = [DisplayModelFormat.AnimationZip, DisplayModelFormat.Live2dZip, DisplayModelFormat.VRM]
+const syncableFormats: string[] = [DisplayModelFormat.AnimationZip]
 const uploadTaskKind = 'upload-display-model'
 const UploadPayloadSchema = v.object({ modelId: v.string(), requestId: v.string() })
 
 const displayModelsPresets: DisplayModel[] = [
   { id: presetAnimationPackId, format: DisplayModelFormat.AnimationZip, type: 'url', url: presetAnimationPackUrl, name: 'Demo Pet', importedAt: 1733113886841 },
-  { id: 'preset-live2d-1', format: DisplayModelFormat.Live2dZip, type: 'url', url: presetLive2dProUrl, name: 'Hiyori (Pro)', previewImage: presetLive2dPreview, importedAt: 1733113886840 },
-  { id: 'preset-live2d-2', format: DisplayModelFormat.Live2dZip, type: 'url', url: presetLive2dFreeUrl, name: 'Hiyori (Free)', previewImage: presetLive2dPreview, importedAt: 1733113886840 },
-  { id: 'preset-vrm-1', format: DisplayModelFormat.VRM, type: 'url', url: presetVrmAvatarAUrl, name: 'AvatarSample_A', previewImage: presetVrmAvatarAPreview, importedAt: 1733113886840 },
-  { id: 'preset-vrm-2', format: DisplayModelFormat.VRM, type: 'url', url: presetVrmAvatarBUrl, name: 'AvatarSample_B', previewImage: presetVrmAvatarBPreview, importedAt: 1733113886840 },
 ]
 
 export const useDisplayModelsStore = defineStore('display-models', () => {
@@ -342,7 +323,7 @@ export const useDisplayModelsStore = defineStore('display-models', () => {
     const upload = await reserveDisplayModelUpload({
       id: modelId,
       requestId,
-      format: record.format as 'live2d-zip' | 'vrm',
+      format: record.format,
       name: record.name,
       originalFilename: record.file.name,
       byteSize: record.file.size,

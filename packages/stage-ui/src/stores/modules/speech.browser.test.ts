@@ -83,7 +83,7 @@ describe('speech synchronization', () => {
   // https://github.com/moeru-ai/airi/pull/2490#discussion_r3967949219
   // ROOT CAUSE: Catalog invalidation erased the voice just applied by a card.
   // The selection command must discard the old catalog before setting the override.
-  it.each(['microsoft-speech', 'official-provider-speech'])('preserves a card voice while its new %s model catalog loads', async (provider) => {
+  it.each(['alibaba-cloud-model-studio', 'official-provider-speech'])('preserves a card voice while its new %s model catalog loads', async (provider) => {
     const deferred = Promise.withResolvers<Response>()
     let pause = false
     stubCatalogFetch(vi.fn<typeof fetch>(async () => pause
@@ -102,7 +102,7 @@ describe('speech synchronization', () => {
         session: { id: 'session', userId: 'owner', token: 'session-token', createdAt: now, updatedAt: now, expiresAt: new Date(now.getTime() + 60000) },
       })
     }
-    await useProviderConfigStore(leader.pinia).ensureProvider(provider, provider, { apiKey: 'key', baseUrl: 'https://voices.invalid/v1/', region: 'eastasia' })
+    await useProviderConfigStore(leader.pinia).ensureProvider(provider, provider, { apiKey: 'key', baseUrl: 'https://voices.invalid/v1/' })
     await useProviderStore(leader.pinia).forceProviderConfigured(provider)
     await leader.speechStore.selectProviderModel(provider, 'model-a', 'old')
     await vi.waitFor(() => expect(leader.speechStore.availableVoices[provider]?.[0]?.id).toBe('old'))
@@ -206,17 +206,17 @@ describe('speech synchronization', () => {
     follower.speechStore.ssmlEnabled = true
     await vi.waitFor(() => expect(delayed.length).toBeGreaterThan(0))
     stubCatalogFetch(vi.fn<typeof fetch>(async () => Response.json({ voices: [{ id: 'fresh', name: 'Fresh', languages: [] }] })))
-    await leader.speechStore.loadVoiceCatalog('microsoft-speech', 'model', {
-      definitionId: 'microsoft-speech',
-      config: { apiKey: 'key', baseUrl: 'https://voices.invalid/v1/', region: 'eastasia' },
+    await leader.speechStore.loadVoiceCatalog('alibaba-cloud-model-studio', 'model', {
+      definitionId: 'alibaba-cloud-model-studio',
+      config: { apiKey: 'key', baseUrl: 'https://voices.invalid/v1/' },
     })
-    await vi.waitFor(() => expect(follower.speechStore.availableVoices['microsoft-speech']?.[0]?.id).toBe('fresh'))
+    await vi.waitFor(() => expect(follower.speechStore.availableVoices['alibaba-cloud-model-studio']?.[0]?.id).toBe('fresh'))
     traffic.mockRestore()
     for (const deliver of delayed)
       deliver()
     await vi.waitFor(() => expect(leader.speechStore.pitch).toBe(15))
-    expect(leader.speechStore.availableVoices['microsoft-speech']?.[0]?.id).toBe('fresh')
-    expect(leader.speechStore.voiceCatalogIdentities['microsoft-speech']?.model).toBe('model')
+    expect(leader.speechStore.availableVoices['alibaba-cloud-model-studio']?.[0]?.id).toBe('fresh')
+    expect(leader.speechStore.voiceCatalogIdentities['alibaba-cloud-model-studio']?.model).toBe('model')
     expect(follower.speechStore.$state).not.toHaveProperty('availableVoices')
   })
 
@@ -227,22 +227,21 @@ describe('speech synchronization', () => {
     const namespace = `speech:${crypto.randomUUID()}`
     const leader = createSyncedContext(namespace, 'leader-only')
     await vi.waitFor(() => expect(leader.runtime.isLeader()).toBe(true))
-    await useProviderConfigStore(leader.pinia).ensureProvider('microsoft-speech', 'microsoft-speech', {
+    await useProviderConfigStore(leader.pinia).ensureProvider('alibaba-cloud-model-studio', 'alibaba-cloud-model-studio', {
       apiKey: 'key',
       baseUrl: 'https://voices.invalid/v1/',
-      region: 'eastasia',
     })
     const caller = createSyncedContext(namespace, 'follower-only')
     const other = createSyncedContext(namespace, 'follower-only')
-    await vi.waitFor(() => expect(useProviderConfigStore(other.pinia).configs['microsoft-speech']?.apiKey).toBe('key'))
+    await vi.waitFor(() => expect(useProviderConfigStore(other.pinia).configs['alibaba-cloud-model-studio']?.apiKey).toBe('key'))
     const { promise: response, resolve: finish } = Promise.withResolvers<Response>()
     const fetchCatalog = vi.fn<typeof fetch>(() => response)
     stubCatalogFetch(fetchCatalog)
-    const pending = other.speechStore.loadVoicesForProvider('microsoft-speech')
+    const pending = other.speechStore.loadVoicesForProvider('alibaba-cloud-model-studio')
     try {
       await vi.waitFor(() => expect(fetchCatalog).toHaveBeenCalledOnce())
       await caller.speechStore.resetState()
-      await vi.waitFor(() => expect(other.speechStore.voiceCatalogStatus['microsoft-speech']).toBeUndefined(), { timeout: 400 })
+      await vi.waitFor(() => expect(other.speechStore.voiceCatalogStatus['alibaba-cloud-model-studio']).toBeUndefined(), { timeout: 400 })
       await expect(pending).resolves.toEqual([])
     }
     finally {
@@ -257,14 +256,13 @@ describe('speech synchronization', () => {
     const namespace = `speech:${crypto.randomUUID()}`
     const leader = createSyncedContext(namespace, 'leader-only')
     await vi.waitFor(() => expect(leader.runtime.isLeader()).toBe(true))
-    await useProviderConfigStore(leader.pinia).ensureProvider('microsoft-speech', 'microsoft-speech', {
+    await useProviderConfigStore(leader.pinia).ensureProvider('alibaba-cloud-model-studio', 'alibaba-cloud-model-studio', {
       apiKey: 'key',
       baseUrl: 'https://voices.invalid/v1/',
-      region: 'eastasia',
     })
     const follower = createSyncedContext(namespace, 'follower-only')
     await vi.waitFor(() => expect(follower.runtime.getLeaderId()).toBe(leader.runtime.participantId))
-    await vi.waitFor(() => expect(useProviderConfigStore(follower.pinia).configs['microsoft-speech']?.apiKey).toBe('key'))
+    await vi.waitFor(() => expect(useProviderConfigStore(follower.pinia).configs['alibaba-cloud-model-studio']?.apiKey).toBe('key'))
     await new Promise(resolve => setTimeout(resolve, 100))
     const fetchCatalog = vi.fn<typeof fetch>(async () => Response.json({ voices: [] }))
     stubCatalogFetch(fetchCatalog)
@@ -278,7 +276,7 @@ describe('speech synchronization', () => {
       }
       postMessage.call(this, message)
     })
-    const pending = follower.speechStore.loadVoicesForProvider('microsoft-speech')
+    const pending = follower.speechStore.loadVoicesForProvider('alibaba-cloud-model-studio')
     await vi.waitFor(() => expect(delayed.length).toBeGreaterThan(0))
     await follower.speechStore.resetState()
     traffic.mockRestore()
@@ -288,7 +286,7 @@ describe('speech synchronization', () => {
     // Await the same channel's next action so the delayed request has run.
     await follower.speechStore.ensureActiveSpeechVoice()
     expect(fetchCatalog).not.toHaveBeenCalled()
-    expect(leader.speechStore.availableVoices['microsoft-speech']).toBeUndefined()
+    expect(leader.speechStore.availableVoices['alibaba-cloud-model-studio']).toBeUndefined()
   })
 
   // https://github.com/moeru-ai/airi/pull/2490#discussion_r3965793959
@@ -297,23 +295,22 @@ describe('speech synchronization', () => {
   it('clears the selected voice before loading a different configuration', async () => {
     const leader = createSyncedContext(`speech:${crypto.randomUUID()}`, 'leader-only')
     await vi.waitFor(() => expect(leader.runtime.isLeader()).toBe(true))
-    await useProviderConfigStore(leader.pinia).ensureProvider('microsoft-speech', 'microsoft-speech', {
+    await useProviderConfigStore(leader.pinia).ensureProvider('alibaba-cloud-model-studio', 'alibaba-cloud-model-studio', {
       apiKey: 'key',
       baseUrl: 'https://old.invalid/v1/',
-      region: 'eastasia',
     })
     stubCatalogFetch(vi.fn<typeof fetch>(async () => Response.json({ voices: [{ id: 'old', name: 'Old', languages: [] }] })))
-    await leader.speechStore.selectProviderModel('microsoft-speech', 'model')
-    await vi.waitFor(() => expect(leader.speechStore.availableVoices['microsoft-speech']?.[0]?.id).toBe('old'))
+    await leader.speechStore.selectProviderModel('alibaba-cloud-model-studio', 'model')
+    await vi.waitFor(() => expect(leader.speechStore.availableVoices['alibaba-cloud-model-studio']?.[0]?.id).toBe('old'))
     leader.speechStore.activeSpeechVoiceId = 'old'
     await leader.speechStore.ensureActiveSpeechVoice()
     expect(leader.speechStore.configured).toBe(true)
     const { promise: response, reject: fail } = Promise.withResolvers<Response>()
     const fetchCatalog = vi.fn<typeof fetch>(() => response)
     stubCatalogFetch(fetchCatalog)
-    const pending = leader.speechStore.loadVoiceCatalog('microsoft-speech', 'model', {
-      definitionId: 'microsoft-speech',
-      config: { apiKey: 'new-key', baseUrl: 'https://new.invalid/v1/', region: 'westus' },
+    const pending = leader.speechStore.loadVoiceCatalog('alibaba-cloud-model-studio', 'model', {
+      definitionId: 'alibaba-cloud-model-studio',
+      config: { apiKey: 'new-key', baseUrl: 'https://new.invalid/v1/' },
     })
     const rejection = expect(pending).rejects.toThrow('unavailable')
     try {
@@ -394,23 +391,22 @@ describe('speech synchronization', () => {
     const namespace = `speech:${crypto.randomUUID()}`
     const leader = createSyncedContext(namespace, 'leader-only')
     await vi.waitFor(() => expect(leader.runtime.isLeader()).toBe(true))
-    await useProviderConfigStore(leader.pinia).ensureProvider('microsoft-speech', 'microsoft-speech', {
+    await useProviderConfigStore(leader.pinia).ensureProvider('alibaba-cloud-model-studio', 'alibaba-cloud-model-studio', {
       apiKey: 'key',
       baseUrl: 'https://voices.invalid/v1/',
-      region: 'eastasia',
     })
     const follower = createSyncedContext(namespace, 'follower-only')
-    await vi.waitFor(() => expect(useProviderConfigStore(follower.pinia).configs['microsoft-speech']?.apiKey).toBe('key'))
+    await vi.waitFor(() => expect(useProviderConfigStore(follower.pinia).configs['alibaba-cloud-model-studio']?.apiKey).toBe('key'))
     stubCatalogFetch(vi.fn<typeof fetch>(async () => Response.json({ voices: [{ id: 'fresh', name: 'Fresh', languages: [] }] })))
     const traffic = vi.spyOn(BroadcastChannel.prototype, 'postMessage')
-    await follower.speechStore.selectProviderModel('microsoft-speech', 'model-a')
+    await follower.speechStore.selectProviderModel('alibaba-cloud-model-studio', 'model-a')
     expect(follower.speechStore.activeSpeechModel).toBe('model-a')
-    await vi.waitFor(() => expect(follower.speechStore.availableVoices['microsoft-speech']?.[0]?.id).toBe('fresh'))
+    await vi.waitFor(() => expect(follower.speechStore.availableVoices['alibaba-cloud-model-studio']?.[0]?.id).toBe('fresh'))
     expect(leader.speechStore.activeSpeechModel).toBe('model-a')
-    await follower.speechStore.selectProviderModel('microsoft-speech', 'model-b')
+    await follower.speechStore.selectProviderModel('alibaba-cloud-model-studio', 'model-b')
     expect(follower.speechStore.activeSpeechModel).toBe('model-b')
-    await vi.waitFor(() => expect(follower.speechStore.voiceCatalogIdentities['microsoft-speech']?.model).toBe('model-b'))
-    expect(follower.speechStore.availableVoices['microsoft-speech']?.[0]?.id).toBe('fresh')
+    await vi.waitFor(() => expect(follower.speechStore.voiceCatalogIdentities['alibaba-cloud-model-studio']?.model).toBe('model-b'))
+    expect(follower.speechStore.availableVoices['alibaba-cloud-model-studio']?.[0]?.id).toBe('fresh')
     expect(traffic.mock.calls.filter(([message]) => JSON.stringify(message).includes('replaceState'))).toHaveLength(0)
   })
 
@@ -423,21 +419,20 @@ describe('speech synchronization', () => {
     const leader = createSyncedContext(namespace, 'leader-only')
     await vi.waitFor(() => expect(leader.runtime.isLeader()).toBe(true))
     const leaderConfig = useProviderConfigStore(leader.pinia)
-    await leaderConfig.ensureProvider('microsoft-speech', 'microsoft-speech', {
+    await leaderConfig.ensureProvider('alibaba-cloud-model-studio', 'alibaba-cloud-model-studio', {
       apiKey: 'old-key',
       baseUrl: 'https://old.invalid/v1/',
-      region: 'eastasia',
     })
     const follower = createSyncedContext(namespace, 'follower-only')
     const followerConfig = useProviderConfigStore(follower.pinia)
-    await vi.waitFor(() => expect(followerConfig.configs['microsoft-speech']?.apiKey).toBe('old-key'))
+    await vi.waitFor(() => expect(followerConfig.configs['alibaba-cloud-model-studio']?.apiKey).toBe('old-key'))
     const requests: string[] = []
     stubCatalogFetch(vi.fn<typeof fetch>(async (input) => {
       requests.push(String(input))
       return Response.json({ voices: [] })
     }))
-    followerConfig.configs['microsoft-speech'].baseUrl = 'https://new.invalid/v1/'
-    await follower.speechStore.loadVoicesForProvider('microsoft-speech')
+    followerConfig.configs['alibaba-cloud-model-studio'].baseUrl = 'https://new.invalid/v1/'
+    await follower.speechStore.loadVoicesForProvider('alibaba-cloud-model-studio')
     expect(requests).toHaveLength(1)
     expect(requests[0]).toContain('https://new.invalid/')
   })
@@ -464,10 +459,9 @@ describe('speech synchronization', () => {
     const context = createSyncedContext(`speech:${crypto.randomUUID()}`, 'leader-only')
     await vi.waitFor(() => expect(context.runtime.isLeader()).toBe(true))
     const config = useProviderConfigStore(context.pinia)
-    await config.ensureProvider('microsoft-speech', 'microsoft-speech', {
+    await config.ensureProvider('alibaba-cloud-model-studio', 'alibaba-cloud-model-studio', {
       apiKey: 'key',
       baseUrl: 'https://old.invalid/v1/',
-      region: 'eastasia',
     })
     const { promise: oldResponse, resolve: finishOld } = Promise.withResolvers<Response>()
     let requests = 0
@@ -477,14 +471,14 @@ describe('speech synchronization', () => {
         return oldResponse
       return Response.json({ voices: [{ id: 'new', name: 'New', languages: [] }] })
     }))
-    const oldLoad = context.speechStore.loadVoicesForProvider('microsoft-speech')
+    const oldLoad = context.speechStore.loadVoicesForProvider('alibaba-cloud-model-studio')
     try {
       await vi.waitFor(() => expect(requests).toBe(1))
-      config.configs['microsoft-speech'].baseUrl = 'https://new.invalid/v1/'
-      await context.speechStore.loadVoicesForProvider('microsoft-speech')
+      config.configs['alibaba-cloud-model-studio'].baseUrl = 'https://new.invalid/v1/'
+      await context.speechStore.loadVoicesForProvider('alibaba-cloud-model-studio')
       finishOld(Response.json({ voices: [{ id: 'old', name: 'Old', languages: [] }] }))
       await oldLoad
-      expect(context.speechStore.availableVoices['microsoft-speech'][0]?.id).toBe('new')
+      expect(context.speechStore.availableVoices['alibaba-cloud-model-studio'][0]?.id).toBe('new')
     }
     finally {
       finishOld(Response.json({ voices: [] }))
@@ -541,7 +535,7 @@ describe('speech synchronization', () => {
     const leader = createSyncedContext(namespace, 'leader-only')
     await vi.waitFor(() => expect(leader.runtime.isLeader()).toBe(true))
     const config = useProviderConfigStore(leader.pinia)
-    await config.ensureProvider('microsoft-speech', 'microsoft-speech', { apiKey: 'key', baseUrl: 'https://voices.invalid/v1/', region: 'eastasia' })
+    await config.ensureProvider('alibaba-cloud-model-studio', 'alibaba-cloud-model-studio', { apiKey: 'key', baseUrl: 'https://voices.invalid/v1/' })
     const { promise: oldResponse, resolve: finishOld } = Promise.withResolvers<Response>()
     let pause = false
     let catalogVersion = 'cached'
@@ -554,16 +548,16 @@ describe('speech synchronization', () => {
     }))
     const survivor = createSyncedContext(namespace, 'follower-preferred')
     await vi.waitFor(() => expect(survivor.runtime.getLeaderId()).toBe(leader.runtime.participantId))
-    leader.speechStore.activeSpeechProvider = 'microsoft-speech'
-    await vi.waitFor(() => expect(survivor.speechStore.availableVoices['microsoft-speech']?.[0]?.id).toBe('cached'))
+    leader.speechStore.activeSpeechProvider = 'alibaba-cloud-model-studio'
+    await vi.waitFor(() => expect(survivor.speechStore.availableVoices['alibaba-cloud-model-studio']?.[0]?.id).toBe('cached'))
     await vi.waitFor(() => expect(survivor.speechStore.isLoadingSpeechProviderVoices).toBe(false))
     pause = true
     const beforeRefresh = requests
-    const refresh = leader.speechStore.loadVoicesForProvider('microsoft-speech')
+    const refresh = leader.speechStore.loadVoicesForProvider('alibaba-cloud-model-studio')
     try {
       await vi.waitFor(() => expect(requests).toBeGreaterThan(beforeRefresh))
       // Same-identity refreshes preserve the last successful catalog during IO.
-      expect(survivor.speechStore.availableVoices['microsoft-speech']?.[0]?.id).toBe('cached')
+      expect(survivor.speechStore.availableVoices['alibaba-cloud-model-studio']?.[0]?.id).toBe('cached')
       pause = false
       catalogVersion = 'recovered'
       // Dispose the outgoing renderer's store scopes as closing a tab would.
@@ -573,7 +567,7 @@ describe('speech synchronization', () => {
       outgoing.runtime.dispose()
       syncedContexts.splice(syncedContexts.indexOf(outgoing), 1)
       await vi.waitFor(() => expect(survivor.runtime.isLeader()).toBe(true), { timeout: 5000 })
-      await vi.waitFor(() => expect(survivor.speechStore.availableVoices['microsoft-speech']?.[0]?.id).toBe('recovered'), { timeout: 5000 })
+      await vi.waitFor(() => expect(survivor.speechStore.availableVoices['alibaba-cloud-model-studio']?.[0]?.id).toBe('recovered'), { timeout: 5000 })
       await vi.waitFor(() => expect(survivor.speechStore.isLoadingSpeechProviderVoices).toBe(false))
       expect(survivor.pinia.state.value.speech).not.toHaveProperty('voiceCatalogStatus')
     }
@@ -594,19 +588,19 @@ describe('speech synchronization', () => {
     const { promise: response, resolve: finish } = Promise.withResolvers<Response>()
     const fetchCatalog = vi.fn<typeof fetch>(() => response)
     stubCatalogFetch(fetchCatalog)
-    const pending = leader.speechStore.loadVoiceCatalog('microsoft-speech', undefined, {
-      definitionId: 'microsoft-speech',
-      config: { apiKey: 'key', baseUrl: 'https://voices.invalid/v1/', region: 'eastasia' },
+    const pending = leader.speechStore.loadVoiceCatalog('alibaba-cloud-model-studio', undefined, {
+      definitionId: 'alibaba-cloud-model-studio',
+      config: { apiKey: 'key', baseUrl: 'https://voices.invalid/v1/' },
     })
     try {
       await vi.waitFor(() => expect(fetchCatalog).toHaveBeenCalledOnce())
-      await vi.waitFor(() => expect(follower.speechStore.availableVoices['microsoft-speech']).toEqual([]))
+      await vi.waitFor(() => expect(follower.speechStore.availableVoices['alibaba-cloud-model-studio']).toEqual([]))
       const traffic = vi.spyOn(BroadcastChannel.prototype, 'postMessage')
       await follower.speechStore.resetState()
       finish(Response.json({ voices: [{ id: 'stale', name: 'Stale', languages: [] }] }))
       await expect(pending).resolves.toEqual([])
-      expect(leader.speechStore.availableVoices['microsoft-speech']).toBeUndefined()
-      await vi.waitFor(() => expect(follower.speechStore.availableVoices['microsoft-speech']).toBeUndefined())
+      expect(leader.speechStore.availableVoices['alibaba-cloud-model-studio']).toBeUndefined()
+      await vi.waitFor(() => expect(follower.speechStore.availableVoices['alibaba-cloud-model-studio']).toBeUndefined())
       expect(traffic.mock.calls.filter(([message]) => JSON.stringify(message).includes('replaceState'))).toHaveLength(0)
     }
     finally {
@@ -623,27 +617,26 @@ describe('speech synchronization', () => {
     const namespace = `speech:${crypto.randomUUID()}`
     const leader = createSyncedContext(namespace, 'leader-only')
     await vi.waitFor(() => expect(leader.runtime.isLeader()).toBe(true))
-    await useProviderConfigStore(leader.pinia).ensureProvider('microsoft-speech', 'microsoft-speech', {
+    await useProviderConfigStore(leader.pinia).ensureProvider('alibaba-cloud-model-studio', 'alibaba-cloud-model-studio', {
       apiKey: 'key',
       baseUrl: 'https://voices.invalid/v1/',
-      region: 'eastasia',
     })
     const follower = createSyncedContext(namespace, 'follower-only')
-    await vi.waitFor(() => expect(useProviderConfigStore(follower.pinia).configs['microsoft-speech']?.apiKey).toBe('key'))
+    await vi.waitFor(() => expect(useProviderConfigStore(follower.pinia).configs['alibaba-cloud-model-studio']?.apiKey).toBe('key'))
     const { promise: response, resolve: finish } = Promise.withResolvers<Response>()
     const fetchCatalog = vi.fn<typeof fetch>(() => response)
     stubCatalogFetch(fetchCatalog)
-    const first = follower.speechStore.loadVoicesForProvider('microsoft-speech')
-    const second = follower.speechStore.loadVoicesForProvider('microsoft-speech')
+    const first = follower.speechStore.loadVoicesForProvider('alibaba-cloud-model-studio')
+    const second = follower.speechStore.loadVoicesForProvider('alibaba-cloud-model-studio')
     try {
       await vi.waitFor(() => expect(fetchCatalog).toHaveBeenCalledOnce())
-      expect(follower.speechStore.voiceCatalogStatus['microsoft-speech']?.loading).toBe(true)
+      expect(follower.speechStore.voiceCatalogStatus['alibaba-cloud-model-studio']?.loading).toBe(true)
       await follower.speechStore.resetState()
-      expect(follower.speechStore.voiceCatalogStatus['microsoft-speech']).toBeUndefined()
+      expect(follower.speechStore.voiceCatalogStatus['alibaba-cloud-model-studio']).toBeUndefined()
       await expect(first).resolves.toEqual([])
       await expect(second).resolves.toEqual([])
       await follower.speechStore.resetState()
-      expect(follower.speechStore.voiceCatalogStatus['microsoft-speech']).toBeUndefined()
+      expect(follower.speechStore.voiceCatalogStatus['alibaba-cloud-model-studio']).toBeUndefined()
     }
     finally {
       finish(Response.json({ voices: [] }))
@@ -682,15 +675,15 @@ describe('speech synchronization', () => {
     const leader = createSyncedContext(namespace, 'leader-only')
     await vi.waitFor(() => expect(leader.runtime.isLeader()).toBe(true))
     const config = useProviderConfigStore(leader.pinia)
-    await config.ensureProvider('microsoft-speech', 'microsoft-speech', { apiKey: 'key', baseUrl: 'https://voices.invalid/v1/', region: 'eastasia' })
+    await config.ensureProvider('alibaba-cloud-model-studio', 'alibaba-cloud-model-studio', { apiKey: 'key', baseUrl: 'https://voices.invalid/v1/' })
     const follower = createSyncedContext(namespace, 'follower-only')
-    await vi.waitFor(() => expect(useProviderConfigStore(follower.pinia).configs['microsoft-speech']?.apiKey).toBe('key'))
+    await vi.waitFor(() => expect(useProviderConfigStore(follower.pinia).configs['alibaba-cloud-model-studio']?.apiKey).toBe('key'))
     stubCatalogFetch(vi.fn<typeof fetch>(async () => {
       throw new Error('catalog unavailable')
     }))
-    await expect(follower.speechStore.loadVoicesForProvider('microsoft-speech')).resolves.toEqual([])
-    expect(follower.speechStore.voiceCatalogStatus['microsoft-speech']?.error).toContain('catalog unavailable')
-    expect(follower.speechStore.voiceCatalogStatus['microsoft-speech']?.loading).toBe(false)
-    expect(leader.speechStore.voiceCatalogStatus['microsoft-speech']).toBeUndefined()
+    await expect(follower.speechStore.loadVoicesForProvider('alibaba-cloud-model-studio')).resolves.toEqual([])
+    expect(follower.speechStore.voiceCatalogStatus['alibaba-cloud-model-studio']?.error).toContain('catalog unavailable')
+    expect(follower.speechStore.voiceCatalogStatus['alibaba-cloud-model-studio']?.loading).toBe(false)
+    expect(leader.speechStore.voiceCatalogStatus['alibaba-cloud-model-studio']).toBeUndefined()
   })
 })

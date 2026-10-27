@@ -509,16 +509,16 @@ describe('single model speech providers', () => {
     // speaks until the user opens the dropdown and picks that one entry.
     const providersStore = useProviderStore()
     const speechStore = useSpeechStore()
-    speechStore.activeSpeechProvider = 'voicevox'
+    speechStore.activeSpeechProvider = 'alibaba-cloud-model-studio'
     speechStore.activeSpeechModel = ''
-    await providersStore.initializeProvider('voicevox')
-    providersStore.providerRuntimeState.voicevox.models = [
-      { id: 'default', name: 'VOICEVOX', provider: 'voicevox' },
+    await providersStore.initializeProvider('alibaba-cloud-model-studio')
+    providersStore.providerRuntimeState['alibaba-cloud-model-studio'].models = [
+      { id: 'cosyvoice-v1', name: 'CosyVoice', provider: 'alibaba-cloud-model-studio' },
     ]
 
     speechStore.ensureActiveSpeechModel()
 
-    expect(speechStore.activeSpeechModel).toBe('default')
+    expect(speechStore.activeSpeechModel).toBe('cosyvoice-v1')
   })
 
   // https://github.com/moeru-ai/airi/pull/2490#discussion_r3967236129
@@ -538,12 +538,12 @@ describe('single model speech providers', () => {
   it('keeps the voice when it seeds the model, because voices belong to the provider', async () => {
     const providersStore = useProviderStore()
     const speechStore = useSpeechStore()
-    speechStore.activeSpeechProvider = 'voicevox'
+    speechStore.activeSpeechProvider = 'alibaba-cloud-model-studio'
     speechStore.activeSpeechModel = ''
     speechStore.activeSpeechVoiceId = '3'
-    await providersStore.initializeProvider('voicevox')
-    providersStore.providerRuntimeState.voicevox.models = [
-      { id: 'default', name: 'VOICEVOX', provider: 'voicevox' },
+    await providersStore.initializeProvider('alibaba-cloud-model-studio')
+    providersStore.providerRuntimeState['alibaba-cloud-model-studio'].models = [
+      { id: 'cosyvoice-v1', name: 'CosyVoice', provider: 'alibaba-cloud-model-studio' },
     ]
 
     speechStore.ensureActiveSpeechModel()
@@ -554,12 +554,12 @@ describe('single model speech providers', () => {
   it('does not guess when a provider publishes several models', async () => {
     const providersStore = useProviderStore()
     const speechStore = useSpeechStore()
-    speechStore.activeSpeechProvider = 'elevenlabs'
+    speechStore.activeSpeechProvider = 'alibaba-cloud-model-studio'
     speechStore.activeSpeechModel = ''
-    await providersStore.initializeProvider('elevenlabs')
-    providersStore.providerRuntimeState.elevenlabs.models = [
-      { id: 'eleven_v3', name: 'v3', provider: 'elevenlabs' },
-      { id: 'eleven_flash_v2_5', name: 'flash', provider: 'elevenlabs' },
+    await providersStore.initializeProvider('alibaba-cloud-model-studio')
+    providersStore.providerRuntimeState['alibaba-cloud-model-studio'].models = [
+      { id: 'cosyvoice-v1', name: 'CosyVoice', provider: 'alibaba-cloud-model-studio' },
+      { id: 'cosyvoice-v2', name: 'CosyVoice (New)', provider: 'alibaba-cloud-model-studio' },
     ]
 
     speechStore.ensureActiveSpeechModel()
@@ -568,26 +568,11 @@ describe('single model speech providers', () => {
   })
 })
 
-describe('vOICEVOX provider defaults', () => {
+describe('speech provider catalogs', () => {
   beforeEach(() => {
     setActivePinia(createPinia())
   })
 
-  // https://github.com/moeru-ai/airi/issues/2166
-  it('persists the neutral volume default, so a new provider is not silent — Issue #2166', async () => {
-    // The settings form seeds `{ pitch: 0, speed: 1, volume: 0 }` when the
-    // stored configuration carries no voice settings, and a `volumeScale` of
-    // zero is silence. Provider metadata resolves asynchronously, so this pins
-    // that `initializeProvider` waits for it before it writes the schema
-    // defaults into the stored configuration.
-    const providersStore = useProviderStore()
-    const providerConfigStore = useProviderConfigStore()
-
-    await providersStore.initializeProvider('voicevox')
-
-    expect(providerConfigStore.getProviderConfig('voicevox')?.voiceSettings)
-      .toEqual({ speed: 1, pitch: 0, intonation: 1, volume: 1 })
-  })
   // ROOT CAUSE: Model reloads lived in the settings page, so card changes bypassed them.
   // https://github.com/moeru-ai/airi/actions/runs/39113696560/job/117634993202
   // Catalog hashing is asynchronous. Wait for each request instead of assuming it finishes within 20 ms.
@@ -612,28 +597,28 @@ describe('vOICEVOX provider defaults', () => {
   // not change. A temporary failure then removed valid cached choices.
   it('retains the same catalog on refresh failure but clears it for a different model', async () => {
     const providers = useProviderStore()
-    const voices = [{ id: 'cached', name: 'Cached', languages: [], provider: 'microsoft-speech' }]
+    const voices = [{ id: 'cached', name: 'Cached', languages: [], provider: 'alibaba-cloud-model-studio' }]
     const loads = vi.spyOn(providers, 'listProviderVoices').mockResolvedValue(voices)
     const speech = useSpeechStore()
-    await speech.loadVoicesForProvider('microsoft-speech', 'model-a')
+    await speech.loadVoicesForProvider('alibaba-cloud-model-studio', 'model-a')
     loads.mockRejectedValue(new Error('temporary outage'))
-    await speech.loadVoicesForProvider('microsoft-speech', 'model-a')
-    expect(speech.availableVoices['microsoft-speech']).toEqual(voices)
-    expect(speech.voiceCatalogStatus['microsoft-speech']?.error).toBe('temporary outage')
-    await speech.loadVoicesForProvider('microsoft-speech', 'model-b')
-    expect(speech.availableVoices['microsoft-speech']).toEqual([])
+    await speech.loadVoicesForProvider('alibaba-cloud-model-studio', 'model-a')
+    expect(speech.availableVoices['alibaba-cloud-model-studio']).toEqual(voices)
+    expect(speech.voiceCatalogStatus['alibaba-cloud-model-studio']?.error).toBe('temporary outage')
+    await speech.loadVoicesForProvider('alibaba-cloud-model-studio', 'model-b')
+    expect(speech.availableVoices['alibaba-cloud-model-studio']).toEqual([])
   })
 
   // https://github.com/moeru-ai/airi/pull/2490#discussion_r3966034981
   // ROOT CAUSE: Synthesis settings changed the catalog fingerprint and cleared
   // a valid selection. Each adapter must identify its discovery inputs.
-  it.each(['elevenlabs', 'voicevox', 'microsoft-speech'])('retains %s selection after synthesis settings change', async (provider) => {
+  it.each(['alibaba-cloud-model-studio', 'volcengine'])('retains %s selection after synthesis settings change', async (provider) => {
     const voices = [{ id: 'selected', name: 'Selected', languages: [], provider }]
     vi.spyOn(useProviderStore(), 'listProviderVoices').mockResolvedValue(voices)
     const speech = useSpeechStore()
     await speech.selectProviderModel(provider, 'model')
     await vi.waitFor(() => expect(speech.isLoadingSpeechProviderVoices).toBe(false))
-    const config = { apiKey: 'key', baseUrl: 'https://voices.invalid/', region: 'eastasia' }
+    const config = { apiKey: 'key', baseUrl: 'https://voices.invalid/' }
     await speech.loadVoiceCatalog(provider, 'model', { definitionId: provider, config })
     speech.activeSpeechVoiceId = 'selected'
     await speech.ensureActiveSpeechVoice()
@@ -648,21 +633,21 @@ describe('vOICEVOX provider defaults', () => {
 
   it('invalidates cached voices when configuration changes or the provider session expires', async () => {
     const providers = useProviderStore()
-    const voices = [{ id: 'cached', name: 'Cached', languages: [], provider: 'microsoft-speech' }]
+    const voices = [{ id: 'cached', name: 'Cached', languages: [], provider: 'alibaba-cloud-model-studio' }]
     const loads = vi.spyOn(providers, 'listProviderVoices').mockResolvedValue(voices)
     const speech = useSpeechStore()
-    const original = { definitionId: 'microsoft-speech', config: { baseUrl: 'https://old.invalid/' } }
-    const changed = { definitionId: 'microsoft-speech', config: { baseUrl: 'https://new.invalid/' } }
-    await speech.loadVoiceCatalog('microsoft-speech', 'model-a', original)
+    const original = { definitionId: 'alibaba-cloud-model-studio', config: { baseUrl: 'https://old.invalid/' } }
+    const changed = { definitionId: 'alibaba-cloud-model-studio', config: { baseUrl: 'https://new.invalid/' } }
+    await speech.loadVoiceCatalog('alibaba-cloud-model-studio', 'model-a', original)
     loads.mockRejectedValue(new Error('configuration unavailable'))
-    await expect(speech.loadVoiceCatalog('microsoft-speech', 'model-a', changed)).rejects.toThrow('configuration unavailable')
-    expect(speech.availableVoices['microsoft-speech']).toEqual([])
+    await expect(speech.loadVoiceCatalog('alibaba-cloud-model-studio', 'model-a', changed)).rejects.toThrow('configuration unavailable')
+    expect(speech.availableVoices['alibaba-cloud-model-studio']).toEqual([])
     loads.mockResolvedValue(voices)
-    await speech.loadVoiceCatalog('microsoft-speech', 'model-a', changed)
+    await speech.loadVoiceCatalog('alibaba-cloud-model-studio', 'model-a', changed)
     loads.mockResolvedValue(undefined)
-    await speech.loadVoiceCatalog('microsoft-speech', 'model-a', changed)
-    expect(speech.availableVoices['microsoft-speech']).toEqual([])
-    expect(speech.voiceCatalogIdentities['microsoft-speech']).toBeUndefined()
+    await speech.loadVoiceCatalog('alibaba-cloud-model-studio', 'model-a', changed)
+    expect(speech.availableVoices['alibaba-cloud-model-studio']).toEqual([])
+    expect(speech.voiceCatalogIdentities['alibaba-cloud-model-studio']).toBeUndefined()
   })
 
   // https://github.com/moeru-ai/airi/pull/2490#discussion_r3964866479
@@ -676,10 +661,10 @@ describe('vOICEVOX provider defaults', () => {
     const loads = vi.spyOn(providers, 'listProviderVoices').mockResolvedValue(voices)
     const speech = useSpeechStore()
     await speech.loadVoicesForProvider(OFFICIAL_SPEECH_PROVIDER_ID, 'model-a')
-    await speech.loadVoicesForProvider('microsoft-speech', 'model-a')
+    await speech.loadVoicesForProvider('alibaba-cloud-model-studio', 'model-a')
     useAuthStore().$patch({ user: null, session: null, token: null })
     await vi.waitFor(() => expect(speech.availableVoices[OFFICIAL_SPEECH_PROVIDER_ID]).toEqual([]))
-    expect(speech.availableVoices['microsoft-speech']).toEqual(voices)
+    expect(speech.availableVoices['alibaba-cloud-model-studio']).toEqual(voices)
     authenticateOfficialProvider()
     useAuthStore().user = { ...useAuthStore().user!, id: 'new-owner' }
     loads.mockRejectedValue(new Error('new account unavailable'))
@@ -720,20 +705,20 @@ describe('vOICEVOX provider defaults', () => {
     })
     const requests = vi.spyOn(providers, 'listProviderVoices').mockResolvedValue([])
     const speech = useSpeechStore()
-    const pending = speech.loadVoiceCatalog('microsoft-speech', 'delayed', { definitionId: 'microsoft-speech', config: {} })
+    const pending = speech.loadVoiceCatalog('alibaba-cloud-model-studio', 'delayed', { definitionId: 'alibaba-cloud-model-studio', config: {} })
     await speech.resetState()
     finish()
     await expect(pending).resolves.toEqual([])
     expect(requests.mock.calls.some(([, model]) => model === 'delayed')).toBe(false)
-    expect(speech.availableVoices['microsoft-speech']).toBeUndefined()
+    expect(speech.availableVoices['alibaba-cloud-model-studio']).toBeUndefined()
   })
 
   // https://github.com/moeru-ai/airi/pull/2490#discussion_r3964866488
   it('keeps large provider samples out of replicated speech state', async () => {
     vi.spyOn(useProviderStore(), 'listProviderVoices').mockResolvedValue([])
     const speech = useSpeechStore()
-    await speech.loadVoiceCatalog('microsoft-speech', 'model-a', {
-      definitionId: 'microsoft-speech',
+    await speech.loadVoiceCatalog('alibaba-cloud-model-studio', 'model-a', {
+      definitionId: 'alibaba-cloud-model-studio',
       config: { voiceSample: 'private-sample'.repeat(100000) },
     })
     const state = JSON.stringify({ settings: speech.$state, identities: speech.voiceCatalogIdentities })
@@ -800,18 +785,18 @@ describe('vOICEVOX provider defaults', () => {
     const providers = useProviderStore()
     const loads = vi.spyOn(providers, 'listProviderVoices').mockResolvedValue([])
     const speech = useSpeechStore()
-    speech.activeSpeechProvider = 'microsoft-speech'
+    speech.activeSpeechProvider = 'alibaba-cloud-model-studio'
     await new Promise(resolve => setTimeout(resolve, 20))
     let rejectActive!: (error: Error) => void
     loads.mockImplementation(async (provider) => {
-      if (provider === 'microsoft-speech') {
+      if (provider === 'alibaba-cloud-model-studio') {
         return new Promise((_resolve, reject) => {
           rejectActive = reject
         })
       }
       return []
     })
-    const active = speech.loadVoicesForProvider('microsoft-speech')
+    const active = speech.loadVoicesForProvider('alibaba-cloud-model-studio')
     try {
       await vi.waitFor(() => expect(rejectActive).toBeDefined())
       await speech.loadVoicesForProvider('speech-noop')

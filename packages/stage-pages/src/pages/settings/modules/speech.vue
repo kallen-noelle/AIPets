@@ -882,31 +882,6 @@ async function handleDeleteProvider(providerId: string) {
               @change="commitCustomVoiceSelection"
               @update:model-value="updateCustomVoiceName"
             />
-
-            <!-- Model selection for ElevenLabs -->
-            <div v-if="activeSpeechProvider === 'elevenlabs'">
-              <label class="mb-1 block text-sm font-medium">
-                Model
-              </label>
-              <select
-                v-model="displayedSpeechModel"
-                :class="[
-                  'w-full px-3 py-2',
-                  'border border-neutral-300 rounded dark:border-neutral-700',
-                  'bg-white dark:bg-neutral-900',
-                ]"
-              >
-                <option value="eleven_monolingual_v1">
-                  Monolingual v1
-                </option>
-                <option value="eleven_multilingual_v1">
-                  Multilingual v1
-                </option>
-                <option value="eleven_multilingual_v2">
-                  Multilingual v2
-                </option>
-              </select>
-            </div>
           </div>
         </div>
       </div>

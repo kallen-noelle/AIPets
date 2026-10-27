@@ -72,12 +72,12 @@ describe('onboarding store', () => {
 
   // ROOT CAUSE:
   //
-  // An azure-openai apiKey without a baseUrl suppressed onboarding even without a validated provider (P2).
+  // A deepseek apiKey without a baseUrl suppressed onboarding even without a validated provider (P2).
   // Only validated provider status at startup can suppress onboarding.
   // https://github.com/moeru-ai/airi/pull/1900
   it('requires onboarding when startup credentials have no validated provider', () => {
     const providerStore = useProviderConfigStore()
-    vi.spyOn(providerStore, 'getProviderConfig').mockImplementation(providerId => providerId === 'azure-openai' ? { apiKey: 'sk-x', baseUrl: '' } : {})
+    vi.spyOn(providerStore, 'getProviderConfig').mockImplementation(providerId => providerId === 'deepseek' ? { apiKey: 'sk-x', baseUrl: '' } : {})
 
     const store = useOnboardingStore()
 

@@ -13,6 +13,9 @@ Provide a minimal closed loop that stage-web can consume:
 - Devtools page: `apps/stage-web/src/pages/devtools/model-driver-mediapipe.vue`
 - Menu entry: Settings → System → Developer → “MediaPipe Workshop”
 
+The devtools page shows the camera preview and the landmark overlay.
+It does not drive a body renderer, because the fork uses the animation renderer.
+
 **Key files**
 
 - `packages/model-driver-mediapipe/src/types.ts`: middle-layer contract (`PerceptionState`)

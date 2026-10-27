@@ -266,7 +266,7 @@ A producer streams its text to TTS by segments. `MarkdownSegmenter` ends a segme
 So an answer starts to speak after its first sentence, and a formula that later writes complete is still read as one formula.
 Symbols that markdown keeps as text, for example `2 * 3` and `x ~= 3`, stay in the speech text.
 TeX formulas, `\ce{}` chemistry, units, and dollar prices are read as words of the sentence language: Chinese, English, Japanese, or Korean.
-The rules are in [`@proj-airi/speech-transformer-math`](../speech-transformer-math) and [`@proj-airi/speech-transformer-chem`](../speech-transformer-chem), see [the ADR](../../docs/ai/adr/2026-10-20-speech-text-preprocessor.md).
+The rules are in [`@proj-airi/speech-transformer-math`](../speech-transformer-math) and [`@proj-airi/speech-transformer-chem`](../speech-transformer-chem).
 `mathSpeech` is the instance that AIRI uses: the built-in locale packs, with chemistry.
 
 `toMathJson(tex)` returns the MathJSON of a formula without reading it, for tools that inspect formulas.

@@ -46,13 +46,12 @@ it.each(['completed', 'unmounted', 'replaced'])('isolates card preview responses
     await router.push('/')
     await router.isReady()
     const speech = useSpeechStore(pinia)
-    await useProviderConfigStore(pinia).ensureProvider('microsoft-speech', 'microsoft-speech', {
+    await useProviderConfigStore(pinia).ensureProvider('alibaba-cloud-model-studio', 'alibaba-cloud-model-studio', {
       apiKey: 'key',
       baseUrl: 'https://voices.invalid/v1/',
-      region: 'eastasia',
     })
-    await speech.selectProviderModel('microsoft-speech', 'runtime-model')
-    await vi.waitFor(() => expect(speech.availableVoices['microsoft-speech']?.[0]?.id).toBe('runtime'))
+    await speech.selectProviderModel('alibaba-cloud-model-studio', 'runtime-model')
+    await vi.waitFor(() => expect(speech.availableVoices['alibaba-cloud-model-studio']?.[0]?.id).toBe('runtime'))
     speech.activeSpeechVoiceId = 'runtime'
     await speech.ensureActiveSpeechVoice()
     const cards = useAiriCardStore(pinia)
@@ -62,7 +61,7 @@ it.each(['completed', 'unmounted', 'replaced'])('isolates card preview responses
         name: 'Preview',
         version: '1.0',
         description: '',
-        extensions: { airi: { modules: { speech: { provider: 'microsoft-speech', model, voice_id: '' } } } },
+        extensions: { airi: { modules: { speech: { provider: 'alibaba-cloud-model-studio', model, voice_id: '' } } } },
       }, 'scratch')
     }
     cardId.value = await draft('preview-model')
@@ -90,7 +89,7 @@ it.each(['completed', 'unmounted', 'replaced'])('isolates card preview responses
     }
     expect(speech.activeSpeechModel).toBe('runtime-model')
     expect(speech.activeSpeechVoiceId).toBe('runtime')
-    expect(speech.availableVoices['microsoft-speech']?.[0]?.id).toBe('runtime')
+    expect(speech.availableVoices['alibaba-cloud-model-studio']?.[0]?.id).toBe('runtime')
   }
   finally {
     deferred.resolve(Response.json({ voices: [] }))

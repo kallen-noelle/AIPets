@@ -2,11 +2,8 @@ import type { ChatSessionsExport } from '../types/chat-session'
 
 import { isStageTamagotchi } from '@proj-airi/stage-shared'
 import { useSettingsScreenAmbientLight } from '@proj-airi/stage-shared/stores/screen-ambient-light'
-import { useSettingsLive2d } from '@proj-airi/stage-ui-live2d/composables/live2d'
-import { useLive2dParams } from '@proj-airi/stage-ui-live2d/stores/model-parameters'
 import { useModelStore } from '@proj-airi/stage-ui-three'
 
-import { useLive2DMotionMagicSettings } from '../features/motions/live2d'
 import { clearSherpawModelAssets } from '../libs/providers/providers/sherpaw/model-assets'
 import { useChatStore } from '../stores/chat'
 import { useChatSessionStore } from '../stores/chat/session-store'
@@ -16,11 +13,9 @@ import { useMemoryStore } from '../stores/memory'
 import { useAiriCardStore } from '../stores/modules/airi-card'
 import { useConsciousnessStore } from '../stores/modules/consciousness'
 import { useConsciousnessSettingsStore } from '../stores/modules/consciousness-settings'
-import { useDiscordStore } from '../stores/modules/discord'
 import { useHearingStore } from '../stores/modules/hearing'
 import { useHomeAssistantStore } from '../stores/modules/home-assistant'
 import { useSpeechStore } from '../stores/modules/speech'
-import { useTwitterStore } from '../stores/modules/twitter'
 import { useWebSearchStore } from '../stores/modules/web-search'
 import { useOnboardingStore } from '../stores/onboarding'
 import { useProviderStore } from '../stores/providers/provider'
@@ -35,9 +30,6 @@ export function useDataMaintenance() {
   const providersStore = useProviderStore()
   const settingsStore = useSettings()
   const audioSettingsStore = useSettingsAudioDevice()
-  const live2dParamsStore = useLive2dParams()
-  const live2dSettingsStore = useSettingsLive2d()
-  const live2dMagicSettingsStore = useLive2DMotionMagicSettings()
   const screenAmbientLightSettingsStore = useSettingsScreenAmbientLight()
   const threeStore = useModelStore()
   const hearingStore = useHearingStore()
@@ -45,9 +37,7 @@ export function useDataMaintenance() {
   const speechStore = useSpeechStore()
   const consciousnessStore = useConsciousnessStore()
   const consciousnessSettingsStore = useConsciousnessSettingsStore()
-  const twitterStore = useTwitterStore()
   const webSearchStore = useWebSearchStore()
-  const discordStore = useDiscordStore()
   const mcpStore = useMcpStore()
   const onboardingStore = useOnboardingStore()
   const airiCardStore = useAiriCardStore()
@@ -74,9 +64,7 @@ export function useDataMaintenance() {
       () => speechStore.resetState(),
       () => consciousnessStore.resetState(),
       () => consciousnessSettingsStore.resetState(),
-      () => twitterStore.resetState(),
       () => webSearchStore.resetState(),
-      () => discordStore.resetState(),
       // Memories and recipes hold what the character learned about the owner.
       () => memoryStore.resetState(),
       () => recipesStore.resetState(),
@@ -112,9 +100,6 @@ export function useDataMaintenance() {
   async function resetSettingsState() {
     await settingsStore.resetState()
     audioSettingsStore.resetState()
-    live2dParamsStore.resetState()
-    live2dSettingsStore.resetState()
-    live2dMagicSettingsStore.resetState()
     screenAmbientLightSettingsStore.resetState()
     threeStore.resetModelStore()
     mcpStore.resetState()

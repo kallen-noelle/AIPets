@@ -27,21 +27,21 @@ afterEach(async () => {
 it('reads a model that the previous release wrote, with the same bytes', async () => {
   const content = bytes(1024 * 1024)
   await store.setItem(id, {
-    format: DisplayModelFormat.VRM,
-    file: new File([content], 'avatar.vrm', { type: 'model/gltf-binary' }),
+    format: DisplayModelFormat.AnimationZip,
+    file: new File([content], 'avatar.zip', { type: 'application/zip' }),
     importedAt: 1,
   })
 
   const [listed] = await createDisplayModelsRepo(store).list()
 
-  expect(listed).toMatchObject({ id, type: 'file', name: 'avatar.vrm', format: DisplayModelFormat.VRM })
+  expect(listed).toMatchObject({ id, type: 'file', name: 'avatar.zip', format: DisplayModelFormat.AnimationZip })
   // Compare digests. `toEqual` checks a byte array one element at a time, and 4 MiB took 5 seconds in Node.
   expect(listed.file.size).toBe(content.byteLength)
   expect(await sha256Hex(listed.file)).toBe(await sha256Hex(new Blob([content])))
 })
 
 it('keeps a saved model and a pending upload across repository instances', async () => {
-  const model: DisplayModelFile = { id, format: DisplayModelFormat.Live2dZip, type: 'file', file: new File(['zip'], 'model.zip'), name: 'Renamed', importedAt: 1 }
+  const model: DisplayModelFile = { id, format: DisplayModelFormat.AnimationZip, type: 'file', file: new File(['zip'], 'model.zip'), name: 'Renamed', importedAt: 1 }
   await createDisplayModelsRepo(store).save(model)
   await createDisplayModelsRepo(store).saveUpload({ id, kind: 'upload', ownerId: 'owner', payload: null, status: 'queued' })
 

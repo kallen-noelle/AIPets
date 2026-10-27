@@ -11,7 +11,6 @@ import { useI18n } from 'vue-i18n'
 import { useProviderConfigStore } from '../../../../stores/providers/config'
 import { useProviderStore } from '../../../../stores/providers/provider'
 import { Alert } from '../../../misc'
-import { ProviderAccountIdInput } from '../../../scenarios/providers'
 
 interface Props {
   selectedProviderId: string
@@ -86,16 +85,13 @@ const needsApiKey = computed(() => {
   // Providers with custom onboarding fields handle their own auth
   if (hasOnboardingFields.value)
     return false
-  return props.selectedProvider.id !== 'ollama' && props.selectedProvider.id !== 'player2'
+  return props.selectedProvider.id !== 'ollama'
 })
 
 const needsBaseUrl = computed(() => {
   if (!props.selectedProvider)
     return false
-  // Providers with custom onboarding fields handle their own endpoints
-  if (hasOnboardingFields.value)
-    return false
-  return props.selectedProvider.id !== 'cloudflare-workers-ai'
+  return !hasOnboardingFields.value
 })
 
 const showChatCheckOption = computedAsync(
@@ -151,8 +147,6 @@ async function validateConfiguration() {
         config.apiKey = apiKey.value.trim()
       if (needsBaseUrl.value)
         config.baseUrl = baseUrl.value.trim()
-      if (props.selectedProvider.id === 'cloudflare-workers-ai')
-        config.accountId = accountId.value.trim()
     }
 
     // Validate using provider's validator
@@ -201,20 +195,11 @@ async function handleContinueAnyway() {
 function getApiKeyPlaceholder(providerId: string): string {
   const placeholders: Record<string, string> = {
     'openai': 'sk-...',
-    'azure-openai': 'Azure OpenAI API Key',
     'anthropic': 'sk-ant-...',
     'google-generative-ai': 'AI...',
-    'openrouter-ai': 'sk-or-...',
     'deepseek': 'sk-...',
-    'xai': 'xai-...',
-    'together-ai': 'togetherapi-...',
-    'mistral-ai': 'mis-...',
     'moonshot-ai': 'ms-...',
-    'modelscope': 'ms-...',
-    'fireworks-ai': 'fw-...',
-    'featherless-ai': 'fw-...',
     'nvidia': 'nvapi-...',
-    'novita-ai': 'nvt-...',
   }
 
   return placeholders[providerId] || 'API Key'
@@ -298,11 +283,6 @@ initializeForm()
                 label="Base URL"
                 description="Enter the base URL for the provider's API."
               />
-            </div>
-
-            <!-- Account ID for Cloudflare -->
-            <div v-if="props.selectedProvider.id === 'cloudflare-workers-ai'">
-              <ProviderAccountIdInput v-model="accountId" />
             </div>
           </template>
         </div>

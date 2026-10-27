@@ -6,7 +6,6 @@ import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 import ActionAbout from '../Layouts/InteractiveArea/Actions/About.vue'
-import ViewControls from '../Layouts/InteractiveArea/Actions/ViewControls.vue'
 import ChatToolbarButton from './ChatToolbarButton.vue'
 
 import { BackgroundDialogPicker } from '../Backgrounds'
@@ -43,7 +42,6 @@ const sendModeLabels = computed<Record<SendMode, string>>(() => ({
   <ActionAbout v-model="aboutOpen" hide-trigger />
   <BackgroundDialogPicker v-model="backgroundDialogOpen" />
   <div absolute bottom--8 right-0 flex gap-2>
-    <ViewControls />
     <ChatToolbarButton
       :title="t('stage.mobile-tools.background')"
       :aria-label="t('stage.mobile-tools.background')"

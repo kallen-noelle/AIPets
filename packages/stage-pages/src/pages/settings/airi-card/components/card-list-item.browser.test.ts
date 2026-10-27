@@ -23,9 +23,9 @@ async function renderItem(syncState?: 'synced' | 'pending' | 'refused', isActive
   const pinia = createPinia()
   useDisplayModelsStore(pinia).displayModels = [{
     id: 'model',
-    format: DisplayModelFormat.VRM,
+    format: DisplayModelFormat.AnimationZip,
     type: 'url',
-    url: 'https://example.com/model.vrm',
+    url: 'https://example.com/model.zip',
     name: 'Avatar',
     previewImage: 'data:image/png;base64,preview',
     importedAt: 0,

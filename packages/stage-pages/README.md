@@ -9,7 +9,7 @@ Add a page under `src/pages`. Each stage application scans this directory throug
 Import a shared page through the package boundary when code needs the component directly:
 
 ```ts
-import PolaroidPage from '@proj-airi/stage-pages/pages/devtools/polaroid.vue'
+import ImageDevtoolsPage from '@proj-airi/stage-pages/pages/devtools/image.vue'
 ```
 
 ## When to use this package

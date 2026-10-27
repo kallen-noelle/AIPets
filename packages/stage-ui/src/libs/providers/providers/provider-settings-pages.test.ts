@@ -35,7 +35,7 @@ describe('speech provider settings pages', () => {
   // catch-all route. This happens because the speech directory has no
   // `[providerId].vue` catch-all.
   //
-  // Before the patch, `minimax-speech` had no page file.
+  // Before the patch, one listed speech provider had no page file.
   //
   // We fixed this by adding the page file and sweeping every provider.
   it('has a settings page for every listed speech provider', () => {

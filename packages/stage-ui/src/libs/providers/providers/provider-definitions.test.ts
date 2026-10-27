@@ -65,23 +65,9 @@ describe('migrated provider definitions', () => {
       'openai-compatible-audio-transcription',
       'aliyun-nls-transcription',
       'browser-web-speech-api',
-      'elevenlabs',
-      'deepgram-tts',
-      'microsoft-speech',
-      'index-tts-vllm',
       'alibaba-cloud-model-studio',
       'volcengine',
-      'minimax-speech',
-      'openrouter-audio-speech',
-      'mimo-audio-speech',
-      'comet-api-speech',
-      'comet-api-transcription',
-      'mimo-audio-transcription',
-      'player2-speech',
       'kokoro-local',
-      'google-gemini-audio-speech',
-      'voicevox',
-      'aivis-speech',
     ]
 
     for (const providerId of providerIds)
@@ -171,22 +157,5 @@ describe('migrated provider definitions', () => {
       streamInput: true,
     })
     expect(await definition.isAvailableBy?.()).toBe(false)
-  })
-
-  it('keeps ElevenLabs configuration and model discovery in the definition', async () => {
-    const definition = getRequiredProvider('elevenlabs')
-    const defaults = z.parse(await definition.createProviderConfig({ t: translate }), { apiKey: 'test' })
-    const provider = await definition.createProvider(defaults)
-    const models = await definition.extraMethods?.listModels?.(defaults, provider)
-
-    expect(defaults).toMatchObject({
-      baseUrl: 'https://unspeech.hyp3r.link/v1/',
-      voiceSettings: {
-        similarityBoost: 0.75,
-        stability: 0.5,
-      },
-    })
-    expect(models?.length).toBeGreaterThan(0)
-    expect(models?.every(model => model.provider === 'elevenlabs')).toBe(true)
   })
 })

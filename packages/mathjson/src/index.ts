@@ -4,7 +4,7 @@
  * The format follows MathJSON: a number object, a symbol string, or an array whose first item is the head. Standard
  * heads, for example `Divide`, `Power`, `Limit`, `D`, and `Interval`, keep their MathJSON meaning, so the formula speech
  * eval can compare them with Compute Engine. Speech also needs what the writer wrote, so the pipeline adds heads such
- * as `Percent`, `Group`, `Unit`, and `Chemistry`. See docs/ai/adr/2026-10-20-speech-text-preprocessor.md.
+ * as `Percent`, `Group`, `Unit`, and `Chemistry`.
  *
  * Two representation choices differ from Compute Engine:
  * - A symbol keeps its TeX token, for example `\pi` or `x`, so locale packs key their words by TeX.

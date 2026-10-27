@@ -14,12 +14,6 @@ import ActionAbout from './InteractiveArea/Actions/About.vue'
 
 import { BackgroundDialogPicker } from '../Backgrounds'
 
-const props = defineProps<{
-  viewControlsAvailable: boolean
-}>()
-const emit = defineEmits<{
-  openViewControls: []
-}>()
 const characterVoiceEnabled = defineModel<boolean>('characterVoiceEnabled', { required: true })
 const { t } = useI18n()
 const { themeMode } = useTheme()
@@ -49,9 +43,9 @@ useEventListener('pointerdown', () => {
 }, { capture: true })
 
 // Finish closing settings before opening a sibling modal, so focus and scroll locks have one owner.
-const nextPanel = shallowRef<'background' | 'about' | 'account' | 'view' | 'notifications'>()
+const nextPanel = shallowRef<'background' | 'about' | 'account' | 'notifications'>()
 
-function openPanel(panel: 'background' | 'about' | 'account' | 'view' | 'notifications') {
+function openPanel(panel: 'background' | 'about' | 'account' | 'notifications') {
   nextPanel.value = panel
   settingsOpen.value = false
 }
@@ -74,9 +68,6 @@ function finishSettingsClose() {
       void router.push('/settings/account')
     else
       authStore.needsLogin = true
-  }
-  else if (nextPanel.value === 'view') {
-    emit('openViewControls')
   }
   else if (nextPanel.value === 'notifications') {
     notificationsOpen.value = true
@@ -218,17 +209,6 @@ const characterVoiceIcon = computed(() => {
           >
             <span aria-hidden="true" :class="['i-solar:gallery-wide-outline size-5 shrink-0 text-neutral-400']" />
             <span :class="['flex-1 text-left text-sm']">{{ t('stage.mobile-tools.background') }}</span>
-            <span aria-hidden="true" :class="['i-solar:alt-arrow-right-outline size-4 text-neutral-400']" />
-          </GhostButton>
-          <div :class="['mx-4 border-t border-neutral-100 dark:border-neutral-700/50']" />
-          <GhostButton
-            block size="unset"
-            :disabled="!props.viewControlsAvailable"
-            :class="['mobile-tool-row min-h-13 rounded-none px-4 py-3']"
-            @click="openPanel('view')"
-          >
-            <span aria-hidden="true" :class="['i-solar:tuning-outline size-5 shrink-0 text-neutral-400']" />
-            <span :class="['flex-1 text-left text-sm']">{{ t('stage.mobile-tools.view') }}</span>
             <span aria-hidden="true" :class="['i-solar:alt-arrow-right-outline size-4 text-neutral-400']" />
           </GhostButton>
         </div>

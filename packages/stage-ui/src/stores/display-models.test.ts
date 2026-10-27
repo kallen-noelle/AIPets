@@ -25,7 +25,7 @@ vi.mock('localforage', () => ({
 
 const cloudModel: CloudDisplayModel = {
   id: 'display-model-cloud',
-  format: 'live2d-zip',
+  format: 'animation-zip',
   name: 'Cloud model',
   originalFilename: 'cloud.zip',
   byteSize: 5,
@@ -59,8 +59,7 @@ async function startCloudSync() {
   signIn('owner-a')
   useFeatureFlagsStore().setPreference(DISPLAY_MODEL_SYNC_FLAG.key, true)
   const store = useDisplayModelsStore()
-  // The preview renderers need `window` and fail to load in Node. Sync starts before they load.
-  await expect(store.initialize()).rejects.toThrow('window is not defined')
+  await store.initialize()
   await vi.waitFor(() => expect(store.cloudModels).toHaveLength(1))
   return store
 }
@@ -81,7 +80,7 @@ describe('display models store', () => {
     const store = useDisplayModelsStore()
     const model = {
       id: 'display-model-pending-idb-write',
-      format: DisplayModelFormat.Live2dZip,
+      format: DisplayModelFormat.AnimationZip,
       type: 'file' as const,
       file: new File(['model'], 'model.zip'),
       name: 'model.zip',
@@ -138,7 +137,7 @@ describe('display models store', () => {
     const store = useDisplayModelsStore()
     vi.mocked(localforage.getItem).mockResolvedValueOnce({
       id: 'display-model-private',
-      format: DisplayModelFormat.Live2dZip,
+      format: DisplayModelFormat.AnimationZip,
       type: 'file',
       file: new File(['model'], 'model.zip'),
       name: 'model.zip',

@@ -6,14 +6,6 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { DisplayModelFormat, useDisplayModelsStore } from '../display-models'
 import { useSettingsStageModel } from './stage-model'
 
-const { resetLegacyModelIdentity } = vi.hoisted(() => ({
-  resetLegacyModelIdentity: vi.fn(),
-}))
-
-vi.mock('@proj-airi/stage-ui-three', () => ({
-  useModelStore: () => ({ resetLegacyModelIdentity }),
-}))
-
 vi.mock('@vueuse/core', async (importOriginal) => {
   const actual = await importOriginal<typeof import('@vueuse/core')>()
 
@@ -26,7 +18,6 @@ vi.mock('@vueuse/core', async (importOriginal) => {
 describe('settings stage model store', () => {
   beforeEach(() => {
     setActivePinia(createPinia())
-    resetLegacyModelIdentity.mockReset()
   })
 
   afterEach(() => {
@@ -55,7 +46,6 @@ describe('settings stage model store', () => {
     expect(store.stageModelRenderer).toBe('disabled')
     expect(store.stageModelUnavailable).toBe(true)
     expect(ensureDisplayModelSpy).toHaveBeenCalledWith('display-model-missing')
-    expect(resetLegacyModelIdentity).not.toHaveBeenCalled()
   })
 
   it('keeps a cloud model selected when its download fails', async () => {
@@ -73,56 +63,48 @@ describe('settings stage model store', () => {
     expect(store.stageModelUnavailable).toBe(false)
   })
 
-  it('routes Tachie archives to the Tachie renderer', async () => {
-    const tachieModel: DisplayModelURL = {
-      id: 'tachie-model',
-      format: DisplayModelFormat.TachieZip,
+  it('routes animation packs to the animation renderer', async () => {
+    const animationModel: DisplayModelURL = {
+      id: 'animation-model',
+      format: DisplayModelFormat.AnimationZip,
       type: 'url',
-      url: 'https://example.com/character.tachie.zip',
-      name: 'Tachie character',
+      url: 'https://example.com/character.zip',
+      name: 'Animation character',
       importedAt: 1,
     }
     const displayModelsStore = useDisplayModelsStore()
-    vi.spyOn(displayModelsStore, 'ensureDisplayModelAvailable').mockResolvedValue(tachieModel)
+    vi.spyOn(displayModelsStore, 'ensureDisplayModelAvailable').mockResolvedValue(animationModel)
 
     vi.stubGlobal('window', {})
     const store = useSettingsStageModel()
-    store.stageModelSelected = tachieModel.id
+    store.stageModelSelected = animationModel.id
 
     await store.initializeStageModel()
 
-    expect(store.stageModelSelectedDisplayModel).toEqual(tachieModel)
-    expect(store.stageModelSelectedUrl).toBe(tachieModel.url)
-    expect(store.stageModelRenderer).toBe('tachie')
-    expect(resetLegacyModelIdentity).toHaveBeenCalledOnce()
-    expect(resetLegacyModelIdentity).toHaveBeenCalledWith()
+    expect(store.stageModelSelectedDisplayModel).toEqual(animationModel)
+    expect(store.stageModelSelectedUrl).toBe(animationModel.url)
+    expect(store.stageModelRenderer).toBe('animation')
   })
 
-  it('resets the legacy model identity before publishing the startup model', async () => {
-    const vrmModel: DisplayModelURL = {
-      id: 'vrm-model',
-      format: DisplayModelFormat.VRM,
+  it('publishes the startup model after the renderer is ready', async () => {
+    const animationModel: DisplayModelURL = {
+      id: 'animation-model',
+      format: DisplayModelFormat.AnimationZip,
       type: 'url',
-      url: 'https://example.com/character.vrm',
-      name: 'VRM character',
+      url: 'https://example.com/character.zip',
+      name: 'Animation character',
       importedAt: 1,
     }
     const displayModelsStore = useDisplayModelsStore()
-    vi.spyOn(displayModelsStore, 'ensureDisplayModelAvailable').mockResolvedValue(vrmModel)
+    vi.spyOn(displayModelsStore, 'ensureDisplayModelAvailable').mockResolvedValue(animationModel)
 
     vi.stubGlobal('window', {})
     const store = useSettingsStageModel()
-
-    resetLegacyModelIdentity.mockImplementationOnce(() => {
-      expect(store.stageModelRenderer).toBeUndefined()
-      expect(store.stageModelSelectedUrl).toBeUndefined()
-    })
-    store.stageModelSelected = vrmModel.id
+    store.stageModelSelected = animationModel.id
 
     await store.initializeStageModel()
 
-    expect(resetLegacyModelIdentity).toHaveBeenCalledWith()
-    expect(store.stageModelRenderer).toBe('vrm')
-    expect(store.stageModelSelectedUrl).toBe(vrmModel.url)
+    expect(store.stageModelRenderer).toBe('animation')
+    expect(store.stageModelSelectedUrl).toBe(animationModel.url)
   })
 })

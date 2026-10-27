@@ -4,17 +4,7 @@ import { array, date, literal, number, object, optional, pipe, string, transform
 
 // --- Enums & Configs ---
 
-export const AvatarModelConfigSchema = object({
-  vrm: optional(object({
-    urls: array(string()),
-  })),
-  live2d: optional(object({
-    urls: array(string()),
-  })),
-  spine: optional(object({
-    urls: array(string()),
-  })),
-})
+export const AvatarModelConfigSchema = object({})
 
 export const CharacterCapabilityConfigSchema = object({
   apiKey: string(),
@@ -45,11 +35,7 @@ const CharacterCapabilityTypeSchema = union([
   literal('asr'),
 ])
 
-const AvatarModelTypeSchema = union([
-  literal('vrm'),
-  literal('live2d'),
-  literal('spine'),
-])
+const AvatarModelTypeSchema = literal('animation')
 
 const PromptTypeSchema = union([
   literal('system'),

@@ -27,7 +27,7 @@ function createStore(records: Record<string, unknown> = {}): DisplayModelStore {
 }
 
 function model(id: string, name = 'model.zip'): DisplayModelFile {
-  return { id, format: DisplayModelFormat.Live2dZip, type: 'file', file: new File(['model'], 'model.zip'), name, importedAt: 1 }
+  return { id, format: DisplayModelFormat.AnimationZip, type: 'file', file: new File(['model'], 'model.zip'), name, importedAt: 1 }
 }
 
 describe('displayModelsRepo', () => {
@@ -60,8 +60,8 @@ describe('displayModelsRepo', () => {
   it('reads records that earlier releases wrote', async () => {
     const file = new File(['model'], 'original.zip')
     const repo = createDisplayModelsRepo(createStore({
-      'display-model-old': { format: DisplayModelFormat.Live2dZip, file, importedAt: 1 },
-      'display-model-renamed': { format: DisplayModelFormat.Live2dZip, file, importedAt: 2, name: 'Renamed' },
+      'display-model-old': { format: DisplayModelFormat.AnimationZip, file, importedAt: 1 },
+      'display-model-renamed': { format: DisplayModelFormat.AnimationZip, file, importedAt: 2, name: 'Renamed' },
     }))
 
     expect(await repo.list()).toMatchObject([

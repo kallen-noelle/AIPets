@@ -1,5 +1,4 @@
 import type { Card, ccv3 } from '@proj-airi/ccc'
-import type { Live2DControlPolicy } from '@proj-airi/stage-ui-live2d/types/avatar-model'
 import type { GenericSchema, InferOutput } from 'valibot'
 
 import type { DisplayModel, useDisplayModelsStore } from '../stores/display-models'
@@ -8,7 +7,7 @@ import type { AiriCard, AiriExtension } from '../types/airiCard'
 import JSZip from 'jszip'
 
 import { exportToJSON } from '@proj-airi/ccc'
-import { array, literal, object, optional, parse, picklist, record, string, unknown as unknownSchema } from 'valibot'
+import { array, literal, object, optional, parse, record, string, unknown as unknownSchema } from 'valibot'
 
 import { wakeWordSchema } from '../libs/voice/wake-words'
 import { DisplayModelFormat } from '../stores/display-models'
@@ -19,10 +18,7 @@ const VERSION = 1
 const CARD_PATH = 'card.json'
 const MANIFEST_PATH = 'manifest.json'
 const MODEL_EXT: Partial<Record<DisplayModelFormat, string>> = {
-  [DisplayModelFormat.Live2dZip]: 'zip',
-  [DisplayModelFormat.SpineZip]: 'zip',
-  [DisplayModelFormat.TachieZip]: 'tachie.zip',
-  [DisplayModelFormat.VRM]: 'vrm',
+  [DisplayModelFormat.AnimationZip]: 'zip',
 }
 
 type DisplayModelsStore = ReturnType<typeof useDisplayModelsStore>
@@ -35,12 +31,8 @@ const manifestSchema = object({
   resources: optional(object({
     displayModel: object({
       path: string(),
-      format: picklist([DisplayModelFormat.Live2dZip, DisplayModelFormat.SpineZip, DisplayModelFormat.TachieZip, DisplayModelFormat.VRM]),
+      format: literal(DisplayModelFormat.AnimationZip),
       name: string(),
-      controls: optional(object({
-        disabledExpressions: array(string()),
-        disabledMotions: array(string()),
-      })),
     }),
   })),
 })
@@ -117,7 +109,7 @@ export async function importAiriCardPackage({ file, displayModelsStore }: { file
   const cardJson = await readJsonFile(zip, manifest.card.path, characterCardV3Schema)
   const displayModel = await importDisplayModel(zip, manifest, displayModelsStore)
 
-  return exportToJSON(cardFromCharacterCard(cardJson, displayModel, manifest.resources?.displayModel.controls))
+  return exportToJSON(cardFromCharacterCard(cardJson, displayModel))
 }
 
 async function exportDisplayModel(card: AiriCard, store: DisplayModelsStore) {
@@ -146,12 +138,6 @@ async function exportDisplayModel(card: AiriCard, store: DisplayModelsStore) {
       format: model.format,
       name: payload.file.name,
       path: `models/body-model.${modelExt}`,
-      ...(avatarModel?.type === 'live2d'
-        ? { controls: {
-            disabledExpressions: [...avatarModel.config.controls.disabledExpressions],
-            disabledMotions: [...avatarModel.config.controls.disabledMotions],
-          } }
-        : {}),
     },
   }
 }
@@ -215,7 +201,6 @@ function cardFromAiriCard(card: AiriCard): ShareableAiriCard {
 function cardFromCharacterCard(
   card: CharacterCardPackageJson,
   displayModel?: DisplayModel,
-  controls?: Live2DControlPolicy,
 ): ShareableAiriCard {
   const data = card.data
   return {
@@ -229,26 +214,19 @@ function cardFromCharacterCard(
     notes: data.creator_notes,
     systemPrompt: data.system_prompt,
     postHistoryInstructions: data.post_history_instructions,
-    extensions: { airi: sanitizeAiri(data.extensions?.airi, displayModel, controls) },
+    extensions: { airi: sanitizeAiri(data.extensions?.airi, displayModel) },
   }
 }
 
 function sanitizeAiri(
   value: unknown,
   displayModel?: DisplayModel,
-  controls?: Live2DControlPolicy,
 ): AiriExtension {
   const source = isRecord(value) ? value : {}
   const modules = isRecord(source.modules) ? source.modules : {}
   const artistry = isRecord(modules.artistry) ? modules.artistry : {}
   const speech = isRecord(modules.speech) ? modules.speech : {}
-  const avatarModel = displayModel ? createAvatarModelReference(displayModel.id, displayModel.format) : undefined
-  if (avatarModel?.type === 'live2d' && controls) {
-    avatarModel.config.controls = {
-      disabledExpressions: [...controls.disabledExpressions],
-      disabledMotions: [...controls.disabledMotions],
-    }
-  }
+  const avatarModel = displayModel ? createAvatarModelReference(displayModel.id) : undefined
 
   return {
     ...(source.wakeWords === undefined ? {} : { wakeWords: parse(array(wakeWordSchema), source.wakeWords) }),

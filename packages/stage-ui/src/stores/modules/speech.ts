@@ -131,12 +131,8 @@ export const useSpeechStore = defineStore('speech', () => {
   })
 
   const supportsSSML = computed(() => {
-    // Currently only ElevenLabs and some other providers support SSML
-    // only part voices are support SSML in cosyvoice-v2 which is provided by alibaba
-    if (activeSpeechProvider.value === 'alibaba-cloud-model-studio' && activeSpeechModel.value === 'cosyvoice-v2') {
-      return true
-    }
-    return ['elevenlabs', 'microsoft-speech', 'azure-speech'].includes(activeSpeechProvider.value)
+    // Only part of the cosyvoice-v2 voices support SSML.
+    return activeSpeechProvider.value === 'alibaba-cloud-model-studio' && activeSpeechModel.value === 'cosyvoice-v2'
   })
 
   // Only leader loads own these counters. Older responses for a provider cannot
@@ -550,7 +546,7 @@ export const useSpeechStore = defineStore('speech', () => {
     const model = selection.model || (typeof config.model === 'string' ? config.model : '')
     const voiceId = selection.voice_id || (typeof config.voice === 'string' ? config.voice : '')
     const useSSML = ssmlEnabled.value
-    const canUseSSML = ['elevenlabs', 'microsoft-speech', 'azure-speech'].includes(providerId) || (providerId === 'alibaba-cloud-model-studio' && model === 'cosyvoice-v2')
+    const canUseSSML = providerId === 'alibaba-cloud-model-studio' && model === 'cosyvoice-v2'
     const pitchValue = pitch.value
     const language = voice?.languages[0]?.code
     const voiceType = providerId === OFFICIAL_SPEECH_PROVIDER_ID || providerId === OFFICIAL_SPEECH_STREAMING_PROVIDER_ID

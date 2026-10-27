@@ -132,7 +132,7 @@ describe('airi card editor validation', () => {
     // We fix this by applying the editor-owned fields as a structured patch
     // over the existing extension.
     const existing: AiriExtension = {
-      avatarModels: [{ id: 'old-avatar-model', displayModelId: 'old-display-model', type: 'vrm', config: {} }],
+      avatarModels: [{ id: 'old-avatar-model', displayModelId: 'old-display-model', type: 'animation', config: {} }],
       defaultAvatarModelId: 'old-avatar-model',
       modules: {
         consciousness: { provider: 'old-chat', model: 'old-chat-model' },
@@ -146,8 +146,6 @@ describe('airi card editor validation', () => {
           ssml: true,
           language: 'ja',
         },
-        vrm: { source: 'url', url: 'https://example.com/avatar.vrm' },
-        live2d: { source: 'file', file: 'models/avatar.model3.json' },
         activeBackgroundId: 'background-1',
         artistry: {
           enabled: true,
@@ -202,8 +200,6 @@ describe('airi card editor validation', () => {
       ssml: true,
       language: 'ja',
     })
-    expect(extension.modules.vrm).toEqual(existing.modules.vrm)
-    expect(extension.modules.live2d).toEqual(existing.modules.live2d)
     expect(extension.avatarModels).toEqual(existing.avatarModels)
     expect(extension.defaultAvatarModelId).toBe('old-avatar-model')
     expect(extension.modules.activeBackgroundId).toBe('background-1')

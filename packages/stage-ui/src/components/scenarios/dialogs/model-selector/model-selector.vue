@@ -83,14 +83,6 @@ async function handleAddAnimationModel(file: FileList | null) {
 
 const mapFormatRenderer: Record<DisplayModelFormat, string> = {
   [DisplayModelFormat.AnimationZip]: 'Animation',
-  [DisplayModelFormat.Live2dZip]: 'Live2D',
-  [DisplayModelFormat.Live2dDirectory]: 'Live2D',
-  [DisplayModelFormat.VRM]: 'VRM',
-  [DisplayModelFormat.SpineZip]: 'Spine',
-  [DisplayModelFormat.TachieZip]: 'Tachie',
-  [DisplayModelFormat.PMXDirectory]: 'MMD',
-  [DisplayModelFormat.PMXZip]: 'MMD',
-  [DisplayModelFormat.PMD]: 'MMD',
 }
 
 const animationDialog = useFileDialog({ accept: '.zip', multiple: false, reset: true })

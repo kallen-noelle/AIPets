@@ -16,11 +16,9 @@ import { useMemoryStore } from '../stores/memory'
 import { useModsServerChannelStore } from '../stores/mods/api/channel-server'
 import { useConsciousnessStore } from '../stores/modules/consciousness'
 import { useConsciousnessSettingsStore } from '../stores/modules/consciousness-settings'
-import { useDiscordStore } from '../stores/modules/discord'
 import { useHearingStore } from '../stores/modules/hearing'
 import { useHomeAssistantStore } from '../stores/modules/home-assistant'
 import { useSpeechStore } from '../stores/modules/speech'
-import { useTwitterStore } from '../stores/modules/twitter'
 import { useWebSearchStore } from '../stores/modules/web-search'
 import { useRecipesStore } from '../stores/recipes'
 import { useVoiceprintStore } from '../stores/voiceprint'
@@ -94,9 +92,7 @@ it.each(['resetSettings', 'resetState'])('continues independent module resets wh
     homeAssistant,
     useSpeechStore(pinia),
     useConsciousnessStore(pinia),
-    useTwitterStore(pinia),
     useWebSearchStore(pinia),
-    useDiscordStore(pinia),
   ]
   const resetModules: string[] = []
   for (const module of modules) {

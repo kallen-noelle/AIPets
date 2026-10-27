@@ -46,7 +46,7 @@ import ProviderSettingsLayout from './provider-settings-layout.vue'
     >
       <div>
         <ProviderSettingsLayout
-          provider-name="Mistral AI" provider-icon-color="i-lobe-icons:mistral-color"
+          provider-name="Anthropic" provider-icon-color="i-lobe-icons:anthropic-color"
         >
           <div class="mt-4 rounded-xl bg-neutral-50 p-4 dark:bg-[rgba(0,0,0,0.3)]">
             <p>Provider settings content goes here</p>

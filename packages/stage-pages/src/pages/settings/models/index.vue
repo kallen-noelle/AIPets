@@ -1,39 +1,11 @@
 <script setup lang="ts">
 import { ModelSettings } from '@proj-airi/stage-ui/components/scenarios/settings/model-settings'
-import { Vibrant } from 'node-vibrant/browser'
-import { ref } from 'vue'
-
-const modelSettingsRef = ref<{ capturePreviewFrame: () => Promise<Blob | undefined> }>()
-const palette = ref<string[]>([])
-
-async function extractColorsFromModel() {
-  const frame = await modelSettingsRef.value?.capturePreviewFrame()
-  if (!frame) {
-    console.error('No frame captured')
-    return
-  }
-
-  const frameUrl = URL.createObjectURL(frame)
-  try {
-    const vibrant = new Vibrant(frameUrl)
-
-    const paletteFromVibrant = await vibrant.getPalette()
-    palette.value = Object.values(paletteFromVibrant).map(color => color?.hex).filter(it => typeof it === 'string')
-  }
-  finally {
-    URL.revokeObjectURL(frameUrl)
-  }
-}
 </script>
 
 <template>
   <div flex class="relative h-full flex-col-reverse md:flex-row">
     <ModelSettings
-      ref="modelSettingsRef"
       settings-class="w-100% md:w-40% lg:w-40% xl:w-25% 2xl:w-30% h-fit sm:max-h-80dvh relative"
-      live-2d-scene-class="absolute max-h-[calc(100dvh-100px-56px)] w-full h-full"
-      vrm-scene-class="absolute max-h-[calc(100dvh-100px-56px)] w-full h-full"
-      :palette="palette" @extract-colors-from-model="extractColorsFromModel"
     />
   </div>
 

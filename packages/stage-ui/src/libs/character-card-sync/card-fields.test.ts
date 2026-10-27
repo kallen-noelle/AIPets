@@ -14,7 +14,7 @@ const card: AiriCard = {
     'depth/prompt': { depth: 4 },
     'airi': {
       wakeWords: [],
-      avatarModels: [{ id: 'avatar-model-1', displayModelId: 'display-model-1', type: 'vrm', config: {} }],
+      avatarModels: [{ id: 'avatar-model-1', displayModelId: 'display-model-1', type: 'animation', config: {} }],
       defaultAvatarModelId: 'avatar-model-1',
       modules: {
         consciousness: { provider: 'openai', model: 'gpt' },
@@ -36,7 +36,7 @@ describe('splitCard', () => {
       '/greetings': ['Hello'],
       '/extensions/depth~1prompt': { depth: 4 },
       '/extensions/airi/wakeWords': [],
-      '/extensions/airi/avatarModels': [{ id: 'avatar-model-1', displayModelId: 'display-model-1', type: 'vrm', config: {} }],
+      '/extensions/airi/avatarModels': [{ id: 'avatar-model-1', displayModelId: 'display-model-1', type: 'animation', config: {} }],
       '/extensions/airi/defaultAvatarModelId': 'avatar-model-1',
       '/extensions/airi/agents': {},
       '/extensions/airi/modules/consciousness': { provider: 'openai', model: 'gpt' },

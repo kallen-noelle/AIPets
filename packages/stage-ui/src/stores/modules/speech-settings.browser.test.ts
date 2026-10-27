@@ -70,10 +70,9 @@ it.each(['mount', 'provider change'])('handles interrupted model discovery after
   const namespace = `speech-settings:${crypto.randomUUID()}`
   const leader = mountRenderer(namespace)
   await vi.waitFor(() => expect(leader.runtime.isLeader()).toBe(true))
-  await useProviderConfigStore(leader.pinia).ensureProvider('microsoft-speech', 'microsoft-speech', {
+  await useProviderConfigStore(leader.pinia).ensureProvider('volcengine', 'volcengine', {
     apiKey: 'key',
     baseUrl: 'https://voices.invalid/v1/',
-    region: 'eastasia',
   })
   await leader.speech.selectProviderModel('speech-noop', '')
   let completed = 0
@@ -97,7 +96,7 @@ it.each(['mount', 'provider change'])('handles interrupted model discovery after
   if (trigger === 'provider change') {
     await vi.waitFor(() => expect(completed).toBeGreaterThan(0))
     interrupt = true
-    await leader.speech.selectProviderModel('microsoft-speech', 'v1')
+    await leader.speech.selectProviderModel('volcengine', 'v1')
   }
   await vi.waitFor(() => expect(blocked).toBeGreaterThan(0))
   follower.runtime.dispose()
@@ -118,25 +117,24 @@ it('reports the committed provider and model after a settings-page click', async
   const namespace = `speech-settings:${crypto.randomUUID()}`
   const leader = mountRenderer(namespace)
   await vi.waitFor(() => expect(leader.runtime.isLeader()).toBe(true))
-  await useProviderConfigStore(leader.pinia).ensureProvider('microsoft-speech', 'microsoft-speech', {
+  await useProviderConfigStore(leader.pinia).ensureProvider('volcengine', 'volcengine', {
     apiKey: 'key',
     baseUrl: 'https://voices.invalid/v1/',
-    region: 'eastasia',
   })
-  await useProviderStore(leader.pinia).forceProviderConfigured('microsoft-speech')
+  await useProviderStore(leader.pinia).forceProviderConfigured('volcengine')
   await leader.speech.selectProviderModel('speech-noop', 'previous-model')
   const follower = mountRenderer(namespace, SpeechSettings)
   await vi.waitFor(() => expect(follower.speech.activeSpeechModel).toBe('previous-model'))
-  await vi.waitFor(() => expect(follower.container.querySelector('input[value="microsoft-speech"]')).not.toBeNull())
-  const input = follower.container.querySelector<HTMLInputElement>('input[value="microsoft-speech"]')!
+  await vi.waitFor(() => expect(follower.container.querySelector('input[value="volcengine"]')).not.toBeNull())
+  const input = follower.container.querySelector<HTMLInputElement>('input[value="volcengine"]')!
   input.click()
   await vi.waitFor(() => expect(vi.mocked(captureAnalyticsEvent).mock.calls.filter(([name]) => name === 'tts_provider_selected')).toHaveLength(1))
   expect(captureAnalyticsEvent).toHaveBeenCalledWith('tts_provider_selected', expect.objectContaining({
-    tts_provider_id: 'microsoft-speech',
+    tts_provider_id: 'volcengine',
     tts_model_id: 'v1',
     source: 'settings',
   }))
-  expect(follower.speech.activeSpeechProvider).toBe('microsoft-speech')
+  expect(follower.speech.activeSpeechProvider).toBe('volcengine')
 })
 
 // https://github.com/moeru-ai/airi/pull/2490#discussion_r3967708960

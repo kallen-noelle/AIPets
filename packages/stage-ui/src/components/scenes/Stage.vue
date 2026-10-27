@@ -8,7 +8,6 @@ import { errorMessageFrom, sleep } from '@moeru/std'
 import { BrowserPlayback } from '@proj-airi/audio/browser'
 import { normalizeActPayload, Playback } from '@proj-airi/pipelines-audio'
 import { createQueue } from '@proj-airi/stream-kit'
-import { Callout } from '@proj-airi/ui'
 import { useBroadcastChannel, useEventListener } from '@vueuse/core'
 import { storeToRefs } from 'pinia'
 import { computed, nextTick, onUnmounted, ref, shallowRef, watch } from 'vue'
@@ -31,7 +30,7 @@ import { useSettingsStageModel } from '../../stores/settings/stage-model'
 import { useSpeechOutputControlStore } from '../../stores/speech-output-control'
 import { useVoiceStore } from '../../stores/voice'
 
-const props = withDefaults(defineProps<{
+withDefaults(defineProps<{
   cursorPosition?: { x: number, y: number }
   enableOrbitControls?: boolean
   paused?: boolean
@@ -366,11 +365,6 @@ function resumeAudioContextOnInteraction() {
 // `useEventListener` removes them on unmount if no interaction came first.
 useEventListener(['click', 'touchstart', 'keydown'], resumeAudioContextOnInteraction, { once: true, passive: true })
 
-watch([stageModelRenderer, () => props.paused], ([renderer]) => {
-  if (renderer === 'godot')
-    componentState.value = 'mounted'
-}, { immediate: true })
-
 function canvasElement() {
   if (stageModelRenderer.value === 'animation')
     return animationSceneRef.value?.canvasElement()
@@ -433,26 +427,6 @@ defineExpose({
         :now-speaking="nowSpeaking"
         @error="reportStageRenderError"
       />
-      <div
-        v-if="stageModelRenderer === 'godot'"
-        :class="[
-          'h-full w-full',
-          'flex items-center justify-center',
-          'px-4 py-6',
-        ]"
-      >
-        <div
-          :class="[
-            'w-96 max-w-full',
-            'min-h-32',
-            'flex items-center justify-center',
-          ]"
-        >
-          <Callout label="Godot Stage (Experimental)">
-            <p>Godot Stage (experimental) is running...</p>
-          </Callout>
-        </div>
-      </div>
 
       <StageAvatarModelMissing
         v-if="avatarModelPrompt"

@@ -93,6 +93,5 @@ surface, icon, and text. Pass the Item slot's `takeover` and physical `edge` to 
 `showLabel=false` fills the former text area while keeping the accessible name.
 
 Use these components for persistent action areas on either side. They do not own
-conversation storage, undo, or swipe-to-reply behavior. See the
-[component reference](../../docs/ai/context/ui-components.md#swipeactions) and
+conversation storage, undo, or swipe-to-reply behavior. See
 the stage-ui Histoire story **Misc → Swipe Actions**.
