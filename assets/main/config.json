@@ -16,6 +16,9 @@
       }
     }
   ],
+  "chat": {
+    "historyTurns": 1
+  },
   "animations": {
     "idle": [
       "待机呼吸休闲"

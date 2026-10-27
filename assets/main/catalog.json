@@ -338,19 +338,6 @@
       "source": "manual"
     },
     {
-      "id": "animations/写代码.webm",
-      "name": "写代码",
-      "description": "专注地敲键盘写代码",
-      "tags": [
-        "thinking",
-        "work"
-      ],
-      "valence": 0.35,
-      "arousal": 0.45,
-      "role": "oneShot",
-      "source": "manual"
-    },
-    {
       "id": "animations/摇扇纳凉.webm",
       "name": "摇扇纳凉",
       "description": "摇扇纳凉",
@@ -375,18 +362,6 @@
       "source": "inferred"
     },
     {
-      "id": "animations/原地专心玩魔方.webm",
-      "name": "原地专心玩魔方",
-      "description": "原地专心玩魔方",
-      "tags": [
-        "play"
-      ],
-      "valence": 0.6,
-      "arousal": 0.65,
-      "role": "oneShot",
-      "source": "inferred"
-    },
-    {
       "id": "animations/原地蹲下玩玩具汽车.webm",
       "name": "原地蹲下玩玩具汽车",
       "description": "原地蹲下玩玩具汽车",
@@ -395,18 +370,6 @@
       ],
       "valence": 0.6,
       "arousal": 0.65,
-      "role": "oneShot",
-      "source": "inferred"
-    },
-    {
-      "id": "animations/鲸鱼吐泡泡特效.webm",
-      "name": "鲸鱼吐泡泡特效",
-      "description": "鲸鱼吐泡泡特效",
-      "tags": [
-        "animal"
-      ],
-      "valence": 0.5,
-      "arousal": 0.5,
       "role": "oneShot",
       "source": "inferred"
     },
@@ -520,18 +483,6 @@
       "source": "inferred"
     },
     {
-      "id": "animations/动物环绕.webm",
-      "name": "动物环绕",
-      "description": "动物环绕",
-      "tags": [
-        "animal"
-      ],
-      "valence": 0.5,
-      "arousal": 0.5,
-      "role": "oneShot",
-      "source": "inferred"
-    },
-    {
       "id": "animations/放风筝.webm",
       "name": "放风筝",
       "description": "放风筝",
@@ -580,30 +531,6 @@
       "source": "inferred"
     },
     {
-      "id": "animations/抽陀螺.webm",
-      "name": "抽陀螺",
-      "description": "抽陀螺",
-      "tags": [
-        "play"
-      ],
-      "valence": 0.6,
-      "arousal": 0.65,
-      "role": "oneShot",
-      "source": "inferred"
-    },
-    {
-      "id": "animations/吹笛子.webm",
-      "name": "吹笛子",
-      "description": "吹笛子",
-      "tags": [
-        "perform"
-      ],
-      "valence": 0.6,
-      "arousal": 0.65,
-      "role": "oneShot",
-      "source": "inferred"
-    },
-    {
       "id": "animations/蝴蝶蜜蜂环绕头顶开花.webm",
       "name": "蝴蝶蜜蜂环绕头顶开花",
       "description": "蝴蝶蜜蜂环绕头顶开花",
@@ -640,18 +567,6 @@
       "source": "inferred"
     },
     {
-      "id": "animations/骑木马.webm",
-      "name": "骑木马",
-      "description": "骑木马",
-      "tags": [
-        "ambient"
-      ],
-      "valence": 0.2,
-      "arousal": 0.4,
-      "role": "oneShot",
-      "source": "inferred"
-    },
-    {
       "id": "animations/三球抛接.webm",
       "name": "三球抛接",
       "description": "三球抛接",
@@ -684,18 +599,6 @@
       ],
       "valence": 0.2,
       "arousal": 0.4,
-      "role": "oneShot",
-      "source": "inferred"
-    },
-    {
-      "id": "animations/荡秋千.webm",
-      "name": "荡秋千",
-      "description": "荡秋千",
-      "tags": [
-        "play"
-      ],
-      "valence": 0.6,
-      "arousal": 0.65,
       "role": "oneShot",
       "source": "inferred"
     },
@@ -1038,18 +941,6 @@
       "source": "inferred"
     },
     {
-      "id": "animations/萌化小幽灵.webm",
-      "name": "萌化小幽灵",
-      "description": "萌化小幽灵",
-      "tags": [
-        "ambient"
-      ],
-      "valence": 0.2,
-      "arousal": 0.4,
-      "role": "oneShot",
-      "source": "inferred"
-    },
-    {
       "id": "animations/装点圣诞树.webm",
       "name": "装点圣诞树",
       "description": "装点圣诞树",
@@ -1128,20 +1019,6 @@
       "id": "animations/碎碎念-擦桌碎碎念.webm",
       "name": "碎碎念-擦桌碎碎念",
       "description": "碎碎念-擦桌碎碎念",
-      "tags": [
-        "loop",
-        "thinking",
-        "work"
-      ],
-      "valence": 0.2,
-      "arousal": 0.4,
-      "role": "loop",
-      "source": "inferred"
-    },
-    {
-      "id": "animations/碎碎念-发呆碎碎念.webm",
-      "name": "碎碎念-发呆碎碎念",
-      "description": "碎碎念-发呆碎碎念",
       "tags": [
         "loop",
         "thinking",

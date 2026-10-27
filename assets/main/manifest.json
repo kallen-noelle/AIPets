@@ -10,6 +10,7 @@
     "fadeMs": 180
   },
   "animations": {
+
     "idle": [
       {
         "src": "animations/待机呼吸休闲.webm",
@@ -154,6 +155,86 @@
           "loop": false
         }
       ]
+    },
+    "longActions": {
+      "抽陀螺": {
+        "start": { "src": "animations/抽陀螺-start.webm", "weight": 1, "loop": false, "durationMs": 5000 },
+        "mid": { "src": "animations/抽陀螺-mid.webm", "weight": 1, "loop": true, "durationMs": 4042 },
+        "end": { "src": "animations/抽陀螺-end.webm", "weight": 1, "loop": false, "durationMs": 5042 },
+        "defaultDurationMs": 60000
+      },
+      "吹笛子": {
+        "start": { "src": "animations/吹笛子-start.webm", "weight": 1, "loop": false, "durationMs": 5000 },
+        "mid": { "src": "animations/吹笛子-mid.webm", "weight": 1, "loop": true, "durationMs": 4042 },
+        "end": { "src": "animations/吹笛子-end.webm", "weight": 1, "loop": false, "durationMs": 5042 },
+        "defaultDurationMs": 60000
+      },
+      "萌化小幽灵": {
+        "start": { "src": "animations/萌化小幽灵-start.webm", "weight": 1, "loop": false, "durationMs": 5000 },
+        "mid": { "src": "animations/萌化小幽灵-mid.webm", "weight": 1, "loop": true, "durationMs": 4042 },
+        "end": { "src": "animations/萌化小幽灵-end.webm", "weight": 1, "loop": false, "durationMs": 5042 },
+        "defaultDurationMs": 60000
+      },
+      "写代码": {
+        "start": { "src": "animations/写代码-start.webm", "weight": 1, "loop": false, "durationMs": 5000 },
+        "mid": { "src": "animations/写代码-mid.webm", "weight": 1, "loop": true, "durationMs": 4042 },
+        "end": { "src": "animations/写代码-end.webm", "weight": 1, "loop": false, "durationMs": 5042 },
+        "defaultDurationMs": 60000
+      },
+      "鲸鱼吐泡泡特效": {
+        "start": { "src": "animations/鲸鱼吐泡泡特效-start.webm", "weight": 1, "loop": false, "durationMs": 5000 },
+        "mid": { "src": "animations/鲸鱼吐泡泡特效-mid.webm", "weight": 1, "loop": true, "durationMs": 4042 },
+        "end": { "src": "animations/鲸鱼吐泡泡特效-end.webm", "weight": 1, "loop": false, "durationMs": 5042 },
+        "defaultDurationMs": 60000
+      },
+      "骑木马": {
+        "start": { "src": "animations/骑木马-start.webm", "weight": 1, "loop": false, "durationMs": 5000 },
+        "mid": { "src": "animations/骑木马-mid.webm", "weight": 1, "loop": true, "durationMs": 6042 },
+        "end": { "src": "animations/骑木马-end.webm", "weight": 1, "loop": false, "durationMs": 5042 },
+        "defaultDurationMs": 60000
+      },
+      "荡秋千": {
+        "start": { "src": "animations/荡秋千-start.webm", "weight": 1, "loop": false, "durationMs": 5000 },
+        "mid": { "src": "animations/荡秋千-mid.webm", "weight": 1, "loop": true, "durationMs": 4042 },
+        "end": { "src": "animations/荡秋千-end.webm", "weight": 1, "loop": false, "durationMs": 5042 },
+        "defaultDurationMs": 60000
+      },
+      "原地专心玩魔方": {
+        "start": { "src": "animations/原地专心玩魔方-start.webm", "weight": 1, "loop": false, "durationMs": 5000 },
+        "mid": { "src": "animations/原地专心玩魔方-mid.webm", "weight": 1, "loop": true, "durationMs": 4042 },
+        "end": { "src": "animations/原地专心玩魔方-end.webm", "weight": 1, "loop": false, "durationMs": 5042 },
+        "defaultDurationMs": 60000
+      },
+      "放风筝": {
+        "start": { "src": "animations/放风筝-start.webm", "weight": 1, "loop": false, "durationMs": 5000 },
+        "mid": { "src": "animations/放风筝-mid.webm", "weight": 1, "loop": true, "durationMs": 4042 },
+        "end": { "src": "animations/放风筝-end.webm", "weight": 1, "loop": false, "durationMs": 5042 },
+        "defaultDurationMs": 60000
+      },
+      "动物环绕": {
+        "start": { "src": "animations/动物环绕-start.webm", "weight": 1, "loop": false, "durationMs": 5000 },
+        "mid": { "src": "animations/动物环绕-mid.webm", "weight": 1, "loop": true, "durationMs": 4042 },
+        "end": { "src": "animations/动物环绕-end.webm", "weight": 1, "loop": false, "durationMs": 5042 },
+        "defaultDurationMs": 60000
+      },
+      "悠闲哼歌": {
+        "start": { "src": "animations/悠闲哼歌-start.webm", "weight": 1, "loop": false, "durationMs": 5000 },
+        "mid": { "src": "animations/悠闲哼歌-mid.webm", "weight": 1, "loop": true, "durationMs": 4042 },
+        "end": { "src": "animations/悠闲哼歌-end.webm", "weight": 1, "loop": false, "durationMs": 5042 },
+        "defaultDurationMs": 60000
+      },
+      "摇扇纳凉": {
+        "start": { "src": "animations/摇扇纳凉-start.webm", "weight": 1, "loop": false, "durationMs": 5000 },
+        "mid": { "src": "animations/摇扇纳凉-mid.webm", "weight": 1, "loop": true, "durationMs": 4042 },
+        "end": { "src": "animations/摇扇纳凉-end.webm", "weight": 1, "loop": false, "durationMs": 5042 },
+        "defaultDurationMs": 60000
+      },
+      "碎碎念-发呆碎碎念": {
+        "start": { "src": "animations/碎碎念-发呆碎碎念-start.webm", "weight": 1, "loop": false, "durationMs": 5000 },
+        "mid": { "src": "animations/碎碎念-发呆碎碎念-mid.webm", "weight": 1, "loop": true, "durationMs": 4042 },
+        "end": { "src": "animations/碎碎念-发呆碎碎念-end.webm", "weight": 1, "loop": false, "durationMs": 5042 },
+        "defaultDurationMs": 60000
+      }
     },
     "actions": {
       "待机呼吸休闲": {
