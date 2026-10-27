@@ -20,6 +20,15 @@ export type {
   AffectStateParseResult,
   CharacterTraits,
 } from './affect'
+export { resolvePlanArrival } from './arrival'
+export type {
+  PlanArrivalDecision,
+  PlanArrivalDrop,
+  PlanArrivalDropReason,
+  PlanArrivalOptions,
+  PlanTimelineMark,
+  TimedPlanCue,
+} from './arrival'
 export {
   characterCatalogSchema,
   clipHasAnyTag,
@@ -35,6 +44,30 @@ export type {
   ClipRole,
   ClipSemanticSource,
 } from './catalog'
+export {
+  createRuleBasedDayPlan,
+  currentDayPlanBlock,
+  dayKeyAt,
+  dayPlanDefaults,
+  dayPlanSchema,
+  isDayPlanExpired,
+  isDayPlanThrottled,
+  mergeDayPlan,
+  nextDayPlanBlock,
+  parseDayPlan,
+  startOfNextDay,
+  validateDayPlan,
+} from './day-plan'
+export type {
+  DayPlan,
+  DayPlanBlock,
+  DayPlanBlockKind,
+  DayPlanParseResult,
+  DayPlanTimingOptions,
+  DayPlanValidationOptions,
+  DayPlanValidationResult,
+  RuleBasedDayPlanOptions,
+} from './day-plan'
 export { PerformancePlanExecutor } from './executor'
 export type {
   ExecutedCue,
@@ -88,7 +121,44 @@ export type {
   PlanValidationResult,
 } from './plan'
 export { manifestSchema } from './schema'
-export type { AnimationManifest, RawClipEntry, RawEmotionEntry } from './schema'
+export type { AnimationManifest, RawClipEntry, RawEmotionEntry, RawLongActionEntry } from './schema'
+export {
+  actionSequenceSchema,
+  defaultLongStepOverheadMs,
+  defaultShortStepMs,
+  parseActionSequence,
+  SequenceRunner,
+  sequenceStepDurationMs,
+  truncateSequenceToBudget,
+  validateActionSequence,
+} from './sequence'
+export type {
+  ActionSequence,
+  SequenceBudgetOptions,
+  SequenceLongStep,
+  SequenceParseResult,
+  SequenceRunnerOptions,
+  SequenceShortStep,
+  SequenceStep,
+  SequenceValidationOptions,
+  SequenceValidationResult,
+  TruncatedSequence,
+} from './sequence'
+export {
+  defaultSessionIdleTimeoutMs,
+  defaultSessionReserveMs,
+  SessionStateMachine,
+} from './session'
+export type {
+  SessionEffect,
+  SessionEvent,
+  SessionEventType,
+  SessionInteractionType,
+  SessionPhase,
+  SessionSnapshot,
+  SessionStateMachineOptions,
+  SessionTransition,
+} from './session'
 export { AnimationController } from './state'
 export type { AnimationControllerOptions } from './state'
 export type {
@@ -103,6 +173,9 @@ export type {
   ClickArea,
   EmotionClips,
   LoadedPack,
+  LongActionClips,
+  LongActionPhase,
+  LongActionStopMode,
   ManifestParseResult,
   NormalizedClip,
   PackSummary,

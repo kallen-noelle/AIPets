@@ -33,6 +33,7 @@
     "build:packages": "turbo run build -F=\"./packages/*\"",
     "build:engines": "turbo run build -F=\"./engines/*\"",
     "characters:build": "node scripts/build-character-packs.mjs",
+    "state:split": "node scripts/split-state-clips.mjs",
     "test": "vitest --coverage",
     "test:run": "turbo run test:run --concurrency=2",
     "test:root": "vitest run",

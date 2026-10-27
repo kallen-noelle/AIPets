@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { AnimationCommand, AnimationEvent, NormalizedClip } from '@proj-airi/character-animation'
+import type { AnimationCommand, AnimationEvent, LongActionStopMode, NormalizedClip } from '@proj-airi/character-animation'
 
 import type { LoadedAnimationPack } from '../../adapters/animation/zip-loader'
 
@@ -118,6 +118,10 @@ function dispatch(event: AnimationEvent) {
 
 function handleEnded(event: Event) {
   const video = event.target as HTMLVideoElement
+  // A slot that a later clip replaced can still fire `ended` during the fade.
+  if (video !== videos.value[activeSlotKey])
+    return
+
   const clipId = video.dataset.clipId
   if (!clipId)
     return
@@ -130,12 +134,17 @@ function playEmotion(emotion: string, intensity = 1) {
   dispatch({ type: 'emotion', emotion, intensity })
 }
 
-function playAction(name: string) {
-  dispatch({ type: 'action', name })
+function playAction(name: string, durationSeconds?: number) {
+  const durationMs = durationSeconds !== undefined ? Math.round(durationSeconds * 1000) : undefined
+  dispatch({ type: 'action', name, durationMs })
 }
 
 function playExpression(name: string) {
   dispatch({ type: 'expression', name })
+}
+
+function stopAction(mode?: LongActionStopMode) {
+  dispatch({ type: 'longActionStop', mode })
 }
 
 function triggerClick(area?: 'head' | 'body') {
@@ -239,6 +248,7 @@ async function captureFrame(): Promise<Blob | null> {
 function disposePack() {
   clearTimeout(fadeTimer)
   pauseAll()
+  controller.value?.dispose()
   for (const video of Object.values(videos.value)) {
     if (video)
       video.removeAttribute('src')
@@ -265,7 +275,7 @@ async function loadModel(src?: string) {
       return
 
     transitionMs.value = pack.pack.manifest.transition?.fadeMs ?? 180
-    controller.value = new AnimationController(pack.pack)
+    controller.value = new AnimationController(pack.pack, { onCommands: applyCommands })
     dispatch({ type: 'idle' })
     if (props.paused)
       dispatch({ type: 'paused', value: true })
@@ -295,6 +305,7 @@ defineExpose({
   playAction,
   playExpression,
   setExpression: playExpression,
+  stopAction,
   triggerClick,
   setSpeaking,
   setThinking,

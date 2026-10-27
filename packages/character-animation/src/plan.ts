@@ -19,6 +19,8 @@ export interface PerformanceCue {
   anchor: PlanAnchor
   clipId: string
   intensity: number
+  /** Seconds for a long action. Long actions repeat their mid clip to reach it. */
+  durationSeconds?: number
   reason?: string
 }
 
@@ -35,6 +37,8 @@ export interface PerformancePlan {
 
 export interface PlanValidationOptions {
   catalog: CharacterCatalog
+  /** Names of long actions in the active pack. A cue with a duration must use one. */
+  longActionIds?: string[]
   maxCues?: number
   maxValenceDelta?: number
   maxArousalDelta?: number
@@ -73,6 +77,7 @@ const cueSchema = v.object({
   anchor: anchorSchema,
   clipId: v.pipe(v.string(), v.minLength(1)),
   intensity: v.optional(v.pipe(v.number(), v.minValue(0), v.maxValue(1)), 0.7),
+  durationSeconds: v.optional(v.pipe(v.number(), v.finite('durationSeconds must be finite'), v.minValue(1), v.maxValue(600))),
   reason: v.optional(v.pipe(v.string(), v.maxLength(200))),
 })
 
@@ -150,16 +155,11 @@ export function validatePerformancePlan(
   const acceptedCues: PerformanceCue[] = []
   const seenClipIds = new Set<string>()
   const descriptors = new Map<string, ClipDescriptor>(options.catalog.clips.map(clip => [clip.id, clip]))
+  const longActionIds = new Set(options.longActionIds ?? [])
 
   for (const cue of parsed.plan.cues) {
     if (acceptedCues.length >= maxCues) {
       issues.push(`cue dropped: ${cue.clipId} exceeds the ${maxCues} cue limit`)
-      continue
-    }
-
-    const descriptor = descriptors.get(cue.clipId)
-    if (!descriptor) {
-      issues.push(`cue dropped: unknown clip ${cue.clipId}`)
       continue
     }
 
@@ -168,9 +168,29 @@ export function validatePerformancePlan(
       continue
     }
 
-    if (forbiddenTags.length && clipHasAnyTag(descriptor, forbiddenTags)) {
-      issues.push(`cue dropped: ${cue.clipId} uses a forbidden tag`)
-      continue
+    const isLongAction = longActionIds.has(cue.clipId)
+    if (isLongAction) {
+      if (cue.durationSeconds === undefined) {
+        issues.push(`cue dropped: long action ${cue.clipId} needs durationSeconds`)
+        continue
+      }
+    }
+    else {
+      if (cue.durationSeconds !== undefined) {
+        issues.push(`cue dropped: ${cue.clipId} is not a long action`)
+        continue
+      }
+
+      const descriptor = descriptors.get(cue.clipId)
+      if (!descriptor) {
+        issues.push(`cue dropped: unknown clip ${cue.clipId}`)
+        continue
+      }
+
+      if (forbiddenTags.length && clipHasAnyTag(descriptor, forbiddenTags)) {
+        issues.push(`cue dropped: ${cue.clipId} uses a forbidden tag`)
+        continue
+      }
     }
 
     seenClipIds.add(cue.clipId)

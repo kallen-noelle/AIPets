@@ -42,6 +42,8 @@ export interface NormalizedActPayload {
   expression?: StreamingControlExpressionPayload | null
   /** Motion cue emitted by the model, when present. */
   motion?: string
+  /** Seconds the motion must run. Long actions repeat their mid clip to reach it. */
+  motionDuration?: number
 }
 
 /**
@@ -157,6 +159,14 @@ function normalizeDuration(value: unknown): number | undefined {
   return Number.isFinite(duration) && duration > 0 ? duration : undefined
 }
 
+function normalizeMotionDuration(value: unknown): number | undefined {
+  const duration = normalizeDuration(value)
+  if (duration === undefined)
+    return undefined
+
+  return Math.min(duration, 600)
+}
+
 function normalizeExpression(value: unknown): StreamingControlExpressionPayload | null | undefined {
   if (value === null)
     return null
@@ -208,10 +218,12 @@ export function normalizeActPayload(
   const emotion = normalizeEmotion(payload.emotion)
   const expression = normalizeExpression(payload.expression)
   const motion = normalizeMotion(payload.motion)
+  const motionDuration = motion ? normalizeMotionDuration(payload.duration) : undefined
 
   return {
     ...(emotion && { emotion }),
     ...(expression !== undefined && { expression }),
     ...(motion && { motion }),
+    ...(motionDuration !== undefined && { motionDuration }),
   }
 }

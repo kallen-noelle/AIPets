@@ -48,4 +48,29 @@ describe('normalizeActPayload', () => {
   it('normalizes a null expression as an explicit reset', () => {
     expect(normalizeActPayload({ expression: null })).toEqual({ expression: null })
   })
+
+  it('normalizes a motion duration and caps it', () => {
+    expect(normalizeActPayload({
+      motion: 'swing',
+      duration: 40,
+    })).toEqual({
+      motion: 'swing',
+      motionDuration: 40,
+    })
+
+    expect(normalizeActPayload({
+      motion: 'swing',
+      duration: '900',
+    })).toEqual({
+      motion: 'swing',
+      motionDuration: 600,
+    })
+
+    expect(normalizeActPayload({
+      motion: 'swing',
+      duration: -1,
+    })).toEqual({
+      motion: 'swing',
+    })
+  })
 })

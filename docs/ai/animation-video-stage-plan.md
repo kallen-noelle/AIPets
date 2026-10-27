@@ -213,11 +213,16 @@ talk/talk-01.webm
 emotion/happy-1.webm
 emotion/happy-2.webm
 action/wave.webm
+long/swing-start.webm     # 可选：长期动作的进入片段
+long/swing-mid.webm       # 长期动作的循环片段
+long/swing-end.webm       # 可选：长期动作的退出片段
 expression/smile.webm
 click/poke.webm
 thinking/think-01.webm
 beat/dance-01.webm
 ```
+
+首批长期动作素材位于 `assets/<角色>/state/`，命名格式为 `<名称>-start.webm` 与 `<名称>-end.webm`。mid 片段补齐后，在 `longActions` 里登记同名条目即可。
 
 ### 3.2 manifest.json
 
@@ -257,6 +262,13 @@ beat/dance-01.webm
     "actions": {
       "wave": "action/wave.webm"
     },
+    "longActions": {
+      "swing": {
+        "start": "long/swing-start.webm",
+        "mid": { "src": "long/swing-mid.webm", "durationMs": 4000 },
+        "end": "long/swing-end.webm"
+      }
+    },
     "expressions": {
       "smile": "expression/smile.webm"
     },
@@ -283,7 +295,8 @@ beat/dance-01.webm
 | `animations.idle` | 是 | 至少一条，否则无效 |
 | `animations.talk` | 否 | 缺失时说话沿用 idle |
 | `animations.emotion` | 否 | 支持 low/high 两档 |
-| `animations.actions` | 否 | 对应 `act.motion` |
+| `animations.actions` | 否 | 对应 `act.motion`，播放一次 |
+| `animations.longActions` | 否 | 长期动作，计时器控制 mid 循环与 end 插入 |
 | `animations.expressions` | 否 | 对应 `act.expression` |
 | `transition.fadeMs` | 否 | 默认 180ms |
 | `audio` | 否 | `keep` 保留原声，`mute` 静音 |
@@ -292,6 +305,13 @@ beat/dance-01.webm
 
 - **基础层**：`idle`、`talk`、`thinking` 三条链。片段播完按权重抽下一个，避免与上一个重复。
 - **一次性层**：情绪、点击、动作、表情。播完自动回基础层。
+- **长期动作**：`longActions` 条目按 `start → mid（循环）→ end` 播放，由真实计时器控制总时长。计时从 mid 开始时启动，到时立即切断当前 mid 并插入 end，所以 `mid.durationMs` 与视频实际长度不一致也不会拉长总时长。未传时长时用 `defaultDurationMs`，缺失则用 mid 的 `durationMs`。`start`、`end` 可省略。
+- **中断类型**：
+  - 计时器到时：播 `end`，再回基础层。
+  - 意图抢占（说话、思考、情绪、点击、其他动作、显式播放片段）：立即切断，清除计时器，不补播 `end`。
+  - 显式停止：`{ type: 'longActionStop', mode: 'end' }` 播 `end`；`mode: 'cut'` 直接回基础层。
+  - 暂停：冻结计时器并保留剩余预算，恢复后继续计时；暂停不重置时长。
+  - 宿主卸载：调用 `controller.dispose()` 清除计时器。
 - **打断规则**：
   - 情绪可打断情绪。
   - 说话开始会打断一次性动画，回到 `talk`。

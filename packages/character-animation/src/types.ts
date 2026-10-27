@@ -1,6 +1,6 @@
 import type { AnimationManifest } from './schema'
 
-export type BaseChain = 'idle' | 'talk' | 'thinking'
+export type BaseChain = 'idle' | 'talk' | 'thinking' | 'waiting'
 export type ClickArea = 'head' | 'body'
 export type AnimationAudioMode = 'keep' | 'mute'
 
@@ -10,6 +10,18 @@ export interface NormalizedClip {
   weight: number
   loop: boolean
   fadeMs?: number
+  /** Known clip length. The mid clip of a long action needs it. */
+  durationMs?: number
+}
+
+/** Phases of a long action. The mid clip repeats until the requested duration is covered. */
+export type LongActionPhase = 'start' | 'mid' | 'end'
+
+export interface LongActionClips {
+  start?: NormalizedClip
+  mid: NormalizedClip
+  end?: NormalizedClip
+  defaultDurationMs?: number
 }
 
 export interface EmotionClips {
@@ -23,6 +35,7 @@ export interface LoadedPack {
   click: Record<ClickArea | 'default', NormalizedClip[]>
   emotions: Record<string, EmotionClips>
   actions: Record<string, NormalizedClip[]>
+  longActions: Record<string, LongActionClips>
   expressions: Record<string, NormalizedClip[]>
   beat: NormalizedClip[]
   look: Partial<Record<'left' | 'right', NormalizedClip>>
@@ -41,11 +54,15 @@ export type ManifestParseResult
   = | { ok: true, pack: LoadedPack }
     | { ok: false, issues: string[] }
 
+/** How an explicit stop finishes a long action. */
+export type LongActionStopMode = 'end' | 'cut'
+
 export type AnimationIntent
   = | { kind: 'idle' }
     | { kind: 'talk', speaking: boolean }
     | { kind: 'emotion', emotion: string, intensity?: number }
-    | { kind: 'action', name: string }
+    | { kind: 'action', name: string, durationMs?: number }
+    | { kind: 'longActionStop', mode?: LongActionStopMode }
     | { kind: 'expression', name: string }
     | { kind: 'click', area?: ClickArea }
     | { kind: 'thinking', value: boolean }
@@ -56,13 +73,15 @@ export type AnimationEvent
     | { type: 'speaking', value: boolean }
     | { type: 'thinking', value: boolean }
     | { type: 'emotion', emotion: string, intensity?: number }
-    | { type: 'action', name: string }
+    | { type: 'action', name: string, durationMs?: number }
+    | { type: 'longActionStop', mode?: LongActionStopMode }
     | { type: 'expression', name: string }
     | { type: 'click', area?: ClickArea }
     | { type: 'playClip', clipId: string }
     | { type: 'setState', clipId: string }
     | { type: 'clearState' }
     | { type: 'paused', value: boolean }
+    | { type: 'waiting', value: boolean }
 
 export type AnimationCommand
   = | { type: 'play', clip: NormalizedClip, fadeMs: number }
@@ -74,7 +93,11 @@ export interface AnimationPlaybackSnapshot {
   currentClipId: string | null
   oneShotClipId: string | null
   stateClipId: string | null
+  longActionName: string | null
+  longActionPhase: LongActionPhase | null
   paused: boolean
+  /** True while the session waits for the next user input. */
+  waiting: boolean
 }
 
 export interface AnimationPlayerPort {

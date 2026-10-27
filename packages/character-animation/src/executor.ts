@@ -16,6 +16,8 @@ export interface ExecutedCue {
   clipId: string
   intensity: number
   anchor: PlanAnchor
+  /** Present when the cue runs a long action for a fixed number of seconds. */
+  durationSeconds?: number
   reason?: string
 }
 
@@ -302,6 +304,7 @@ export class PerformancePlanExecutor {
       clipId: cue.clipId,
       intensity: cue.intensity,
       anchor: cue.anchor,
+      ...(cue.durationSeconds !== undefined ? { durationSeconds: cue.durationSeconds } : {}),
       ...(cue.reason ? { reason: cue.reason } : {}),
     })
   }

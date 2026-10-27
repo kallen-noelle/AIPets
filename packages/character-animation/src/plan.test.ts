@@ -120,4 +120,24 @@ describe('performancePlan', () => {
     expect(result.ok).toBe(false)
     expect(result.plan).toBeNull()
   })
+
+  it('accepts long actions with a duration and drops durations on normal clips', () => {
+    const result = validatePerformancePlan({
+      cues: [
+        { anchor: { type: 'replyStart' }, clipId: 'swing', durationSeconds: 40 },
+        { anchor: { type: 'sentence', index: 1 }, clipId: 'a.webm', durationSeconds: 5 },
+        { anchor: { type: 'afterSpeech' }, clipId: 'swing-2' },
+      ],
+    }, { catalog: createCatalog(), longActionIds: ['swing', 'swing-2', 'swing'] })
+
+    expect(result.ok).toBe(true)
+    if (!result.ok || !result.plan)
+      return
+
+    expect(result.plan.cues).toHaveLength(1)
+    expect(result.plan.cues[0]?.clipId).toBe('swing')
+    expect(result.plan.cues[0]?.durationSeconds).toBe(40)
+    expect(result.issues).toContain('cue dropped: a.webm is not a long action')
+    expect(result.issues).toContain('cue dropped: long action swing-2 needs durationSeconds')
+  })
 })

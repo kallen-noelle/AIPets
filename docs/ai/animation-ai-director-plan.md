@@ -1,7 +1,7 @@
 # AI 主导的角色动画控制计划书
 
 - 分支：`kallen/feat/ai-animation-director`
-- 状态：Phase 0–2 已完成；Phase 3 待开始
+- 状态：Phase 0–3 已完成；Phase 4 待开始
 - 关联文档：`docs/ai/animation-video-stage-plan.md`（透明视频动画包与渲染器替换）
 - 本期范围：`packages/character-animation` + `apps/stage-web-react`
 - 不在本期：Vue 遗留端、stage-tamagotchi、游戏对局接入、云同步
@@ -603,9 +603,44 @@ Phase 2 已完成：
 - character2 的 `updatedAt` 回拨 8 小时后重载：`angry` 衰减为 `calm`，valence −0.20 → 0.10，arousal 0.55 → 0.50。
 - 本地规则词表：`你真可爱/谢谢你 → praise`，`你好笨 → insult`，`你不笨 → null`，`对不起 → apology`。
 
+Phase 3 已完成：
+
+- 新增 `director-bus.ts`、`director.ts`、`retrieval.ts`、`director-config.ts`。
+- 聊天回复完成后并行请求导演模型，2.5 秒超时，不阻塞文字与语音。
+- 候选检索按情绪标签、关键词、VA 距离和片段类型排序，只把 Top-20 交给模型。
+- 导演输出经过 Valibot 与片段白名单校验，非法 JSON、未知片段、超时全部静默丢弃。
+- 聊天开始与结束派发 `thinking` 事件，舞台通过总线订阅。
+- 舞台订阅表演计划，重新校验后执行，并把导演的情绪增量写入 affect store。
+- 新增 `/settings/animation` 设置页：开关、导演模型、控制级别、最大线索数。
+- L1 只保留强度 ≥ 0.7 的线索并移除情绪增量；L2 为默认；L3 最多允许四条线索。
+
+实测结果（使用拦截后的模拟 provider，避免真实计费）：
+
+- 聊天请求模型 `mock-chat`，导演请求模型 `mock-director`。
+- 回复完成后按 `replyStart → sentence 1 → afterSpeech` 播放害羞、开心、行礼片段，触发时间约 170ms、1415ms、3748ms。
+- 导演情绪增量写入后，角色保持 `excited`。
+- 空闲调度在约 7.6 秒后按 `excited` 标签播放了《荡秋千》。
+
 尚未完成：
 
-- Phase 3 的 AI 导演调用、候选检索与设置页尚未开始。
+- Phase 4 的时间适配器、睡眠度驱动与睡眠模式尚未开始。
+
+Phase 3 修复（实测后）：
+
+- 新增 `animation/animation-log.ts` 与 `components/animation-log-panel.tsx`。舞台页展示从聊天到视频的每一段链路，缺失的阶段即断点。
+- 导演超时从 2.5 秒改为 15 秒。云端模型无法在 2.5 秒内返回 JSON，原值会导致全部计划被丢弃。
+- 修正重复点击已选中角色会清空 catalog 的问题。`CharacterStage` 的 `manifestUrl` 不变时不会重新加载，`onReady` 不再触发，catalog 会永久为 null。
+- 检索新增变装、换装、变身、舞蹈关键词，命中 `perform`、`vanity`、`magic` 标签。
+- 导演默认开启。
+
+实测结果：
+
+- 发送「请你进行变装」后，导演返回计划并播放 `animations/整体换装试色.webm`。
+- 日志可见完整链路：`run → requestPerformancePlan → LLM responded → parsed JSON → plan accepted → bus emitPlan → executor anchor → stage play clip`。
+
+已知限制：
+
+- `/chat` 路由没有舞台，`directorBus` 上下文不激活，在该页聊天不会驱动物理可见动画。
 
 ## 20. 计划文件清单
 

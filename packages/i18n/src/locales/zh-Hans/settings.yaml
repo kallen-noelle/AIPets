@@ -621,6 +621,9 @@ pages:
       all_deleted: 已删除所有本地数据。
       desktop_window_centered: 桌面窗口已移至屏幕中央。
       desktop_reset: 桌面数据重置。
+  animation:
+    description: 让聊天模型在每次回复后选择一段有边界的表演计划。
+    title: 动画导演
   models:
     description: 切换角色的 Live2D、VRM、Spine 模型
     title: 角色模型
@@ -2520,6 +2523,8 @@ reactShell:
   chatListen: 听写
   chatStopListening: 停止听写
   chatAttach: 图片
+  chatKite: 放风筝
+  chatKitePrompt: 放风筝给我看吧。
   chatDraw: 作画
   chatDrawing: 作画中…
   chatRemoveImage: 移除图片
@@ -2527,6 +2532,26 @@ reactShell:
   characterName: 名字
   characterPersona: 人格设定
   characterPersonaPlaceholder: 描述角色的说话方式与行为习惯。
+  cardSectionCharacter: 角色
+  cardSectionAppearance: 外观
+  cardSectionChat: 对话
+  cardSectionStage: 舞台
+  characterScale: 缩放
+  characterOffsetX: 水平偏移
+  characterOffsetY: 垂直偏移
+  characterFade: 淡入时长
+  characterMirror: 镜像角色
+  characterClick: 响应点击
+  characterAppearanceHint: 留空时使用角色文件夹自带的显示参数。
+  characterAppearanceReset: 重置
+  characterChatModel: 对话模型
+  characterChatModelPlaceholder: 例如 gpt-4o-mini
+  characterChatModelHint: 服务来源在服务商页配置。留空时使用该服务商的默认模型。
+  characterHistoryTurns: 历史轮数
+  characterHistoryTurnsHint: 模型保留在上下文中的轮数，最少为 2。
+  characterShowOnStage: 在舞台上显示角色
+  characterShowOnStageHint: 隐藏后对话与设置仍然可用，舞台显示占位提示。
+  stageCharacterHidden: 角色已隐藏。可在角色设置页重新开启。
   memoryDescription: 控制模型能够看到的对话历史长度。
   memoryEnabled: 发送对话历史
   memoryWindow: 保留消息数
@@ -2593,6 +2618,29 @@ reactShell:
   memoryRecipesNote: 记忆配方尚未加入 React 版本。
   memoryEntriesEmpty: 还没有保存的记忆。
   deleteEntry: 删除
+  memoryAdd: 新增记忆
+  memoryAddDescription: 角色在需要时会读取这些条目，也可以自行保存和删除自己的条目。
+  memoryName: 名称
+  memoryIndexLine: 索引行
+  memoryIndexLineHint: 事实本身，或者这条事实何时有用。
+  memoryBody: 内容
+  memoryAddButton: 保存记忆
+  memoryEntriesDescription: 属于某个角色的条目只在该角色下生效，通用条目对所有角色生效。
+  memoryGeneral: 通用
+  memoryMakeGeneral: 改为通用
+  memoryFormIncomplete: 记忆需要名称和内容。
+  memoryLongTermDescription: 角色跨对话保留的记忆，这个列表的索引会加入提示词。
+  chatCallingTool: 正在调用 {{tool}}...
+  voicePreview: 语音试听
+  voicePreviewHint: 使用当前表单里的配置，试听成功后再保存。
+  voicePreviewPlay: 播放
+  voicePreviewing: 播放中...
+  activeProviderHint: 对话页和语音页会使用各自类型的当前服务商。
+  providerGroupChat: 对话
+  providerGroupSpeech: 语音
+  providerGroupTranscription: 语音识别
+  pendingDescription: React 版本还没有这个页面，这里先保留路由，避免链接失效。
+  pendingBack: 返回舞台
   beatSyncParameters: 检测参数
   beatSyncNote: Beat Sync 用于音频可视化，React 舞台暂未运行该模块。
   beatSyncSensitivity: 灵敏度

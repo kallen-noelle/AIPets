@@ -198,7 +198,7 @@ chatHookCleanups.push(streamingControl.onSignal(async (signal) => {
 
     if (stageModelRenderer.value === 'animation') {
       if (act.motion) {
-        animationSceneRef.value?.playAction(act.motion)
+        animationSceneRef.value?.playAction(act.motion, act.motionDuration)
         explicitAnimationMotion = true
       }
       if (act.expression)

@@ -658,6 +658,9 @@ pages:
       all_deleted: All local data deleted.
       desktop_window_centered: Desktop window moved to screen center.
       desktop_reset: Desktop data reset.
+  animation:
+    description: Let the chat model choose a bounded performance plan after each reply.
+    title: Animation director
   models:
     description: Live2D, VRM, Spine, MMD, etc.
     title: Models
@@ -2736,6 +2739,8 @@ reactShell:
   chatListen: Listen
   chatStopListening: Stop listening
   chatAttach: Image
+  chatKite: Fly a kite
+  chatKitePrompt: Fly a kite for me.
   chatDraw: Draw
   chatDrawing: Drawing...
   chatRemoveImage: Remove image
@@ -2743,6 +2748,26 @@ reactShell:
   characterName: Name
   characterPersona: Persona
   characterPersonaPlaceholder: Describe how the character speaks and behaves.
+  cardSectionCharacter: Character
+  cardSectionAppearance: Appearance
+  cardSectionChat: Chat
+  cardSectionStage: Stage
+  characterScale: Scale
+  characterOffsetX: Horizontal offset
+  characterOffsetY: Vertical offset
+  characterFade: Fade in
+  characterMirror: Mirror the character
+  characterClick: React to clicks
+  characterAppearanceHint: Empty fields follow the look the character folder ships.
+  characterAppearanceReset: Reset
+  characterChatModel: Chat model
+  characterChatModelPlaceholder: For example gpt-4o-mini
+  characterChatModelHint: The provider comes from the Providers page. An empty value uses its default model.
+  characterHistoryTurns: History rounds
+  characterHistoryTurnsHint: Rounds the model keeps in context. The minimum is 2.
+  characterShowOnStage: Show the character on the stage
+  characterShowOnStageHint: A hidden character keeps its chat and settings, and the stage shows a placeholder.
+  stageCharacterHidden: The character is hidden. Enable it on the Card settings page.
   memoryDescription: Controls how much conversation history the model receives.
   memoryEnabled: Send conversation history
   memoryWindow: Messages to keep
@@ -2809,6 +2834,29 @@ reactShell:
   memoryRecipesNote: Memory recipes are not part of the React app yet.
   memoryEntriesEmpty: No memories stored yet.
   deleteEntry: Delete
+  memoryAdd: Add a memory
+  memoryAddDescription: The character reads these entries when they matter. It can also save and forget its own entries.
+  memoryName: Name
+  memoryIndexLine: Index line
+  memoryIndexLineHint: The fact itself, or when the fact matters.
+  memoryBody: Body
+  memoryAddButton: Save memory
+  memoryEntriesDescription: An entry owned by a character stays with it. A general entry reaches every character.
+  memoryGeneral: General
+  memoryMakeGeneral: Make general
+  memoryFormIncomplete: A memory needs a name and a body.
+  memoryLongTermDescription: Memories the character keeps across chats. The index of this list is part of the prompt.
+  chatCallingTool: Calling {{tool}}...
+  voicePreview: Voice preview
+  voicePreviewHint: Uses the values in this form. Save after the preview works.
+  voicePreviewPlay: Play
+  voicePreviewing: Playing...
+  activeProviderHint: The chat and the speech pages use the active provider of their kind.
+  providerGroupChat: Chat
+  providerGroupSpeech: Speech
+  providerGroupTranscription: Transcription
+  pendingDescription: This page has no React version yet. The route exists so links reach a page.
+  pendingBack: Back to the stage
   beatSyncParameters: Detection parameters
   beatSyncNote: Beat Sync visualizes audio. The React stage does not run it yet.
   beatSyncSensitivity: Sensitivity
