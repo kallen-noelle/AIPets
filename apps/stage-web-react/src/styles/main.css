@@ -5,7 +5,8 @@ body,
 }
 
 :root {
-  --airi-bg: #05070d;
+  --airi-bg: #04060c;
+  --airi-stage-bg: #03050b;
   --airi-fg: #e2e8f0;
   --airi-muted: #94a3b8;
   --airi-card: rgb(255 255 255 / 6%);
@@ -15,6 +16,7 @@ body,
 
 :root[data-theme='light'] {
   --airi-bg: #f5f6fa;
+  --airi-stage-bg: #f4f5f9;
   --airi-fg: #0f172a;
   --airi-muted: #64748b;
   --airi-card: rgb(15 23 42 / 4%);
@@ -28,4 +30,70 @@ body {
   color: var(--airi-fg);
   font-family: Nunito, 'Segoe UI', system-ui, sans-serif;
   transition: background-color 200ms ease, color 200ms ease;
+}
+
+/*
+ * The desktop host uses a transparent, frameless window. Every page paints its
+ * own background, so the document stays clear and the character floats over the
+ * desktop.
+ */
+:root[data-desktop] body {
+  background: transparent;
+  transition: none;
+}
+
+/*
+ * Dialogue bubble above the character head.
+ * The look follows the dsh-pet bubble: white translucent panel, downward tail,
+ * size anchored to the font size, natural wrapping, and a fade transition.
+ */
+.airi-stage-bubble {
+  position: absolute;
+  left: 50%;
+  /* The stage frame hugs the character, so the bubble sits at the top edge. */
+  top: 1.5%;
+  transform: translateX(-50%);
+  z-index: 10;
+
+  /* Long replies clip at the top, so the newest streamed text stays visible. */
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+
+  box-sizing: content-box;
+  width: max-content;
+  min-width: 5.7em;
+  max-width: min(16em, 92%);
+  max-height: 46%;
+  overflow: hidden;
+  padding: 0.48em 0.66em;
+  border-radius: 0.77em;
+
+  background: rgb(255 255 255 / 92%);
+  color: #2b2b2b;
+  font-family: Nunito, 'Segoe UI', system-ui, sans-serif;
+  font-size: var(--airi-bubble-font, 13px);
+  line-height: 1.6;
+  white-space: normal;
+  overflow-wrap: break-word;
+  box-shadow: 0 0.2em 0.77em rgb(0 0 0 / 14%), 0 1px 3px rgb(0 0 0 / 8%);
+  backdrop-filter: blur(6px);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 250ms ease;
+}
+
+.airi-stage-bubble[data-visible='true'] {
+  opacity: 1;
+}
+
+.airi-stage-bubble::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: -0.37em;
+  transform: translateX(-50%);
+  border: 0.37em solid transparent;
+  border-top-color: rgb(255 255 255 / 92%);
+  border-bottom: none;
 }
