@@ -1,16 +1,15 @@
 import type { ProviderDefinition } from '@proj-airi/provider-inference'
 
 import { portableProviderDefinitions } from '@proj-airi/provider-inference'
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
 
 import { createProvider, useProviders } from '../../providers/store'
+import { definitionHasTask, providerTaskAliases } from '../../providers/tasks'
 
-const taskGroups = [
-  { id: 'chat', label: 'chat', tasks: ['chat'] },
-  { id: 'speech', label: 'speech', tasks: ['text-to-speech', 'tts'] },
-  { id: 'transcription', label: 'transcription', tasks: ['speech-to-text', 'automatic-speech-recognition', 'asr', 'stt'] },
-]
+const taskGroups = (Object.keys(providerTaskAliases) as Array<keyof typeof providerTaskAliases>)
+  .map(group => ({ id: group, label: group }))
 
 // Claude has no standalone provider. The Anthropic card covers it.
 const priorityProviderIds = [
@@ -22,6 +21,9 @@ const priorityProviderIds = [
   'volcengine-coding-plan',
   'alibaba-cloud-model-studio',
 ]
+
+// The other cards stay in the registry but are hidden until they are ready.
+const visibleProviderIds = new Set(priorityProviderIds)
 
 function priorityIndex(id: string): number {
   const index = priorityProviderIds.indexOf(id)
@@ -40,6 +42,7 @@ export function ProvidersPage() {
   const { t } = useTranslation()
   const navigate = useNavigate()
   const providers = useProviders()
+  const [activeGroupId, setActiveGroupId] = useState(taskGroups[0].id)
 
   const translate = (key: string) => String(t(key, { defaultValue: key }))
 
@@ -47,10 +50,13 @@ export function ProvidersPage() {
     .map(group => ({
       ...group,
       definitions: portableProviderDefinitions
-        .filter(definition => definition.tasks.some(task => group.tasks.includes(task)))
+        .filter(definition => visibleProviderIds.has(definition.id))
+        .filter(definition => definitionHasTask(definition.tasks, group.id))
         .sort((left, right) => priorityIndex(left.id) - priorityIndex(right.id)),
     }))
     .filter(group => group.definitions.length > 0)
+
+  const activeGroup = groups.find(group => group.id === activeGroupId) ?? groups[0]
 
   const openProvider = (definitionId: string) => {
     const existing = Object.values(providers).find(provider => provider.definitionId === definitionId)
@@ -69,51 +75,61 @@ export function ProvidersPage() {
         </p>
       </header>
 
-      {groups.map(group => (
-        <div key={group.id} className="flex flex-col gap-3">
-          <h2 className="text-xs text-[var(--airi-muted)] font-semibold tracking-wider uppercase">
+      <div className="flex gap-2 border-b border-[var(--airi-border)]">
+        {groups.map(group => (
+          <button
+            key={group.id}
+            type="button"
+            onClick={() => setActiveGroupId(group.id)}
+            className={[
+              'px-3 py-2 text-xs font-semibold tracking-wider uppercase transition',
+              group.id === activeGroup.id
+                ? 'text-[var(--airi-fg)] border-b-2 border-[var(--airi-fg)]'
+                : 'text-[var(--airi-muted)] hover:text-[var(--airi-fg)]',
+            ].join(' ')}
+          >
             {group.label}
-          </h2>
+          </button>
+        ))}
+      </div>
 
-          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-            {group.definitions.map((definition) => {
-              const configuredCount = Object.values(providers)
-                .filter(provider => provider.definitionId === definition.id)
-                .length
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+        {activeGroup.definitions.map((definition) => {
+          const configuredCount = Object.values(providers)
+            .filter(provider => provider.definitionId === definition.id)
+            .length
 
-              return (
-                <button
-                  key={definition.id}
-                  type="button"
-                  onClick={() => openProvider(definition.id)}
-                  className={[
-                    'flex items-start gap-3 rounded-2xl border border-[var(--airi-border)]',
-                    'bg-[var(--airi-card)] p-4 text-left transition hover:bg-[var(--airi-hover)]',
-                  ].join(' ')}
-                >
-                  <span className={`${providerIcon(definition)} mt-0.5 text-2xl`} />
+          return (
+            <button
+              key={definition.id}
+              type="button"
+              onClick={() => openProvider(definition.id)}
+              className={[
+                'flex items-start gap-3 rounded-2xl border border-[var(--airi-border)]',
+                'bg-[var(--airi-card)] p-4 text-left transition hover:bg-[var(--airi-hover)]',
+              ].join(' ')}
+            >
+              <span className={`${providerIcon(definition)} mt-0.5 text-2xl`} />
 
-                  <span className="min-w-0 flex flex-col gap-1">
-                    <span className="flex flex-wrap items-center gap-2">
-                      <span className="font-medium">{definition.nameLocalize({ t: translate })}</span>
+              <span className="min-w-0 flex flex-col gap-1">
+                <span className="flex flex-wrap items-center gap-2">
+                  <span className="font-medium">{definition.nameLocalize({ t: translate })}</span>
 
-                      {configuredCount > 0 && (
-                        <span className="rounded-full bg-emerald-500/15 px-2 py-0.5 text-[10px] text-emerald-400">
-                          {t('settings.reactShell.configured', { defaultValue: 'Configured' })}
-                        </span>
-                      )}
+                  {configuredCount > 0 && (
+                    <span className="rounded-full bg-emerald-500/15 px-2 py-0.5 text-[10px] text-emerald-400">
+                      {t('settings.reactShell.configured', { defaultValue: 'Configured' })}
                     </span>
+                  )}
+                </span>
 
-                    <span className="text-xs text-[var(--airi-muted)]">
-                      {definition.descriptionLocalize({ t: translate })}
-                    </span>
-                  </span>
-                </button>
-              )
-            })}
-          </div>
-        </div>
-      ))}
+                <span className="text-xs text-[var(--airi-muted)]">
+                  {definition.descriptionLocalize({ t: translate })}
+                </span>
+              </span>
+            </button>
+          )
+        })}
+      </div>
     </section>
   )
 }

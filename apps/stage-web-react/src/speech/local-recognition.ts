@@ -62,6 +62,12 @@ export function isLocalRecognitionAvailable(): boolean {
 
 export interface LocalRecognitionOptions {
   lang: string
+  /**
+   * Fired immediately when the browser reports a fatal error such as
+   * microphone permission denial or no audio input device. This lets the
+   * caller unlock the UI without waiting for the user to click Stop.
+   */
+  onError?: (message: string) => void
 }
 
 export interface LocalRecognitionHandle {
@@ -70,6 +76,14 @@ export interface LocalRecognitionHandle {
   /** Stops the microphone and drops the transcript. */
   cancel: () => void
 }
+
+/** SpeechRecognition error codes that mean the microphone cannot work at all. */
+const FATAL_RECOGNITION_ERRORS = new Set([
+  'not-allowed',
+  'service-not-allowed',
+  'audio-capture',
+  'network',
+])
 
 export function startLocalRecognition(options: LocalRecognitionOptions): LocalRecognitionHandle {
   const Constructor = getRecognitionConstructor()
@@ -86,6 +100,7 @@ export function startLocalRecognition(options: LocalRecognitionOptions): LocalRe
   let stopped = false
   let settled = false
   let finish: (() => void) | null = null
+  let reportedFatal = false
 
   const settle = () => {
     if (settled)
@@ -107,11 +122,24 @@ export function startLocalRecognition(options: LocalRecognitionOptions): LocalRe
       return
 
     failure = new Error(`Browser speech recognition failed: ${event.error ?? 'unknown'}`)
+
+    const code = event.error
+    if (!reportedFatal && code && FATAL_RECOGNITION_ERRORS.has(code)) {
+      reportedFatal = true
+      options.onError?.(failure.message)
+    }
   }
 
   recognition.onend = settle
 
-  recognition.start()
+  try {
+    recognition.start()
+  }
+  catch (cause) {
+    failure = cause instanceof Error ? cause : new Error(String(cause))
+    options.onError?.(failure.message)
+    throw failure
+  }
 
   return {
     stop: () => new Promise<string>((resolve, reject) => {

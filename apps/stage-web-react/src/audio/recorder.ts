@@ -51,6 +51,81 @@ export interface Recorder {
   stop: () => Promise<Recording>
 }
 
+/** Structured classification of failures while opening the microphone. */
+export type MicErrorCode
+  = 'permission-denied'
+    | 'not-found'
+    | 'not-readable'
+    | 'overconstrained'
+    | 'security'
+    | 'timeout'
+    | 'unknown'
+
+/**
+ * Turns a DOMException (or SpeechRecognition error code) into a stable code
+ * that the UI can map to a targeted message.
+ *
+ * Prefer this over grepping the error message — browsers speak slightly
+ * different languages for the same underlying failure.
+ */
+export function classifyMicError(cause: unknown): MicErrorCode {
+  if (!cause || typeof cause !== 'object')
+    return 'unknown'
+
+  const error = cause as { name?: string, code?: number, message?: string }
+
+  // SpeechRecognition surfaces fatal errors via a plain string on the event.
+  if (typeof error.message === 'string') {
+    const lower = error.message.toLowerCase()
+    if (lower.includes('not-allowed') || lower.includes('not allowed'))
+      return 'permission-denied'
+    if (lower.includes('service-not-allowed'))
+      return 'permission-denied'
+    if (lower.includes('audio-capture'))
+      return 'not-found'
+    if (lower.includes('network'))
+      return 'unknown'
+  }
+
+  // Standard DOMException names from getUserMedia.
+  switch (error.name) {
+    case 'NotAllowedError':
+    case 'PermissionDeniedError':
+      return 'permission-denied'
+    case 'NotFoundError':
+    case 'DevicesNotFoundError':
+      return 'not-found'
+    case 'NotReadableError':
+    case 'TrackStartError':
+      return 'not-readable'
+    case 'OverconstrainedError':
+    case 'ConstraintNotSatisfiedError':
+      return 'overconstrained'
+    case 'SecurityError':
+    case 'HardwareMuteError':
+      return 'security'
+    case 'AbortError':
+      return 'unknown'
+    default:
+      break
+  }
+
+  if (error.code === 1)
+    return 'permission-denied'
+  if (error.code === 8)
+    return 'not-found'
+
+  if (typeof error.message === 'string') {
+    const lower = error.message.toLowerCase()
+    if (lower.includes('denied') || lower.includes('permission') || lower.includes('not allowed'))
+      return 'permission-denied'
+    if (lower.includes('no microphone') || lower.includes('not found') || lower.includes('no audio'))
+      return 'not-found'
+  }
+
+  return 'unknown'
+}
+
 /**
  * Records the microphone and returns 16-bit mono WAV.
  *

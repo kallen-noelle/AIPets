@@ -6,6 +6,8 @@ import type {
 } from '@proj-airi/character-animation'
 
 import {
+  affectLimits,
+  applyAffectDelta,
   applyAffectEvent,
   createAffectState,
   decayAffect,
@@ -143,6 +145,24 @@ class CharacterAffectStore {
 
     const profile = profileFor(this.characterId)
     this.state = applyAffectEvent(this.state, kind, profile.traits, { now: Date.now() })
+    this.persist()
+    this.notify()
+  }
+
+  /**
+   * Applies a bounded director proposal. The store clamps the delta to the
+   * director cap, so a model response cannot override rule-owned state.
+   */
+  applyDelta(delta: { valence: number, arousal: number }): void {
+    if (!this.state || !this.characterId)
+      return
+
+    const profile = profileFor(this.characterId)
+    this.state = applyAffectDelta(this.state, delta, profile.traits, {
+      now: Date.now(),
+      maxValenceDelta: affectLimits.maxDirectorValence,
+      maxArousalDelta: affectLimits.maxDirectorArousal,
+    })
     this.persist()
     this.notify()
   }

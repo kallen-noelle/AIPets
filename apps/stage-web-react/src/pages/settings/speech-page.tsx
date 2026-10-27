@@ -5,6 +5,7 @@ import { Link } from 'react-router'
 
 import { SectionCard, SelectField, SliderField, ToggleField } from '../../components/fields'
 import { useProviders } from '../../providers/store'
+import { definitionHasTask } from '../../providers/tasks'
 import { useStoredValue } from '../../settings/persisted'
 import { isLocalSpeechAvailable } from '../../speech/playback'
 
@@ -54,7 +55,7 @@ export function SpeechPage() {
 
   const speechProviders = Object.values(providers).filter((provider) => {
     const definition = portableProviderDefinitions.find(item => item.id === provider.definitionId)
-    return definition?.tasks.includes('speech') ?? false
+    return definitionHasTask(definition?.tasks, 'speech')
   })
 
   const languagePrefix = localLanguage.slice(0, 2).toLowerCase()

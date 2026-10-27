@@ -60,6 +60,14 @@ export const settingsEntries: SettingsEntry[] = [
     status: 'ready',
   },
   {
+    id: 'animation',
+    path: '/settings/animation',
+    titleKey: 'settings.pages.animation.title',
+    descriptionKey: 'settings.pages.animation.description',
+    icon: 'i-solar:magic-stick-3-bold-duotone',
+    status: 'ready',
+  },
+  {
     id: 'providers',
     path: '/settings/providers',
     titleKey: 'settings.pages.providers.title',

@@ -60,6 +60,12 @@ interface CharacterInput {
 }
 
 export const activeCharacterKey = 'airi:react:character/active'
+/** Appearance fields the card page overrides on top of the character folder. */
+export const characterAppearanceOverrideKey = 'airi:react:character/appearance-override'
+/** Whether the stage shows the character. */
+export const characterEnabledKey = 'airi:react:character/enabled'
+
+export type CharacterAppearanceOverride = Partial<CharacterAppearance>
 
 export const defaultCharacterAppearance: CharacterAppearance = {
   scale: 1,
@@ -107,6 +113,36 @@ export function normalizeAppearance(value: unknown): CharacterAppearance {
     mirror: booleanOr(appearance.mirror, defaultCharacterAppearance.mirror),
     clickEnabled: booleanOr(appearance.clickEnabled, defaultCharacterAppearance.clickEnabled),
   }
+}
+
+/**
+ * Reads the appearance fields the user changed in the card page.
+ *
+ * Only fields present in the stored object are returned. The stage merges the
+ * result over the appearance a character folder ships, so an empty override
+ * keeps the original look.
+ */
+export function readAppearanceOverride(): CharacterAppearanceOverride {
+  const stored = readStored<unknown>(characterAppearanceOverrideKey, null)
+  if (typeof stored !== 'object' || stored === null)
+    return {}
+
+  const entry = stored as Record<string, unknown>
+  const override: CharacterAppearanceOverride = {}
+  if (typeof entry.scale === 'number' && Number.isFinite(entry.scale))
+    override.scale = Math.max(0.1, entry.scale)
+  if (typeof entry.offsetX === 'number' && Number.isFinite(entry.offsetX))
+    override.offsetX = entry.offsetX
+  if (typeof entry.offsetY === 'number' && Number.isFinite(entry.offsetY))
+    override.offsetY = entry.offsetY
+  if (typeof entry.fadeMs === 'number' && Number.isFinite(entry.fadeMs))
+    override.fadeMs = Math.max(0, entry.fadeMs)
+  if (typeof entry.mirror === 'boolean')
+    override.mirror = entry.mirror
+  if (typeof entry.clickEnabled === 'boolean')
+    override.clickEnabled = entry.clickEnabled
+
+  return override
 }
 
 /**
@@ -159,6 +195,36 @@ export async function loadBuiltinCharacters(): Promise<BuiltinCharacter[]> {
     .filter(isCharacterInput)
     .map(normalizeCharacter)
     .sort((left, right) => left.order - right.order || left.id.localeCompare(right.id))
+}
+
+/** Chat settings a character pack ships in its `config.json`. */
+export interface CharacterChatConfig {
+  /** Messages the chat keeps in the model context. */
+  historyTurns: number
+}
+
+/**
+ * Reads the chat settings of one character folder.
+ *
+ * A missing file, a missing field, or a bad value returns null so the caller
+ * keeps its own default.
+ */
+export async function loadCharacterChatConfig(characterId: string): Promise<CharacterChatConfig | null> {
+  try {
+    const response = await fetch(`${assetsBase}${characterId}/config.json`)
+    if (!response.ok)
+      return null
+
+    const payload = await response.json() as { chat?: { historyTurns?: unknown } }
+    const turns = payload.chat?.historyTurns
+    if (typeof turns !== 'number' || !Number.isFinite(turns) || turns < 2)
+      return null
+
+    return { historyTurns: Math.floor(turns) }
+  }
+  catch {
+    return null
+  }
 }
 
 export function characterManifestUrl(character: BuiltinCharacter): string {

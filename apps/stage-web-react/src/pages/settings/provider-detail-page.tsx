@@ -1,11 +1,14 @@
 import type { ProviderDefinition } from '@proj-airi/provider-inference'
 
+import { errorMessageFrom } from '@moeru/std'
 import { portableProviderDefinitions } from '@proj-airi/provider-inference'
 import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link, useNavigate, useParams } from 'react-router'
 
 import { removeProvider, updateProviderConfig, useProviders } from '../../providers/store'
+import { activeProviderKeys, groupsOfDefinition } from '../../providers/tasks'
+import { speak, speakLocally } from '../../speech/playback'
 
 interface FieldMeta {
   type?: string
@@ -58,9 +61,24 @@ function readMeta(field: unknown): FieldMeta {
   return (candidate.meta as () => FieldMeta)() ?? {}
 }
 
+function readActiveProviders(): Record<string, string> {
+  const result: Record<string, string> = {}
+  for (const [group, key] of Object.entries(activeProviderKeys)) {
+    const value = localStorage.getItem(key)
+    if (value)
+      result[group] = value
+  }
+  return result
+}
+
 const inputClass = [
   'w-full rounded-xl border border-[var(--airi-border)] bg-transparent px-3 py-2 text-sm',
   'outline-none focus:border-[var(--airi-fg)]',
+].join(' ')
+
+const secondaryButtonClass = [
+  'rounded-full border border-[var(--airi-border)] px-4 py-1.5 text-xs',
+  'transition hover:bg-[var(--airi-hover)] disabled:opacity-40',
 ].join(' ')
 
 export function ProviderDetailPage() {
@@ -77,8 +95,12 @@ export function ProviderDetailPage() {
   const [schema, setSchema] = useState<SchemaLike | null>(null)
   const [config, setConfig] = useState<Record<string, unknown>>({})
   const [issues, setIssues] = useState<string[]>([])
+  const [active, setActive] = useState<Record<string, string>>(() => readActiveProviders())
+  const [preview, setPreview] = useState('Hello, this is a voice preview.')
+  const [previewing, setPreviewing] = useState(false)
 
   const translate = (key: string) => String(t(key, { defaultValue: key }))
+  const localized = (key?: string) => (key ? String(t(key, { defaultValue: key })) : undefined)
 
   useEffect(() => {
     if (!definition || !provider)
@@ -118,6 +140,8 @@ export function ProviderDetailPage() {
     )
   }
 
+  const groups = groupsOfDefinition(provider.definitionId)
+
   const setField = (key: string, value: unknown) => {
     setConfig(current => ({ ...current, [key]: value }))
   }
@@ -134,9 +158,44 @@ export function ProviderDetailPage() {
       return
     }
 
-    updateProviderConfig(provider.id, result.data as Record<string, unknown>)
+    updateProviderConfig(provider.id, result.data as Record<string, unknown>, 'configured')
     setIssues([])
     void navigate('/settings/providers')
+  }
+
+  const activate = (group: (typeof groups)[number]) => {
+    localStorage.setItem(activeProviderKeys[group], provider.id)
+    setActive(current => ({ ...current, [group]: provider.id }))
+    window.dispatchEvent(new StorageEvent('storage', { key: activeProviderKeys[group] }))
+  }
+
+  const previewVoice = async () => {
+    const baseUrl = typeof config.baseUrl === 'string' ? config.baseUrl.replace(/\/+$/, '') : ''
+    const apiKey = typeof config.apiKey === 'string' ? config.apiKey : ''
+    const model = typeof config.model === 'string' ? config.model : ''
+    const voice = typeof config.voice === 'string' ? config.voice : ''
+
+    setPreviewing(true)
+    setIssues([])
+    try {
+      if (baseUrl) {
+        await speak(preview, { baseUrl, apiKey, model, voice })
+      }
+      else {
+        await speakLocally(preview, {
+          lang: navigator.language || 'en-US',
+          voiceURI: '',
+          rate: 1,
+          pitch: 1,
+        })
+      }
+    }
+    catch (cause) {
+      setIssues([errorMessageFrom(cause) ?? 'Voice preview failed'])
+    }
+    finally {
+      setPreviewing(false)
+    }
   }
 
   const remove = () => {
@@ -159,11 +218,12 @@ export function ProviderDetailPage() {
       <div className="flex flex-col gap-4 border border-[var(--airi-border)] rounded-2xl bg-[var(--airi-card)] p-4">
         {fields.map(({ key, meta }) => {
           const value = config[key]
+          const label = localized(meta.labelLocalized) ?? key
 
           if (meta.type === 'boolean') {
             return (
               <label key={key} className="flex items-center justify-between gap-4 text-sm">
-                <span>{meta.labelLocalized ?? key}</span>
+                <span>{label}</span>
                 <input
                   type="checkbox"
                   checked={value === true}
@@ -177,7 +237,7 @@ export function ProviderDetailPage() {
           if (meta.type === 'select' && meta.options) {
             return (
               <label key={key} className="flex flex-col gap-1 text-sm">
-                <span>{meta.labelLocalized ?? key}</span>
+                <span>{label}</span>
                 <select
                   className={inputClass}
                   value={typeof value === 'string' ? value : ''}
@@ -186,27 +246,30 @@ export function ProviderDetailPage() {
                 >
                   {meta.options.map(option => (
                     <option key={option.value} value={option.value}>
-                      {option.label ?? option.value}
+                      {localized(option.label) ?? option.value}
                     </option>
                   ))}
                 </select>
+                {localized(meta.descriptionLocalized) && (
+                  <span className="text-xs text-[var(--airi-muted)]">{localized(meta.descriptionLocalized)}</span>
+                )}
               </label>
             )
           }
 
           return (
             <label key={key} className="flex flex-col gap-1 text-sm">
-              <span>{meta.labelLocalized ?? key}</span>
+              <span>{label}</span>
               <input
                 className={inputClass}
                 type={meta.type === 'password' ? 'password' : 'text'}
                 value={typeof value === 'string' ? value : ''}
-                placeholder={meta.placeholderLocalized}
+                placeholder={localized(meta.placeholderLocalized)}
                 disabled={meta.disabled}
                 onChange={event => setField(key, event.target.value)}
               />
-              {meta.descriptionLocalized && (
-                <span className="text-xs text-[var(--airi-muted)]">{meta.descriptionLocalized}</span>
+              {localized(meta.descriptionLocalized) && (
+                <span className="text-xs text-[var(--airi-muted)]">{localized(meta.descriptionLocalized)}</span>
               )}
             </label>
           )
@@ -218,6 +281,70 @@ export function ProviderDetailPage() {
           </ul>
         )}
       </div>
+
+      {groups.includes('speech') && (
+        <div className="flex flex-col gap-3 border border-[var(--airi-border)] rounded-2xl bg-[var(--airi-card)] p-4">
+          <div>
+            <h2 className="text-sm font-semibold">
+              {t('settings.reactShell.voicePreview', { defaultValue: 'Voice preview' })}
+            </h2>
+            <p className="text-xs text-[var(--airi-muted)]">
+              {t('settings.reactShell.voicePreviewHint', {
+                defaultValue: 'Uses the values in this form. Save after the preview works.',
+              })}
+            </p>
+          </div>
+
+          <div className="flex flex-wrap gap-2">
+            <input
+              className={`${inputClass} flex-1`}
+              value={preview}
+              onChange={event => setPreview(event.target.value)}
+            />
+            <button
+              type="button"
+              className={secondaryButtonClass}
+              disabled={previewing || !preview.trim()}
+              onClick={() => void previewVoice()}
+            >
+              {previewing
+                ? t('settings.reactShell.voicePreviewing', { defaultValue: 'Playing...' })
+                : t('settings.reactShell.voicePreviewPlay', { defaultValue: 'Play' })}
+            </button>
+          </div>
+        </div>
+      )}
+
+      {groups.length > 0 && (
+        <div className="flex flex-col gap-3 border border-[var(--airi-border)] rounded-2xl bg-[var(--airi-card)] p-4">
+          <div>
+            <h2 className="text-sm font-semibold">
+              {t('settings.reactShell.activeProvider', { defaultValue: 'Active provider' })}
+            </h2>
+            <p className="text-xs text-[var(--airi-muted)]">
+              {t('settings.reactShell.activeProviderHint', {
+                defaultValue: 'The chat and the speech pages use the active provider of their kind.',
+              })}
+            </p>
+          </div>
+
+          <div className="flex flex-wrap gap-2">
+            {groups.map(group => (
+              <button
+                key={group}
+                type="button"
+                className={secondaryButtonClass}
+                onClick={() => activate(group)}
+              >
+                {active[group] === provider.id ? '✓ ' : ''}
+                {t(`settings.reactShell.providerGroup${group[0].toUpperCase()}${group.slice(1)}`, {
+                  defaultValue: group,
+                })}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
 
       <div className="flex flex-wrap gap-3">
         <button

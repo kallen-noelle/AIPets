@@ -2,7 +2,9 @@ import { createHashRouter } from 'react-router'
 
 import { AuthCallbackPage } from './pages/auth-callback-page'
 import { ChatPage } from './pages/chat-page'
+import { PendingPage } from './pages/pending-page'
 import { AccountPage } from './pages/settings/account-page'
+import { AnimationPage } from './pages/settings/animation-page'
 import { ArtistryPage } from './pages/settings/artistry-page'
 import { BeatSyncPage } from './pages/settings/beat-sync-page'
 import { CardPage } from './pages/settings/card-page'
@@ -46,21 +48,37 @@ export const router = createHashRouter([
     path: '/auth/callback',
     element: <AuthCallbackPage />,
   },
+  // Routes the Vue app serves today. The React pages for them are pending.
+  { path: '/auth', element: <PendingPage title="auth" /> },
+  { path: '/onboarding', element: <PendingPage title="onboarding" /> },
+  { path: '/devtools', element: <PendingPage title="devtools" /> },
+  { path: '/widgets', element: <PendingPage title="widgets" /> },
+  { path: '/caption', element: <PendingPage title="caption" /> },
+  { path: '/spotlight', element: <PendingPage title="spotlight" /> },
+  { path: '/chat-floating', element: <PendingPage title="chat-floating" /> },
+  { path: '/editor', element: <PendingPage title="editor" /> },
+  { path: '/desktop-overlay', element: <PendingPage title="desktop-overlay" /> },
   {
     path: '/settings',
     element: <SettingsLayout />,
     children: [
       { index: true, element: <SettingsIndex /> },
       { path: 'system', element: <SystemPage /> },
+      { path: 'system/developer', element: <PendingPage title="developer" /> },
       { path: 'account', element: <AccountPage /> },
+      { path: 'characters', element: <PendingPage title="characters" /> },
       { path: 'card', element: <CardPage /> },
       { path: 'memory', element: <MemoryPage /> },
       { path: 'scene', element: <ScenePage /> },
+      { path: 'animation', element: <AnimationPage /> },
       { path: 'data', element: <DataPage /> },
       { path: 'connection', element: <ConnectionPage /> },
       { path: 'modules', element: <ModulesPage /> },
       { path: 'modules/speech', element: <SpeechPage /> },
       { path: 'modules/hearing', element: <HearingPage /> },
+      { path: 'modules/hearing/transcriber', element: <PendingPage title="transcriber" /> },
+      { path: 'modules/hearing/wake-words', element: <PendingPage title="wake-words" /> },
+      { path: 'modules/hearing/voiceprint', element: <PendingPage title="voiceprint" /> },
       { path: 'modules/consciousness', element: <ConsciousnessPage /> },
       { path: 'modules/vision', element: <VisionPage /> },
       { path: 'modules/stickers', element: <StickersPage /> },
@@ -69,6 +87,7 @@ export const router = createHashRouter([
       { path: 'modules/tool-cards', element: <ToolCardsPage /> },
       { path: 'modules/memory-short-term', element: <MemoryShortTermPage /> },
       { path: 'modules/memory-long-term', element: <MemoryLongTermPage /> },
+      { path: 'modules/memory-long-term/recipes', element: <PendingPage title="recipes" /> },
       { path: 'modules/messaging-discord', element: <DiscordPage /> },
       { path: 'modules/x', element: <XPage /> },
       { path: 'modules/home-assistant', element: <HomeAssistantPage /> },
@@ -76,6 +95,7 @@ export const router = createHashRouter([
       { path: 'modules/beat-sync', element: <BeatSyncPage /> },
       { path: 'modules/:moduleId', element: <MigratingPage /> },
       { path: 'models', element: <ModelsPage /> },
+      { path: 'animation', element: <AnimationPage /> },
       { path: 'providers', element: <ProvidersPage /> },
       { path: 'providers/:providerId', element: <ProviderDetailPage /> },
       { path: '*', element: <MigratingPage /> },

@@ -1,4 +1,5 @@
 import type {
+  ActionSequence,
   AffectLabel,
   AnimationClockPort,
   AnimationEvent,
@@ -7,35 +8,65 @@ import type {
   PerformanceCue,
   PerformancePlan,
   PlanAnchor,
+  PlanTimelineMark,
 } from '@proj-airi/character-animation'
 
+import type { DirectorLongAction } from '../animation/director'
+import type { DirectorAutonomy } from '../animation/director-config'
 import type { LoadedZipPack } from '../animation/zip-pack'
-import type { BuiltinCharacter } from '../character/characters'
+import type { BuiltinCharacter, CharacterAppearance, CharacterAppearanceOverride } from '../character/characters'
 import type { StageSnapshot } from '../components/character-stage'
 
 import { errorMessageFrom } from '@moeru/std'
-import { PerformancePlanExecutor, validatePerformancePlan } from '@proj-airi/character-animation'
+import { resolvePlanArrival, validatePerformancePlan } from '@proj-airi/character-animation'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router'
 
+import { animationLog } from '../animation/animation-log'
+import { patchDayPlanRecord, readDayPlanRecord } from '../animation/day-plan-store'
+import { describeLongActions } from '../animation/director'
+import { directorBus } from '../animation/director-bus'
+import { cueLimitFor, directorAutonomyKey, directorDefaults, directorMaxCuesKey } from '../animation/director-config'
+import { recordClipPlayed } from '../animation/playback-history'
+import { sessionController, useSessionPhase } from '../animation/session-controller'
+import { useDayPlan } from '../animation/use-day-plan'
+import { WaitingSequenceRunner } from '../animation/waiting-sequence'
 import { getActivePackId, loadStoredPack, setActivePackId } from '../animation/zip-pack'
 import { affectStore, useAffect } from '../character/affect-store'
 import {
   applyCharacterPersona,
+  characterAppearanceOverrideKey,
+  characterEnabledKey,
   characterManifestUrl,
+  defaultCharacterAppearance,
   getActiveCharacterId,
   loadBuiltinCharacters,
   loadCharacterPersona,
   setActiveCharacterId as persistActiveCharacterId,
 } from '../character/characters'
+import { characterPersonaKey } from '../chat/types'
+import { AnimationLogPanel } from '../components/animation-log-panel'
 import { CharacterStage } from '../components/character-stage'
 import { ChatPanel } from '../components/chat-panel'
-import { useStoredValue } from '../settings/persisted'
+import { DirectorMonitorPanel } from '../components/director-monitor-panel'
+import { isDesktop } from '../desktop/bridge'
+import { readStored, useStoredValue } from '../settings/persisted'
 import { sceneBackgroundKey } from '../settings/scene'
 import { getSpeaking, useSpeaking } from '../speech/playback'
 
 const demoManifestUrl = './animations/demo/manifest.json'
+
+/** Stable fallback for the appearance override store. */
+const emptyAppearanceOverride: CharacterAppearanceOverride = {}
+
+/** Applies the card page overrides on top of the look a character ships. */
+function withAppearanceOverride(
+  appearance: CharacterAppearance,
+  override: CharacterAppearanceOverride,
+): CharacterAppearance {
+  return { ...appearance, ...override }
+}
 
 const buttonClass = [
   'rounded-full px-4 py-2 text-sm font-medium transition',
@@ -131,27 +162,69 @@ function createBrowserClock(): AnimationClockPort {
 export function StagePage() {
   const { t } = useTranslation()
   const dispatchRef = useRef<((event: AnimationEvent) => void) | null>(null)
-  const executorRef = useRef<PerformancePlanExecutor | null>(null)
   const planTimersRef = useRef<number[]>([])
   const planCooldownUntilRef = useRef(0)
+  const snapshotRef = useRef<StageSnapshot>({
+    base: 'idle',
+    clipId: null,
+    longActionName: null,
+    longActionPhase: null,
+    waiting: false,
+  })
+  const waitingRunnerRef = useRef<WaitingSequenceRunner | null>(null)
+  const waitingSequenceRef = useRef<ActionSequence | null>(null)
+  const timelineMarksRef = useRef<PlanTimelineMark[]>([])
+  const pendingCuesRef = useRef<PerformanceCue[]>([])
 
-  const [snapshot, setSnapshot] = useState<StageSnapshot>({ base: 'idle', clipId: null })
+  const sessionPhase = useSessionPhase()
+  const [snapshot, setSnapshot] = useState<StageSnapshot>({
+    base: 'idle',
+    clipId: null,
+    longActionName: null,
+    longActionPhase: null,
+    waiting: false,
+  })
   const [packLabel, setPackLabel] = useState('Loading...')
   const [catalog, setCatalog] = useState<CharacterCatalog | null>(null)
   const [planText, setPlanText] = useState('')
   const [planIssues, setPlanIssues] = useState<string[]>([])
+  const [longActionName, setLongActionName] = useState('放风筝')
+  const [longActionDurationMs, setLongActionDurationMs] = useState('30000')
   const [error, setError] = useState<string | null>(null)
   const [speaking, setSpeaking] = useState(false)
   const [thinking, setThinking] = useState(false)
   const [paused, setPaused] = useState(false)
   const [activePack, setActivePack] = useState<LoadedZipPack | null>(null)
+  const [packLongActions, setPackLongActions] = useState<DirectorLongAction[]>([])
   const [characters, setCharacters] = useState<BuiltinCharacter[]>([])
   const [activeCharacterId, setActiveCharacterId] = useState<string | null>(() => getActiveCharacterId())
+  const [speechBubble, setSpeechBubble] = useState<string | null>(null)
+  const speechBubbleTimerRef = useRef<number | null>(null)
   const [background] = useStoredValue(sceneBackgroundKey, '')
+  const [characterEnabled] = useStoredValue(characterEnabledKey, true)
+  const [appearanceOverride] = useStoredValue<CharacterAppearanceOverride>(
+    characterAppearanceOverrideKey,
+    emptyAppearanceOverride,
+  )
 
   const characterId = activeCharacterId ?? activePack?.pack.manifest.id ?? 'demo'
   const affect = useAffect(characterId)
+
+  const showSpeechBubble = useCallback((text: string | null) => {
+    setSpeechBubble(text)
+    if (speechBubbleTimerRef.current !== null) {
+      window.clearTimeout(speechBubbleTimerRef.current)
+      speechBubbleTimerRef.current = null
+    }
+    if (text === null)
+      return
+    speechBubbleTimerRef.current = window.setTimeout(setSpeechBubble, 5000, null as string | null)
+  }, [])
   const affectLabel = affect.state?.label ?? null
+  const activeCharacterName = characters.find(character => character.id === activeCharacterId)?.name
+    ?? activePack?.profile.name
+    ?? 'aipetdex'
+  const persona = readStored(characterPersonaKey, '')
 
   useEffect(() => {
     let disposed = false
@@ -213,7 +286,188 @@ export function StagePage() {
   }, [voiceSpeaking])
 
   useEffect(() => {
-    if (!catalog || !affectLabel || speaking || thinking || paused || voiceSpeaking)
+    directorBus.setContext({ active: true })
+    const unsubscribe = directorBus.subscribeEvents((event) => {
+      dispatchRef.current?.(event)
+    })
+
+    return () => {
+      unsubscribe()
+      directorBus.setContext({ active: false })
+    }
+  }, [])
+
+  useEffect(() => {
+    directorBus.setContext({
+      catalog,
+      characterId,
+      characterName: activeCharacterName,
+      persona,
+      longActions: packLongActions,
+    })
+  }, [catalog, characterId, activeCharacterName, persona, packLongActions])
+
+  const playClip = useCallback((clipId: string) => {
+    recordClipPlayed(clipId)
+    dispatchRef.current?.({ type: 'playClip', clipId })
+  }, [])
+
+  const clipDurations = useCallback((): Record<string, number> => {
+    if (!catalog)
+      return {}
+
+    const map: Record<string, number> = {}
+    for (const clip of catalog.clips) {
+      if (clip.durationMs !== undefined)
+        map[clip.id] = clip.durationMs
+    }
+    return map
+  }, [catalog])
+
+  const playWaitingSequence = useCallback(() => {
+    const runner = waitingRunnerRef.current
+    const sequence = waitingSequenceRef.current
+    if (!runner || !sequence)
+      return
+
+    waitingSequenceRef.current = null
+    const acceptedMs = runner.play(sequence, sessionController.sequenceBudgetMs())
+    animationLog.write('session', 'waiting sequence started', {
+      steps: sequence.steps.length,
+      acceptedMs,
+    })
+  }, [])
+
+  const flushPendingCues = useCallback(() => {
+    if (!pendingCuesRef.current.length)
+      return
+
+    const decision = resolvePlanArrival({
+      cues: pendingCuesRef.current,
+      marks: timelineMarksRef.current,
+      now: Date.now(),
+      clipDurations: clipDurations(),
+    })
+
+    animationLog.write('plan', 'pending cues flushed', {
+      playNow: decision.playNow.map(cue => cue.clipId),
+      scheduled: decision.scheduled.length,
+      dropped: decision.dropped,
+    })
+
+    for (const cue of decision.playNow)
+      playClip(cue.clipId)
+    for (const item of decision.timed) {
+      planTimersRef.current.push(window.setTimeout(playClip, item.inMs, item.cue.clipId))
+    }
+    pendingCuesRef.current = decision.scheduled
+  }, [clipDurations, playClip])
+
+  const dayPlan = useDayPlan({
+    characterId,
+    characterName: activeCharacterName,
+    persona,
+    catalog,
+    longActions: packLongActions,
+  })
+  const lastDayPlanBlockRef = useRef<string | null>(readDayPlanRecord(characterId)?.lastPlayedBlockId ?? null)
+
+  useEffect(() => {
+    const block = dayPlan.block
+    if (sessionPhase !== 'ambient' || !block || lastDayPlanBlockRef.current === block.id)
+      return
+
+    lastDayPlanBlockRef.current = block.id
+    animationLog.write('day-plan', `block ${block.id}: ${block.actionId}`, {
+      kind: block.kind,
+      durationMs: block.durationMs,
+    })
+
+    if (block.kind === 'long')
+      dispatchRef.current?.({ type: 'action', name: block.actionId, durationMs: block.durationMs })
+    else
+      playClip(block.actionId)
+
+    patchDayPlanRecord(characterId, { lastPlayedBlockId: block.id, lastPlayedAt: Date.now() })
+  }, [sessionPhase, dayPlan.block, characterId, playClip])
+
+  useEffect(() => {
+    if (!catalog)
+      return
+
+    const runner = new WaitingSequenceRunner({
+      dispatch: event => dispatchRef.current?.(event),
+      clock: createBrowserClock(),
+      clipDurationMs: id => catalog.clips.find(clip => clip.id === id)?.durationMs,
+    })
+    waitingRunnerRef.current = runner
+
+    return () => {
+      runner.interrupt()
+      waitingRunnerRef.current = null
+    }
+  }, [catalog])
+
+  useEffect(() => directorBus.subscribeSequences((sequence) => {
+    waitingSequenceRef.current = sequence
+    if (sessionController.phase === 'waiting')
+      playWaitingSequence()
+  }), [playWaitingSequence])
+
+  useEffect(() => directorBus.subscribeTimeline((event) => {
+    if (event.type === 'reply-start')
+      timelineMarksRef.current = []
+
+    timelineMarksRef.current.push({ type: event.type, index: event.index, at: event.at })
+    flushPendingCues()
+  }), [flushPendingCues])
+
+  useEffect(() => sessionController.subscribe((transition) => {
+    const dispatch = (event: AnimationEvent) => dispatchRef.current?.(event)
+
+    if (transition.effects.includes('stop-long-action') && snapshotRef.current.longActionPhase !== 'end')
+      dispatch({ type: 'longActionStop', mode: 'end' })
+
+    if (transition.to === 'listening') {
+      waitingRunnerRef.current?.interrupt()
+      dispatch({ type: 'waiting', value: false })
+    }
+
+    if (transition.effects.includes('enter-thinking')) {
+      waitingRunnerRef.current?.interrupt()
+      dispatch({ type: 'waiting', value: false })
+      dispatch({ type: 'thinking', value: true })
+    }
+
+    if (transition.effects.includes('enter-talking'))
+      dispatch({ type: 'thinking', value: false })
+
+    if (transition.effects.includes('enter-waiting')) {
+      dispatch({ type: 'thinking', value: false })
+      dispatch({ type: 'waiting', value: true })
+      playWaitingSequence()
+    }
+
+    if (transition.effects.includes('enter-ambient')) {
+      waitingRunnerRef.current?.interrupt()
+      waitingSequenceRef.current = null
+      pendingCuesRef.current = []
+      dispatch({ type: 'waiting', value: false })
+      dispatch({ type: 'thinking', value: false })
+    }
+
+    if (transition.effects.includes('reorder-plan'))
+      dayPlan.reorder()
+
+    // Entering ends when no long action blocks the waiting chain.
+    if (transition.to === 'entering' && !snapshotRef.current.longActionName)
+      sessionController.notifyEntered()
+  }), [playWaitingSequence, dayPlan.reorder])
+
+  useEffect(() => {
+    // The day plan owns ambient behavior. The random fallback only runs when no
+    // plan is available, so it cannot cut a scheduled long action.
+    if (dayPlan.plan || sessionPhase !== 'ambient' || !catalog || !affectLabel || speaking || thinking || paused || voiceSpeaking)
       return
 
     const tags = ambientTags[affectLabel]
@@ -229,11 +483,11 @@ export function StagePage() {
 
       const clip = candidates[Math.floor(Math.random() * candidates.length)]
       if (clip)
-        dispatchRef.current?.({ type: 'playClip', clipId: clip.id })
+        playClip(clip.id)
     }, ambientIntervals[affectLabel])
 
     return () => window.clearInterval(timer)
-  }, [catalog, affectLabel, speaking, thinking, paused, voiceSpeaking])
+  }, [dayPlan.plan, sessionPhase, catalog, affectLabel, speaking, thinking, paused, voiceSpeaking, playClip])
 
   const handleController = useCallback((dispatch: (event: AnimationEvent) => void) => {
     dispatchRef.current = dispatch
@@ -241,34 +495,36 @@ export function StagePage() {
   }, [])
 
   const handleSnapshot = useCallback((next: StageSnapshot) => {
+    snapshotRef.current = next
     setSnapshot(next)
-  }, [])
 
-  const handleClipEnded = useCallback((clipId: string) => {
-    const executor = executorRef.current
-    if (!executor)
-      return
-
-    const result = executor.notifyClipEnded(clipId)
-    for (const cue of result.cues)
-      dispatchRef.current?.({ type: 'playClip', clipId: cue.clipId })
+    // The end clip of a long action delays the waiting chain. Entering is done
+    // once no long action is running.
+    if (sessionController.phase === 'entering' && !next.longActionName)
+      sessionController.notifyEntered()
   }, [])
 
   const handleUserClick = useCallback(() => {
     affectStore.applyEvent('click')
+    sessionController.notifyInteraction('click')
   }, [])
 
   const handleReady = useCallback((pack: LoadedPack, nextCatalog?: CharacterCatalog) => {
     setPackLabel(`${pack.manifest.name} · ${pack.allClips.length} clips`)
     setCatalog(nextCatalog ?? null)
+    // Built-in characters arrive through this callback, not through
+    // `activePack`. Reading long actions from the pack keeps the director prompt
+    // complete for them too.
+    setPackLongActions(describeLongActions(pack.longActions))
     setPlanText(nextCatalog ? JSON.stringify(createDebugPlan(nextCatalog), null, 2) : '')
   }, [])
 
   useEffect(() => {
     return () => {
-      executorRef.current?.interrupt()
       for (const id of planTimersRef.current)
         window.clearTimeout(id)
+      if (speechBubbleTimerRef.current !== null)
+        window.clearTimeout(speechBubbleTimerRef.current)
     }
   }, [])
 
@@ -307,14 +563,100 @@ export function StagePage() {
   }
 
   const stopPlan = useCallback(() => {
-    executorRef.current?.interrupt()
-    executorRef.current = null
     for (const id of planTimersRef.current)
       window.clearTimeout(id)
     planTimersRef.current = []
+    pendingCuesRef.current = []
     setPlanIssues([])
     planCooldownUntilRef.current = 0
   }, [])
+
+  const executePlan = useCallback((plan: PerformancePlan) => {
+    if (!catalog) {
+      animationLog.write('plan', 'skip: catalog missing')
+      return
+    }
+
+    stopPlan()
+    if (plan.affect)
+      affectStore.applyDelta(plan.affect)
+
+    const marks = timelineMarksRef.current
+    const decision = marks.length
+      ? resolvePlanArrival({
+          cues: plan.cues,
+          marks,
+          now: Date.now(),
+          clipDurations: clipDurations(),
+        })
+      : {
+          // The debug panel and cold starts have no reply marks yet. Play in
+          // plan order instead of parking every cue as a future anchor.
+          playNow: [...plan.cues],
+          timed: [],
+          scheduled: [],
+          dropped: [],
+        }
+
+    animationLog.write('plan', 'arrival decision', {
+      cues: plan.cues.map(cue => ({ anchor: cue.anchor, clipId: cue.clipId, intensity: cue.intensity })),
+      affect: plan.affect,
+      playNow: decision.playNow.map(cue => cue.clipId),
+      timed: decision.timed.map(item => ({ clipId: item.cue.clipId, inMs: item.inMs })),
+      scheduled: decision.scheduled.length,
+      dropped: decision.dropped,
+    })
+    setPlanIssues(decision.dropped.map(item => `${item.clipId}: ${item.reason}`))
+
+    for (const cue of decision.playNow)
+      playClip(cue.clipId)
+    for (const item of decision.timed) {
+      planTimersRef.current.push(window.setTimeout(playClip, item.inMs, item.cue.clipId))
+    }
+    pendingCuesRef.current = decision.scheduled
+    planCooldownUntilRef.current = Date.now() + 6000
+  }, [catalog, clipDurations, playClip, stopPlan])
+
+  useEffect(() => {
+    if (!catalog)
+      return
+
+    animationLog.write('bus', 'stage subscribed to plans')
+
+    return directorBus.subscribePlans((plan) => {
+      const autonomy = readStored<DirectorAutonomy>(directorAutonomyKey, directorDefaults.autonomy)
+      const configuredMax = readStored(directorMaxCuesKey, directorDefaults.maxCues)
+      const validation = validatePerformancePlan(plan, {
+        catalog,
+        maxCues: cueLimitFor(autonomy, configuredMax),
+        longActionIds: Object.keys(activePack?.pack.longActions ?? {}),
+      })
+      if (validation.ok && validation.plan)
+        executePlan(validation.plan)
+      else
+        animationLog.write('plan', 'stage validation failed', validation.issues)
+    })
+  }, [catalog, executePlan, activePack])
+
+  // Assistant replies reach the head bubble through their own channel, so the
+  // bubble also works when the director is disabled or its model call fails.
+  useEffect(() => directorBus.subscribeBubble((text) => {
+    const trimmed = text?.trim()
+    showSpeechBubble(trimmed || null)
+  }), [showSpeechBubble])
+
+  const runLongAction = () => {
+    const name = longActionName.trim()
+    if (!name)
+      return
+
+    const duration = Number(longActionDurationMs)
+    send({
+      type: 'action',
+      name,
+      durationMs: Number.isFinite(duration) && duration > 0 ? duration : undefined,
+    })
+  }
 
   const runPlan = () => {
     if (!catalog)
@@ -335,40 +677,25 @@ export function StagePage() {
       return
     }
 
-    stopPlan()
+    executePlan(validation.plan)
     setPlanIssues(validation.issues)
-
-    const executor = new PerformancePlanExecutor({
-      clock: createBrowserClock(),
-      catalog,
-      onCue: cue => dispatchRef.current?.({ type: 'playClip', clipId: cue.clipId }),
-    })
-    executorRef.current = executor
-    executor.start(validation.plan)
-    planCooldownUntilRef.current = Date.now() + 6000
-
-    const apply = (cues: PerformanceCue[]) => {
-      for (const cue of cues)
-        dispatchRef.current?.({ type: 'playClip', clipId: cue.clipId })
-    }
-
-    apply(executor.handle({ type: 'replyStart' }).cues)
-    planTimersRef.current.push(window.setTimeout(() => {
-      apply(executor.handle({ type: 'sentence', index: 1 }).cues)
-    }, 1200))
-    planTimersRef.current.push(window.setTimeout(() => {
-      apply(executor.handle({ type: 'sentence', index: 2 }).cues)
-    }, 2400))
-    planTimersRef.current.push(window.setTimeout(() => {
-      apply(executor.handle({ type: 'speechEnd' }).cues)
-    }, 3600))
   }
 
   const activeCharacter = characters.find(character => character.id === activeCharacterId) ?? null
 
   const selectCharacter = (character: BuiltinCharacter) => {
+    // Re-selecting the active character must not clear the catalog.
+    // `CharacterStage` keeps the same manifestUrl, so it does not reload and
+    // `onReady` never fires again. A cleared catalog would stay null.
+    if (character.id === activeCharacterId && catalog) {
+      animationLog.write('stage', `character already active: ${character.id}`)
+      return
+    }
+
+    animationLog.write('stage', `switch character: ${character.id}`)
     stopPlan()
     setCatalog(null)
+    setPackLongActions([])
     setPlanText('')
     setPlanIssues([])
     persistActiveCharacterId(character.id)
@@ -392,7 +719,12 @@ export function StagePage() {
   }
 
   return (
-    <div className="relative min-h-screen w-full bg-[var(--airi-bg)] text-[var(--airi-fg)]">
+    <div
+      className={[
+        'relative min-h-screen w-full text-[var(--airi-fg)]',
+        isDesktop() ? 'bg-transparent' : 'bg-[var(--airi-bg)]',
+      ].join(' ')}
+    >
       {background && (
         <>
           <div
@@ -450,43 +782,52 @@ export function StagePage() {
               </div>
             )}
 
-            {activeCharacter
+            {!characterEnabled
               ? (
-                  <CharacterStage
-                    manifestUrl={characterManifestUrl(activeCharacter)}
-                    appearance={activeCharacter.appearance}
-                    onController={handleController}
-                    onSnapshot={handleSnapshot}
-                    onClipEnded={handleClipEnded}
-                    onUserClick={handleUserClick}
-                    onReady={handleReady}
-                    onError={handleError}
-                  />
+                  <p className="max-w-md text-center text-sm text-[var(--airi-muted)]">
+                    {t('settings.reactShell.stageCharacterHidden', {
+                      defaultValue: 'The character is hidden. Enable it on the Card settings page.',
+                    })}
+                  </p>
                 )
-              : activePack
+              : activeCharacter
                 ? (
                     <CharacterStage
-                      pack={activePack}
-                      appearance={activePack.profile.appearance}
+                      manifestUrl={characterManifestUrl(activeCharacter)}
+                      appearance={withAppearanceOverride(activeCharacter.appearance, appearanceOverride)}
                       onController={handleController}
                       onSnapshot={handleSnapshot}
-                      onClipEnded={handleClipEnded}
                       onUserClick={handleUserClick}
                       onReady={handleReady}
                       onError={handleError}
+                      speechText={speechBubble}
                     />
                   )
-                : (
-                    <CharacterStage
-                      manifestUrl={demoManifestUrl}
-                      onController={handleController}
-                      onSnapshot={handleSnapshot}
-                      onClipEnded={handleClipEnded}
-                      onUserClick={handleUserClick}
-                      onReady={handleReady}
-                      onError={handleError}
-                    />
-                  )}
+                : activePack
+                  ? (
+                      <CharacterStage
+                        pack={activePack}
+                        appearance={withAppearanceOverride(activePack.profile.appearance, appearanceOverride)}
+                        onController={handleController}
+                        onSnapshot={handleSnapshot}
+                        onUserClick={handleUserClick}
+                        onReady={handleReady}
+                        onError={handleError}
+                        speechText={speechBubble}
+                      />
+                    )
+                  : (
+                      <CharacterStage
+                        manifestUrl={demoManifestUrl}
+                        appearance={withAppearanceOverride(defaultCharacterAppearance, appearanceOverride)}
+                        onController={handleController}
+                        onSnapshot={handleSnapshot}
+                        onUserClick={handleUserClick}
+                        onReady={handleReady}
+                        onError={handleError}
+                        speechText={speechBubble}
+                      />
+                    )}
 
             {error
               ? <p className="max-w-md text-center text-sm text-rose-400">{error}</p>
@@ -589,6 +930,28 @@ export function StagePage() {
                   </button>
                 </div>
 
+                <div className="flex flex-wrap items-center gap-2">
+                  <input
+                    className="w-36 border border-[var(--airi-border)] rounded-xl bg-[var(--airi-bg)] px-3 py-2 text-xs text-[var(--airi-fg)] font-mono"
+                    value={longActionName}
+                    onChange={event => setLongActionName(event.target.value)}
+                    placeholder="Long action name"
+                    spellCheck={false}
+                  />
+                  <input
+                    className="w-24 border border-[var(--airi-border)] rounded-xl bg-[var(--airi-bg)] px-3 py-2 text-xs text-[var(--airi-fg)] font-mono"
+                    value={longActionDurationMs}
+                    onChange={event => setLongActionDurationMs(event.target.value)}
+                    inputMode="numeric"
+                  />
+                  <button type="button" className={debugButtonClass} onClick={runLongAction} disabled={!catalog}>
+                    Run long action
+                  </button>
+                  <button type="button" className={debugButtonClass} onClick={() => send({ type: 'longActionStop', mode: 'end' })}>
+                    Stop long action
+                  </button>
+                </div>
+
                 {planIssues.length > 0 && (
                   <ul className="flex flex-col gap-1 text-xs text-rose-400">
                     {planIssues.map((issue, index) => (
@@ -598,6 +961,9 @@ export function StagePage() {
                 )}
               </div>
             </details>
+
+            <AnimationLogPanel />
+            <DirectorMonitorPanel />
           </main>
 
           <aside className={[

@@ -1,4 +1,5 @@
 import { useTranslation } from 'react-i18next'
+import { Link } from 'react-router'
 
 import { memoryEnabledKey, memoryWindowKey } from '../../chat/types'
 import { useStoredValue } from '../../settings/persisted'
@@ -48,10 +49,17 @@ export function MemoryPage() {
 
         <p className="text-xs text-[var(--airi-muted)]">
           {t('settings.reactShell.memoryLongTermNote', {
-            defaultValue: 'Long-term memory storage is not part of the React app yet.',
+            defaultValue: 'Long-term memory lives on its own page and reaches this chat as an index in the prompt.',
           })}
         </p>
       </div>
+
+      <Link
+        to="/settings/modules/memory-long-term"
+        className="text-sm text-[var(--airi-muted)] hover:text-[var(--airi-fg)]"
+      >
+        {t('settings.pages.modules.memory-long-term.title', { defaultValue: 'Long-Term Memory' })}
+      </Link>
     </section>
   )
 }
