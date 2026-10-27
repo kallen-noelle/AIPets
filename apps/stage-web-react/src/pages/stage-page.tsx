@@ -24,13 +24,12 @@ import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router'
 
 import { animationLog } from '../animation/animation-log'
-import { patchDayPlanRecord, readDayPlanRecord } from '../animation/day-plan-store'
 import { describeLongActions } from '../animation/director'
 import { directorBus } from '../animation/director-bus'
 import { cueLimitFor, directorAutonomyKey, directorDefaults, directorMaxCuesKey } from '../animation/director-config'
 import { recordClipPlayed } from '../animation/playback-history'
 import { sessionController, useSessionPhase } from '../animation/session-controller'
-import { useDayPlan } from '../animation/use-day-plan'
+import { useAmbient } from '../animation/use-ambient'
 import { WaitingSequenceRunner } from '../animation/waiting-sequence'
 import { getActivePackId, loadStoredPack, setActivePackId } from '../animation/zip-pack'
 import { affectStore, useAffect } from '../character/affect-store'
@@ -312,6 +311,11 @@ export function StagePage() {
     dispatchRef.current?.({ type: 'playClip', clipId })
   }, [])
 
+  /** Stable controller entry point for modules that outlive a render. */
+  const sendEvent = useCallback((event: AnimationEvent) => {
+    dispatchRef.current?.(event)
+  }, [])
+
   const clipDurations = useCallback((): Record<string, number> => {
     if (!catalog)
       return {}
@@ -363,33 +367,14 @@ export function StagePage() {
     pendingCuesRef.current = decision.scheduled
   }, [clipDurations, playClip])
 
-  const dayPlan = useDayPlan({
+  const ambient = useAmbient({
     characterId,
     characterName: activeCharacterName,
     persona,
     catalog,
     longActions: packLongActions,
+    dispatch: sendEvent,
   })
-  const lastDayPlanBlockRef = useRef<string | null>(readDayPlanRecord(characterId)?.lastPlayedBlockId ?? null)
-
-  useEffect(() => {
-    const block = dayPlan.block
-    if (sessionPhase !== 'ambient' || !block || lastDayPlanBlockRef.current === block.id)
-      return
-
-    lastDayPlanBlockRef.current = block.id
-    animationLog.write('day-plan', `block ${block.id}: ${block.actionId}`, {
-      kind: block.kind,
-      durationMs: block.durationMs,
-    })
-
-    if (block.kind === 'long')
-      dispatchRef.current?.({ type: 'action', name: block.actionId, durationMs: block.durationMs })
-    else
-      playClip(block.actionId)
-
-    patchDayPlanRecord(characterId, { lastPlayedBlockId: block.id, lastPlayedAt: Date.now() })
-  }, [sessionPhase, dayPlan.block, characterId, playClip])
 
   useEffect(() => {
     if (!catalog)
@@ -426,7 +411,7 @@ export function StagePage() {
     const dispatch = (event: AnimationEvent) => dispatchRef.current?.(event)
 
     if (transition.effects.includes('stop-long-action') && snapshotRef.current.longActionPhase !== 'end')
-      dispatch({ type: 'longActionStop', mode: 'end' })
+      dispatch({ type: 'longActionStop' })
 
     if (transition.to === 'listening') {
       waitingRunnerRef.current?.interrupt()
@@ -457,17 +442,17 @@ export function StagePage() {
     }
 
     if (transition.effects.includes('reorder-plan'))
-      dayPlan.reorder()
+      ambient.reorder()
 
     // Entering ends when no long action blocks the waiting chain.
     if (transition.to === 'entering' && !snapshotRef.current.longActionName)
       sessionController.notifyEntered()
-  }), [playWaitingSequence, dayPlan.reorder])
+  }), [playWaitingSequence, ambient.reorder])
 
   useEffect(() => {
-    // The day plan owns ambient behavior. The random fallback only runs when no
-    // plan is available, so it cannot cut a scheduled long action.
-    if (dayPlan.plan || sessionPhase !== 'ambient' || !catalog || !affectLabel || speaking || thinking || paused || voiceSpeaking)
+    // The ambient program owns ambient behavior. The random fallback only runs
+    // when no program is available, so it cannot cut a scheduled action.
+    if (ambient.program || sessionPhase !== 'ambient' || !catalog || !affectLabel || speaking || thinking || paused || voiceSpeaking)
       return
 
     const tags = ambientTags[affectLabel]
@@ -487,7 +472,7 @@ export function StagePage() {
     }, ambientIntervals[affectLabel])
 
     return () => window.clearInterval(timer)
-  }, [dayPlan.plan, sessionPhase, catalog, affectLabel, speaking, thinking, paused, voiceSpeaking, playClip])
+  }, [ambient.program, sessionPhase, catalog, affectLabel, speaking, thinking, paused, voiceSpeaking, playClip])
 
   const handleController = useCallback((dispatch: (event: AnimationEvent) => void) => {
     dispatchRef.current = dispatch
@@ -799,6 +784,7 @@ export function StagePage() {
                       onSnapshot={handleSnapshot}
                       onUserClick={handleUserClick}
                       onReady={handleReady}
+                      onClipEnded={ambient.handleClipEnded}
                       onError={handleError}
                       speechText={speechBubble}
                     />
@@ -812,6 +798,7 @@ export function StagePage() {
                         onSnapshot={handleSnapshot}
                         onUserClick={handleUserClick}
                         onReady={handleReady}
+                        onClipEnded={ambient.handleClipEnded}
                         onError={handleError}
                         speechText={speechBubble}
                       />
@@ -824,6 +811,7 @@ export function StagePage() {
                         onSnapshot={handleSnapshot}
                         onUserClick={handleUserClick}
                         onReady={handleReady}
+                        onClipEnded={ambient.handleClipEnded}
                         onError={handleError}
                         speechText={speechBubble}
                       />
@@ -947,7 +935,7 @@ export function StagePage() {
                   <button type="button" className={debugButtonClass} onClick={runLongAction} disabled={!catalog}>
                     Run long action
                   </button>
-                  <button type="button" className={debugButtonClass} onClick={() => send({ type: 'longActionStop', mode: 'end' })}>
+                  <button type="button" className={debugButtonClass} onClick={() => send({ type: 'longActionStop' })}>
                     Stop long action
                   </button>
                 </div>

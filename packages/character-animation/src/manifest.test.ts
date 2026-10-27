@@ -80,12 +80,12 @@ describe('parseAnimationManifest', () => {
     expect(result.pack.chains.idle[0]?.weight).toBe(3)
   })
 
-  it('normalizes long actions and requires a mid duration', () => {
+  it('normalizes long actions and requires a loop duration', () => {
     const result = parseAnimationManifest(createManifest({
       longActions: {
         swing: {
           start: 'long/swing-start.webm',
-          mid: { src: 'long/swing-mid.webm', durationMs: 4000 },
+          loop: { src: 'long/swing-loop.webm', durationMs: 4000 },
           end: 'long/swing-end.webm',
         },
       },
@@ -94,16 +94,16 @@ describe('parseAnimationManifest', () => {
     if (!result.ok)
       return
 
-    expect(result.pack.longActions.swing?.mid.durationMs).toBe(4000)
-    expect(result.pack.longActions.swing?.mid.loop).toBe(false)
+    expect(result.pack.longActions.swing?.loop.durationMs).toBe(4000)
+    expect(result.pack.longActions.swing?.loop.loop).toBe(false)
     expect(result.pack.longActions.swing?.start?.id).toBe('long/swing-start.webm')
-    expect(result.pack.allClips.map(clip => clip.id)).toContain('long/swing-mid.webm')
+    expect(result.pack.allClips.map(clip => clip.id)).toContain('long/swing-loop.webm')
   })
 
   it('rejects a long action without any duration source', () => {
     const result = parseAnimationManifest(createManifest({
       longActions: {
-        swing: { mid: 'long/swing-mid.webm' },
+        swing: { loop: 'long/swing-loop.webm' },
       },
     }))
     expect(result.ok).toBe(false)
@@ -115,7 +115,7 @@ describe('parseAnimationManifest', () => {
   it('accepts a long action with only a default duration', () => {
     const result = parseAnimationManifest(createManifest({
       longActions: {
-        swing: { mid: 'long/swing-mid.webm', defaultDurationMs: 8000 },
+        swing: { loop: 'long/swing-loop.webm', defaultDurationMs: 8000 },
       },
     }))
     expect(result.ok).toBe(true)

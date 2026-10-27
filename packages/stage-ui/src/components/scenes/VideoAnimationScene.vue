@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { AnimationCommand, AnimationEvent, LongActionStopMode, NormalizedClip } from '@proj-airi/character-animation'
+import type { AnimationCommand, AnimationEvent, NormalizedClip } from '@proj-airi/character-animation'
 
 import type { LoadedAnimationPack } from '../../adapters/animation/zip-loader'
 
@@ -143,8 +143,8 @@ function playExpression(name: string) {
   dispatch({ type: 'expression', name })
 }
 
-function stopAction(mode?: LongActionStopMode) {
-  dispatch({ type: 'longActionStop', mode })
+function stopAction() {
+  dispatch({ type: 'longActionStop' })
 }
 
 function triggerClick(area?: 'head' | 'body') {
@@ -275,7 +275,7 @@ async function loadModel(src?: string) {
       return
 
     transitionMs.value = pack.pack.manifest.transition?.fadeMs ?? 180
-    controller.value = new AnimationController(pack.pack, { onCommands: applyCommands })
+    controller.value = new AnimationController(pack.pack)
     dispatch({ type: 'idle' })
     if (props.paused)
       dispatch({ type: 'paused', value: true })

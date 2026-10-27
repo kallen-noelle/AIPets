@@ -65,7 +65,6 @@ function createFakeClock() {
 
 function createLongActionController() {
   const fake = createFakeClock()
-  const emitted: AnimationCommand[][] = []
   const result = parseAnimationManifest({
     manifestVersion: 1,
     id: 'test-pet',
@@ -76,11 +75,11 @@ function createLongActionController() {
       longActions: {
         swing: {
           start: 'long/swing-start.webm',
-          mid: { src: 'long/swing-mid.webm', durationMs: 4000 },
+          loop: { src: 'long/swing-loop.webm', durationMs: 4000 },
           end: 'long/swing-end.webm',
         },
         sway: {
-          mid: { src: 'long/sway-mid.webm', durationMs: 3000 },
+          loop: { src: 'long/sway-loop.webm', durationMs: 3000 },
           defaultDurationMs: 6000,
         },
       },
@@ -92,10 +91,9 @@ function createLongActionController() {
   const controller = new AnimationController(result.pack, {
     random: () => 0,
     clock: fake.clock,
-    onCommands: commands => emitted.push(commands),
   })
 
-  return { controller, emitted, advance: fake.advance, pending: fake.pending }
+  return { controller, advance: fake.advance, pending: fake.pending }
 }
 
 describe('animationController', () => {
@@ -164,26 +162,50 @@ describe('animationController', () => {
       return
     expect(commands[0].clip.id).toBe('click/head.webm')
   })
+
+  it('finishes a one-shot clip before a new request replaces it', () => {
+    const controller = createController()
+    controller.dispatch({ type: 'idle' })
+    controller.dispatch({ type: 'emotion', emotion: 'happy', intensity: 0.2 })
+
+    expect(controller.dispatch({ type: 'click', area: 'head' })).toEqual([])
+    expect(controller.snapshot.currentClipId).toBe('emotion/happy-low.webm')
+
+    expect(clipIdOf(controller.clipEnded('emotion/happy-low.webm'))).toBe('click/head.webm')
+  })
+
+  it('finishes a one-shot clip before speech starts', () => {
+    const controller = createController()
+    controller.dispatch({ type: 'idle' })
+    controller.dispatch({ type: 'emotion', emotion: 'happy', intensity: 0.2 })
+
+    expect(controller.dispatch({ type: 'speaking', value: true })).toEqual([])
+    expect(controller.snapshot.currentClipId).toBe('emotion/happy-low.webm')
+
+    expect(clipIdOf(controller.clipEnded('emotion/happy-low.webm'))).toBe('talk/a.webm')
+  })
 })
 
 describe('long actions', () => {
-  it('plays start, loops mid, and inserts end when the timer expires', () => {
-    const { controller, emitted, advance } = createLongActionController()
+  it('plays start, loops the loop clip, and inserts end after the budget ends', () => {
+    const { controller, advance } = createLongActionController()
     const started = controller.dispatch({ type: 'action', name: 'swing', durationMs: 40000 })
     expect(clipIdOf(started)).toBe('long/swing-start.webm')
     expect(controller.snapshot.longActionPhase).toBe('start')
 
-    const firstMid = controller.clipEnded('long/swing-start.webm')
-    expect(clipIdOf(firstMid)).toBe('long/swing-mid.webm')
-    expect(controller.snapshot.longActionPhase).toBe('mid')
+    const firstLoop = controller.clipEnded('long/swing-start.webm')
+    expect(clipIdOf(firstLoop)).toBe('long/swing-loop.webm')
+    expect(controller.snapshot.longActionPhase).toBe('loop')
 
-    // Mid clips loop by themselves until the timer fires.
-    expect(clipIdOf(controller.clipEnded('long/swing-mid.webm'))).toBe('long/swing-mid.webm')
+    // The loop clip repeats until the budget is spent.
+    expect(clipIdOf(controller.clipEnded('long/swing-loop.webm'))).toBe('long/swing-loop.webm')
     advance(39999)
-    expect(emitted).toHaveLength(0)
+    expect(controller.snapshot.longActionPhase).toBe('loop')
 
+    // The budget never cuts the running clip. The exit waits for its end.
     advance(1)
-    expect(clipIdOf(emitted[0] ?? [])).toBe('long/swing-end.webm')
+    expect(controller.snapshot.longActionPhase).toBe('loop')
+    expect(clipIdOf(controller.clipEnded('long/swing-loop.webm'))).toBe('long/swing-end.webm')
     expect(controller.snapshot.longActionPhase).toBe('end')
 
     const finished = controller.clipEnded('long/swing-end.webm')
@@ -191,92 +213,147 @@ describe('long actions', () => {
     expect(controller.snapshot.longActionName).toBeNull()
   })
 
-  it('cuts a mid clip even when it outlasts the requested duration', () => {
-    const { controller, emitted, advance } = createLongActionController()
+  it('counts the start clip against the budget', () => {
+    const { controller, advance } = createLongActionController()
+    controller.dispatch({ type: 'action', name: 'swing', durationMs: 9000 })
+
+    // Six of the nine seconds go to the start clip.
+    advance(6000)
+    expect(clipIdOf(controller.clipEnded('long/swing-start.webm'))).toBe('long/swing-loop.webm')
+
+    advance(2999)
+    expect(clipIdOf(controller.clipEnded('long/swing-loop.webm'))).toBe('long/swing-loop.webm')
+
+    advance(1)
+    expect(clipIdOf(controller.clipEnded('long/swing-loop.webm'))).toBe('long/swing-end.webm')
+  })
+
+  it('waits for the loop clip when the budget ends before the clip does', () => {
+    const { controller, advance } = createLongActionController()
     controller.dispatch({ type: 'action', name: 'swing', durationMs: 9000 })
     controller.clipEnded('long/swing-start.webm')
 
     advance(9000)
-    expect(clipIdOf(emitted[0] ?? [])).toBe('long/swing-end.webm')
+    expect(controller.snapshot.longActionPhase).toBe('loop')
+    expect(clipIdOf(controller.clipEnded('long/swing-loop.webm'))).toBe('long/swing-end.webm')
+  })
+
+  it('replays the loop clip without a fade', () => {
+    const { controller } = createLongActionController()
+    controller.dispatch({ type: 'action', name: 'swing', durationMs: 40000 })
+
+    const entered = controller.clipEnded('long/swing-start.webm')
+    expect(entered[0]?.type).toBe('play')
+    if (entered[0]?.type !== 'play')
+      return
+    expect(entered[0].fadeMs).toBe(180)
+
+    const replay = controller.clipEnded('long/swing-loop.webm')
+    expect(replay[0]?.type).toBe('play')
+    if (replay[0]?.type !== 'play')
+      return
+    expect(replay[0].fadeMs).toBe(0)
   })
 
   it('uses the declared default duration when the caller passes none', () => {
-    const { controller, emitted, advance } = createLongActionController()
+    const { controller, advance } = createLongActionController()
     const started = controller.dispatch({ type: 'action', name: 'sway' })
-    expect(clipIdOf(started)).toBe('long/sway-mid.webm')
+    expect(clipIdOf(started)).toBe('long/sway-loop.webm')
 
     advance(6000)
-    // No end clip, so the timer returns to the base chain.
-    expect(clipIdOf(emitted[0] ?? [])).toBe('idle/a.webm')
+    // No end clip, so the base chain returns after the loop clip ends.
+    expect(clipIdOf(controller.clipEnded('long/sway-loop.webm'))).toBe('idle/a.webm')
     expect(controller.snapshot.longActionName).toBeNull()
   })
 
-  it('clears the timer when speech interrupts the long action', () => {
-    const { controller, emitted, advance } = createLongActionController()
+  it('finishes the running loop before the exit clip when speech starts', () => {
+    const { controller, advance } = createLongActionController()
     controller.dispatch({ type: 'action', name: 'swing', durationMs: 40000 })
     controller.clipEnded('long/swing-start.webm')
 
-    controller.dispatch({ type: 'speaking', value: true })
-    expect(controller.snapshot.longActionName).toBeNull()
+    expect(controller.dispatch({ type: 'speaking', value: true })).toEqual([])
+    expect(controller.snapshot.longActionName).toBe('swing')
+    expect(controller.snapshot.longActionPhase).toBe('loop')
 
+    // The running loop clip is not abandoned.
     advance(60000)
-    expect(emitted).toHaveLength(0)
-    expect(controller.clipEnded('long/swing-mid.webm')).toEqual([])
+    expect(controller.snapshot.longActionPhase).toBe('loop')
+    expect(clipIdOf(controller.clipEnded('long/swing-loop.webm'))).toBe('long/swing-end.webm')
+
+    expect(clipIdOf(controller.clipEnded('long/swing-end.webm'))).toBe('idle/a.webm')
+    expect(controller.snapshot.longActionName).toBeNull()
+  })
+
+  it('finishes the start clip before the exit clip when interrupted', () => {
+    const { controller } = createLongActionController()
+    controller.dispatch({ type: 'action', name: 'swing', durationMs: 40000 })
+
+    expect(controller.dispatch({ type: 'speaking', value: true })).toEqual([])
+    expect(controller.snapshot.longActionPhase).toBe('start')
+
+    expect(clipIdOf(controller.clipEnded('long/swing-start.webm'))).toBe('long/swing-end.webm')
+    expect(controller.snapshot.longActionPhase).toBe('end')
   })
 
   it('freezes the budget while paused and resumes the rest', () => {
-    const { controller, emitted, advance } = createLongActionController()
+    const { controller, advance } = createLongActionController()
     controller.dispatch({ type: 'action', name: 'swing', durationMs: 40000 })
     controller.clipEnded('long/swing-start.webm')
 
     advance(10000)
     controller.dispatch({ type: 'paused', value: true })
     advance(100000)
-    expect(emitted).toHaveLength(0)
+    expect(controller.snapshot.longActionPhase).toBe('loop')
 
     controller.dispatch({ type: 'paused', value: false })
     advance(29999)
-    expect(emitted).toHaveLength(0)
+    expect(clipIdOf(controller.clipEnded('long/swing-loop.webm'))).toBe('long/swing-loop.webm')
+
     advance(1)
-    expect(clipIdOf(emitted[0] ?? [])).toBe('long/swing-end.webm')
+    expect(clipIdOf(controller.clipEnded('long/swing-loop.webm'))).toBe('long/swing-end.webm')
   })
 
-  it('stops on request with the end clip or with a cut', () => {
-    const endRun = createLongActionController()
-    endRun.controller.dispatch({ type: 'action', name: 'swing', durationMs: 40000 })
-    endRun.controller.clipEnded('long/swing-start.webm')
-    expect(clipIdOf(endRun.controller.dispatch({ type: 'longActionStop' }))).toBe('long/swing-end.webm')
-    endRun.advance(60000)
-    expect(endRun.emitted).toHaveLength(0)
-
-    const cutRun = createLongActionController()
-    cutRun.controller.dispatch({ type: 'action', name: 'swing', durationMs: 40000 })
-    cutRun.controller.clipEnded('long/swing-start.webm')
-    expect(clipIdOf(cutRun.controller.dispatch({ type: 'longActionStop', mode: 'cut' }))).toBe('idle/a.webm')
-    cutRun.advance(60000)
-    expect(cutRun.emitted).toHaveLength(0)
-  })
-
-  it('clears the timer when another action replaces the long action', () => {
-    const { controller, emitted, advance } = createLongActionController()
+  it('waits for the running loop before the exit clip on an explicit stop', () => {
+    const { controller } = createLongActionController()
     controller.dispatch({ type: 'action', name: 'swing', durationMs: 40000 })
     controller.clipEnded('long/swing-start.webm')
 
-    controller.dispatch({ type: 'action', name: 'sway' })
-    controller.dispatch({ type: 'longActionStop', mode: 'cut' })
-    advance(60000)
-    expect(emitted).toHaveLength(0)
+    expect(controller.dispatch({ type: 'longActionStop' })).toEqual([])
+    expect(controller.snapshot.longActionPhase).toBe('loop')
+
+    expect(clipIdOf(controller.clipEnded('long/swing-loop.webm'))).toBe('long/swing-end.webm')
+    expect(clipIdOf(controller.clipEnded('long/swing-end.webm'))).toBe('idle/a.webm')
+    expect(controller.snapshot.longActionName).toBeNull()
+  })
+
+  it('runs the pending action after the exit clip', () => {
+    const { controller, advance } = createLongActionController()
+    controller.dispatch({ type: 'action', name: 'swing', durationMs: 40000 })
+    controller.clipEnded('long/swing-start.webm')
+
+    expect(controller.dispatch({ type: 'action', name: 'sway' })).toEqual([])
+    expect(controller.snapshot.longActionName).toBe('swing')
+
+    // The running loop finishes, then the swing exit clip, then sway starts.
+    expect(clipIdOf(controller.clipEnded('long/swing-loop.webm'))).toBe('long/swing-end.webm')
+    expect(clipIdOf(controller.clipEnded('long/swing-end.webm'))).toBe('long/sway-loop.webm')
+    expect(controller.snapshot.longActionName).toBe('sway')
+    expect(controller.snapshot.longActionPhase).toBe('loop')
+
+    advance(6000)
+    expect(clipIdOf(controller.clipEnded('long/sway-loop.webm'))).toBe('idle/a.webm')
+    expect(controller.snapshot.longActionName).toBeNull()
   })
 
   it('drops pending timers on dispose', () => {
-    const { controller, emitted, advance, pending } = createLongActionController()
+    const { controller, pending } = createLongActionController()
     controller.dispatch({ type: 'action', name: 'swing', durationMs: 40000 })
     controller.clipEnded('long/swing-start.webm')
     expect(pending()).toBe(1)
 
     controller.dispose()
-    advance(60000)
-    expect(emitted).toHaveLength(0)
+    expect(pending()).toBe(0)
+    expect(controller.snapshot.longActionName).toBeNull()
   })
 
   it('falls back to a one-shot for normal actions', () => {

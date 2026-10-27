@@ -5,7 +5,7 @@ const clipObjectSchema = v.object({
   weight: v.optional(v.pipe(v.number(), v.minValue(0)), 1),
   loop: v.optional(v.boolean(), true),
   fadeMs: v.optional(v.pipe(v.number(), v.minValue(0))),
-  /** Known clip length. Long actions need it on the mid clip to count repeats. */
+  /** Known clip length. Long actions need it on the loop clip to count repeats. */
   durationMs: v.optional(v.pipe(v.number(), v.integer(), v.minValue(1))),
 })
 
@@ -36,13 +36,13 @@ const lookEntrySchema = v.object({
 })
 
 const longActionEntrySchema = v.object({
-  /** Entry clip. Omit it to start directly with the mid clip. */
+  /** Entry clip. Omit it to start directly with the loop clip. */
   start: v.optional(clipEntrySchema),
   /** Loop body. Its `durationMs` decides how many repeats fill the request. */
-  mid: clipEntrySchema,
-  /** Exit clip. Omit it to return to the base chain after the last mid repeat. */
+  loop: clipEntrySchema,
+  /** Exit clip. Omit it to return to the base chain after the last loop repeat. */
   end: v.optional(clipEntrySchema),
-  /** Duration used when the caller does not pass one. Defaults to one mid clip. */
+  /** Duration used when the caller does not pass one. Defaults to one loop clip. */
   defaultDurationMs: v.optional(v.pipe(v.number(), v.integer(), v.minValue(1))),
 })
 

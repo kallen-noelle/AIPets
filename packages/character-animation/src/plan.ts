@@ -19,7 +19,7 @@ export interface PerformanceCue {
   anchor: PlanAnchor
   clipId: string
   intensity: number
-  /** Seconds for a long action. Long actions repeat their mid clip to reach it. */
+  /** Seconds for a long action. Long actions repeat their loop clip to reach it. */
   durationSeconds?: number
   reason?: string
 }

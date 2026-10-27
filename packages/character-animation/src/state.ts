@@ -9,7 +9,6 @@ import type {
   LoadedPack,
   LongActionClips,
   LongActionPhase,
-  LongActionStopMode,
   NormalizedClip,
 } from './types'
 
@@ -19,22 +18,19 @@ export interface AnimationControllerOptions {
   random?: RandomSource
   defaultFadeMs?: number
   clock?: AnimationClockPort
-  /**
-   * Receives commands that no dispatch call produces, such as the long action
-   * timer switching to the end clip. The host must apply them like return values.
-   */
-  onCommands?: (commands: AnimationCommand[]) => void
 }
 
 interface ActiveLongAction {
   name: string
   phase: LongActionPhase
   clips: LongActionClips
-  /** Mid-loop budget left. The start and end clips do not count. */
+  /** Action budget left. It counts from the first frame, start included. */
   remainingMs: number
   startedAt: number
-  /** Cancels the running mid-loop timer. Undefined while paused or before mid. */
+  /** Cancels the running budget timer. Undefined while paused or after it fires. */
   timer?: () => void
+  /** An interrupt waits for the playing clip to finish. */
+  stopRequested: boolean
 }
 
 // The package compiles without DOM or Node types. Both runtimes expose timers
@@ -56,6 +52,8 @@ interface InternalState {
   oneShot: NormalizedClip | null
   stateClip: NormalizedClip | null
   longAction: ActiveLongAction | null
+  /** Request that waits for the finite clip that already plays. */
+  pendingEvent: AnimationEvent | null
   paused: boolean
   speaking: boolean
   thinking: boolean
@@ -86,7 +84,6 @@ export class AnimationController {
   private readonly picker: WeightedPicker
   private readonly fallbackFadeMs: number
   private readonly clock: AnimationClockPort
-  private readonly onCommands?: (commands: AnimationCommand[]) => void
   private state: InternalState
 
   constructor(pack: LoadedPack, options: AnimationControllerOptions = {}) {
@@ -94,13 +91,13 @@ export class AnimationController {
     this.picker = new WeightedPicker(options.random)
     this.fallbackFadeMs = options.defaultFadeMs ?? defaultFadeMs
     this.clock = options.clock ?? systemClock
-    this.onCommands = options.onCommands
     this.state = {
       base: 'idle',
       current: null,
       oneShot: null,
       stateClip: null,
       longAction: null,
+      pendingEvent: null,
       paused: false,
       speaking: false,
       thinking: false,
@@ -126,33 +123,41 @@ export class AnimationController {
     switch (event.type) {
       case 'idle':
         this.state.waiting = false
-        this.cancelLongAction()
+        if (this.requestLongStop(event) || this.deferForPlayingClip(event))
+          return []
         return this.enterBase('idle')
       case 'speaking':
         return this.handleSpeaking(event.value)
       case 'thinking':
         return this.handleThinking(event.value)
       case 'emotion':
-        this.cancelLongAction()
+        if (this.requestLongStop(event) || this.deferForPlayingClip(event))
+          return []
         return this.playOneShot(chooseTier(this.pack, event.emotion, event.intensity ?? 1))
       case 'action':
         return this.handleAction(event.name, event.durationMs)
       case 'longActionStop':
-        return this.stopLongAction(event.mode ?? 'end')
+        this.requestLongStop(null)
+        return []
       case 'expression':
-        this.cancelLongAction()
+        if (this.requestLongStop(event) || this.deferForPlayingClip(event))
+          return []
         return this.playOneShot(this.pack.expressions[event.name] ?? [])
       case 'click':
-        this.cancelLongAction()
+        if (this.requestLongStop(event) || this.deferForPlayingClip(event))
+          return []
         return this.playOneShot(chooseClick(this.pack, event.area))
       case 'playClip':
-        this.cancelLongAction()
+        if (this.requestLongStop(event) || this.deferForPlayingClip(event))
+          return []
         return this.playSpecifiedClip(event.clipId)
       case 'setState':
-        this.cancelLongAction()
+        if (this.requestLongStop(event) || this.deferForPlayingClip(event))
+          return []
         return this.setStateClip(event.clipId)
       case 'clearState':
-        this.cancelLongAction()
+        if (this.requestLongStop(event) || this.deferForPlayingClip(event))
+          return []
         return this.clearStateClip()
       case 'paused':
         return this.handlePaused(event.value)
@@ -167,12 +172,19 @@ export class AnimationController {
 
     const longAction = this.state.longAction
     if (longAction) {
-      if (longAction.phase === 'start' && longAction.clips.start?.id === clipId)
-        return this.beginLongMid()
+      if (longAction.phase === 'start' && longAction.clips.start?.id === clipId) {
+        // An interrupt waits for this clip. It never cuts the playing frame.
+        if (longAction.stopRequested)
+          return this.playLongEnd()
+        return this.beginLongLoop()
+      }
 
-      if (longAction.phase === 'mid' && longAction.clips.mid.id === clipId) {
-        // The timer owns the budget. Mid keeps looping until it fires.
-        return this.playLongMid()
+      if (longAction.phase === 'loop' && longAction.clips.loop.id === clipId) {
+        if (longAction.stopRequested)
+          return this.playLongEnd()
+
+        // The timer owns the budget. Loop keeps repeating until it fires.
+        return this.playLongLoop()
       }
 
       if (longAction.phase === 'end' && longAction.clips.end?.id === clipId)
@@ -184,10 +196,22 @@ export class AnimationController {
 
     if (this.state.oneShot?.id === clipId) {
       this.state.oneShot = null
+      this.state.current = null
+      const pending = this.takePendingEvent()
+      if (pending)
+        return this.dispatch(pending)
       return this.resumeBase()
     }
 
     if (this.state.current?.id === clipId) {
+      this.state.current = null
+      const pending = this.takePendingEvent()
+      if (pending)
+        return this.dispatch(pending)
+
+      if (this.state.speaking || this.state.thinking || this.state.waiting)
+        return this.resumeBase()
+
       if (this.state.stateClip?.id === clipId)
         return this.playStateClip()
       return this.playFromChain(this.state.base)
@@ -200,10 +224,13 @@ export class AnimationController {
   dispose(): void {
     this.clearLongTimer()
     this.state.longAction = null
+    this.state.pendingEvent = null
   }
 
   private handleAction(name: string, durationMs?: number): AnimationCommand[] {
-    this.cancelLongAction()
+    const request: AnimationEvent = { type: 'action', name, durationMs }
+    if (this.requestLongStop(request) || this.deferForPlayingClip(request))
+      return []
 
     const clips = this.pack.longActions[name]
     if (!clips)
@@ -215,7 +242,7 @@ export class AnimationController {
   private startLongAction(name: string, clips: LongActionClips, durationMs?: number): AnimationCommand[] {
     const requested = durationMs && durationMs > 0
       ? durationMs
-      : clips.defaultDurationMs ?? clips.mid.durationMs ?? 0
+      : clips.defaultDurationMs ?? clips.loop.durationMs ?? 0
 
     this.state.longAction = {
       name,
@@ -223,29 +250,34 @@ export class AnimationController {
       clips,
       remainingMs: Math.max(0, requested),
       startedAt: 0,
+      stopRequested: false,
     }
     this.state.oneShot = null
+
+    // The budget counts from the first frame of the action. The start clip
+    // spends part of it before the loop begins.
+    this.startLongTimer()
 
     if (clips.start)
       return this.playLongClip('start', clips.start)
 
-    return this.beginLongMid()
+    return this.beginLongLoop()
   }
 
-  /** Enters the mid loop and starts the duration timer. */
-  private beginLongMid(): AnimationCommand[] {
+  /** Enters the loop. The timer already runs, so this only plays the clip. */
+  private beginLongLoop(): AnimationCommand[] {
     const longAction = this.state.longAction
     if (!longAction)
       return []
 
-    const commands = this.playLongClip('mid', longAction.clips.mid)
+    const commands = this.playLongClip('loop', longAction.clips.loop)
     this.startLongTimer()
     return commands
   }
 
   private startLongTimer(): void {
     const longAction = this.state.longAction
-    if (!longAction || longAction.timer || longAction.phase !== 'mid')
+    if (!longAction || longAction.timer || longAction.stopRequested)
       return
 
     longAction.startedAt = this.clock.now()
@@ -254,8 +286,8 @@ export class AnimationController {
       if (this.state.longAction !== longAction)
         return
 
-      // The timer cuts the current mid clip and inserts the end clip.
-      this.emitCommands(this.playLongEnd())
+      // The budget is spent. The exit waits for the running clip to end.
+      longAction.stopRequested = true
     })
   }
 
@@ -278,21 +310,22 @@ export class AnimationController {
     this.clearLongTimer()
   }
 
-  private playLongClip(phase: LongActionPhase, clip: NormalizedClip): AnimationCommand[] {
+  private playLongClip(phase: LongActionPhase, clip: NormalizedClip, fadeMs?: number): AnimationCommand[] {
     if (this.state.longAction)
       this.state.longAction.phase = phase
 
     this.state.oneShot = clip
     this.state.current = clip
-    return [{ type: 'play', clip, fadeMs: this.fadeFor(clip) }]
+    return [{ type: 'play', clip, fadeMs: fadeMs ?? this.fadeFor(clip) }]
   }
 
-  private playLongMid(): AnimationCommand[] {
+  private playLongLoop(): AnimationCommand[] {
     const longAction = this.state.longAction
     if (!longAction)
       return []
 
-    return this.playLongClip('mid', longAction.clips.mid)
+    // A repeated loop clip must not crossfade into itself. The seam is a cut.
+    return this.playLongClip('loop', longAction.clips.loop, 0)
   }
 
   private playLongEnd(): AnimationCommand[] {
@@ -312,69 +345,95 @@ export class AnimationController {
     this.clearLongTimer()
     this.state.longAction = null
     this.state.oneShot = null
+    this.state.current = null
+
+    const pending = this.takePendingEvent()
+    if (pending)
+      return this.dispatch(pending)
+
     return this.resumeBase()
   }
 
   /**
-   * Drops the long action at once. Used by intents that must take over, such as
-   * speech or a click. The end clip does not play on this path.
+   * Marks the long action to exit after the clip that already plays.
+   *
+   * The playing clip always finishes. The end clip follows it, and then the
+   * pending event applies. This keeps an interrupt from cutting a frame.
    */
-  private cancelLongAction(): void {
-    if (!this.state.longAction)
-      return
-
-    this.clearLongTimer()
-    this.state.longAction = null
-    this.state.oneShot = null
-  }
-
-  private stopLongAction(mode: LongActionStopMode): AnimationCommand[] {
+  private requestLongStop(event: AnimationEvent | null): boolean {
     const longAction = this.state.longAction
     if (!longAction)
-      return []
+      return false
 
+    longAction.stopRequested = true
+    if (event)
+      this.state.pendingEvent = event
+
+    // The duration timer must not cut the clip that already plays.
     this.clearLongTimer()
-
-    if (mode === 'end')
-      return this.playLongEnd()
-
-    this.state.longAction = null
-    this.state.oneShot = null
-    return this.resumeBase()
+    return true
   }
 
-  private emitCommands(commands: AnimationCommand[]): void {
-    if (commands.length)
-      this.onCommands?.(commands)
+  /**
+   * Holds a request until the clip that already plays reaches its end.
+   *
+   * Only a finite clip blocks a switch. A looping clip has no end, so it can
+   * crossfade at any time.
+   */
+  private deferForPlayingClip(event: AnimationEvent): boolean {
+    if (!this.hasFiniteClipPlaying())
+      return false
+
+    this.state.pendingEvent = event
+    return true
+  }
+
+  private hasFiniteClipPlaying(): boolean {
+    const current = this.state.current
+    return !!current && !current.loop
+  }
+
+  private takePendingEvent(): AnimationEvent | null {
+    const pending = this.state.pendingEvent
+    this.state.pendingEvent = null
+    return pending
   }
 
   private handleSpeaking(value: boolean): AnimationCommand[] {
-    if (value) {
-      // A long action already plays its exit clip. Let it finish so the
-      // session start stays smooth instead of cutting the end clip.
-      if (this.state.longAction && this.state.longAction.phase === 'end') {
-        this.state.speaking = true
-        return []
-      }
+    if (this.state.speaking === value)
+      return []
 
-      this.cancelLongAction()
-      this.state.speaking = true
+    this.state.speaking = value
+
+    // A long action leaves only after the clip that already plays.
+    if (this.requestLongStop(null))
+      return []
+
+    // A finite one-shot also runs to its end. The flag picks the chain after it.
+    if (this.hasFiniteClipPlaying())
+      return []
+
+    if (value) {
       this.state.oneShot = null
       return this.enterBase('talk')
     }
 
-    this.state.speaking = false
     return this.enterBase(this.state.waiting ? 'waiting' : 'idle')
   }
 
   private handleThinking(value: boolean): AnimationCommand[] {
+    if (this.state.thinking === value)
+      return []
+
     this.state.thinking = value
 
-    if (value && !this.state.speaking) {
-      if (this.state.longAction && this.state.longAction.phase === 'end')
-        return []
+    if (this.requestLongStop(null))
+      return []
 
-      this.cancelLongAction()
+    if (this.hasFiniteClipPlaying())
+      return []
+
+    if (value && !this.state.speaking) {
       this.state.oneShot = null
       return this.enterBase('thinking')
     }
@@ -389,8 +448,8 @@ export class AnimationController {
    * Enters or leaves the session wait loop.
    *
    * A running long action keeps its own exit path. The session machine
-   * requests `longActionStop: end` first, and the wait chain starts when the
-   * end clip finishes. An active one-shot also finishes before the switch.
+   * requests `longActionStop` first, and the wait chain starts when the end
+   * clip finishes. An active one-shot also finishes before the switch.
    */
   private handleWaiting(value: boolean): AnimationCommand[] {
     if (this.state.waiting === value)
@@ -398,9 +457,11 @@ export class AnimationController {
 
     this.state.waiting = value
 
+    // A long action and a finite one-shot both finish their clip first.
+    if (this.state.longAction || this.hasFiniteClipPlaying())
+      return []
+
     if (value) {
-      if (this.state.longAction || this.state.oneShot)
-        return []
       return this.enterBase('waiting')
     }
 

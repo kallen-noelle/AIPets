@@ -214,7 +214,7 @@ emotion/happy-1.webm
 emotion/happy-2.webm
 action/wave.webm
 long/swing-start.webm     # 可选：长期动作的进入片段
-long/swing-mid.webm       # 长期动作的循环片段
+long/swing-loop.webm      # 长期动作的循环片段
 long/swing-end.webm       # 可选：长期动作的退出片段
 expression/smile.webm
 click/poke.webm
@@ -222,7 +222,7 @@ thinking/think-01.webm
 beat/dance-01.webm
 ```
 
-首批长期动作素材位于 `assets/<角色>/state/`，命名格式为 `<名称>-start.webm` 与 `<名称>-end.webm`。mid 片段补齐后，在 `longActions` 里登记同名条目即可。
+首批长期动作素材位于 `assets/<角色>/state/`，命名格式为 `<名称>-start.webm` 与 `<名称>-end.webm`。loop 片段补齐后，在 `longActions` 里登记同名条目即可。
 
 ### 3.2 manifest.json
 
@@ -265,7 +265,7 @@ beat/dance-01.webm
     "longActions": {
       "swing": {
         "start": "long/swing-start.webm",
-        "mid": { "src": "long/swing-mid.webm", "durationMs": 4000 },
+        "loop": { "src": "long/swing-loop.webm", "durationMs": 4000 },
         "end": "long/swing-end.webm"
       }
     },
@@ -296,7 +296,7 @@ beat/dance-01.webm
 | `animations.talk` | 否 | 缺失时说话沿用 idle |
 | `animations.emotion` | 否 | 支持 low/high 两档 |
 | `animations.actions` | 否 | 对应 `act.motion`，播放一次 |
-| `animations.longActions` | 否 | 长期动作，计时器控制 mid 循环与 end 插入 |
+| `animations.longActions` | 否 | 长期动作，计时器控制 loop 循环与 end 插入 |
 | `animations.expressions` | 否 | 对应 `act.expression` |
 | `transition.fadeMs` | 否 | 默认 180ms |
 | `audio` | 否 | `keep` 保留原声，`mute` 静音 |
@@ -304,17 +304,18 @@ beat/dance-01.webm
 ### 3.3 播放模型
 
 - **基础层**：`idle`、`talk`、`thinking` 三条链。片段播完按权重抽下一个，避免与上一个重复。
-- **一次性层**：情绪、点击、动作、表情。播完自动回基础层。
-- **长期动作**：`longActions` 条目按 `start → mid（循环）→ end` 播放，由真实计时器控制总时长。计时从 mid 开始时启动，到时立即切断当前 mid 并插入 end，所以 `mid.durationMs` 与视频实际长度不一致也不会拉长总时长。未传时长时用 `defaultDurationMs`，缺失则用 mid 的 `durationMs`。`start`、`end` 可省略。
+- **一次性层**：情绪、点击、动作、表情。播完自动回基础层。播放期间新请求排队，不切断当前片段。
+- **长期动作**：`longActions` 条目按 `start → loop（循环）→ end` 播放，由真实计时器控制总时长。计时从 start 片段的第一帧开始，start 的时长计入预算。到时只标记预算用完，等当前片段播完再插入 end，所以实际时长最多比请求多一个当前片段。未传时长时用 `defaultDurationMs`，缺失则用 loop 的 `durationMs`。`start`、`end` 可省略。每段长期动作片段都是非循环片段，播完触发一次 `clipEnded`。loop 片段重播不做淡入，接缝为硬切。
 - **中断类型**：
-  - 计时器到时：播 `end`，再回基础层。
-  - 意图抢占（说话、思考、情绪、点击、其他动作、显式播放片段）：立即切断，清除计时器，不补播 `end`。
-  - 显式停止：`{ type: 'longActionStop', mode: 'end' }` 播 `end`；`mode: 'cut'` 直接回基础层。
+  - 计时器到时：只发送结束请求，等当前片段播完，播 `end`，再回基础层。
+  - 意图抢占（说话、思考、情绪、点击、其他动作、显式播放片段、idle）：不放弃正在播的片段，等它播完，再播 `end`，然后执行抢占请求。
+  - 显式停止：`{ type: 'longActionStop' }` 等当前片段播完，再播 `end`，然后按当前标志回基础链。
   - 暂停：冻结计时器并保留剩余预算，恢复后继续计时；暂停不重置时长。
   - 宿主卸载：调用 `controller.dispose()` 清除计时器。
+- **不放弃原则**：任何非循环片段正在播放时，新请求都先排队；循环片段没有终点，可以直接淡入替换。
 - **打断规则**：
-  - 情绪可打断情绪。
-  - 说话开始会打断一次性动画，回到 `talk`。
+  - 情绪可打断情绪，但要等当前片段播完。
+  - 说话开始会等一次性动画播完，再回到 `talk`。
   - `paused` 暂停当前视频，恢复后继续。
 - **切换方式**：A/B 双 `<video>`，旧视频延迟卸载，新视频 `opacity` 淡入，避免白帧。
 - **预加载**：加载动画包时把所有片段 `fetch` 成 Blob URL，播放时不再请求网络。

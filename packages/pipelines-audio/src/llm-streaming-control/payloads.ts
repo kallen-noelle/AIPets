@@ -42,7 +42,7 @@ export interface NormalizedActPayload {
   expression?: StreamingControlExpressionPayload | null
   /** Motion cue emitted by the model, when present. */
   motion?: string
-  /** Seconds the motion must run. Long actions repeat their mid clip to reach it. */
+  /** Seconds the motion must run. Long actions repeat their loop clip to reach it. */
   motionDuration?: number
 }
 

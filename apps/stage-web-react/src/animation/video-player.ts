@@ -33,7 +33,6 @@ export class CrossfadeVideoPlayer {
 
     const next: VideoSlot = this.slot === 'a' ? 'b' : 'a'
     const target = next === 'a' ? a : b
-    const previous = next === 'a' ? b : a
 
     if (target.dataset.clipId !== clip.id) {
       target.src = this.options.resolve(clip.src)
@@ -60,7 +59,14 @@ export class CrossfadeVideoPlayer {
 
     clearTimeout(this.timer)
     this.timer = setTimeout(() => {
-      previous?.pause()
+      // Pause every slot except the current one. A `previous` captured before
+      // `await` can be stale when two `play` calls interleave, so pausing it
+      // can freeze the clip that just became visible.
+      const videos = this.options.videos()
+      for (const key of ['a', 'b'] as const) {
+        if (key !== this.slot)
+          videos[key]?.pause()
+      }
     }, fadeMs + 50)
   }
 

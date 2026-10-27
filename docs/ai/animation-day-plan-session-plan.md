@@ -16,7 +16,7 @@
 | 重排节流 | 两次生成间隔 ≥ 10 分钟，只排剩余时间 |
 | 会话超时 | 最后一次用户交互后 90 秒，可配置 |
 | 会话内动作 | 导演规划动作序列，总时长 ≤ 70 秒 |
-| 长动作打断 | 停止 mid → 播 end（约 5 秒）→ 进入目标状态 |
+| 长动作打断 | 播完当前片段 → 播 end（约 5 秒）→ 进入目标状态 |
 | 打断后恢复 | 不恢复，剩余时长丢弃 |
 | end 语义 | 退场过渡，不是完成动作；缺失时直接淡出 |
 | 说话期插播 | 仅句界，单条 ≤ 2 秒，禁止长动作 |
@@ -32,12 +32,12 @@
 
 已有能力：
 
-- `packages/character-animation/src/state.ts`：基础链、一次性层、长期动作 start/mid/end、真实计时器、`onCommands`、`dispose()`、`longActionStop`。
+- `packages/character-animation/src/state.ts`：基础链、一次性层、长期动作 start/loop/end、真实计时器、`dispose()`、`longActionStop`。
 - `packages/character-animation/src/plan.ts`：表演计划与动作指令校验，支持 `durationSeconds`。
 - `packages/character-animation/src/executor.ts`：按回复锚点排程、冷却、单槽队列。
 - `apps/stage-web-react/src/animation/director.ts`：回复结束后调用导演，输出计划。
 - `apps/stage-web-react/src/animation/director-bus.ts`：聊天面板与舞台之间的计划总线。
-- `assets/<角色>/state/`：17 个长动作素材，命名 `<名称>-start.webm` / `<名称>-end.webm`，各 5 秒，mid 待补。
+- `assets/<角色>/state/`：17 个长动作素材，命名 `<名称>-start.webm` / `<名称>-end.webm`，各 5 秒，loop 待补。
 
 已确认的问题：
 
@@ -179,7 +179,7 @@ CrossfadeVideoPlayer（A/B 双 video）
 
 | 从 | 事件 | 到 | 动画行为 |
 | --- | --- | --- | --- |
-| `ambient` | 点击宠物 / 提交消息 / 开始语音 | `entering` | 长动作停 mid → 播 end |
+| `ambient` | 点击宠物 / 提交消息 / 开始语音 | `entering` | 长动作播完当前片段 → 播 end |
 | `entering` | end 结束或无需 end | `waiting` | 进入 waiting 链 |
 | `waiting` | 聚焦输入框 / 按下麦克风 | `listening` | 播一次 listening 微动作 |
 | `listening` | 提交消息 | `thinking` | 进入 thinking 链 |
@@ -248,20 +248,19 @@ CrossfadeVideoPlayer（A/B 双 video）
 - 步骤按顺序播放，不重叠。
 - 序列总时长 ≤ `sessionIdleTimeoutMs - 20000`，默认 70 秒。
 - 超预算时在步骤边界截断，不截断正在播的长动作。
-- 长步骤走 start → mid 循环 → end，计时器控制 mid 预算。
-- 任意用户输入终止序列：长步骤播 end，短步骤直接切。
+- 长步骤走 start → loop 循环 → end，计时器控制 loop 预算。
+- 任意用户输入终止序列：长步骤播完当前片段再播 end，短步骤直接切。
 - 未知或重复片段直接丢弃，序列继续。
 
 ## 8. 长动作打断与计时器
 
 | 事件 | 行为 |
 | --- | --- |
-| 计时器到时（自然结束） | 停 mid，播 end，回基础链 |
-| 会话进入 / 用户输入 | 停 mid，播 end（约 5 秒），进入 session |
-| 短动作被新输入打断 | 直接切断，不播 end |
-| 显式停止 `longActionStop: end` | 播 end |
-| 显式停止 `longActionStop: cut` | 直接回基础链 |
-| 没有 end 片段 | 直接淡出，不阻塞交互 |
+| 计时器到时（自然结束） | 只发送结束请求，等当前片段播完，播 end，回基础链 |
+| 会话进入 / 用户输入 | 播完当前片段，播 end（约 5 秒），进入 session |
+| 短动作被新输入打断 | 播完当前片段，再执行新请求，不播 end |
+| 显式停止 `longActionStop` | 播完当前片段，播 end |
+| 没有 end 片段 | 播完当前片段后直接淡出，不阻塞交互 |
 | 同时多个 end 请求 | 只播一个，后续直接过渡 |
 
 规则：
@@ -300,16 +299,16 @@ CrossfadeVideoPlayer（A/B 双 video）
 
 | 素材 | 状态 | 用途 |
 | --- | --- | --- |
-| 13 个长动作 `start` / `mid` / `end` | 已有，`manifest.json` 已登记 `longActions` | 日计划块与会话 filler |
+| 13 个长动作 `start` / `loop` / `end` | 已有，`manifest.json` 已登记 `longActions` | 日计划块与会话 filler |
 | `waiting` 基础链 | 待补 | 会话等待 |
 | `listening` 微动作 | 待补 | 聚焦输入、按下麦克风 |
 | 句界短动作 1–2 秒 | 部分已有 | talking 插播 |
 
 约束：
 
-- `mid.durationMs` 只作为默认时长的兜底，真实总时长由计时器控制。
+- `loop.durationMs` 只作为默认时长的兜底，真实预算由计时器控制。计时从 start 片段的第一帧开始，start 的时长计入预算。预算到时不会切断正在播的片段。
 - `end` 允许 5 秒；若后续压到 1.5 秒，打断延迟同步下降。
-- 长动作缺少 `mid` 时不登记 `longActions`，避免运行期报错。
+- 长动作缺少 `loop` 时不登记 `longActions`，避免运行期报错。
 
 ## 12. 分阶段实施
 
@@ -384,7 +383,7 @@ CrossfadeVideoPlayer（A/B 双 video）
 
 交付：
 
-- 补齐 mid 片段与 waiting / listening 素材。
+- 补齐 loop 片段与 waiting / listening 素材。
 - 调整 end 长度、过渡淡入参数。
 - 端到端剧本验证。
 

@@ -116,10 +116,9 @@ class AnimationSessionController {
     const remaining = this.machine.remainingMs()
     this.timer = setTimeout(() => {
       this.timer = null
-      const transition = this.machine.handle({ type: 'timeout' })
-      if (transition)
-        this.emit(transition)
-      this.armTimer()
+      // Route the timeout through `handle` so the transition reaches the log
+      // and the listeners with the same shape as every other transition.
+      this.handle({ type: 'timeout' })
     }, Math.max(500, remaining))
   }
 

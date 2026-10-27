@@ -20,6 +20,20 @@ export type {
   AffectStateParseResult,
   CharacterTraits,
 } from './affect'
+export {
+  ambientPhaseSteps,
+  ambientProgramDurationMs,
+  ambientProgramSchema,
+  parseAmbientProgram,
+  resolveAmbientPhase,
+} from './ambient-program'
+export type {
+  AmbientPhase,
+  AmbientPhaseState,
+  AmbientProgram,
+  AmbientProgramParseResult,
+  AmbientStep,
+} from './ambient-program'
 export { resolvePlanArrival } from './arrival'
 export type {
   PlanArrivalDecision,
@@ -44,30 +58,6 @@ export type {
   ClipRole,
   ClipSemanticSource,
 } from './catalog'
-export {
-  createRuleBasedDayPlan,
-  currentDayPlanBlock,
-  dayKeyAt,
-  dayPlanDefaults,
-  dayPlanSchema,
-  isDayPlanExpired,
-  isDayPlanThrottled,
-  mergeDayPlan,
-  nextDayPlanBlock,
-  parseDayPlan,
-  startOfNextDay,
-  validateDayPlan,
-} from './day-plan'
-export type {
-  DayPlan,
-  DayPlanBlock,
-  DayPlanBlockKind,
-  DayPlanParseResult,
-  DayPlanTimingOptions,
-  DayPlanValidationOptions,
-  DayPlanValidationResult,
-  RuleBasedDayPlanOptions,
-} from './day-plan'
 export { PerformancePlanExecutor } from './executor'
 export type {
   ExecutedCue,
@@ -175,7 +165,6 @@ export type {
   LoadedPack,
   LongActionClips,
   LongActionPhase,
-  LongActionStopMode,
   ManifestParseResult,
   NormalizedClip,
   PackSummary,

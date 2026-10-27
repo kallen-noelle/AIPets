@@ -45,7 +45,7 @@ export interface SequenceValidationResult {
 export interface SequenceBudgetOptions {
   /** Used when a short step does not declare a duration. */
   defaultShortMs?: number
-  /** Start plus end clips of a long action, added to its mid budget. */
+  /** Start plus end clips of a long action, added to its loop budget. */
   longOverheadMs?: number
 }
 

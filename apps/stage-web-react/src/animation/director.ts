@@ -32,11 +32,13 @@ export interface DirectorLongAction {
   id: string
   /** Start clip length. Zero when the action has no start clip. */
   startMs: number
-  /** One mid clip length. */
-  midMs: number
+  /** Loop clip id. Used as the held loop of one ambient phase. */
+  loopClipId: string
+  /** One loop clip length. */
+  loopMs: number
   /** End clip length. Zero when the action has no end clip. */
   endMs: number
-  /** Mid budget used when the caller omits one. */
+  /** Loop budget used when the caller omits one. */
   defaultMs: number
 }
 
@@ -72,7 +74,8 @@ export function describeLongActions(longActions: Record<string, LongActionClips>
   return Object.entries(longActions).map(([id, entry]) => ({
     id,
     startMs: entry.start?.durationMs ?? 0,
-    midMs: entry.mid.durationMs ?? 0,
+    loopClipId: entry.loop.id,
+    loopMs: entry.loop.durationMs ?? 0,
     endMs: entry.end?.durationMs ?? 0,
     defaultMs: entry.defaultDurationMs ?? 0,
   }))

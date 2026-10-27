@@ -10,16 +10,16 @@ export interface NormalizedClip {
   weight: number
   loop: boolean
   fadeMs?: number
-  /** Known clip length. The mid clip of a long action needs it. */
+  /** Known clip length. The loop clip of a long action needs it. */
   durationMs?: number
 }
 
-/** Phases of a long action. The mid clip repeats until the requested duration is covered. */
-export type LongActionPhase = 'start' | 'mid' | 'end'
+/** Phases of a long action. The loop clip repeats until the requested duration is covered. */
+export type LongActionPhase = 'start' | 'loop' | 'end'
 
 export interface LongActionClips {
   start?: NormalizedClip
-  mid: NormalizedClip
+  loop: NormalizedClip
   end?: NormalizedClip
   defaultDurationMs?: number
 }
@@ -54,15 +54,12 @@ export type ManifestParseResult
   = | { ok: true, pack: LoadedPack }
     | { ok: false, issues: string[] }
 
-/** How an explicit stop finishes a long action. */
-export type LongActionStopMode = 'end' | 'cut'
-
 export type AnimationIntent
   = | { kind: 'idle' }
     | { kind: 'talk', speaking: boolean }
     | { kind: 'emotion', emotion: string, intensity?: number }
     | { kind: 'action', name: string, durationMs?: number }
-    | { kind: 'longActionStop', mode?: LongActionStopMode }
+    | { kind: 'longActionStop' }
     | { kind: 'expression', name: string }
     | { kind: 'click', area?: ClickArea }
     | { kind: 'thinking', value: boolean }
@@ -74,7 +71,7 @@ export type AnimationEvent
     | { type: 'thinking', value: boolean }
     | { type: 'emotion', emotion: string, intensity?: number }
     | { type: 'action', name: string, durationMs?: number }
-    | { type: 'longActionStop', mode?: LongActionStopMode }
+    | { type: 'longActionStop' }
     | { type: 'expression', name: string }
     | { type: 'click', area?: ClickArea }
     | { type: 'playClip', clipId: string }

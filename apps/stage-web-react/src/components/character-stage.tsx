@@ -190,9 +190,7 @@ export function CharacterStage({ manifestUrl, pack, appearance, speechText, onRe
 
     const start = (loadedPack: LoadedPack, resolve: (src: string) => string, loadedCatalog?: CharacterCatalog) => {
       resolveRef.current = resolve
-      const controller = new AnimationController(loadedPack, {
-        onCommands: commands => applyCommandsRef.current(commands),
-      })
+      const controller = new AnimationController(loadedPack)
       controllerRef.current = controller
 
       setCanvas(loadedPack.manifest.canvas)
@@ -259,7 +257,7 @@ export function CharacterStage({ manifestUrl, pack, appearance, speechText, onRe
     // A click must leave a long action through its end clip. Dispatching the
     // click clip directly would cut the long action with no exit transition.
     if (controller.snapshot.longActionName)
-      applyCommandsRef.current(controller.dispatch({ type: 'longActionStop', mode: 'end' }))
+      applyCommandsRef.current(controller.dispatch({ type: 'longActionStop' }))
     else
       applyCommandsRef.current(controller.dispatch({ type: 'click', area }))
 

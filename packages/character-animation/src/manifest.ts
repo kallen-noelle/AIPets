@@ -79,17 +79,17 @@ function asOneShot(clip: NormalizedClip): NormalizedClip {
 
 function normalizeLongAction(entry: RawLongActionEntry, name: string, issues: string[]): LongActionClips {
   const start = entry.start ? asOneShot(normalizeClip(entry.start, false)) : undefined
-  const mid = asOneShot(normalizeClip(entry.mid, false))
+  const loop = asOneShot(normalizeClip(entry.loop, false))
   const end = entry.end ? asOneShot(normalizeClip(entry.end, false)) : undefined
 
-  // The timer owns the total duration. The mid length is only a fallback when
+  // The timer owns the total duration. The loop length is only a fallback when
   // neither the caller nor the manifest provides one.
-  if (!mid.durationMs && !entry.defaultDurationMs)
-    issues.push(`long action "${name}": mid clip needs durationMs or defaultDurationMs`)
+  if (!loop.durationMs && !entry.defaultDurationMs)
+    issues.push(`long action "${name}": loop clip needs durationMs or defaultDurationMs`)
 
   return {
     start,
-    mid,
+    loop,
     end,
     defaultDurationMs: entry.defaultDurationMs,
   }
@@ -196,7 +196,7 @@ export function parseAnimationManifest(input: unknown): ManifestParseResult {
   for (const longAction of Object.values(longActions)) {
     if (longAction.start)
       addClips([longAction.start])
-    addClips([longAction.mid])
+    addClips([longAction.loop])
     if (longAction.end)
       addClips([longAction.end])
   }

@@ -15,7 +15,7 @@ export interface WaitingSequenceOptions {
  * Plays the waiting-phase steps one at a time.
  *
  * A short step maps to a one-shot clip. A long step maps to the controller long
- * action entry, so the controller owns the start, mid loop, timer, and end clip.
+ * action entry, so the controller owns the start, loop, timer, and end clip.
  * `interrupt()` cuts a short step and sends a long step through its end clip.
  */
 export class WaitingSequenceRunner {
@@ -56,7 +56,7 @@ export class WaitingSequenceRunner {
     this.runner.interrupt()
     this.current = null
     if (step?.kind === 'long')
-      this.dispatch({ type: 'longActionStop', mode: 'end' })
+      this.dispatch({ type: 'longActionStop' })
   }
 
   private playStep(step: SequenceStep): void {
