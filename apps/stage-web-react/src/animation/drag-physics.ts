@@ -23,15 +23,14 @@ interface DragState {
 
 const friction = 0.94
 const restitution = 0.55
-const springStrength = 90
-const springDamping = 0.86
 const flingThreshold = 380
 
 /**
  * Drags and throws an element with pointer input.
  *
- * A release above the fling threshold keeps the velocity, bounces off the
- * window edges, then springs back to the start position.
+ * A release above the fling threshold keeps the velocity and bounces off the
+ * window edges. The element stops where it lands and never returns to its
+ * start position.
  */
 export function useDragPhysics(targetRef: RefObject<HTMLElement | null>) {
   const [offset, setOffset] = useState<DragOffset>({ x: 0, y: 0 })
@@ -108,22 +107,11 @@ export function useDragPhysics(targetRef: RefObject<HTMLElement | null>) {
         current.vy = -Math.abs(current.vy) * restitution
       }
 
-      const speed = Math.hypot(current.vx, current.vy)
-      if (speed < 60) {
-        current.vx += (0 - current.x) * springStrength * dt
-        current.vy += (0 - current.y) * springStrength * dt
-        current.vx *= springDamping
-        current.vy *= springDamping
-      }
-
       setOffset({ x: current.x, y: current.y })
 
-      if (Math.hypot(current.x, current.y) < 0.5 && Math.hypot(current.vx, current.vy) < 2) {
-        current.x = 0
-        current.y = 0
+      if (Math.hypot(current.vx, current.vy) < 2) {
         current.vx = 0
         current.vy = 0
-        setOffset({ x: 0, y: 0 })
         current.frame = 0
         return
       }

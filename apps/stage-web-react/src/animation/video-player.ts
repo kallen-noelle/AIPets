@@ -21,6 +21,11 @@ export class CrossfadeVideoPlayer {
 
   constructor(private readonly options: CrossfadeVideoPlayerOptions) {}
 
+  /** Slot that currently holds the visible clip. */
+  get activeSlot(): VideoSlot {
+    return this.slot
+  }
+
   async play(clip: NormalizedClip, fadeMs: number): Promise<void> {
     const { a, b } = this.options.videos()
     if (!a || !b)

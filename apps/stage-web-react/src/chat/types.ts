@@ -1,3 +1,5 @@
+import type { ChatToolTrace } from './tools'
+
 export type ChatRole = 'user' | 'assistant' | 'system'
 
 export interface ChatMessage {
@@ -7,6 +9,8 @@ export interface ChatMessage {
   createdAt: number
   /** Data URL of an attached or generated image. */
   image?: string
+  /** The tool calls this reply made, kept for the transcript. */
+  toolCalls?: ChatToolTrace[]
 }
 
 export const chatMessagesKey = 'airi:react:chat/messages'

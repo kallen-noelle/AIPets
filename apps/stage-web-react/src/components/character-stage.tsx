@@ -9,6 +9,7 @@ import { errorMessageFrom } from '@moeru/std'
 import { AnimationController } from '@proj-airi/character-animation'
 import { useCallback, useEffect, useRef, useState } from 'react'
 
+import { animationLog } from '../animation/animation-log'
 import { useDragPhysics } from '../animation/drag-physics'
 import { loadAnimationPackFromUrl } from '../animation/pack'
 import { CrossfadeVideoPlayer } from '../animation/video-player'
@@ -17,6 +18,9 @@ import { defaultCharacterAppearance } from '../character/characters'
 export interface StageSnapshot {
   base: string
   clipId: string | null
+  longActionName: string | null
+  longActionPhase: string | null
+  waiting: boolean
 }
 
 export interface CharacterStageProps {
@@ -25,6 +29,8 @@ export interface CharacterStageProps {
   pack?: LoadedZipPack
   /** Per-character presentation from the generated registry. */
   appearance?: CharacterAppearance
+  /** Assistant reply shown in the bubble above the character. `null` hides it. */
+  speechText?: string | null
   onReady?: (pack: LoadedPack, catalog?: CharacterCatalog) => void
   onSnapshot?: (snapshot: StageSnapshot) => void
   onClipEnded?: (clipId: string) => void
@@ -40,7 +46,7 @@ export interface CharacterStageProps {
  * The React layer only owns DOM playback and input. Clip choice, chain
  * weights, and one-shot recovery stay inside `@proj-airi/character-animation`.
  */
-export function CharacterStage({ manifestUrl, pack, appearance, onReady, onSnapshot, onClipEnded, onUserClick, onError, onController }: CharacterStageProps) {
+export function CharacterStage({ manifestUrl, pack, appearance, speechText, onReady, onSnapshot, onClipEnded, onUserClick, onError, onController }: CharacterStageProps) {
   const videoARef = useRef<HTMLVideoElement>(null)
   const videoBRef = useRef<HTMLVideoElement>(null)
   const stageRef = useRef<HTMLDivElement>(null)
@@ -56,17 +62,50 @@ export function CharacterStage({ manifestUrl, pack, appearance, onReady, onSnaps
   const [status, setStatus] = useState<'loading' | 'ready' | 'error'>('loading')
   const [message, setMessage] = useState<string | null>(null)
   const [canvas, setCanvas] = useState({ width: 720, height: 1280 })
+  const [naturalSize, setNaturalSize] = useState<{ width: number, height: number } | null>(null)
+  const [bubbleText, setBubbleText] = useState<string | null>(speechText ?? null)
+  const [bubbleVisible, setBubbleVisible] = useState(Boolean(speechText))
+
+  useEffect(() => {
+    if (speechText) {
+      setBubbleText(speechText)
+      setBubbleVisible(true)
+      return
+    }
+
+    // Keep the last text mounted while it fades out, then unmount it.
+    setBubbleVisible(false)
+    const timer = window.setTimeout(setBubbleText, 250, null)
+    return () => window.clearTimeout(timer)
+  }, [speechText])
 
   const applyCommands = useCallback((commands: AnimationCommand[]) => {
     const player = playerRef.current
     const controller = controllerRef.current
-    if (!player)
+    if (!player) {
+      animationLog.write('stage', 'applyCommands skipped: player not ready')
       return
+    }
+
+    if (commands.length === 0)
+      animationLog.write('stage', 'controller returned 0 commands')
 
     for (const command of commands) {
       if (command.type === 'play') {
+        animationLog.write('stage', `play clip: ${command.clip.id}`, {
+          src: command.clip.src,
+          loop: command.clip.loop,
+          fadeMs: command.fadeMs,
+        })
         void player.play(command.clip, command.fadeMs)
-        onSnapshot?.({ base: controller?.snapshot.base ?? 'idle', clipId: command.clip.id })
+        const snapshot = controller?.snapshot
+        onSnapshot?.({
+          base: snapshot?.base ?? 'idle',
+          clipId: command.clip.id,
+          longActionName: snapshot?.longActionName ?? null,
+          longActionPhase: snapshot?.longActionPhase ?? null,
+          waiting: snapshot?.waiting ?? false,
+        })
         continue
       }
 
@@ -95,6 +134,14 @@ export function CharacterStage({ manifestUrl, pack, appearance, onReady, onSnaps
       if (!(target instanceof HTMLVideoElement))
         return
 
+      // A slot that a later clip replaced can still fire `ended` during the fade.
+      const activeSlot = playerRef.current?.activeSlot
+      if (activeSlot) {
+        const activeVideo = activeSlot === 'a' ? videoARef.current : videoBRef.current
+        if (target !== activeVideo)
+          return
+      }
+
       const clipId = target.dataset.clipId
       const controller = controllerRef.current
       if (!clipId || !controller)
@@ -104,12 +151,25 @@ export function CharacterStage({ manifestUrl, pack, appearance, onReady, onSnaps
       onClipEndedRef.current?.(clipId)
     }
 
-    for (const video of videos)
+    const handleMetadata = (event: Event) => {
+      const target = event.currentTarget
+      if (!(target instanceof HTMLVideoElement))
+        return
+
+      if (target.videoWidth > 0 && target.videoHeight > 0)
+        setNaturalSize({ width: target.videoWidth, height: target.videoHeight })
+    }
+
+    for (const video of videos) {
       video?.addEventListener('ended', handleEnded)
+      video?.addEventListener('loadedmetadata', handleMetadata)
+    }
 
     return () => {
-      for (const video of videos)
+      for (const video of videos) {
         video?.removeEventListener('ended', handleEnded)
+        video?.removeEventListener('loadedmetadata', handleMetadata)
+      }
     }
   }, [])
 
@@ -130,7 +190,9 @@ export function CharacterStage({ manifestUrl, pack, appearance, onReady, onSnaps
 
     const start = (loadedPack: LoadedPack, resolve: (src: string) => string, loadedCatalog?: CharacterCatalog) => {
       resolveRef.current = resolve
-      const controller = new AnimationController(loadedPack)
+      const controller = new AnimationController(loadedPack, {
+        onCommands: commands => applyCommandsRef.current(commands),
+      })
       controllerRef.current = controller
 
       setCanvas(loadedPack.manifest.canvas)
@@ -165,6 +227,7 @@ export function CharacterStage({ manifestUrl, pack, appearance, onReady, onSnaps
       cancelled = true
       player.dispose()
       playerRef.current = null
+      controllerRef.current?.dispose()
       controllerRef.current = null
     }
   }, [manifestUrl, pack, onReady, onError])
@@ -192,17 +255,27 @@ export function CharacterStage({ manifestUrl, pack, appearance, onReady, onSnaps
 
     const rect = event.currentTarget.getBoundingClientRect()
     const area: ClickArea = event.clientY - rect.top < rect.height * 0.35 ? 'head' : 'body'
-    applyCommandsRef.current(controller.dispatch({ type: 'click', area }))
+
+    // A click must leave a long action through its end clip. Dispatching the
+    // click clip directly would cut the long action with no exit transition.
+    if (controller.snapshot.longActionName)
+      applyCommandsRef.current(controller.dispatch({ type: 'longActionStop', mode: 'end' }))
+    else
+      applyCommandsRef.current(controller.dispatch({ type: 'click', area }))
+
     onUserClick?.(area)
   }
+
+  const frame = naturalSize ?? canvas
 
   return (
     <div
       ref={stageRef}
-      className="relative touch-none select-none overflow-hidden bg-[var(--airi-bg)]"
+      className="relative touch-none select-none overflow-hidden bg-transparent"
       style={{
-        aspectRatio: `${canvas.width} / ${canvas.height}`,
-        width: 'min(360px, 82vw)',
+        width: `${frame.width}px`,
+        maxWidth: '100%',
+        aspectRatio: `${frame.width} / ${frame.height}`,
         transform: `translate3d(${drag.offset.x}px, ${drag.offset.y}px, 0) scale(${drag.dragging ? 0.97 : 1})`,
         cursor: drag.dragging ? 'grabbing' : 'grab',
       }}
@@ -232,6 +305,16 @@ export function CharacterStage({ manifestUrl, pack, appearance, onReady, onSnaps
           preload="auto"
         />
       </div>
+
+      {bubbleText && (
+        <div
+          aria-live="polite"
+          className="airi-stage-bubble"
+          data-visible={bubbleVisible}
+        >
+          {bubbleText}
+        </div>
+      )}
 
       {status !== 'ready' && (
         <div className="absolute inset-0 flex items-center justify-center bg-slate-950/80 px-6 text-center text-sm text-slate-200">
