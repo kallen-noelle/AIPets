@@ -13,6 +13,7 @@ const taskGroups = (Object.keys(providerTaskAliases) as Array<keyof typeof provi
 
 // Claude has no standalone provider. The Anthropic card covers it.
 const priorityProviderIds = [
+  'alibaba-cloud-bailian',
   'deepseek',
   'anthropic',
   'openai',

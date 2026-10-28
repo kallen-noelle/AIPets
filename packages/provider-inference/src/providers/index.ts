@@ -1,5 +1,6 @@
 import type { ProviderDefinition } from '../types'
 
+import { providerAlibabaCloudBailian } from './cloud/alibaba-cloud-bailian'
 import { providerAnthropic } from './cloud/anthropic'
 import { providerBytePlus } from './cloud/byteplus'
 import { providerDeepSeek } from './cloud/deepseek'
@@ -40,7 +41,8 @@ type ErasedProviderDefinitions<TDefinitions extends readonly ProviderDefinitionR
 function eraseProviderDefinitions<const TDefinitions extends readonly ProviderDefinitionRegistration[]>(
   ...definitions: TDefinitions
 ): ErasedProviderDefinitions<TDefinitions> {
-  return definitions as unknown as ErasedProviderDefinitions<TDefinitions>
+  const registrations: readonly ProviderDefinitionRegistration[] = definitions
+  return registrations as ErasedProviderDefinitions<TDefinitions>
 }
 
 /**
@@ -50,6 +52,7 @@ function eraseProviderDefinitions<const TDefinitions extends readonly ProviderDe
  * `isAvailableBy` before they offer one to a user in the current runtime.
  */
 export const portableProviderDefinitions = eraseProviderDefinitions(
+  providerAlibabaCloudBailian,
   providerAnthropic,
   providerBytePlus,
   providerDeepSeek,

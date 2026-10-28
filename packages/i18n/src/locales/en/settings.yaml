@@ -1792,6 +1792,9 @@ pages:
       browser-local-audio-speech:
         title: Browser (Local)
         description: https://github.com/moeru-ai/xsai-transformers
+      alibaba-cloud-bailian:
+        title: Alibaba Cloud Bailian
+        description: bailian.console.aliyun.com
       alibaba-cloud-model-studio:
         description: bailian.console.aliyun.com
         title: Alibaba Cloud Model Studio

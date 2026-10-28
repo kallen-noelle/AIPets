@@ -130,43 +130,29 @@ export interface SpeechOptions {
 }
 
 /**
- * Plays text through an OpenAI-compatible speech endpoint.
+ * DashScope does not expose `/audio/speech`. Its speech models answer on the
+ * speech synthesizer endpoint and return a short-lived audio URL.
  *
- * The `speaking` flag turns on before playback and off on end or error, so the
- * stage can switch between the idle and talk chains.
+ * The omni chat models of this account accept text and audio input, but they
+ * refuse the audio output modality. Sambert models serve WebSocket streams only.
+ * The non-realtime synthesizer serves `qwen-audio-3.1-tts-flash` and
+ * `cosyvoice-v3-flash` over HTTP, so this path uses it.
  */
-function base64ToBlob(base64: string, type: string): Blob {
-  const binary = atob(base64)
-  const bytes = new Uint8Array(binary.length)
-  for (let index = 0; index < binary.length; index++)
-    bytes[index] = binary.charCodeAt(index)
-
-  return new Blob([bytes], { type })
-}
-
-/**
- * DashScope does not expose `/audio/speech`. Its omni models stream base64
- * audio inside chat completion deltas instead.
- */
-async function synthesizeWithOmni(text: string, options: SpeechOptions): Promise<Blob> {
-  const response = await fetch(`${options.baseUrl.replace(/\/+$/, '')}/chat/completions`, {
+async function synthesizeWithDashScope(text: string, options: SpeechOptions): Promise<Blob> {
+  const response = await fetch('https://dashscope.aliyuncs.com/api/v1/services/audio/tts/SpeechSynthesizer', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${options.apiKey}`,
     },
     body: JSON.stringify({
-      model: options.model || 'qwen3-omni-flash',
-      messages: [
-        {
-          role: 'system',
-          content: 'You are a text-to-speech engine. Read the user text verbatim and add no extra words.',
-        },
-        { role: 'user', content: text },
-      ],
-      modalities: ['text', 'audio'],
-      audio: { voice: options.voice || 'Cherry', format: 'mp3' },
-      stream: true,
+      model: options.model || 'qwen-audio-3.1-tts-flash',
+      input: {
+        text,
+        voice: options.voice || 'longanhuan_v3.1',
+        format: 'mp3',
+        sample_rate: 24000,
+      },
     }),
   })
 
@@ -175,29 +161,19 @@ async function synthesizeWithOmni(text: string, options: SpeechOptions): Promise
     throw new Error(detail || `Speech request failed with HTTP ${response.status}`)
   }
 
-  const body = await response.text()
-  const parts: string[] = []
-
-  for (const line of body.split('\n')) {
-    if (!line.startsWith('data:'))
-      continue
-
-    const payload = line.slice(5).trim()
-    if (!payload || payload === '[DONE]')
-      continue
-
-    const parsed = JSON.parse(payload) as {
-      choices?: Array<{ delta?: { audio?: { data?: unknown } } }>
-    }
-    const data = parsed.choices?.[0]?.delta?.audio?.data
-    if (typeof data === 'string')
-      parts.push(data)
+  const payload = await response.json() as {
+    output?: { audio?: { url?: unknown } }
+    message?: string
   }
+  const url = payload.output?.audio?.url
+  if (typeof url !== 'string' || !url)
+    throw new Error(payload.message ?? 'The speech model returned no audio')
 
-  if (!parts.length)
-    throw new Error('The omni model returned no audio')
+  const audio = await fetch(url)
+  if (!audio.ok)
+    throw new Error(`Cannot download the speech audio (HTTP ${audio.status})`)
 
-  return base64ToBlob(parts.join(''), 'audio/mp3')
+  return audio.blob()
 }
 
 async function synthesizeWithOpenAI(text: string, options: SpeechOptions): Promise<Blob> {
@@ -225,7 +201,7 @@ async function synthesizeWithOpenAI(text: string, options: SpeechOptions): Promi
 
 export async function synthesizeSpeech(text: string, options: SpeechOptions): Promise<Blob> {
   if (options.baseUrl.includes('dashscope.aliyuncs.com'))
-    return synthesizeWithOmni(text, options)
+    return synthesizeWithDashScope(text, options)
 
   return synthesizeWithOpenAI(text, options)
 }

@@ -19,13 +19,27 @@ export function VisionPage() {
   const [useForChat, setUseForChat] = useStoredValue(useForChatKey, true)
   const [useForToolImages, setUseForToolImages] = useStoredValue(useForToolImagesKey, true)
 
+  const visionProviders = Object.values(providers).filter((provider) => {
+    const definition = portableProviderDefinitions.find(item => item.id === provider.definitionId)
+    return definition?.tasks.includes('chat') ?? false
+  })
+
+  const duplicateDefinitions = new Set(
+    visionProviders
+      .map(provider => provider.definitionId)
+      .filter((definitionId, index, all) => all.indexOf(definitionId) !== index),
+  )
+
   const options = [
     { value: '', label: t('settings.reactShell.providerNone', { defaultValue: 'None' }) },
-    ...Array.from(new Set(Object.values(providers).map(provider => provider.definitionId)))
-      .map((definitionId) => {
-        const definition = portableProviderDefinitions.find(item => item.id === definitionId)
-        return { value: definitionId, label: definition?.name ?? definitionId }
-      }),
+    ...visionProviders.map((provider) => {
+      const definition = portableProviderDefinitions.find(item => item.id === provider.definitionId)
+      const name = definition?.name ?? provider.definitionId
+      const label = duplicateDefinitions.has(provider.definitionId)
+        ? `${name} · ${provider.id.slice(0, 6)}`
+        : name
+      return { value: provider.id, label }
+    }),
   ]
 
   return (

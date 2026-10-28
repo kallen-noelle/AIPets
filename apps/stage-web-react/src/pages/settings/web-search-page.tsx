@@ -40,12 +40,6 @@ export function WebSearchPage() {
             {t('settings.pages.modules.web-search.configured', { defaultValue: 'Web search is ready to use!' })}
           </p>
         )}
-
-        <p className="text-xs text-[var(--airi-muted)]">
-          {t('settings.reactShell.notInChat', {
-            defaultValue: 'The value is saved now. The React chat does not call this tool yet.',
-          })}
-        </p>
       </SectionCard>
     </section>
   )

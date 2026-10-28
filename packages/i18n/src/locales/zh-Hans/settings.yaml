@@ -1715,6 +1715,8 @@ pages:
         title: 浏览器内（本地）
       browser-local-audio-speech:
         title: 浏览器内（本地）
+      alibaba-cloud-bailian:
+        title: 阿里云百炼
       alibaba-cloud-model-studio:
         title: 阿里百炼
       amazon-bedrock:
