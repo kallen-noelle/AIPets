@@ -1,3 +1,4 @@
+import reactHooks from 'eslint-plugin-react-hooks'
 import slop from 'eslint-plugin-slop'
 
 import { defineConfig } from '@moeru/eslint-config'
@@ -51,6 +52,14 @@ export default defineConfig({
     'slop/no-trivial-type-aliases': 'off',
     // The autofix workflow must preserve existing comment syntax.
     'slop/prefer-jsdoc': 'off',
+  },
+}, {
+  name: 'airi/react-hooks',
+  files: ['**/*.{jsx,tsx}'],
+  plugins: { 'react-hooks': reactHooks },
+  rules: {
+    'react-hooks/rules-of-hooks': 'error',
+    'react-hooks/exhaustive-deps': 'warn',
   },
 }, {
   rules: {
