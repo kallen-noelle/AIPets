@@ -30,8 +30,11 @@ interface Emits {
 
 const props = withDefaults(defineProps<{
   extraSteps?: OnboardingStep[]
+  /** Shows the sign-in action on the welcome step. */
+  loginEnabled?: boolean
 }>(), {
   extraSteps: () => [],
+  loginEnabled: true,
 })
 const emit = defineEmits<Emits>()
 const step = ref(0)
@@ -127,6 +130,7 @@ const allSteps = computed<OnboardingStep[]>(() => {
       component: StepWelcome,
       props: () => ({
         customProviderSetupEnabled: !isCustomProvidersDisabled(),
+        loginEnabled: props.loginEnabled,
       }),
     },
     {

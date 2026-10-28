@@ -23,7 +23,7 @@ const authStore = useAuthStore()
 const providersStore = useProviderStore()
 const providerConfigStore = useProviderConfigStore()
 const speechStore = useSpeechStore()
-const { isAuthenticated, credits, needsLogin } = storeToRefs(authStore)
+const { isAuthenticated, credits, loginEnabled, needsLogin } = storeToRefs(authStore)
 
 const providerId = 'official-provider-speech-streaming'
 const providerMetadata = computedAsync(() => selectProviderMetadata(
@@ -170,7 +170,7 @@ function handleLogin() {
     :on-back="() => router.back()"
   >
     <ProviderSettingsContainer>
-      <div v-if="!isAuthenticated" flex flex-col gap-4>
+      <div v-if="!isAuthenticated && loginEnabled" flex flex-col gap-4>
         <Callout theme="primary">
           <template #label>
             {{ t('settings.pages.providers.provider.official.speech-streaming-title') }}

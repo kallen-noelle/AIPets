@@ -21,6 +21,7 @@ import { requestChatCompletion } from '../chat/client'
 import { animationLog } from './animation-log'
 import { cueLimitFor } from './director-config'
 import { directorMonitor } from './director-monitor'
+import { buildStatePrompt } from './state-context'
 
 export interface DirectorHistoryTurn {
   role: 'user' | 'assistant'
@@ -85,12 +86,6 @@ function truncate(text: string, limit: number): string {
   return text.length > limit ? `${text.slice(0, limit)}…` : text
 }
 
-/** Turns a clip id into the bare name the prompt shows. */
-function clipLabel(id: string): string {
-  const file = id.split('/').pop() ?? id
-  return file.replace(/\.webm$/i, '')
-}
-
 export function parseJsonObject(text: string): Record<string, unknown> | null {
   const start = text.indexOf('{')
   const end = text.lastIndexOf('}')
@@ -148,40 +143,19 @@ function splitActionCandidates(
   }
 }
 
-function buildWorldState(): Record<string, string> {
-  return {
-    [`时间：${new Date().toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit' })}`]:
-      '说明：按当前时间所属时段编排行为，例如夜晚时段回复表现出困意，并编排打瞌睡类动画。',
-  }
-}
-
-function buildCharacterState(request: DirectorRequest): Record<string, string> {
-  const recent = request.recentClipIds ?? []
-
-  // The key carries the raw value. The value says how to use it, never what it
-  // means. Code only reads the values, so adding a state needs one new entry.
-  return {
-    [`valence：${request.affect.valence.toFixed(2)}`]:
-      '说明：按数值判断情绪倾向，负值偏安抚或低落，正值偏轻快。',
-    [`arousal：${request.affect.arousal.toFixed(2)}`]:
-      '说明：按数值判断活跃程度，越高动作幅度越大，越低越安静。',
-    [`最近已播：${recent.length ? recent.map(clipLabel).join('、') : '无'}`]:
-      '说明：新动作不要与最近已播的片段重复。',
-  }
-}
-
 function buildRules(maxCues: number): string[] {
   return [
     '- 先检查用户信息：出现长动作列表里的名称时，idle.steps 必须包含该名称的 long 步骤，durationMs 约 30000。',
     '- kind 为 long 时，actionId 只能取长动作列表里的名称，durationMs 在 5000 到 60000。',
     '- affect.valence 在 -0.10 到 0.10，affect.arousal 在 -0.08 到 0.08。',
-    `- cues 最多 ${maxCues} 条，可以为空。`,
+    '- affect 必须有非零增量：valence 与 arousal 至少一个不为 0。',
+    `- cues 必须至少 1 条，最多 ${maxCues} 条。`,
     '- anchor 只能是 {"type":"replyStart"}、{"type":"sentence","index":1}、{"type":"afterSpeech"} 或 {"type":"silence","seconds":5}。',
     '- cues.clipId 只能取短动作列表里的名称。',
     '- 同一个 clipId 不要重复。',
     '- idle.steps 最多 6 步，总时长不超过 70 秒。',
     '- kind 为 short 时，actionId 只能取短动作列表里的名称，durationMs 在 1000 到 10000。',
-    '- 没有合适片段时，cues 输出空数组。',
+    '- 必须从短动作列表里选出至少 1 个最贴合本轮语气与情绪的片段，禁止输出空 cues。',
   ]
 }
 
@@ -198,10 +172,11 @@ function buildPlanSections(
   }
 
   return [
-    '世界状态：',
-    JSON.stringify(buildWorldState(), null, 2),
-    '角色状态：',
-    JSON.stringify(buildCharacterState(request), null, 2),
+    buildStatePrompt({
+      affect: request.affect,
+      recentClipIds: request.recentClipIds ?? [],
+      now: new Date(),
+    }),
     '',
     `动作：${JSON.stringify(animations)}`,
     '',
@@ -257,7 +232,7 @@ export function buildInlinePlanInstructions(request: DirectorRequest): string {
 
   return [
     '动作编排：',
-    '回复正文写完后，另起一行输出动画计划。计划只写一次，不要在正文里提到它。',
+    '回复正文写完后，必须另起一行输出动画计划，cues 不得为空。计划只写一次，不要在正文里提到它。',
     '',
     ...buildPlanSections(request, shortClips, longActionIds, maxCues),
     '',
@@ -435,8 +410,11 @@ function acceptPlan(
 
   const sequence = resolveIdleSequence(input.idle, request, candidates, nameIndex)
 
-  if (!plan.cues.length && !plan.affect && !sequence) {
-    animationLog.write('director', 'abort: plan has no cues, affect delta, or idle sequence')
+  if (!plan.cues.length) {
+    animationLog.write('director', 'abort: plan has no cues', {
+      affect: plan.affect,
+      idleSteps: sequence?.steps.length ?? 0,
+    })
     return null
   }
 

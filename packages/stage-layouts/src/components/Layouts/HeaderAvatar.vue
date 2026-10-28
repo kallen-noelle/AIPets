@@ -227,23 +227,6 @@ const notificationsLabel = computed(() => unread.value > 0
 
         <template v-else>
           <DropdownMenuItem as-child>
-            <button
-              :class="[
-                'group w-full flex cursor-pointer select-none items-center gap-3 rounded-lg px-3 py-2',
-                'text-sm leading-none outline-none text-neutral-700 dark:text-neutral-200',
-                'data-[highlighted]:bg-primary-100/80 dark:data-[highlighted]:bg-primary-900/40',
-                'transition-colors duration-150 ease-in-out',
-              ]"
-              @click="authStore.requestLogin()"
-            >
-              <span :class="['i-solar:login-3-bold-duotone text-lg text-neutral-400 transition group-hover:text-primary-500']" aria-hidden="true" />
-              {{ t('stage.mobile-tools.sign-in') }}
-            </button>
-          </DropdownMenuItem>
-
-          <DropdownMenuSeparator :class="['mx-2 my-1 h-px bg-neutral-200/80 dark:bg-neutral-700/80']" />
-
-          <DropdownMenuItem as-child>
             <RouterLink
               to="/settings/flux"
               :class="[

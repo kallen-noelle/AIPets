@@ -14,8 +14,11 @@ const props = withDefaults(defineProps<{
   extraSteps?: OnboardingStep[]
   scaleBackground?: boolean
   instantOpen?: boolean
+  /** Shows the sign-in action on the welcome step. */
+  loginEnabled?: boolean
 }>(), {
   scaleBackground: true,
+  loginEnabled: true,
 })
 
 const emit = defineEmits<{
@@ -41,7 +44,7 @@ onMounted(() => screenSafeArea.update())
           <DialogTitle>Onboarding</DialogTitle>
         </VisuallyHidden>
         <div class="min-h-0 min-w-0 w-full flex flex-1 flex-col">
-          <Onboarding :extra-steps="props.extraSteps" @configured="emit('configured')" @skipped="emit('skipped')" />
+          <Onboarding :extra-steps="props.extraSteps" :login-enabled="props.loginEnabled" @configured="emit('configured')" @skipped="emit('skipped')" />
         </div>
       </DialogContent>
     </DialogPortal>
@@ -74,7 +77,7 @@ onMounted(() => screenSafeArea.update())
           ]"
         />
         <div class="min-h-0 min-w-0 w-full flex flex-1 flex-col">
-          <Onboarding :extra-steps="props.extraSteps" @configured="emit('configured')" @skipped="emit('skipped')" />
+          <Onboarding :extra-steps="props.extraSteps" :login-enabled="props.loginEnabled" @configured="emit('configured')" @skipped="emit('skipped')" />
         </div>
       </DrawerContent>
     </DrawerPortal>

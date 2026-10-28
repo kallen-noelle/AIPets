@@ -14,6 +14,12 @@ import ActionAbout from './InteractiveArea/Actions/About.vue'
 
 import { BackgroundDialogPicker } from '../Backgrounds'
 
+const props = withDefaults(defineProps<{
+  /** Shows the account row. Hosts without accounts set this to false. */
+  loginEnabled?: boolean
+}>(), {
+  loginEnabled: true,
+})
 const characterVoiceEnabled = defineModel<boolean>('characterVoiceEnabled', { required: true })
 const { t } = useI18n()
 const { themeMode } = useTheme()
@@ -134,7 +140,7 @@ const characterVoiceIcon = computed(() => {
       </BasicButton>
     </template>
     <div :class="['mobile-settings-actions select-none', keyboardNavigation && 'keyboard-navigation']">
-      <div :class="['mb-4 overflow-hidden rounded-2xl bg-white dark:bg-neutral-800/60']">
+      <div v-if="props.loginEnabled" :class="['mb-4 overflow-hidden rounded-2xl bg-white dark:bg-neutral-800/60']">
         <GhostButton
           block size="unset"
           :class="[

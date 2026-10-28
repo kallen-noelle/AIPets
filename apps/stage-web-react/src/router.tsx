@@ -1,13 +1,12 @@
 import { createHashRouter } from 'react-router'
 
-import { AuthCallbackPage } from './pages/auth-callback-page'
 import { ChatPage } from './pages/chat-page'
 import { PendingPage } from './pages/pending-page'
-import { AccountPage } from './pages/settings/account-page'
 import { AnimationPage } from './pages/settings/animation-page'
 import { ArtistryPage } from './pages/settings/artistry-page'
 import { BeatSyncPage } from './pages/settings/beat-sync-page'
 import { CardPage } from './pages/settings/card-page'
+import { CharactersPage } from './pages/settings/characters-page'
 import { ConnectionPage } from './pages/settings/connection-page'
 import { ConsciousnessPage } from './pages/settings/consciousness-page'
 import { DataPage } from './pages/settings/data-page'
@@ -42,12 +41,7 @@ export const router = createHashRouter([
     path: '/chat',
     element: <ChatPage />,
   },
-  {
-    path: '/auth/callback',
-    element: <AuthCallbackPage />,
-  },
   // Routes the Vue app serves today. The React pages for them are pending.
-  { path: '/auth', element: <PendingPage title="auth" /> },
   { path: '/onboarding', element: <PendingPage title="onboarding" /> },
   { path: '/devtools', element: <PendingPage title="devtools" /> },
   { path: '/widgets', element: <PendingPage title="widgets" /> },
@@ -63,8 +57,7 @@ export const router = createHashRouter([
       { index: true, element: <SettingsIndex /> },
       { path: 'system', element: <SystemPage /> },
       { path: 'system/developer', element: <PendingPage title="developer" /> },
-      { path: 'account', element: <AccountPage /> },
-      { path: 'characters', element: <PendingPage title="characters" /> },
+      { path: 'characters', element: <CharactersPage /> },
       { path: 'card', element: <CardPage /> },
       { path: 'memory', element: <MemoryPage /> },
       { path: 'scene', element: <ScenePage /> },

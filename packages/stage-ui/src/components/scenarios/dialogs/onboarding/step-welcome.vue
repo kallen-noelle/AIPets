@@ -18,10 +18,14 @@ import { useSettingsGeneral } from '../../../../stores/settings'
 
 interface Props {
   customProviderSetupEnabled: boolean
+  /** Shows the sign-in action. Hosts without accounts set this to false. */
+  loginEnabled: boolean
   onNext: OnboardingStepNextHandler
 }
 
-const props = defineProps<Props>()
+const props = withDefaults(defineProps<Props>(), {
+  loginEnabled: true,
+})
 const { t } = useI18n()
 const authStore = useAuthStore()
 const onboardingStore = useOnboardingStore()
@@ -126,6 +130,7 @@ function handleLocalSetup() {
     </div>
     <div :class="['mx-2 flex flex-col items-stretch gap-2']">
       <Button
+        v-if="props.loginEnabled"
         v-motion="{
           initial: { opacity: 0, y: 8 },
           enter: { opacity: 1, y: 0 },
@@ -139,16 +144,18 @@ function handleLocalSetup() {
         @click="handleLogin"
       />
       <Button
-        v-if="props.customProviderSetupEnabled"
+        v-if="props.customProviderSetupEnabled || !props.loginEnabled"
         v-motion="{
           initial: { opacity: 0 },
           enter: { opacity: 1 },
           duration: 500,
           delay: 250,
         }"
-        variant="secondary"
-        :outline="false"
-        :class="['bg-transparent! text-neutral-600 dark:bg-neutral-700/60! dark:text-neutral-200']"
+        :color="props.loginEnabled ? undefined : 'primary'"
+        :variant="props.loginEnabled ? 'secondary' : 'primary'"
+        :size="props.loginEnabled ? undefined : 'lg'"
+        :outline="props.loginEnabled ? false : undefined"
+        :class="props.loginEnabled ? ['bg-transparent! text-neutral-600 dark:bg-neutral-700/60! dark:text-neutral-200'] : []"
         :label="t('settings.dialogs.onboarding.setupWithoutSigningIn')"
         @click="handleLocalSetup"
       />

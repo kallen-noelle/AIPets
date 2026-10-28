@@ -26,6 +26,13 @@ import { useMobileInteractiveAreaLayout } from '../../composables/use-mobile-int
 import { useChatToolCallRerun } from '../../composables/useChatToolCallRerun'
 import { useStopSpeakingButton } from '../../composables/useStopSpeakingButton'
 
+const props = withDefaults(defineProps<{
+  /** Shows sign-in entry points. Hosts without accounts set this to false. */
+  loginEnabled?: boolean
+}>(), {
+  loginEnabled: true,
+})
+
 const emit = defineEmits<{
   /** Reports the stable height and offset that keep the Stage in the same screen position. */
   stageViewportChange: [viewport: { height: number, offsetTop: number }]
@@ -265,6 +272,7 @@ onUnmounted(() => {
       <CharacterSwitcherDrawer />
       <MobileSettingsDrawer
         v-model:character-voice-enabled="characterVoiceEnabled"
+        :login-enabled="props.loginEnabled"
       />
     </MobileHeader>
     <div

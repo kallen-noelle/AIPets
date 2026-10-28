@@ -17,7 +17,7 @@ const router = useRouter()
 const { t } = useI18n()
 const authStore = useAuthStore()
 const providersStore = useProviderStore()
-const { isAuthenticated, credits, needsLogin } = storeToRefs(authStore)
+const { isAuthenticated, credits, loginEnabled, needsLogin } = storeToRefs(authStore)
 
 const providerId = 'vision-official-provider'
 const providerMetadata = computedAsync(() => selectProviderMetadata(providersStore.getProviderDefinition(providerId), t, { id: providerId }))
@@ -36,7 +36,7 @@ function handleLogin() {
     :on-back="() => router.back()"
   >
     <ProviderSettingsContainer>
-      <div v-if="!isAuthenticated" flex flex-col gap-4>
+      <div v-if="!isAuthenticated && loginEnabled" flex flex-col gap-4>
         <Callout theme="primary">
           <template #label>
             {{ t('settings.dialogs.onboarding.official.title') }}

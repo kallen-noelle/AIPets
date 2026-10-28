@@ -25,6 +25,7 @@ import {
 import { directorMonitor } from '../animation/director-monitor'
 import { recentClipIds } from '../animation/playback-history'
 import { sessionController } from '../animation/session-controller'
+import { buildStatePrompt } from '../animation/state-context'
 import { classifyMicError, startRecording } from '../audio/recorder'
 import { affectStore, applyUserMessageAffect } from '../character/affect-store'
 import { getActiveCharacterId, loadCharacterChatConfig } from '../character/characters'
@@ -396,8 +397,19 @@ export function ChatPanel({ variant = 'page' }: ChatPanelProps) {
     // section only adds state, candidates, rules, and the output format.
     const inlineRequest = buildDirectorRequest('', history, { baseUrl, apiKey })
     const planInstructions = inlineRequest ? buildInlinePlanInstructions(inlineRequest) : ''
+    // The inline plan section already carries the state facts. Without it, the
+    // state must still reach the reply, so the reply follows the current world
+    // and character facts even when the director is off.
+    const statePrompt = planInstructions
+      ? ''
+      : buildStatePrompt({
+          affect: affectStore.snapshot.state,
+          recentClipIds: recentClipIds(),
+          now: new Date(),
+        })
     const systemPrompt = [
       memoryIndex ? `${basePrompt}${composeMemoryPrompt(memoryIndex)}` : basePrompt,
+      statePrompt,
       planInstructions,
     ].filter(Boolean).join('\n\n')
 
@@ -539,12 +551,17 @@ export function ChatPanel({ variant = 'page' }: ChatPanelProps) {
           planText || null,
           result
             ? `applied · cues ${result.plan.cues.length} · idle steps ${result.sequence?.steps.length ?? 0}`
-            : planText ? 'rejected by validation' : 'no plan block in reply',
+            : planText ? 'rejected by validation · falling back' : 'no plan block · falling back',
         )
-        if (result)
+        // A reply without an action is incomplete. Ask a dedicated call for the
+        // plan so the turn still ends with at least one cue.
+        if (result) {
           applyDirectorResult(result)
-        else
-          animationLog.write('director', 'inline plan dropped')
+        }
+        else {
+          animationLog.write('director', 'inline plan dropped; falling back to director call')
+          runDirector(replyText, history, { baseUrl, apiKey })
+        }
       }
       else {
         directorMonitor.setPlan(monitorId, null, 'not requested: the director is off')

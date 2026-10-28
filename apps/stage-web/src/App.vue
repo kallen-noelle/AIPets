@@ -36,6 +36,8 @@ usePWAStore()
 
 const contextBridgeStore = useContextBridgeStore()
 const authStore = useAuthStore()
+// The web build has no account service. Keep every sign-in entry closed.
+authStore.loginEnabled = false
 const i18n = useI18n()
 const router = useRouter()
 const activeRouteTransitionName = ref('')
@@ -248,6 +250,7 @@ function openOnboardingAfterStartup() {
       v-model="showingSetup"
       :scale-background="false"
       :instant-open="startupOnboarding"
+      :login-enabled="false"
       :extra-steps="onboardingExtraSteps"
       @configured="onboardingStore.markSetupCompleted()"
       @skipped="onboardingStore.markSetupSkipped()"

@@ -102,12 +102,23 @@ export const useAuthStore = defineStore('auth', () => {
   const capacitorRechargesAt = ref<string | null>(null)
   const fallbackToFlux = ref(false)
 
+  /**
+   * Host-level switch. A host without accounts sets this to false during
+   * startup, and every sign-in entry point stays closed.
+   */
+  const loginEnabled = ref(true)
+
   // The leader owns this cross-window login request. Web consumes it locally;
   // Electron renderers compete to consume it before starting the IPC flow.
   const needsLogin = ref(false)
   const { isMobile } = useBreakpoints()
 
   whenever(needsLogin, async () => {
+    if (!loginEnabled.value) {
+      needsLogin.value = false
+      return
+    }
+
     if (isStageTamagotchi())
       return
 
@@ -405,7 +416,7 @@ export const useAuthStore = defineStore('auth', () => {
 
   /** Publishes a login request on the leader before any renderer can consume it. */
   async function requestLogin(): Promise<void> {
-    if (isAuthenticated.value)
+    if (!loginEnabled.value || isAuthenticated.value)
       return
     needsLogin.value = true
   }
@@ -481,6 +492,7 @@ export const useAuthStore = defineStore('auth', () => {
     capacitorRechargesAt,
     fallbackToFlux,
     updateCredits,
+    loginEnabled,
     needsLogin,
     onAuthenticated,
     onLogout,

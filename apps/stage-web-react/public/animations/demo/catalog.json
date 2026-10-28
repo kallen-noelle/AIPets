@@ -1,0 +1,57 @@
+{
+  "catalogVersion": 1,
+  "packId": "demo",
+  "generatedAt": "2026-10-28T00:00:00.000Z",
+  "clips": [
+    {
+      "id": "idle-breathing.webm",
+      "name": "待机呼吸",
+      "description": "安静站立并轻微呼吸，适合平静、等待或倾听。",
+      "tags": ["idle", "calm", "comfort"],
+      "valence": 0.1,
+      "arousal": 0.2,
+      "role": "loop",
+      "source": "manual"
+    },
+    {
+      "id": "talk-murmur.webm",
+      "name": "说话",
+      "description": "边说边小幅摆动，适合正常对话。",
+      "tags": ["talk", "calm"],
+      "valence": 0.15,
+      "arousal": 0.4,
+      "role": "loop",
+      "source": "manual"
+    },
+    {
+      "id": "thinking-bubble.webm",
+      "name": "思考",
+      "description": "低头思考或等待答案，适合犹豫、专注与沉默。",
+      "tags": ["thinking", "calm"],
+      "valence": 0,
+      "arousal": 0.3,
+      "role": "loop",
+      "source": "manual"
+    },
+    {
+      "id": "click-happy.webm",
+      "name": "开心",
+      "description": "明显上扬的开心反应，适合被夸奖、收到好消息或愉快回应。",
+      "tags": ["happy", "excited", "comfort"],
+      "valence": 0.6,
+      "arousal": 0.7,
+      "role": "oneShot",
+      "source": "manual"
+    },
+    {
+      "id": "click-wave.webm",
+      "name": "挥手",
+      "description": "抬手挥动，适合打招呼、告别、提醒或轻快互动。",
+      "tags": ["greet", "happy", "playful"],
+      "valence": 0.4,
+      "arousal": 0.6,
+      "role": "oneShot",
+      "source": "manual"
+    }
+  ]
+}

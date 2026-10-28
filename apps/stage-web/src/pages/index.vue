@@ -120,6 +120,7 @@ const router = useRouter()
     <Teleport to="body">
       <MobileInteractiveArea
         v-if="isMobile"
+        :login-enabled="false"
         @settings-open="handleSettingsOpen"
         @stage-viewport-change="stageViewport = $event"
       />
