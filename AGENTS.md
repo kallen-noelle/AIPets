@@ -6,32 +6,28 @@ This file gives the core rules for all work in the aipets monorepo. aipets is a 
 
 [README.md](./README.md) holds the full range table. The list below is the short form.
 
-- Retained: the browser app `apps/stage-web-react`, the desktop app `apps/stage-tamagotchi`, the animation core `packages/character-animation`, memory, ears, mouth, the plugin system, the Satori chat adapter, the chess game plugin, MCP, the backend, input devices, and desktop native code.
+- Retained: the browser app `apps/stage-web-react`, the Electron desktop shell in `apps/stage-web-react/electron`, the animation core `packages/character-animation`, memory, ears, mouth, the plugin system, the Satori chat adapter, the chess game plugin, MCP, the backend, input devices, and desktop native code.
 - Removed: the mobile app, the Telegram and Discord bots, the X integration, and the game integrations. The bot packages, `apps/stage-pocket`, and `packages/cap-vite` are gone. The Godot desktop host `apps/stage-tamagotchi-kirie` and `engines/stage-tamagotchi-godot` are gone. `integrations/satori-bot` stays because Satori is a protocol that reaches many IM platforms.
+- Removed: every Vue app and Vue package. `apps/stage-web`, `apps/stage-tamagotchi`, `apps/component-calling`, and `apps/ui-server-auth` are deleted. So are `packages/stage-ui`, `packages/stage-ui-three`, `packages/stage-shared`, `packages/stage-pages`, `packages/stage-layouts`, `packages/ui`, `packages/ui-loading-screens`, `packages/ui-transitions`, `packages/electron-vueuse`, and `packages/input-gamepad-vueuse`.
 - Dropped: the Live2D, VRM, MMD, Spine, and Tachie body renderers.
 - Trimmed: the LLM provider list and the locales. Keep Chinese and English only.
-- Kept but not wired: `apps/component-calling`. Nothing imports it.
+- Kept but not wired: nothing. Every app in the tree is wired.
 - Package scope stays `@proj-airi/*`. Only the project name changes.
-- Pending: accounts and `apps/ui-server-auth`.
+- Removed: accounts and `apps/ui-server-auth`.
 
 An entry that the scope drops stays in the tree until a later change removes it. Do not extend a dropped entry.
 
 ## Project Map
 
-Most apps use Vue 3, Vite, TypeScript, Pinia, VueUse, UnoCSS, Vitest, and ESLint. `apps/stage-web-react` uses React, Vite, UnoCSS, and TypeScript instead of Vue.
+The app uses React, Vite, UnoCSS, TypeScript, Vitest, and ESLint. The Electron shell is plain CommonJS.
+
+The only app is `apps/stage-web-react`.
 
 | Path | Content |
 | --- | --- |
-| `apps/stage-web-react` | The React web app. This is the retained frontend. |
+| `apps/stage-web-react` | The React web app and its Electron shell. This is the only frontend. |
+| `apps/stage-web-react/electron` | The Electron main process, preload, windows, and plugin host. Plain CommonJS. |
 | `packages/character-animation` | The transparent video animation core. Pure logic, no UI framework. |
-| `apps/stage-tamagotchi` | The Electron desktop app. |
-| `apps/stage-web` | The upstream Vue web app. Stage-web-react replaces it. |
-| `packages/stage-ui` | Business components, composables, and stores that stage-web and stage-tamagotchi share. |
-| `packages/stage-ui-three` | Three.js bindings and Vue components. |
-| `packages/stage-shared` | Logic that the stage packages and the stage apps share. |
-| `packages/stage-pages` | Shared page bases. |
-| `packages/stage-layouts` | Shared layouts, including the stage-web settings layout. |
-| `packages/ui` | Primitives built on reka-ui, such as inputs, buttons, and layout. They have minimal business logic. |
 | `packages/i18n` | All translations. |
 | `packages/server-runtime`, `packages/server-sdk`, `packages/server-shared` | The server channel that `services/` and `plugins/` use. |
 | `server/apps/api` | The hosted Hono resource API and its business domains. |
@@ -42,26 +38,21 @@ Most apps use Vue 3, Vite, TypeScript, Pinia, VueUse, UnoCSS, Vitest, and ESLint
 
 Key files and directories:
 
-- Pages are in `apps/stage-web-react/src/pages`, `apps/stage-web/src/pages`, and `apps/stage-tamagotchi/src/renderer/pages`. Devtools pages are in the `devtools` folder of the Vue apps.
+- Pages are in `apps/stage-web-react/src/pages`.
 - The React routes are in `apps/stage-web-react/src/router.tsx`. The React settings pages are in `apps/stage-web-react/src/pages/settings/`.
 - The animation code is in `apps/stage-web-react/src/animation/` and `packages/character-animation/src/`. Read [The animation stack](./README.md#the-animation-stack) before you change it.
-- The router configuration is in `apps/stage-web/vite.config.ts` and `apps/stage-tamagotchi/electron.vite.config.ts`.
-- The settings layouts are `packages/stage-layouts/src/layouts/settings.vue` (stage-web) and `apps/stage-tamagotchi/src/renderer/layouts/settings.vue`.
-- A settings or devtools page needs `<route lang="yaml"> meta: layout: settings </route>`. Register its route and icon in the settings layout.
-- In `packages/stage-ui/src`, provider definitions are in `stores/providers/` and orchestration modules are in `stores/modules/`.
-- Business composables are in `packages/stage-ui/src/composables/`. Business components are in `packages/stage-ui/src/components/`.
-- Put a component for one page or one use case in `packages/stage-ui/src/components/scenarios/`.
-- Stories are in `packages/stage-ui/stories`, with `packages/stage-ui/histoire.config.ts`. An example is `packages/stage-ui/src/components/misc/Button.story.vue`.
-- Eventa contracts are in `apps/stage-tamagotchi/src/shared`. Main and renderer usage examples are in `apps/stage-tamagotchi/src/main/services/electron`.
-- The dependency injection example is `apps/stage-tamagotchi/src/main/index.ts`.
-- Style configuration is in `uno.config.ts`. Styles are in `apps/stage-web-react/src/styles` and `apps/stage-web/src/styles`.
+- The Electron main process is `apps/stage-web-react/electron/main.cjs`. The installer config is `apps/stage-web-react/electron-builder.config.cjs`.
+- The settings page list is in `apps/stage-web-react/src/pages/settings/`. Add a route and a link there.
+- Provider definitions are in `apps/stage-web-react/src/providers/` and `packages/provider-inference/src/`.
+- Eventa contracts and desktop channels are in `apps/stage-web-react/electron/shared/contract.cjs`.
+- Style configuration is in `uno.config.ts`. Styles are in `apps/stage-web-react/src/styles`.
 - CI pipelines are in `.github/workflows`. Lint rules are in `eslint.config.ts`.
 
 ## Commands
 
-Use pnpm workspace filters to limit a command to one workspace. Replace `<package name>` with the `name` field in `package.json`, for example `@proj-airi/stage-tamagotchi`.
+Use pnpm workspace filters to limit a command to one workspace. Replace `<package name>` with the `name` field in `package.json`, for example `@proj-airi/stage-web-react`.
 
-- Typecheck one workspace: `pnpm -F <package name> typecheck`. For stage-tamagotchi, this command runs `tsc` and `vue-tsc`.
+- Typecheck one workspace: `pnpm -F <package name> typecheck`.
 - Test one file: `pnpm -F <package name> exec vitest run <path>`. Give `<path>` relative to the workspace.
 - Test one workspace: `pnpm -F <package name> exec vitest run`.
 - Test all workspaces: `pnpm test:run`. Turbo runs the `test:run` script of each workspace, with its browser projects.
@@ -77,7 +68,8 @@ Use pnpm workspace filters to limit a command to one workspace. Replace `<packag
   If the branch changes `.github/scripts`, also run `pnpm test:root`.
 
 - Lint: `pnpm lint`. ESLint also does the formatting. To fix lint and format errors, run `pnpm lint:fix`.
-- Build one workspace: `pnpm -F <package name> build`. For stage-tamagotchi, this command runs the typecheck and `electron-vite build`.
+- Build one workspace: `pnpm -F <package name> build`.
+- Build the Windows installer: `pnpm -F @proj-airi/stage-web-react electron:dist`.
 
 ## Scope and Checks
 
@@ -105,7 +97,7 @@ Use pnpm workspace filters to limit a command to one workspace. Replace `<packag
 - Omit TypeScript and JavaScript source extensions in relative imports, dynamic imports, and re-exports. Write `./module`, not `./module.ts` or `./module.js`. Keep an extension only when the runtime or asset format requires it.
 - Do not edit `tsconfig.json` to hide an import or type error. Find and fix the cause.
 - Treat a circular import as a design problem. First reconsider ownership and module boundaries. If you cannot resolve the cycle confidently, ask the user.
-- Use `@moeru/eventa` for all IPC, RPC, and cross-process events. Define the contracts in one central place, such as `apps/stage-tamagotchi/src/shared`.
+- Use `@moeru/eventa` for all IPC, RPC, and cross-process events. Define the contracts in one central place, such as `apps/stage-web-react/electron/shared`.
 - Use dependency injection only at external boundaries: databases, model runtimes, queues, caches, filesystems, networks, clocks, environments, and feature gates. Use `injeca` for it.
 - Do not add dependency objects for internal functions that only call sibling helpers or forward parameters.
 - Prefer classes for runtime or browser APIs. Also prefer classes for substantial business modules that own state, lifecycle, or a stable domain boundary.
@@ -189,7 +181,7 @@ Skills are in `.agents/skills/<name>/SKILL.md`. Read the listed file before you 
 | Analyze why a chat, speech, or audio turn was slow or failed, using saved IO traces | [`analyze-io-traces`](.agents/skills/analyze-io-traces/SKILL.md) |
 | Create or prepare a pull request | [`create-pr`](.agents/skills/create-pr/SKILL.md) |
 | Upload a local file through a file input or a file chooser in a web or Electron app | [`use-agent-browser-with-input-file`](.agents/skills/use-agent-browser-with-input-file/SKILL.md) and [`agent-browser`](.agents/skills/agent-browser/SKILL.md). For Electron, also read [`agent-browser-electron`](.agents/skills/agent-browser-electron/SKILL.md). |
-| Test the transparent video animation in stage-web-react or stage-tamagotchi | [`use-agent-browser-for-airi`](.agents/skills/use-agent-browser-for-airi/SKILL.md) |
+| Test the transparent video animation in stage-web-react | [`use-agent-browser-for-airi`](.agents/skills/use-agent-browser-for-airi/SKILL.md) |
 
 These directories also have their own `AGENTS.md`. Read it before you work in the directory:
 
