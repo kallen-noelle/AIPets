@@ -11,8 +11,8 @@ export type ProviderTaskGroup = keyof typeof providerTaskAliases
 
 /** Where the settings keep the active provider of each group. */
 export const activeProviderKeys: Record<ProviderTaskGroup, string> = {
-  chat: 'airi:react:chat/provider',
-  speech: 'airi:react:speech/provider',
+  chat: 'aipets:react:chat/provider',
+  speech: 'aipets:react:speech/provider',
   transcription: 'settings/hearing/active-provider',
 }
 

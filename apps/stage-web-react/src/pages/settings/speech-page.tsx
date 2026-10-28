@@ -10,8 +10,8 @@ import { useStoredValue } from '../../settings/persisted'
 import { isLocalSpeechAvailable } from '../../speech/playback'
 
 const fieldClass = [
-  'w-full rounded-xl border border-[var(--airi-border)] bg-transparent px-3 py-2 text-sm',
-  'outline-none focus:border-[var(--airi-fg)]',
+  'w-full rounded-xl border border-[var(--aipets-border)] bg-transparent px-3 py-2 text-sm',
+  'outline-none focus:border-[var(--aipets-fg)]',
 ].join(' ')
 
 const languages = [
@@ -26,15 +26,15 @@ export function SpeechPage() {
   const { t } = useTranslation()
   const providers = useProviders()
 
-  const [localEnabled, setLocalEnabled] = useStoredValue('airi:react:speech/local', true)
-  const [localLanguage, setLocalLanguage] = useStoredValue('airi:react:speech/local-language', 'zh-CN')
-  const [localVoice, setLocalVoice] = useStoredValue('airi:react:speech/local-voice', '')
-  const [localRate, setLocalRate] = useStoredValue('airi:react:speech/local-rate', 1)
-  const [localPitch, setLocalPitch] = useStoredValue('airi:react:speech/local-pitch', 1)
+  const [localEnabled, setLocalEnabled] = useStoredValue('aipets:react:speech/local', true)
+  const [localLanguage, setLocalLanguage] = useStoredValue('aipets:react:speech/local-language', 'zh-CN')
+  const [localVoice, setLocalVoice] = useStoredValue('aipets:react:speech/local-voice', '')
+  const [localRate, setLocalRate] = useStoredValue('aipets:react:speech/local-rate', 1)
+  const [localPitch, setLocalPitch] = useStoredValue('aipets:react:speech/local-pitch', 1)
 
-  const [model, setModel] = useStoredValue('airi:react:speech/model', '')
-  const [voice, setVoice] = useStoredValue('airi:react:speech/voice', '')
-  const [selectedProvider, setSelectedProvider] = useStoredValue('airi:react:speech/provider', '')
+  const [model, setModel] = useStoredValue('aipets:react:speech/model', '')
+  const [voice, setVoice] = useStoredValue('aipets:react:speech/voice', '')
+  const [selectedProvider, setSelectedProvider] = useStoredValue('aipets:react:speech/provider', '')
 
   const [voices, setVoices] = useState<SpeechSynthesisVoice[]>([])
   const localSupported = isLocalSpeechAvailable()
@@ -72,7 +72,7 @@ export function SpeechPage() {
         <h1 className="text-2xl font-semibold">
           {t('settings.pages.modules.speech.title', { defaultValue: 'Speech' })}
         </h1>
-        <p className="text-sm text-[var(--airi-muted)]">
+        <p className="text-sm text-[var(--aipets-muted)]">
           {t('settings.pages.modules.speech.description', { defaultValue: '' })}
         </p>
       </header>
@@ -144,7 +144,7 @@ export function SpeechPage() {
       >
         {speechProviders.length === 0
           ? (
-              <p className="text-xs text-[var(--airi-muted)]">
+              <p className="text-xs text-[var(--aipets-muted)]">
                 {t('settings.reactShell.noSpeechProvider', { defaultValue: 'No speech provider configured yet.' })}
                 {' '}
                 <Link to="/settings/providers" className="underline">

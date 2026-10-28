@@ -3,11 +3,11 @@ import { useTranslation } from 'react-i18next'
 import { setLanguage, setTheme, usePreferences } from '../../settings/preferences'
 
 const optionClass = [
-  'rounded-xl border border-[var(--airi-border)] px-4 py-2 text-sm transition',
-  'hover:bg-[var(--airi-hover)]',
+  'rounded-xl border border-[var(--aipets-border)] px-4 py-2 text-sm transition',
+  'hover:bg-[var(--aipets-hover)]',
 ].join(' ')
 
-const optionActiveClass = 'border-[var(--airi-fg)] bg-[var(--airi-hover)] font-semibold'
+const optionActiveClass = 'border-[var(--aipets-fg)] bg-[var(--aipets-hover)] font-semibold'
 
 export function SystemPage() {
   const { t } = useTranslation()
@@ -19,7 +19,7 @@ export function SystemPage() {
         <h1 className="text-2xl font-semibold">{t('settings.pages.system.title', { defaultValue: 'System' })}</h1>
       </header>
 
-      <div className="flex flex-col gap-3 border border-[var(--airi-border)] rounded-2xl bg-[var(--airi-card)] p-4">
+      <div className="flex flex-col gap-3 border border-[var(--aipets-border)] rounded-2xl bg-[var(--aipets-card)] p-4">
         <h2 className="text-sm font-semibold">{t('settings.reactShell.language', { defaultValue: 'Language' })}</h2>
 
         <div className="flex flex-wrap gap-2">
@@ -40,7 +40,7 @@ export function SystemPage() {
         </div>
       </div>
 
-      <div className="flex flex-col gap-3 border border-[var(--airi-border)] rounded-2xl bg-[var(--airi-card)] p-4">
+      <div className="flex flex-col gap-3 border border-[var(--aipets-border)] rounded-2xl bg-[var(--aipets-card)] p-4">
         <h2 className="text-sm font-semibold">{t('settings.reactShell.theme', { defaultValue: 'Theme' })}</h2>
 
         <div className="flex flex-wrap gap-2">

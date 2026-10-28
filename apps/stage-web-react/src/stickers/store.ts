@@ -10,7 +10,7 @@ export interface Sticker {
   createdAt: number
 }
 
-export const stickerLibraryKey = 'airi:react:stickers/library'
+export const stickerLibraryKey = 'aipets:react:stickers/library'
 export const stickersEnabledKey = 'settings/stickers/enabled'
 export const stickersFrequencyKey = 'settings/stickers/frequency'
 

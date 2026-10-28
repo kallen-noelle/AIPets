@@ -5,29 +5,29 @@ body,
 }
 
 :root {
-  --airi-bg: #04060c;
-  --airi-stage-bg: #03050b;
-  --airi-fg: #e2e8f0;
-  --airi-muted: #94a3b8;
-  --airi-card: rgb(255 255 255 / 6%);
-  --airi-border: rgb(255 255 255 / 12%);
-  --airi-hover: rgb(255 255 255 / 10%);
+  --aipets-bg: #04060c;
+  --aipets-stage-bg: #03050b;
+  --aipets-fg: #e2e8f0;
+  --aipets-muted: #94a3b8;
+  --aipets-card: rgb(255 255 255 / 6%);
+  --aipets-border: rgb(255 255 255 / 12%);
+  --aipets-hover: rgb(255 255 255 / 10%);
 }
 
 :root[data-theme='light'] {
-  --airi-bg: #f5f6fa;
-  --airi-stage-bg: #f4f5f9;
-  --airi-fg: #0f172a;
-  --airi-muted: #64748b;
-  --airi-card: rgb(15 23 42 / 4%);
-  --airi-border: rgb(15 23 42 / 12%);
-  --airi-hover: rgb(15 23 42 / 8%);
+  --aipets-bg: #f5f6fa;
+  --aipets-stage-bg: #f4f5f9;
+  --aipets-fg: #0f172a;
+  --aipets-muted: #64748b;
+  --aipets-card: rgb(15 23 42 / 4%);
+  --aipets-border: rgb(15 23 42 / 12%);
+  --aipets-hover: rgb(15 23 42 / 8%);
 }
 
 body {
   margin: 0;
-  background: var(--airi-bg);
-  color: var(--airi-fg);
+  background: var(--aipets-bg);
+  color: var(--aipets-fg);
   font-family: Nunito, 'Segoe UI', system-ui, sans-serif;
   transition: background-color 200ms ease, color 200ms ease;
 }
@@ -47,7 +47,7 @@ body {
  * The look follows the dsh-pet bubble: white translucent panel, downward tail,
  * size anchored to the font size, natural wrapping, and a fade transition.
  */
-.airi-stage-bubble {
+.aipets-stage-bubble {
   position: absolute;
   left: 50%;
   /* The stage frame hugs the character, so the bubble sits at the top edge. */
@@ -72,7 +72,7 @@ body {
   background: rgb(255 255 255 / 92%);
   color: #2b2b2b;
   font-family: Nunito, 'Segoe UI', system-ui, sans-serif;
-  font-size: var(--airi-bubble-font, 13px);
+  font-size: var(--aipets-bubble-font, 13px);
   line-height: 1.6;
   white-space: normal;
   overflow-wrap: break-word;
@@ -83,11 +83,11 @@ body {
   transition: opacity 250ms ease;
 }
 
-.airi-stage-bubble[data-visible='true'] {
+.aipets-stage-bubble[data-visible='true'] {
   opacity: 1;
 }
 
-.airi-stage-bubble::after {
+.aipets-stage-bubble::after {
   content: '';
   position: absolute;
   left: 50%;
@@ -102,7 +102,7 @@ body {
  * Beat ring: one short glow per detected beat.
  * The stage page remounts this node for every beat, so the animation restarts.
  */
-.airi-beat-ring {
+.aipets-beat-ring {
   position: absolute;
   inset: 6%;
   z-index: 5;
@@ -110,10 +110,10 @@ body {
   border-radius: 9999px;
   pointer-events: none;
   opacity: 0;
-  animation: airi-beat-pulse 480ms ease-out;
+  animation: aipets-beat-pulse 480ms ease-out;
 }
 
-@keyframes airi-beat-pulse {
+@keyframes aipets-beat-pulse {
   0% {
     opacity: 0.8;
     transform: scale(0.92);

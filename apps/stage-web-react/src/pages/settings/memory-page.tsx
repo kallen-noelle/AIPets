@@ -21,14 +21,14 @@ export function MemoryPage() {
         <h1 className="text-2xl font-semibold">
           {t('settings.pages.memory.title', { defaultValue: 'Memory' })}
         </h1>
-        <p className="text-sm text-[var(--airi-muted)]">
+        <p className="text-sm text-[var(--aipets-muted)]">
           {t('settings.reactShell.memoryDescription', {
             defaultValue: 'Controls how much conversation history the model receives.',
           })}
         </p>
       </header>
 
-      <div className="flex flex-col gap-4 border border-[var(--airi-border)] rounded-2xl bg-[var(--airi-card)] p-4">
+      <div className="flex flex-col gap-4 border border-[var(--aipets-border)] rounded-2xl bg-[var(--aipets-card)] p-4">
         <label className="flex items-center justify-between gap-4 text-sm">
           <span>{t('settings.reactShell.memoryEnabled', { defaultValue: 'Send conversation history' })}</span>
           <input type="checkbox" checked={enabled} onChange={event => setEnabled(event.target.checked)} />
@@ -40,14 +40,14 @@ export function MemoryPage() {
             type="number"
             min={2}
             max={50}
-            className="w-28 border border-[var(--airi-border)] rounded-xl bg-transparent px-3 py-2 text-sm"
+            className="w-28 border border-[var(--aipets-border)] rounded-xl bg-transparent px-3 py-2 text-sm"
             value={windowSize}
             disabled={!enabled}
             onChange={event => changeWindow(event.target.value)}
           />
         </label>
 
-        <p className="text-xs text-[var(--airi-muted)]">
+        <p className="text-xs text-[var(--aipets-muted)]">
           {t('settings.reactShell.memoryLongTermNote', {
             defaultValue: 'Long-term memory lives on its own page and reaches this chat as an index in the prompt.',
           })}
@@ -56,7 +56,7 @@ export function MemoryPage() {
 
       <Link
         to="/settings/modules/memory-long-term"
-        className="text-sm text-[var(--airi-muted)] hover:text-[var(--airi-fg)]"
+        className="text-sm text-[var(--aipets-muted)] hover:text-[var(--aipets-fg)]"
       >
         {t('settings.pages.modules.memory-long-term.title', { defaultValue: 'Long-Term Memory' })}
       </Link>

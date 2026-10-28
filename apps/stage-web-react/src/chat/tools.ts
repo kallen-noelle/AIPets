@@ -38,8 +38,8 @@ export const webSearchEnabledKey = 'settings/web-search/enabled'
 export const webSearchApiKey = 'settings/web-search/api-key'
 
 export const homeAssistantEnabledKey = 'settings/home-assistant/enabled'
-export const homeAssistantBaseUrlKey = 'airi:react:home-assistant/base-url'
-export const homeAssistantTokenKey = 'airi:react:home-assistant/token'
+export const homeAssistantBaseUrlKey = 'aipets:react:home-assistant/base-url'
+export const homeAssistantTokenKey = 'aipets:react:home-assistant/token'
 
 const TAVILY_SEARCH_URL = 'https://api.tavily.com/search'
 const WEB_SEARCH_TOOL_NAME = 'web_search'

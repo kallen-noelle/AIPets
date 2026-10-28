@@ -17,12 +17,12 @@ import { getDesktopBridge } from '../../desktop/bridge'
 import { useBattery } from '../../desktop/use-battery'
 import { useStoredValue } from '../../settings/persisted'
 
-const inputDeviceStorageKey = 'airi:react:audio/input-device'
-const outputDeviceStorageKey = 'airi:react:audio/output-device'
+const inputDeviceStorageKey = 'aipets:react:audio/input-device'
+const outputDeviceStorageKey = 'aipets:react:audio/output-device'
 
 const buttonClass = [
-  'rounded-xl border border-[var(--airi-border)] px-3 py-1.5 text-xs transition',
-  'hover:bg-[var(--airi-hover)] disabled:opacity-40',
+  'rounded-xl border border-[var(--aipets-border)] px-3 py-1.5 text-xs transition',
+  'hover:bg-[var(--aipets-hover)] disabled:opacity-40',
 ].join(' ')
 
 const windowLabels: Record<DesktopWindowKind, string> = {
@@ -213,7 +213,7 @@ export function DesktopPage() {
       />
 
       {!bridge && (
-        <p className="text-xs text-[var(--airi-muted)]">
+        <p className="text-xs text-[var(--aipets-muted)]">
           {t('settings.reactShell.desktopBrowserHint', {
             defaultValue: 'These controls need the desktop app. This page runs in a browser tab now.',
           })}
@@ -231,7 +231,7 @@ export function DesktopPage() {
           checked={closeToTray}
           onChange={next => void setTrayPreference(next)}
         />
-        <p className="text-xs text-[var(--airi-muted)]">
+        <p className="text-xs text-[var(--aipets-muted)]">
           {t('settings.reactShell.quitHint', { defaultValue: 'Use Quit in the tray menu to exit.' })}
         </p>
       </SectionCard>
@@ -272,10 +272,10 @@ export function DesktopPage() {
             {windows.filter(item => item.open).map(item => (
               <li
                 key={item.kind}
-                className="flex flex-wrap items-center gap-2 border border-[var(--airi-border)] rounded-xl px-3 py-2 text-xs"
+                className="flex flex-wrap items-center gap-2 border border-[var(--aipets-border)] rounded-xl px-3 py-2 text-xs"
               >
                 <span className="min-w-16 font-medium">{windowLabels[item.kind]}</span>
-                <span className="text-[var(--airi-muted)]">
+                <span className="text-[var(--aipets-muted)]">
                   {item.fullscreen
                     ? t('settings.reactShell.windowFullscreen', { defaultValue: 'fullscreen' })
                     : item.focused
@@ -348,13 +348,13 @@ export function DesktopPage() {
                     %
                   </span>
                 </div>
-                <div className="h-2 w-full overflow-hidden rounded-full bg-[var(--airi-hover)]">
+                <div className="h-2 w-full overflow-hidden rounded-full bg-[var(--aipets-hover)]">
                   <div
                     className="h-full rounded-full bg-emerald-400"
                     style={{ width: `${Math.round(battery.level * 100)}%` }}
                   />
                 </div>
-                <p className="text-xs text-[var(--airi-muted)]">
+                <p className="text-xs text-[var(--aipets-muted)]">
                   {battery.charging
                     ? t('settings.reactShell.batteryCharging', { defaultValue: 'Charging' })
                     : t('settings.reactShell.batteryDischarging', { defaultValue: 'On battery' })}
@@ -362,7 +362,7 @@ export function DesktopPage() {
               </div>
             )
           : (
-              <p className="text-xs text-[var(--airi-muted)]">
+              <p className="text-xs text-[var(--aipets-muted)]">
                 {battery
                   ? t('settings.reactShell.batteryUnsupported', { defaultValue: 'This browser cannot read the battery.' })
                   : ''}
@@ -370,7 +370,7 @@ export function DesktopPage() {
             )}
 
         {power && (
-          <p className="text-xs text-[var(--airi-muted)]">
+          <p className="text-xs text-[var(--aipets-muted)]">
             {t('settings.reactShell.acPower', { defaultValue: 'Power source' })}
             {': '}
             {power.onBatteryPower
@@ -387,7 +387,7 @@ export function DesktopPage() {
         )}
 
         {lastPowerEvent && (
-          <p className="text-xs text-[var(--airi-muted)]">
+          <p className="text-xs text-[var(--aipets-muted)]">
             {t('settings.reactShell.lastPowerEvent', { defaultValue: 'Last power event' })}
             {': '}
             {lastPowerEvent.type}
@@ -404,7 +404,7 @@ export function DesktopPage() {
         })}
       >
         {displays.length > 0 && (
-          <ul className="flex flex-col gap-1 text-xs text-[var(--airi-muted)]">
+          <ul className="flex flex-col gap-1 text-xs text-[var(--aipets-muted)]">
             {displays.map(display => (
               <li key={display.id}>
                 {display.label}
@@ -440,7 +440,7 @@ export function DesktopPage() {
         </div>
 
         {stream && (
-          <p className="text-xs text-[var(--airi-muted)]">
+          <p className="text-xs text-[var(--aipets-muted)]">
             {hasAudioTrack
               ? t('settings.reactShell.captureWithAudio', { defaultValue: 'Screen and system audio are live.' })
               : t('settings.reactShell.captureWithoutAudio', { defaultValue: 'Screen is live without system audio.' })}
@@ -458,7 +458,7 @@ export function DesktopPage() {
 
         <video
           ref={videoRef}
-          className="w-full border border-[var(--airi-border)] rounded-xl"
+          className="w-full border border-[var(--aipets-border)] rounded-xl"
           muted
           autoPlay
           playsInline
@@ -498,7 +498,7 @@ export function DesktopPage() {
         />
 
         {devices.length === 0 && (
-          <p className="text-xs text-[var(--airi-muted)]">
+          <p className="text-xs text-[var(--aipets-muted)]">
             {t('settings.reactShell.noDevices', {
               defaultValue: 'No audio devices found. Allow microphone access to see device names.',
             })}
@@ -556,13 +556,13 @@ export function DesktopPage() {
 
         {monitoring && (
           <div className="flex flex-col gap-2">
-            <div className="h-2 w-full overflow-hidden rounded-full bg-[var(--airi-hover)]">
+            <div className="h-2 w-full overflow-hidden rounded-full bg-[var(--aipets-hover)]">
               <div
                 className="h-full rounded-full bg-sky-400 transition-[width] duration-100"
                 style={{ width: `${Math.round(level * 100)}%` }}
               />
             </div>
-            <p className="text-xs text-[var(--airi-muted)]">
+            <p className="text-xs text-[var(--aipets-muted)]">
               {activity?.speaking
                 ? t('settings.reactShell.voiceDetected', { defaultValue: 'Voice detected' })
                 : t('settings.reactShell.voiceSilent', { defaultValue: 'Silence' })}

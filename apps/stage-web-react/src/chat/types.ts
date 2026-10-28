@@ -15,12 +15,12 @@ export interface ChatMessage {
   toolCalls?: ChatToolTrace[]
 }
 
-export const chatMessagesKey = 'airi:react:chat/messages'
-export const chatModelKey = 'airi:react:chat/model'
-export const chatProviderKey = 'airi:react:chat/provider'
+export const chatMessagesKey = 'aipets:react:chat/messages'
+export const chatModelKey = 'aipets:react:chat/model'
+export const chatProviderKey = 'aipets:react:chat/provider'
 
-export const characterNameKey = 'airi:react:character/name'
-export const characterPersonaKey = 'airi:react:character/persona'
+export const characterNameKey = 'aipets:react:character/name'
+export const characterPersonaKey = 'aipets:react:character/persona'
 
-export const memoryEnabledKey = 'airi:react:memory/enabled'
-export const memoryWindowKey = 'airi:react:memory/window'
+export const memoryEnabledKey = 'aipets:react:memory/enabled'
+export const memoryWindowKey = 'aipets:react:memory/window'

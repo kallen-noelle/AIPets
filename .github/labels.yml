@@ -1,9 +1,6 @@
-- name: 'apps/stage-tamagotchi'
-  description: 'Desktop App: Windows & macOS & Linux'
+- name: 'apps/stage-web-react'
+  description: 'React App: Desktop & Browser'
   color: 'a1f7ef'
-- name: 'apps/stage-web'
-  description: 'Web App: PWA & Browser'
-  color: 'abedff'
 - name: 'bug'
   description: "Something isn't working"
   color: 'd73a4a'

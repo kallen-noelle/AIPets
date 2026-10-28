@@ -53,24 +53,24 @@ describe('copilot category labels', () => {
         issues: { get: vi.fn().mockResolvedValue({ data: item }) },
         pulls: { listFiles: vi.fn() },
       },
-      paginate: vi.fn().mockResolvedValue([{ filename: 'apps/stage-tamagotchi/src/audio.ts' }]),
+      paginate: vi.fn().mockResolvedValue([{ filename: 'apps/stage-web-react/src/audio.ts' }]),
     }
     const writeFile = vi.fn()
     await prepare(github, context, (name: string) => name === 'node:fs/promises' ? { writeFile } : path, { env: { RUNNER_TEMP: '/test', ITEM_NUMBER: '42' } })
     const prompt = writeFile.mock.calls[0][1] as string
     const input = JSON.parse(prompt.split('Item data: ')[1])
     expect(input).toMatchObject({ number: 42, title: item.title, body, issueType: 'Bug', kind: isPullRequest ? 'pull request' : 'issue' })
-    expect(input.files).toEqual(isPullRequest ? ['apps/stage-tamagotchi/src/audio.ts'] : [])
+    expect(input.files).toEqual(isPullRequest ? ['apps/stage-web-react/src/audio.ts'] : [])
     expect(github.paginate).toHaveBeenCalledTimes(isPullRequest ? 1 : 0)
   })
 
   it('updates categories and preserves all human labels', async () => {
-    const test = run('["feature", "apps/stage-tamagotchi", "scope/audio-output"]')
+    const test = run('["feature", "apps/stage-web-react", "scope/audio-output"]')
     await test.execute()
     expect(test.issues.addLabels).toHaveBeenCalledExactlyOnceWith({
       ...context.repo,
       issue_number: 42,
-      labels: ['feature', 'apps/stage-tamagotchi', 'scope/audio-output'],
+      labels: ['feature', 'apps/stage-web-react', 'scope/audio-output'],
     })
     expect(test.issues.removeLabel).toHaveBeenCalledExactlyOnceWith({ ...context.repo, issue_number: 42, name: 'bug' })
   })
@@ -125,7 +125,7 @@ describe('copilot category labels', () => {
   })
 
   it('keeps human labels outside the managed category policy', () => {
-    expect(allowed).toEqual(expect.arrayContaining(['bug', 'feature', 'apps/stage-tamagotchi', 'scope/audio-output']))
+    expect(allowed).toEqual(expect.arrayContaining(['bug', 'feature', 'apps/stage-web-react', 'scope/audio-output']))
     expect(allowed.some(label => label.startsWith('priority/') || label.startsWith('pr-review/'))).toBe(false)
     for (const label of ['question', 'pending triage', 'feature-request/needs-more-info'])
       expect(allowed).not.toContain(label)

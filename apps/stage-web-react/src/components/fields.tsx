@@ -1,15 +1,15 @@
 import type { ReactNode } from 'react'
 
 const fieldClass = [
-  'w-full rounded-xl border border-[var(--airi-border)] bg-transparent px-3 py-2 text-sm',
-  'outline-none focus:border-[var(--airi-fg)]',
+  'w-full rounded-xl border border-[var(--aipets-border)] bg-transparent px-3 py-2 text-sm',
+  'outline-none focus:border-[var(--aipets-fg)]',
 ].join(' ')
 
 export function PageHeader({ title, description }: { title: string, description?: string }) {
   return (
     <header className="flex flex-col gap-1">
       <h1 className="text-2xl font-semibold">{title}</h1>
-      {description && <p className="text-sm text-[var(--airi-muted)]">{description}</p>}
+      {description && <p className="text-sm text-[var(--aipets-muted)]">{description}</p>}
     </header>
   )
 }
@@ -20,11 +20,11 @@ export function SectionCard({ title, description, children }: {
   children: ReactNode
 }) {
   return (
-    <div className="flex flex-col gap-4 border border-[var(--airi-border)] rounded-2xl bg-[var(--airi-card)] p-4">
+    <div className="flex flex-col gap-4 border border-[var(--aipets-border)] rounded-2xl bg-[var(--aipets-card)] p-4">
       {(title || description) && (
         <div>
           {title && <h2 className="text-sm font-semibold">{title}</h2>}
-          {description && <p className="text-xs text-[var(--airi-muted)]">{description}</p>}
+          {description && <p className="text-xs text-[var(--aipets-muted)]">{description}</p>}
         </div>
       )}
 
@@ -51,27 +51,29 @@ export function TextField({ label, description, value, onChange, placeholder, ty
         placeholder={placeholder}
         onChange={event => onChange(event.target.value)}
       />
-      {description && <span className="text-xs text-[var(--airi-muted)]">{description}</span>}
+      {description && <span className="text-xs text-[var(--aipets-muted)]">{description}</span>}
     </label>
   )
 }
 
-export function ToggleField({ label, description, checked, onChange }: {
+export function ToggleField({ label, description, checked, disabled, onChange }: {
   label: string
   description?: string
   checked: boolean
+  disabled?: boolean
   onChange: (checked: boolean) => void
 }) {
   return (
     <label className="flex items-start justify-between gap-4 text-sm">
       <span className="flex flex-col gap-1">
         <span>{label}</span>
-        {description && <span className="text-xs text-[var(--airi-muted)]">{description}</span>}
+        {description && <span className="text-xs text-[var(--aipets-muted)]">{description}</span>}
       </span>
       <input
         type="checkbox"
         className="mt-1 shrink-0"
         checked={checked}
+        disabled={disabled}
         onChange={event => onChange(event.target.checked)}
       />
     </label>
@@ -93,7 +95,7 @@ export function SelectField({ label, description, value, options, onChange }: {
           <option key={option.value} value={option.value}>{option.label}</option>
         ))}
       </select>
-      {description && <span className="text-xs text-[var(--airi-muted)]">{description}</span>}
+      {description && <span className="text-xs text-[var(--aipets-muted)]">{description}</span>}
     </label>
   )
 }
@@ -111,7 +113,7 @@ export function SliderField({ label, description, value, min, max, step, onChang
     <label className="flex flex-col gap-1 text-sm">
       <span className="flex items-center justify-between">
         <span>{label}</span>
-        <span className="text-xs text-[var(--airi-muted)]">{value}</span>
+        <span className="text-xs text-[var(--aipets-muted)]">{value}</span>
       </span>
       <input
         type="range"
@@ -121,7 +123,7 @@ export function SliderField({ label, description, value, min, max, step, onChang
         value={value}
         onChange={event => onChange(Number(event.target.value))}
       />
-      {description && <span className="text-xs text-[var(--airi-muted)]">{description}</span>}
+      {description && <span className="text-xs text-[var(--aipets-muted)]">{description}</span>}
     </label>
   )
 }

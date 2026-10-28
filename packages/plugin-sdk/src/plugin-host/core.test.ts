@@ -10,10 +10,10 @@ import { defineExtension } from '../extension'
 import { defineKit } from '../kit'
 
 describe('extension manifest schema', () => {
-  it('accepts extension.airi.json v2 manifests', () => {
+  it('accepts extension.aipets.json v2 manifests', () => {
     const result = safeParse(extensionManifestV2Schema, {
       manifestVersion: 2,
-      kind: 'manifest.extension.airi.moeru.ai' as const,
+      kind: 'manifest.extension.aipets.app' as const,
       id: 'airi-extension-test',
       version: '1.0.0',
       engines: {
@@ -37,7 +37,7 @@ describe('extension manifest schema', () => {
     // invalid value could become the installed package and session identity.
     const result = safeParse(extensionManifestV2Schema, {
       manifestVersion: 2,
-      kind: 'manifest.extension.airi.moeru.ai',
+      kind: 'manifest.extension.aipets.app',
       id: 'airi-extension-test',
       version: 'release-1',
       engines: {
@@ -70,7 +70,7 @@ describe('extension manifest schema', () => {
   it('rejects unknown manifest fields', () => {
     const result = safeParse(extensionManifestV2Schema, {
       manifestVersion: 2,
-      kind: 'manifest.extension.airi.moeru.ai',
+      kind: 'manifest.extension.aipets.app',
       id: 'airi-extension-test',
       version: '1.0.0',
       engines: {
@@ -90,7 +90,7 @@ describe('extension manifest schema', () => {
   it('rejects manifests without a runtime entrypoint', () => {
     const result = safeParse(extensionManifestV2Schema, {
       manifestVersion: 2,
-      kind: 'manifest.extension.airi.moeru.ai',
+      kind: 'manifest.extension.aipets.app',
       id: 'airi-extension-test',
       version: '1.0.0',
       engines: {
@@ -107,7 +107,7 @@ describe('extension manifest schema', () => {
   it('rejects Extension ids that cannot name an installation folder', () => {
     const result = safeParse(extensionManifestV2Schema, {
       manifestVersion: 2,
-      kind: 'manifest.extension.airi.moeru.ai',
+      kind: 'manifest.extension.aipets.app',
       id: '../outside',
       version: '1.0.0',
       engines: {
@@ -131,7 +131,7 @@ describe('extension manifest schema', () => {
     // common file systems. Folder import then failed with ENAMETOOLONG.
     const result = safeParse(extensionManifestV2Schema, {
       manifestVersion: 2,
-      kind: 'manifest.extension.airi.moeru.ai',
+      kind: 'manifest.extension.aipets.app',
       id: 'a'.repeat(256),
       version: '1.0.0',
       engines: {
@@ -155,7 +155,7 @@ describe('extension manifest schema', () => {
     // The schema accepted these names as normal installation folders.
     const result = safeParse(extensionManifestV2Schema, {
       manifestVersion: 2,
-      kind: 'manifest.extension.airi.moeru.ai',
+      kind: 'manifest.extension.aipets.app',
       id: 'con.tools',
       version: '1.0.0',
       engines: {
@@ -174,7 +174,7 @@ describe('extension manifest schema', () => {
   it('accepts extension-hosted kit declarations', () => {
     const manifest = {
       manifestVersion: 2,
-      kind: 'manifest.extension.airi.moeru.ai' as const,
+      kind: 'manifest.extension.aipets.app' as const,
       id: 'agent-activity-provider',
       version: '1.0.0',
       engines: {
@@ -205,7 +205,7 @@ describe('extension manifest schema', () => {
   it('rejects duplicate provided Kit ids', () => {
     const result = safeParse(extensionManifestV2Schema, {
       manifestVersion: 2,
-      kind: 'manifest.extension.airi.moeru.ai',
+      kind: 'manifest.extension.aipets.app',
       id: 'duplicate-kit-provider',
       version: '1.0.0',
       engines: {
@@ -248,7 +248,7 @@ describe('extension manifest schema', () => {
   it('rejects duplicate used Kit ids', () => {
     const result = safeParse(extensionManifestV2Schema, {
       manifestVersion: 2,
-      kind: 'manifest.extension.airi.moeru.ai',
+      kind: 'manifest.extension.aipets.app',
       id: 'duplicate-kit-consumer',
       version: '1.0.0',
       engines: {
@@ -285,7 +285,7 @@ describe('extension manifest schema', () => {
   it('accepts Kit version ranges for Consumer declarations', () => {
     const result = safeParse(extensionManifestV2Schema, {
       manifestVersion: 2,
-      kind: 'manifest.extension.airi.moeru.ai',
+      kind: 'manifest.extension.aipets.app',
       id: 'agent-activity-consumer',
       version: '1.0.0',
       engines: {
@@ -310,7 +310,7 @@ describe('extension manifest schema', () => {
   it('accepts exact Kit versions for Consumer declarations', () => {
     const result = safeParse(extensionManifestV2Schema, {
       manifestVersion: 2,
-      kind: 'manifest.extension.airi.moeru.ai',
+      kind: 'manifest.extension.aipets.app',
       id: 'exact-version-consumer',
       version: '1.0.0',
       engines: { airi: '*', runtimes: ['electron'] },
@@ -327,7 +327,7 @@ describe('extension manifest schema', () => {
   it('accepts compound Kit version ranges for Consumer declarations', () => {
     const result = safeParse(extensionManifestV2Schema, {
       manifestVersion: 2,
-      kind: 'manifest.extension.airi.moeru.ai',
+      kind: 'manifest.extension.aipets.app',
       id: 'compound-range-consumer',
       version: '1.0.0',
       engines: { airi: '*', runtimes: ['electron'] },
@@ -344,7 +344,7 @@ describe('extension manifest schema', () => {
   it('rejects invalid Kit version ranges for Consumer declarations', () => {
     const result = safeParse(extensionManifestV2Schema, {
       manifestVersion: 2,
-      kind: 'manifest.extension.airi.moeru.ai',
+      kind: 'manifest.extension.aipets.app',
       id: 'invalid-range-consumer',
       version: '1.0.0',
       engines: { airi: '*', runtimes: ['electron'] },
@@ -361,7 +361,7 @@ describe('extension manifest schema', () => {
   it('rejects Kit version ranges for Provider declarations', () => {
     const result = safeParse(extensionManifestV2Schema, {
       manifestVersion: 2,
-      kind: 'manifest.extension.airi.moeru.ai',
+      kind: 'manifest.extension.aipets.app',
       id: 'agent-activity-provider',
       version: '1.0.0',
       engines: {
@@ -391,7 +391,7 @@ describe('for ExtensionHost', () => {
 
     await expect(host.start({
       manifestVersion: 2,
-      kind: 'manifest.extension.airi.moeru.ai',
+      kind: 'manifest.extension.aipets.app',
       id: 'future-extension',
       version: '1.0.0',
       engines: { airi: '>=99.0.0', runtimes: ['node'] },
@@ -413,7 +413,7 @@ describe('for ExtensionHost', () => {
     const session = await host.startExtension(extension, {
       manifest: {
         manifestVersion: 2,
-        kind: 'manifest.extension.airi.moeru.ai' as const,
+        kind: 'manifest.extension.aipets.app' as const,
         id: 'airi-extension-test',
         version: '1.0.0',
         engines: { airi: '*', runtimes: ['electron'] },
@@ -437,7 +437,7 @@ describe('for ExtensionHost', () => {
     await expect(host.startExtension(extension, {
       manifest: {
         manifestVersion: 2,
-        kind: 'manifest.extension.airi.moeru.ai' as const,
+        kind: 'manifest.extension.aipets.app' as const,
         id: 'airi-extension-manifest-id',
         version: '1.0.0',
         engines: { airi: '*', runtimes: ['electron'] },
@@ -474,7 +474,7 @@ describe('for ExtensionHost', () => {
     await expect(host.startExtension(extension, {
       manifest: {
         manifestVersion: 2,
-        kind: 'manifest.extension.airi.moeru.ai' as const,
+        kind: 'manifest.extension.aipets.app' as const,
         id: 'airi-extension-failing',
         version: '1.0.0',
         engines: { airi: '*', runtimes: ['electron'] },
@@ -522,7 +522,7 @@ describe('for ExtensionHost', () => {
     await expect(host.startExtension(extension, {
       manifest: {
         manifestVersion: 2,
-        kind: 'manifest.extension.airi.moeru.ai' as const,
+        kind: 'manifest.extension.aipets.app' as const,
         id: 'airi-extension-cleanup-failure',
         version: '1.0.0',
         engines: { airi: '*', runtimes: ['electron'] },
@@ -593,7 +593,7 @@ describe('for ExtensionHost', () => {
     const session = await host.startExtension(extension, {
       manifest: {
         manifestVersion: 2,
-        kind: 'manifest.extension.airi.moeru.ai' as const,
+        kind: 'manifest.extension.aipets.app' as const,
         id: 'airi-extension-module-dispose',
         version: '1.0.0',
         engines: { airi: '*', runtimes: ['electron'] },
@@ -630,7 +630,7 @@ describe('for ExtensionHost', () => {
     await host.startExtension(extension, {
       manifest: {
         manifestVersion: 2,
-        kind: 'manifest.extension.airi.moeru.ai' as const,
+        kind: 'manifest.extension.aipets.app' as const,
         id: 'airi-extension-direct-kit',
         version: '1.0.0',
         engines: { airi: '*', runtimes: ['electron'] },
@@ -670,7 +670,7 @@ describe('for ExtensionHost', () => {
     await host.startExtension(extension, {
       manifest: {
         manifestVersion: 2,
-        kind: 'manifest.extension.airi.moeru.ai' as const,
+        kind: 'manifest.extension.aipets.app' as const,
         id: 'airi-extension-direct-kit-denied',
         version: '1.0.0',
         engines: { airi: '*', runtimes: ['electron'] },
@@ -710,7 +710,7 @@ describe('for ExtensionHost', () => {
     await host.startExtension(extension, {
       manifest: {
         manifestVersion: 2,
-        kind: 'manifest.extension.airi.moeru.ai' as const,
+        kind: 'manifest.extension.aipets.app' as const,
         id: 'airi-extension-direct-kit-resolver-denied',
         version: '1.0.0',
         engines: { airi: '*', runtimes: ['electron'] },
@@ -741,7 +741,7 @@ describe('for ExtensionHost', () => {
 
     const manifest = {
       manifestVersion: 2,
-      kind: 'manifest.extension.airi.moeru.ai' as const,
+      kind: 'manifest.extension.aipets.app' as const,
       id: 'airi-extension-direct-kit-persisted-revoked',
       version: '1.0.0',
       engines: { airi: '*', runtimes: ['electron'] },
@@ -803,7 +803,7 @@ describe('for ExtensionHost', () => {
     await host.startExtension(extension, {
       manifest: {
         manifestVersion: 2,
-        kind: 'manifest.extension.airi.moeru.ai' as const,
+        kind: 'manifest.extension.aipets.app' as const,
         id: 'airi-extension-module-inherited-grant',
         version: '1.0.0',
         engines: { airi: '*', runtimes: ['electron'] },
@@ -849,7 +849,7 @@ describe('for ExtensionHost', () => {
     await host.startExtension(extension, {
       manifest: {
         manifestVersion: 2,
-        kind: 'manifest.extension.airi.moeru.ai' as const,
+        kind: 'manifest.extension.aipets.app' as const,
         id: 'airi-extension-module-kit-resolver-denied',
         version: '1.0.0',
         engines: { airi: '*', runtimes: ['electron'] },
@@ -882,7 +882,7 @@ describe('for ExtensionHost', () => {
     await host.startExtension(extension, {
       manifest: {
         manifestVersion: 2,
-        kind: 'manifest.extension.airi.moeru.ai' as const,
+        kind: 'manifest.extension.aipets.app' as const,
         id: 'airi-extension-direct-kit-watch',
         version: '1.0.0',
         engines: { airi: '*', runtimes: ['electron'] },
@@ -919,7 +919,7 @@ describe('for ExtensionHost', () => {
     const session = await host.startExtension(extension, {
       manifest: {
         manifestVersion: 2,
-        kind: 'manifest.extension.airi.moeru.ai' as const,
+        kind: 'manifest.extension.aipets.app' as const,
         id: 'airi-extension-direct-kit-watch-dispose',
         version: '1.0.0',
         engines: { airi: '*', runtimes: ['electron'] },
@@ -970,7 +970,7 @@ describe('for ExtensionHost', () => {
     await host.startExtension(extension, {
       manifest: {
         manifestVersion: 2,
-        kind: 'manifest.extension.airi.moeru.ai' as const,
+        kind: 'manifest.extension.aipets.app' as const,
         id: 'airi-extension-kit-test',
         version: '1.0.0',
         engines: { airi: '*', runtimes: ['electron'] },
@@ -1013,7 +1013,7 @@ describe('for ExtensionHost', () => {
     await host.startExtension(extension, {
       manifest: {
         manifestVersion: 2,
-        kind: 'manifest.extension.airi.moeru.ai' as const,
+        kind: 'manifest.extension.aipets.app' as const,
         id: 'airi-extension-module-kit-watch-dispose',
         version: '1.0.0',
         engines: { airi: '*', runtimes: ['electron'] },
@@ -1055,7 +1055,7 @@ describe('for ExtensionHost', () => {
     const session = await host.startExtension(extension, {
       manifest: {
         manifestVersion: 2,
-        kind: 'manifest.extension.airi.moeru.ai' as const,
+        kind: 'manifest.extension.aipets.app' as const,
         id: 'airi-extension-duplicate-module',
         version: '1.0.0',
         engines: { airi: '*', runtimes: ['electron'] },
@@ -1090,7 +1090,7 @@ describe('for ExtensionHost', () => {
     const session = await host.startExtension(extension, {
       manifest: {
         manifestVersion: 2,
-        kind: 'manifest.extension.airi.moeru.ai' as const,
+        kind: 'manifest.extension.aipets.app' as const,
         id: 'airi-extension-async-stop-cleanup',
         version: '1.0.0',
         engines: { airi: '*', runtimes: ['electron'] },
@@ -1138,7 +1138,7 @@ describe('for ExtensionHost', () => {
     await host.startExtension(extension, {
       manifest: {
         manifestVersion: 2,
-        kind: 'manifest.extension.airi.moeru.ai' as const,
+        kind: 'manifest.extension.aipets.app' as const,
         id: 'airi-extension-kit-denied',
         version: '1.0.0',
         engines: { airi: '*', runtimes: ['electron'] },
@@ -1174,7 +1174,7 @@ describe('for FileSystemLoader', () => {
 
     await host.start({
       manifestVersion: 2,
-      kind: 'manifest.extension.airi.moeru.ai' as const,
+      kind: 'manifest.extension.aipets.app' as const,
       id: 'test-define-extension-entrypoint',
       version: '1.0.0',
       engines: { airi: '*', runtimes: ['electron'] },
@@ -1199,7 +1199,7 @@ describe('for FileSystemLoader', () => {
 
     const session = await host.start({
       manifestVersion: 2,
-      kind: 'manifest.extension.airi.moeru.ai' as const,
+      kind: 'manifest.extension.aipets.app' as const,
       id: 'test-stoppable-extension-entrypoint',
       version: '1.0.0',
       engines: { airi: '*', runtimes: ['electron'] },
@@ -1231,7 +1231,7 @@ describe('for FileSystemLoader', () => {
 
     const session = await host.start({
       manifestVersion: 2,
-      kind: 'manifest.extension.airi.moeru.ai' as const,
+      kind: 'manifest.extension.aipets.app' as const,
       id: 'test-stoppable-extension-entrypoint',
       version: '1.0.0',
       engines: { airi: '*', runtimes: ['electron'] },
@@ -1253,7 +1253,7 @@ describe('for FileSystemLoader', () => {
 
     const extension = await host.loadExtensionFor({
       manifestVersion: 2,
-      kind: 'manifest.extension.airi.moeru.ai' as const,
+      kind: 'manifest.extension.aipets.app' as const,
       id: 'test-extension',
       version: '1.0.0',
       engines: { airi: '*', runtimes: ['node'] },
@@ -1273,7 +1273,7 @@ describe('for FileSystemLoader', () => {
 
     await expect(host.loadExtensionFor({
       manifestVersion: 2,
-      kind: 'manifest.extension.airi.moeru.ai' as const,
+      kind: 'manifest.extension.aipets.app' as const,
       id: 'test-extension',
       version: '1.0.0',
       engines: { airi: '*', runtimes: ['electron'] },
@@ -1288,7 +1288,7 @@ describe('for FileSystemLoader', () => {
     const host = new FileSystemLoader()
     const baseManifest = {
       manifestVersion: 2,
-      kind: 'manifest.extension.airi.moeru.ai' as const,
+      kind: 'manifest.extension.aipets.app' as const,
       id: 'test-extension',
       version: '1.0.0',
       engines: { airi: '*', runtimes: ['node'] },
@@ -1331,7 +1331,7 @@ describe('for FileSystemLoader', () => {
     // explicitly excluded the active runtime.
     expect(() => host.resolveEntrypointFor({
       manifestVersion: 2,
-      kind: 'manifest.extension.airi.moeru.ai' as const,
+      kind: 'manifest.extension.aipets.app' as const,
       id: 'test-extension',
       version: '1.0.0',
       engines: { airi: '*', runtimes: ['web'] },
@@ -1351,7 +1351,7 @@ describe('for FileSystemLoader', () => {
 
     expect(host.resolveEntrypointFor({
       manifestVersion: 2,
-      kind: 'manifest.extension.airi.moeru.ai' as const,
+      kind: 'manifest.extension.aipets.app' as const,
       id: 'test-extension',
       version: '1.0.0',
       engines: { airi: '*', runtimes: ['node'] },
@@ -1370,7 +1370,7 @@ describe('for FileSystemLoader', () => {
 
     expect(() => host.resolveEntrypointFor({
       manifestVersion: 2,
-      kind: 'manifest.extension.airi.moeru.ai' as const,
+      kind: 'manifest.extension.aipets.app' as const,
       id: 'test-extension',
       version: '1.0.0',
       engines: { airi: '*', runtimes: ['node'] },
@@ -1386,7 +1386,7 @@ describe('for migrated extension testdata', () => {
 
     const session = await host.start({
       manifestVersion: 2,
-      kind: 'manifest.extension.airi.moeru.ai' as const,
+      kind: 'manifest.extension.aipets.app' as const,
       id: 'test-plugin',
       version: '1.0.0',
       engines: { airi: '*', runtimes: ['electron'] },
@@ -1405,7 +1405,7 @@ describe('for migrated extension testdata', () => {
 
     await expect(host.start({
       manifestVersion: 2,
-      kind: 'manifest.extension.airi.moeru.ai' as const,
+      kind: 'manifest.extension.aipets.app' as const,
       id: 'test-plugin-no-connect',
       version: '1.0.0',
       engines: { airi: '*', runtimes: ['electron'] },
@@ -1425,7 +1425,7 @@ describe('for migrated extension testdata', () => {
 
     const session = await host.start({
       manifestVersion: 2,
-      kind: 'manifest.extension.airi.moeru.ai' as const,
+      kind: 'manifest.extension.aipets.app' as const,
       id: 'test-plugin-injected-host-apis',
       version: '1.0.0',
       engines: { airi: '*', runtimes: ['electron'] },

@@ -50,13 +50,13 @@ import { transcribeAudio } from '../speech/recognition'
 import { pickSticker, useStickers } from '../stickers/store'
 
 const fieldClass = [
-  'rounded-xl border border-[var(--airi-border)] bg-transparent px-3 py-2 text-sm',
-  'outline-none focus:border-[var(--airi-fg)]',
+  'rounded-xl border border-[var(--aipets-border)] bg-transparent px-3 py-2 text-sm',
+  'outline-none focus:border-[var(--aipets-fg)]',
 ].join(' ')
 
 const toolButtonClass = [
-  'rounded-full border border-[var(--airi-border)] px-3 py-1.5 text-xs',
-  'transition hover:bg-[var(--airi-hover)] disabled:opacity-40',
+  'rounded-full border border-[var(--aipets-border)] px-3 py-1.5 text-xs',
+  'transition hover:bg-[var(--aipets-hover)] disabled:opacity-40',
 ].join(' ')
 
 /** How many tool rounds one turn may run before the model must answer. */
@@ -192,8 +192,8 @@ export function ChatPanel({ variant = 'page' }: ChatPanelProps) {
   const [activeId, setActiveId] = useStoredValue(chatActiveSessionKey, '')
   const [model, setModel] = useStoredValue(chatModelKey, '')
   const [providerId, setProviderId] = useStoredValue(chatProviderKey, '')
-  const [ttsEnabled, setTtsEnabled] = useStoredValue('airi:react:chat/tts', false)
-  const [speechProviderId] = useStoredValue('airi:react:speech/provider', '')
+  const [ttsEnabled, setTtsEnabled] = useStoredValue('aipets:react:chat/tts', false)
+  const [speechProviderId] = useStoredValue('aipets:react:speech/provider', '')
   const [characterName] = useStoredValue(characterNameKey, 'aipetdex')
   const [persona] = useStoredValue(characterPersonaKey, '')
   const [memoryEnabled] = useStoredValue(memoryEnabledKey, true)
@@ -614,14 +614,14 @@ export function ChatPanel({ variant = 'page' }: ChatPanelProps) {
       }
 
       if (ttsEnabled) {
-        const localSpeech = readStored('airi:react:speech/local', true)
+        const localSpeech = readStored('aipets:react:speech/local', true)
 
         if (localSpeech || !speechProvider) {
           void speakLocally(replyText, {
-            lang: readStored('airi:react:speech/local-language', 'zh-CN'),
-            voiceURI: readStored('airi:react:speech/local-voice', ''),
-            rate: readStored('airi:react:speech/local-rate', 1),
-            pitch: readStored('airi:react:speech/local-pitch', 1),
+            lang: readStored('aipets:react:speech/local-language', 'zh-CN'),
+            voiceURI: readStored('aipets:react:speech/local-voice', ''),
+            rate: readStored('aipets:react:speech/local-rate', 1),
+            pitch: readStored('aipets:react:speech/local-pitch', 1),
           }).catch((speechError: unknown) => {
             setError(errorMessageFrom(speechError) ?? 'Speech playback failed')
           }).finally(endReply)
@@ -635,8 +635,8 @@ export function ChatPanel({ variant = 'page' }: ChatPanelProps) {
           void speak(replyText, {
             baseUrl: speechBaseUrl,
             apiKey: typeof speechConfig.apiKey === 'string' ? speechConfig.apiKey : '',
-            model: readStored('airi:react:speech/model', ''),
-            voice: readStored('airi:react:speech/voice', ''),
+            model: readStored('aipets:react:speech/model', ''),
+            voice: readStored('aipets:react:speech/voice', ''),
           }).catch((speechError: unknown) => {
             setError(errorMessageFrom(speechError) ?? 'Speech playback failed')
           }).finally(endReply)
@@ -789,11 +789,11 @@ export function ChatPanel({ variant = 'page' }: ChatPanelProps) {
         return
       }
 
-      const hearingMode = readStored<'omni' | 'browser' | 'provider'>('airi:react:hearing/mode', 'omni')
+      const hearingMode = readStored<'omni' | 'browser' | 'provider'>('aipets:react:hearing/mode', 'omni')
 
       if (hearingMode === 'browser' && isLocalRecognitionAvailable()) {
         localRecognitionRef.current = startLocalRecognition({
-          lang: readStored('airi:react:hearing/local-language', 'zh-CN'),
+          lang: readStored('aipets:react:hearing/local-language', 'zh-CN'),
           onError: (message) => {
             // local-recognition surfaces SpeechRecognition codes (e.g.
             // "Browser speech recognition failed: not-allowed") as plain
@@ -830,7 +830,7 @@ export function ChatPanel({ variant = 'page' }: ChatPanelProps) {
       setStarting(true)
 
       recorderRef.current = await startRecording({
-        deviceId: readStored('airi:react:audio/input-device', '') || undefined,
+        deviceId: readStored('aipets:react:audio/input-device', '') || undefined,
       })
       recordingKindRef.current = hearingMode === 'provider' ? 'provider' : 'omni'
       setStarting(false)
@@ -883,7 +883,7 @@ export function ChatPanel({ variant = 'page' }: ChatPanelProps) {
       const url = await generateImage(prompt, {
         baseUrl,
         apiKey: typeof config.apiKey === 'string' ? config.apiKey : '',
-        model: readStored('airi:react:image/model', ''),
+        model: readStored('aipets:react:image/model', ''),
       })
 
       const message: ChatMessage = {
@@ -953,10 +953,10 @@ export function ChatPanel({ variant = 'page' }: ChatPanelProps) {
   }
 
   return (
-    <div className={compact ? 'h-full min-h-0 flex' : 'min-h-screen flex'} style={{ background: 'var(--airi-bg)', color: 'var(--airi-fg)' }}>
+    <div className={compact ? 'h-full min-h-0 flex' : 'min-h-screen flex'} style={{ background: 'var(--aipets-bg)', color: 'var(--aipets-fg)' }}>
       {!compact && (
-        <aside className="w-56 shrink-0 flex-col gap-2 border-r border-[var(--airi-border)] p-3 hidden sm:flex">
-          <Link to="/" className="text-sm text-[var(--airi-muted)] hover:text-[var(--airi-fg)]">
+        <aside className="w-56 shrink-0 flex-col gap-2 border-r border-[var(--aipets-border)] p-3 hidden sm:flex">
+          <Link to="/" className="text-sm text-[var(--aipets-muted)] hover:text-[var(--aipets-fg)]">
             <span className="i-solar:alt-arrow-left-line-duotone" />
             {' '}
             {t('settings.reactShell.backToStage', { defaultValue: 'Back to stage' })}
@@ -964,7 +964,7 @@ export function ChatPanel({ variant = 'page' }: ChatPanelProps) {
 
           <button
             type="button"
-            className="mt-2 rounded-xl bg-[var(--airi-fg)] px-3 py-2 text-sm text-[var(--airi-bg)] font-medium"
+            className="mt-2 rounded-xl bg-[var(--aipets-fg)] px-3 py-2 text-sm text-[var(--aipets-bg)] font-medium"
             onClick={newSession}
           >
             {t('settings.reactShell.chatNew', { defaultValue: 'New chat' })}
@@ -976,7 +976,7 @@ export function ChatPanel({ variant = 'page' }: ChatPanelProps) {
                 key={session.id}
                 className={[
                   'flex items-center gap-2 rounded-lg px-2 py-1.5 text-xs',
-                  session.id === active?.id ? 'bg-[var(--airi-card)]' : 'hover:bg-[var(--airi-hover)]',
+                  session.id === active?.id ? 'bg-[var(--aipets-card)]' : 'hover:bg-[var(--aipets-hover)]',
                 ].join(' ')}
               >
                 <button
@@ -988,7 +988,7 @@ export function ChatPanel({ variant = 'page' }: ChatPanelProps) {
                 </button>
                 <button
                   type="button"
-                  className="text-[var(--airi-muted)] hover:text-rose-400"
+                  className="text-[var(--aipets-muted)] hover:text-rose-400"
                   aria-label={t('settings.reactShell.chatDelete', { defaultValue: 'Delete' })}
                   onClick={() => deleteSession(session.id)}
                 >
@@ -1051,7 +1051,7 @@ export function ChatPanel({ variant = 'page' }: ChatPanelProps) {
               onChange={event => setModel(event.target.value)}
             />
 
-            <label className="flex items-center gap-1 text-xs text-[var(--airi-muted)]">
+            <label className="flex items-center gap-1 text-xs text-[var(--aipets-muted)]">
               <input
                 type="checkbox"
                 checked={ttsEnabled}
@@ -1064,7 +1064,7 @@ export function ChatPanel({ variant = 'page' }: ChatPanelProps) {
 
         <main className="mx-auto max-w-3xl min-h-0 w-full flex flex-1 flex-col gap-3 overflow-y-auto px-4 pb-4">
           {messages.length === 0 && (
-            <p className="py-10 text-center text-sm text-[var(--airi-muted)]">
+            <p className="py-10 text-center text-sm text-[var(--aipets-muted)]">
               {ready
                 ? t('settings.reactShell.chatEmpty', { defaultValue: 'Say something to start.' })
                 : t('settings.reactShell.chatNoProvider', {
@@ -1079,8 +1079,8 @@ export function ChatPanel({ variant = 'page' }: ChatPanelProps) {
               className={[
                 'max-w-[85%] whitespace-pre-wrap rounded-2xl px-4 py-2 text-sm',
                 message.role === 'user'
-                  ? 'self-end bg-[var(--airi-fg)] text-[var(--airi-bg)]'
-                  : 'self-start bg-[var(--airi-card)]',
+                  ? 'self-end bg-[var(--aipets-fg)] text-[var(--aipets-bg)]'
+                  : 'self-start bg-[var(--aipets-card)]',
               ].join(' ')}
             >
               {message.content}
@@ -1094,32 +1094,32 @@ export function ChatPanel({ variant = 'page' }: ChatPanelProps) {
                 />
               )}
               {toolCardsEnabled && message.toolCalls?.length && (
-                <div className="mt-2 flex flex-col gap-1 border-t border-[var(--airi-border)] pt-2 text-xs">
+                <div className="mt-2 flex flex-col gap-1 border-t border-[var(--aipets-border)] pt-2 text-xs">
                   {message.toolCalls.map(trace => (toolReplyCards
                     ? (
                         <div
                           key={trace.id}
-                          className="border border-[var(--airi-border)] rounded-lg bg-[var(--airi-bg)]/40 p-2"
+                          className="border border-[var(--aipets-border)] rounded-lg bg-[var(--aipets-bg)]/40 p-2"
                         >
                           <div className="flex items-center justify-between gap-2">
                             <span className="font-medium">{trace.name}</span>
-                            <span className={trace.ok ? 'text-[var(--airi-muted)]' : 'text-rose-400'}>
+                            <span className={trace.ok ? 'text-[var(--aipets-muted)]' : 'text-rose-400'}>
                               {trace.ok
                                 ? t('settings.reactShell.toolCardOk', { defaultValue: 'Done' })
                                 : t('settings.reactShell.toolCardFailed', { defaultValue: 'Failed' })}
                             </span>
                           </div>
-                          <p className="line-clamp-3 mt-1 whitespace-pre-wrap break-all text-[var(--airi-muted)]">
+                          <p className="line-clamp-3 mt-1 whitespace-pre-wrap break-all text-[var(--aipets-muted)]">
                             {trace.result.slice(0, 240)}
                           </p>
                         </div>
                       )
                     : (
                         <details key={trace.id}>
-                          <summary className={trace.ok ? 'cursor-pointer text-[var(--airi-muted)]' : 'cursor-pointer text-rose-400'}>
+                          <summary className={trace.ok ? 'cursor-pointer text-[var(--aipets-muted)]' : 'cursor-pointer text-rose-400'}>
                             {trace.name}
                           </summary>
-                          <pre className="mt-1 overflow-x-auto whitespace-pre-wrap break-all text-[var(--airi-muted)]">
+                          <pre className="mt-1 overflow-x-auto whitespace-pre-wrap break-all text-[var(--aipets-muted)]">
                             {trace.arguments}
                             {'\n\n'}
                             {trace.result}
@@ -1132,7 +1132,7 @@ export function ChatPanel({ variant = 'page' }: ChatPanelProps) {
           ))}
 
           {sending && (
-            <div className="max-w-[85%] self-start whitespace-pre-wrap rounded-2xl bg-[var(--airi-card)] px-4 py-2 text-sm">
+            <div className="max-w-[85%] self-start whitespace-pre-wrap rounded-2xl bg-[var(--aipets-card)] px-4 py-2 text-sm">
               {streamText || (activeTool
                 ? t('settings.reactShell.chatCallingTool', {
                     defaultValue: 'Calling {{tool}}...',
@@ -1261,7 +1261,7 @@ export function ChatPanel({ variant = 'page' }: ChatPanelProps) {
               <img src={pendingImage} alt="" className="h-16 w-16 rounded-lg object-cover" />
               <button
                 type="button"
-                className="text-xs text-[var(--airi-muted)] hover:text-rose-400"
+                className="text-xs text-[var(--aipets-muted)] hover:text-rose-400"
                 onClick={() => setPendingImage(null)}
               >
                 {t('settings.reactShell.chatRemoveImage', { defaultValue: 'Remove image' })}
@@ -1270,12 +1270,12 @@ export function ChatPanel({ variant = 'page' }: ChatPanelProps) {
           )}
 
           {stickerPickerOpen && (
-            <div className="flex flex-wrap gap-2 border border-[var(--airi-border)] rounded-2xl bg-[var(--airi-card)] p-2">
+            <div className="flex flex-wrap gap-2 border border-[var(--aipets-border)] rounded-2xl bg-[var(--aipets-card)] p-2">
               {stickers.map(sticker => (
                 <button
                   key={sticker.id}
                   type="button"
-                  className="h-14 w-14 overflow-hidden border border-[var(--airi-border)] rounded-lg transition hover:bg-[var(--airi-hover)]"
+                  className="h-14 w-14 overflow-hidden border border-[var(--aipets-border)] rounded-lg transition hover:bg-[var(--aipets-hover)]"
                   onClick={() => sendSticker(sticker.dataUrl)}
                 >
                   <img src={sticker.dataUrl} alt={sticker.name} className="h-full w-full object-contain" />
@@ -1303,7 +1303,7 @@ export function ChatPanel({ variant = 'page' }: ChatPanelProps) {
               type="button"
               disabled={!ready || sending || (!input.trim() && !pendingImage)}
               onClick={() => send()}
-              className="rounded-xl bg-[var(--airi-fg)] px-4 py-2 text-sm text-[var(--airi-bg)] font-medium disabled:opacity-40"
+              className="rounded-xl bg-[var(--aipets-fg)] px-4 py-2 text-sm text-[var(--aipets-bg)] font-medium disabled:opacity-40"
             >
               <span className="i-solar:send-bold-duotone" />
               {' '}

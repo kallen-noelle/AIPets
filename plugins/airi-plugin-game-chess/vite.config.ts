@@ -9,7 +9,7 @@ import react from '@vitejs/plugin-react'
 import { defineConfig } from 'vite'
 
 const rootDir = fileURLToPath(new URL('.', import.meta.url))
-const manifestFileName = 'extension.airi.json'
+const manifestFileName = 'extension.aipets.json'
 
 /**
  * Copies the extension manifest into the packaged plugin root.

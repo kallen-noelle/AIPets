@@ -38,6 +38,7 @@ const { JsonStore } = require('./shared/store.cjs')
 const { SecondaryWindows } = require('./windows.cjs')
 
 const DEV_URL = process.env.STAGE_WEB_REACT_URL ?? 'http://localhost:5173/#/'
+const DEV_ORIGIN = new URL(DEV_URL).origin
 
 const WINDOW_DEFAULTS = { width: 480, height: 720 }
 const MIN_WIDTH = 320
@@ -342,6 +343,54 @@ function registerDisplayMediaHandler() {
   }, { useSystemPicker: false })
 }
 
+/**
+ * Grants only the media permissions that the stage uses.
+ *
+ * The renderer asks for the microphone, screen capture, and audio output
+ * selection. Every other permission, and every other origin, is refused.
+ */
+function registerPermissionHandlers() {
+  const isAppOrigin = (origin) => {
+    if (!origin)
+      return false
+    if (origin.startsWith('file://'))
+      return true
+
+    try {
+      return new URL(origin).origin === DEV_ORIGIN
+    }
+    catch {
+      return false
+    }
+  }
+
+  const allowsAudio = details => !details?.mediaTypes || details.mediaTypes.includes('audio')
+
+  session.defaultSession.setPermissionRequestHandler((webContents, permission, callback, details) => {
+    if (!webContents || !isAppOrigin(webContents.getURL())) {
+      callback(false)
+      return
+    }
+
+    if (permission === 'media')
+      callback(allowsAudio(details))
+    else if (permission === 'display-capture' || permission === 'speaker-selection')
+      callback(true)
+    else
+      callback(false)
+  })
+
+  session.defaultSession.setPermissionCheckHandler((webContents, permission, requestingOrigin, details) => {
+    const origin = requestingOrigin || webContents?.getURL() || ''
+    if (!isAppOrigin(origin))
+      return false
+
+    if (permission === 'media')
+      return allowsAudio(details)
+    return permission === 'display-capture' || permission === 'speaker-selection'
+  })
+}
+
 ipcMain.handle(CHANNELS.getInfo, () => ({
   platform: process.platform,
   versions: { electron: process.versions.electron, chrome: process.versions.chrome },
@@ -443,6 +492,8 @@ else {
       rootDir: path.join(app.getPath('userData'), 'plugins'),
       stateFile: path.join(app.getPath('userData'), 'plugins-state.json'),
     })
+
+    registerPermissionHandlers()
 
     createWindow()
 

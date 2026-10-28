@@ -8,7 +8,7 @@ import type { Extension } from './shared'
  * - Keeping extension metadata and setup logic in one explicit export
  *
  * Expects:
- * - `id` matches `extension.airi.json`
+ * - `id` matches `extension.aipets.json`
  * - `setup` uses `ctx.kits` for the common kit authoring path
  *
  * Returns:

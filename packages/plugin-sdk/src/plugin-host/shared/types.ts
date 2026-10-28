@@ -252,7 +252,7 @@ export interface ExtensionManifestV2 {
   /** Manifest schema version expected by the current Host. */
   manifestVersion: 2
   /** Manifest kind discriminator used to identify AIRI Extension manifests. */
-  kind: 'manifest.extension.airi.moeru.ai'
+  kind: 'manifest.extension.aipets.app'
   /** Stable Extension identifier used for installation and session identity. */
   id: string
   /** Extension package version. */
@@ -422,7 +422,7 @@ const extensionKitManifestSchema = strictObject({
 export const extensionManifestV2Schema = pipe(
   strictObject({
     manifestVersion: literal(2),
-    kind: literal('manifest.extension.airi.moeru.ai'),
+    kind: literal('manifest.extension.aipets.app'),
     id: extensionIdSchema,
     version: exactSemanticVersionSchema,
     engines: strictObject({

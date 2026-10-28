@@ -4,12 +4,12 @@ Runtime-agnostic SDK for AIRI extensions.
 
 ## Extension Manifest
 
-Each installable Extension package has an `extension.airi.json` file at its root. The current Host accepts only Manifest v2:
+Each installable Extension package has an `extension.aipets.json` file at its root. The current Host accepts only Manifest v2:
 
 ```json
 {
   "manifestVersion": 2,
-  "kind": "manifest.extension.airi.moeru.ai",
+  "kind": "manifest.extension.aipets.app",
   "id": "example-extension",
   "version": "1.0.0",
   "engines": {

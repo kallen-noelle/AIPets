@@ -24,8 +24,8 @@ import {
 } from '../../character/characters'
 
 const buttonClass = [
-  'rounded-full border border-[var(--airi-border)] px-4 py-1.5 text-xs',
-  'transition hover:bg-[var(--airi-hover)]',
+  'rounded-full border border-[var(--aipets-border)] px-4 py-1.5 text-xs',
+  'transition hover:bg-[var(--aipets-hover)]',
 ].join(' ')
 
 export function ModelsPage() {
@@ -141,7 +141,7 @@ export function ModelsPage() {
         <h1 className="text-2xl font-semibold">
           {t('settings.pages.models.title', { defaultValue: 'Models' })}
         </h1>
-        <p className="text-sm text-[var(--airi-muted)]">
+        <p className="text-sm text-[var(--aipets-muted)]">
           {t('settings.reactShell.modelsDescription', {
             defaultValue: 'Transparent video animation packs replace the old Live2D and VRM models.',
           })}
@@ -166,7 +166,7 @@ export function ModelsPage() {
                     'flex flex-col gap-3 rounded-2xl border p-4 transition',
                     active
                       ? 'border-emerald-400/50 bg-emerald-500/5'
-                      : 'border-[var(--airi-border)] bg-[var(--airi-card)]',
+                      : 'border-[var(--aipets-border)] bg-[var(--aipets-card)]',
                   ].join(' ')}
                 >
                   {preview && (
@@ -189,8 +189,8 @@ export function ModelsPage() {
 
                   <div className="flex flex-col gap-1">
                     <span className="text-xs" style={{ color: character.accent }}>{character.role}</span>
-                    <p className="text-xs text-[var(--airi-muted)]">{character.description}</p>
-                    <span className="text-xs text-[var(--airi-muted)]">
+                    <p className="text-xs text-[var(--aipets-muted)]">{character.description}</p>
+                    <span className="text-xs text-[var(--aipets-muted)]">
                       {`${character.clipCount} 段动作`}
                     </span>
                   </div>
@@ -213,7 +213,7 @@ export function ModelsPage() {
         {t('settings.reactShell.importedPacks', { defaultValue: 'Imported packs' })}
       </h2>
 
-      <div className="flex flex-wrap items-center gap-3 border border-[var(--airi-border)] rounded-2xl bg-[var(--airi-card)] p-4">
+      <div className="flex flex-wrap items-center gap-3 border border-[var(--aipets-border)] rounded-2xl bg-[var(--aipets-card)] p-4">
         <input
           ref={inputRef}
           type="file"
@@ -226,14 +226,14 @@ export function ModelsPage() {
           type="button"
           disabled={importing}
           onClick={() => inputRef.current?.click()}
-          className="rounded-full bg-[var(--airi-fg)] px-5 py-2 text-sm text-[var(--airi-bg)] font-medium disabled:opacity-50"
+          className="rounded-full bg-[var(--aipets-fg)] px-5 py-2 text-sm text-[var(--aipets-bg)] font-medium disabled:opacity-50"
         >
           {importing
             ? t('settings.reactShell.importing', { defaultValue: 'Importing...' })
             : t('settings.reactShell.importPack', { defaultValue: 'Import pack (.zip)' })}
         </button>
 
-        <span className="text-xs text-[var(--airi-muted)]">
+        <span className="text-xs text-[var(--aipets-muted)]">
           {t('settings.reactShell.importHint', {
             defaultValue: 'The ZIP needs manifest.json and clips. character.json is optional for name, role, and appearance.',
           })}
@@ -244,7 +244,7 @@ export function ModelsPage() {
 
       {packs.length === 0
         ? (
-            <div className="border border-[var(--airi-border)] rounded-2xl border-dashed p-6 text-center text-sm text-[var(--airi-muted)]">
+            <div className="border border-[var(--aipets-border)] rounded-2xl border-dashed p-6 text-center text-sm text-[var(--aipets-muted)]">
               {t('settings.reactShell.noPacks', { defaultValue: 'No animation packs installed yet.' })}
             </div>
           )
@@ -260,7 +260,7 @@ export function ModelsPage() {
                       'flex flex-col gap-3 rounded-2xl border p-4 transition',
                       active
                         ? 'border-emerald-400/50 bg-emerald-500/5'
-                        : 'border-[var(--airi-border)] bg-[var(--airi-card)]',
+                        : 'border-[var(--aipets-border)] bg-[var(--aipets-card)]',
                     ].join(' ')}
                   >
                     <div className="flex items-center justify-between gap-2">
@@ -278,12 +278,12 @@ export function ModelsPage() {
                           <span className="text-xs" style={{ color: pack.profile.accent }}>{pack.profile.role}</span>
                         )}
                         {pack.profile.description && (
-                          <p className="text-xs text-[var(--airi-muted)]">{pack.profile.description}</p>
+                          <p className="text-xs text-[var(--aipets-muted)]">{pack.profile.description}</p>
                         )}
                       </div>
                     )}
 
-                    <div className="flex flex-wrap gap-3 text-xs text-[var(--airi-muted)]">
+                    <div className="flex flex-wrap gap-3 text-xs text-[var(--aipets-muted)]">
                       <span>
                         {t('settings.reactShell.canvas', { defaultValue: 'Canvas' })}
                         {': '}
@@ -314,19 +314,19 @@ export function ModelsPage() {
             </div>
           )}
 
-      <section className="flex flex-col gap-3 border border-[var(--airi-border)] rounded-2xl bg-[var(--airi-card)] p-4">
+      <section className="flex flex-col gap-3 border border-[var(--aipets-border)] rounded-2xl bg-[var(--aipets-card)] p-4">
         <div className="flex flex-col gap-1">
           <h2 className="text-sm font-medium">
             {t('settings.reactShell.assetCacheTitle', { defaultValue: 'Local asset storage' })}
           </h2>
-          <p className="text-xs text-[var(--airi-muted)]">
+          <p className="text-xs text-[var(--aipets-muted)]">
             {t('settings.reactShell.assetCacheHint', {
               defaultValue: 'Clips of a pack served by a URL are kept on this device. The next start reads them from disk, and the pack works offline.',
             })}
           </p>
         </div>
 
-        <p className="text-xs text-[var(--airi-muted)]">
+        <p className="text-xs text-[var(--aipets-muted)]">
           {t('settings.reactShell.assetCacheEntries', { defaultValue: 'Cached files' })}
           {': '}
           {cache?.entries ?? 0}

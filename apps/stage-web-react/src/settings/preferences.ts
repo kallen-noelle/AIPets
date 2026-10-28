@@ -6,7 +6,7 @@ import i18n, { languageStorageKey } from '../i18n'
 
 export type ThemePreference = 'dark' | 'light'
 
-const themeStorageKey = 'airi:react:theme'
+const themeStorageKey = 'aipets:react:theme'
 
 export interface Preferences {
   language: SupportedLanguage

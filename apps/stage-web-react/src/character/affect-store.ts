@@ -66,7 +66,7 @@ function profileFor(characterId: string): AffectProfile {
 }
 
 function storageKey(characterId: string): string {
-  return `airi:react:character/${characterId}/affect`
+  return `aipets:react:character/${characterId}/affect`
 }
 
 const praisePattern = /可爱|好棒|真棒|厉害|喜欢你|爱你|辛苦|谢谢|聪明|漂亮|好看|最棒|优秀|乖/

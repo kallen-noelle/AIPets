@@ -25,26 +25,26 @@ export function ScenePage() {
         <h1 className="text-2xl font-semibold">
           {t('settings.pages.scene.title', { defaultValue: 'Scenes' })}
         </h1>
-        <p className="text-sm text-[var(--airi-muted)]">
+        <p className="text-sm text-[var(--aipets-muted)]">
           {t('settings.reactShell.sceneDescription', {
             defaultValue: 'Background shown behind the character.',
           })}
         </p>
       </header>
 
-      <div className="flex flex-col gap-3 border border-[var(--airi-border)] rounded-2xl bg-[var(--airi-card)] p-4">
+      <div className="flex flex-col gap-3 border border-[var(--aipets-border)] rounded-2xl bg-[var(--aipets-card)] p-4">
         {background
           ? (
               <img src={background} alt="" className="max-h-56 w-full rounded-xl object-cover" />
             )
           : (
-              <p className="text-xs text-[var(--airi-muted)]">
+              <p className="text-xs text-[var(--aipets-muted)]">
                 {t('settings.reactShell.noBackground', { defaultValue: 'No background selected.' })}
               </p>
             )}
 
         <div className="flex flex-wrap items-center gap-3">
-          <label className="border border-[var(--airi-border)] rounded-full px-4 py-1.5 text-xs hover:bg-[var(--airi-hover)]">
+          <label className="border border-[var(--aipets-border)] rounded-full px-4 py-1.5 text-xs hover:bg-[var(--aipets-hover)]">
             {t('settings.reactShell.chooseBackground', { defaultValue: 'Choose image' })}
             <input
               type="file"
@@ -60,7 +60,7 @@ export function ScenePage() {
           {background && (
             <button
               type="button"
-              className="text-xs text-[var(--airi-muted)] hover:text-rose-400"
+              className="text-xs text-[var(--aipets-muted)] hover:text-rose-400"
               onClick={() => setBackground('')}
             >
               {t('settings.reactShell.clearBackground', { defaultValue: 'Clear background' })}

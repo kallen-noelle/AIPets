@@ -35,7 +35,7 @@ export default defineConfig({
     'CLAUDE.md', // Skip the symbolic link
   ],
 }, {
-  name: 'airi/slop',
+  name: 'aipets/slop',
   files: ['**/*.{js,mjs,cjs,jsx,ts,mts,cts,tsx,vue}'],
   plugins: { slop },
   // Full inspection keeps editor and CI results independent of Git history.
@@ -54,7 +54,7 @@ export default defineConfig({
     'slop/prefer-jsdoc': 'off',
   },
 }, {
-  name: 'airi/react-hooks',
+  name: 'aipets/react-hooks',
   files: ['**/*.{jsx,tsx}'],
   plugins: { 'react-hooks': reactHooks },
   rules: {
@@ -78,7 +78,7 @@ export default defineConfig({
     'no-restricted-syntax': [
       'error',
       {
-        message: 'Avoid `error instanceof Error ? error.message : ...`. Use `errorMessageFrom(error)` from \'@moeru/std\' (or `errorMessageFromUnknown(error, fallback)` from \'@proj-airi/stage-shared\'). Pair with `?? \'fallback\'` when a default is needed.',
+        message: 'Avoid `error instanceof Error ? error.message : ...`. Use `errorMessageFrom(error)` from \'@moeru/std\'. Pair with `?? \'fallback\'` when a default is needed.',
         selector: 'ConditionalExpression[test.type=\'BinaryExpression\'][test.operator=\'instanceof\'][test.right.name=\'Error\'][consequent.type=\'MemberExpression\'][consequent.property.name=\'message\']',
       },
       {

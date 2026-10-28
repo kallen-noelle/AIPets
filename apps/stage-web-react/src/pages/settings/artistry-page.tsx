@@ -4,7 +4,7 @@ import { Link } from 'react-router'
 import { PageHeader, SectionCard, TextField } from '../../components/fields'
 import { useStoredValue } from '../../settings/persisted'
 
-const imageModelKey = 'airi:react:image/model'
+const imageModelKey = 'aipets:react:image/model'
 
 export function ArtistryPage() {
   const { t } = useTranslation()
@@ -28,7 +28,7 @@ export function ArtistryPage() {
           onChange={setModel}
         />
 
-        <p className="text-xs text-[var(--airi-muted)]">
+        <p className="text-xs text-[var(--aipets-muted)]">
           {t('settings.reactShell.artistryProviderNote', {
             defaultValue: 'Image generation reuses the API key of the chat provider you select in chat.',
           })}
@@ -36,7 +36,7 @@ export function ArtistryPage() {
 
         <Link
           to="/settings/providers"
-          className="border border-[var(--airi-border)] rounded-full px-4 py-1.5 text-xs hover:bg-[var(--airi-hover)]"
+          className="border border-[var(--aipets-border)] rounded-full px-4 py-1.5 text-xs hover:bg-[var(--aipets-hover)]"
         >
           {t('settings.reactShell.manageProviders', { defaultValue: 'Manage providers' })}
         </Link>
@@ -47,7 +47,7 @@ export function ArtistryPage() {
       >
         <Link
           to="/settings/scene"
-          className="border border-[var(--airi-border)] rounded-full px-4 py-1.5 text-xs hover:bg-[var(--airi-hover)]"
+          className="border border-[var(--aipets-border)] rounded-full px-4 py-1.5 text-xs hover:bg-[var(--aipets-hover)]"
         >
           {t('settings.pages.scene.title', { defaultValue: 'Scenes' })}
         </Link>

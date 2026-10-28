@@ -14,8 +14,8 @@ const dragStyle = { WebkitAppRegion: 'drag' } as CSSProperties
 const noDragStyle = { WebkitAppRegion: 'no-drag' } as CSSProperties
 
 const buttonClass = [
-  'rounded-xl border border-[var(--airi-border)] px-2.5 py-1 text-[11px] transition',
-  'hover:bg-[var(--airi-hover)] disabled:opacity-40',
+  'rounded-xl border border-[var(--aipets-border)] px-2.5 py-1 text-[11px] transition',
+  'hover:bg-[var(--aipets-hover)] disabled:opacity-40',
 ].join(' ')
 
 /**
@@ -70,8 +70,8 @@ export function WidgetPage() {
     <div className="h-screen w-screen bg-transparent p-2">
       <div
         className={[
-          'flex h-full flex-col gap-3 rounded-2xl border border-[var(--airi-border)] p-4',
-          'bg-[rgba(16,16,22,0.86)] text-[var(--airi-fg)]',
+          'flex h-full flex-col gap-3 rounded-2xl border border-[var(--aipets-border)] p-4',
+          'bg-[rgba(16,16,22,0.86)] text-[var(--aipets-fg)]',
         ].join(' ')}
       >
         <header className="flex items-start justify-between gap-2" style={dragStyle}>
@@ -79,7 +79,7 @@ export function WidgetPage() {
             <p className="text-lg font-semibold leading-tight">
               {now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
             </p>
-            <p className="text-[11px] text-[var(--airi-muted)]">
+            <p className="text-[11px] text-[var(--aipets-muted)]">
               {t('settings.reactShell.widgetTitle', { defaultValue: 'aipetdex widget' })}
             </p>
           </div>
@@ -98,7 +98,7 @@ export function WidgetPage() {
           {battery?.supported && (
             <>
               <div className="flex items-center justify-between">
-                <span className="text-[var(--airi-muted)]">
+                <span className="text-[var(--aipets-muted)]">
                   {t('settings.reactShell.batteryLevel', { defaultValue: 'Battery level' })}
                 </span>
                 <span className="font-semibold">
@@ -106,7 +106,7 @@ export function WidgetPage() {
                   %
                 </span>
               </div>
-              <div className="h-1.5 w-full overflow-hidden rounded-full bg-[var(--airi-hover)]">
+              <div className="h-1.5 w-full overflow-hidden rounded-full bg-[var(--aipets-hover)]">
                 <div
                   className="h-full rounded-full bg-emerald-400"
                   style={{ width: `${Math.round(battery.level * 100)}%` }}
@@ -116,7 +116,7 @@ export function WidgetPage() {
           )}
 
           {power && (
-            <p className="text-[11px] text-[var(--airi-muted)]">
+            <p className="text-[11px] text-[var(--aipets-muted)]">
               {power.onBatteryPower
                 ? t('settings.reactShell.batteryDischarging', { defaultValue: 'On battery' })
                 : t('settings.reactShell.acPowerLine', { defaultValue: 'AC power' })}

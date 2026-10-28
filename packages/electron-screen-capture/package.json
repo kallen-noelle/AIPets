@@ -19,7 +19,6 @@
     ".": "./dist/index.js",
     "./main": "./dist/main.mjs",
     "./renderer": "./dist/renderer.js",
-    "./vue": "./dist/vue.js",
     "./package.json": "./package.json"
   },
   "types": "./dist/index.d.ts",
@@ -35,8 +34,7 @@
   },
   "peerDependencies": {
     "@guiiai/logg": ">=1 <2",
-    "electron": ">=40 <44",
-    "vue": ">=3"
+    "electron": ">=40 <44"
   },
   "dependencies": {
     "std-env": "catalog:"
@@ -47,8 +45,7 @@
     "@moeru/std": "catalog:",
     "async-mutex": "catalog:",
     "nanoid": "catalog:",
-    "vite": "catalog:",
-    "vue": "catalog:"
+    "vite": "catalog:"
   },
   "inlinedDependencies": {
     "@moeru/eventa": "1.0.2",

@@ -65,27 +65,27 @@ export function seedDevSettings() {
   }
 
   // Keep the dev provider selected so a stale test provider cannot win.
-  writeJson('airi:react:chat/provider', devProviderId)
-  writeJson('airi:react:speech/provider', devProviderId)
+  writeJson('aipets:react:chat/provider', devProviderId)
+  writeJson('aipets:react:speech/provider', devProviderId)
 
-  writeDefault('airi:react:chat/model', 'qwen3.8-omni-flash')
-  writeDefault('airi:react:speech/model', 'qwen3-omni-flash')
-  writeDefault('airi:react:speech/voice', 'Cherry')
-  writeDefault('airi:react:image/model', 'wanx2.1-t2i-turbo')
-  writeDefault('airi:react:chat/tts', true)
+  writeDefault('aipets:react:chat/model', 'qwen3.8-omni-flash')
+  writeDefault('aipets:react:speech/model', 'qwen3-omni-flash')
+  writeDefault('aipets:react:speech/voice', 'Cherry')
+  writeDefault('aipets:react:image/model', 'wanx2.1-t2i-turbo')
+  writeDefault('aipets:react:chat/tts', true)
 
   // The omni chat model has no audio output, so browser speech is the
   // working default. It needs no provider and keeps the test URL usable
   // without any extra setup.
-  writeDefault('airi:react:speech/local', true)
-  writeDefault('airi:react:speech/local-language', 'zh-CN')
-  writeDefault('airi:react:speech/local-voice', '')
-  writeDefault('airi:react:speech/local-rate', 1)
-  writeDefault('airi:react:speech/local-pitch', 1)
+  writeDefault('aipets:react:speech/local', true)
+  writeDefault('aipets:react:speech/local-language', 'zh-CN')
+  writeDefault('aipets:react:speech/local-voice', '')
+  writeDefault('aipets:react:speech/local-rate', 1)
+  writeDefault('aipets:react:speech/local-pitch', 1)
 
   // DashScope has no `/audio/transcriptions`. Its omni chat models read audio
   // directly, so dictation goes through the selected chat model.
-  localStorage.removeItem('airi:react:hearing/local')
-  writeDefault('airi:react:hearing/mode', 'omni')
-  writeDefault('airi:react:hearing/local-language', 'zh-CN')
+  localStorage.removeItem('aipets:react:hearing/local')
+  writeDefault('aipets:react:hearing/mode', 'omni')
+  writeDefault('aipets:react:hearing/local-language', 'zh-CN')
 }

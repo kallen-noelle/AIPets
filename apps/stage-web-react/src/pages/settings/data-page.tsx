@@ -8,13 +8,13 @@ import { chatActiveSessionKey, chatSessionsKey } from '../../chat/sessions'
 import { resetProviders } from '../../providers/store'
 import { readStored, writeStored } from '../../settings/persisted'
 
-const exportFormat = 'airi-react-chat-sessions:v1'
+const exportFormat = 'aipets-react-chat-sessions:v1'
 
 type ConfirmTarget = 'chats' | 'providers' | 'all'
 
 const buttonClass = [
-  'rounded-full border border-[var(--airi-border)] px-4 py-1.5 text-xs transition',
-  'hover:bg-[var(--airi-hover)] disabled:opacity-40',
+  'rounded-full border border-[var(--aipets-border)] px-4 py-1.5 text-xs transition',
+  'hover:bg-[var(--aipets-hover)] disabled:opacity-40',
 ].join(' ')
 
 const dangerClass = [
@@ -59,7 +59,7 @@ export function DataPage() {
     const url = URL.createObjectURL(blob)
     const anchor = document.createElement('a')
     anchor.href = url
-    anchor.download = `airi-react-chats-${new Date().toISOString()}.json`
+    anchor.download = `aipets-react-chats-${new Date().toISOString()}.json`
     anchor.click()
     URL.revokeObjectURL(url)
     report('ok', t('settings.reactShell.dataExported', { defaultValue: 'Chats exported.' }))
@@ -98,7 +98,7 @@ export function DataPage() {
 
   const deleteAll = () => {
     for (const key of Object.keys(localStorage)) {
-      if (key.startsWith('airi:react:'))
+      if (key.startsWith('aipets:react:'))
         localStorage.removeItem(key)
     }
 
@@ -131,7 +131,7 @@ export function DataPage() {
         <h1 className="text-2xl font-semibold">
           {t('settings.pages.data.title', { defaultValue: 'Data' })}
         </h1>
-        <p className="text-sm text-[var(--airi-muted)]">
+        <p className="text-sm text-[var(--aipets-muted)]">
           {t('settings.reactShell.dataDescription', {
             defaultValue: 'Export, import, and delete the data this app stores in the browser.',
           })}
@@ -144,12 +144,12 @@ export function DataPage() {
         </p>
       )}
 
-      <div className="flex flex-col gap-3 border border-[var(--airi-border)] rounded-2xl bg-[var(--airi-card)] p-4">
+      <div className="flex flex-col gap-3 border border-[var(--aipets-border)] rounded-2xl bg-[var(--aipets-card)] p-4">
         <div>
           <h2 className="text-sm font-semibold">
             {t('settings.reactShell.dataChatsTitle', { defaultValue: 'Chats' })}
           </h2>
-          <p className="text-xs text-[var(--airi-muted)]">
+          <p className="text-xs text-[var(--aipets-muted)]">
             {t('settings.reactShell.dataChatsDescription', {
               defaultValue: 'Every chat session lives in this browser. Export a JSON file to back it up.',
             })}

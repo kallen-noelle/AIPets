@@ -1,5 +1,0 @@
-export type { SwipeActionsSelectEvent, SwipeActionsSide } from './context'
-export { default as SwipeActionsContent } from './swipe-actions-content.vue'
-export { default as SwipeActionsItem } from './swipe-actions-item.vue'
-export { default as SwipeActionsList } from './swipe-actions-list.vue'
-export { default as SwipeActionsRoot } from './swipe-actions-root.vue'

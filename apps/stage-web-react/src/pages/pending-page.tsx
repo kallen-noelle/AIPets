@@ -17,7 +17,7 @@ export function PendingPage({ title }: { title?: string }) {
   return (
     <section className="mx-auto max-w-2xl min-h-[60vh] flex flex-col items-center justify-center gap-3 px-6 text-center">
       <h1 className="text-2xl font-semibold capitalize">{heading}</h1>
-      <p className="text-sm text-[var(--airi-muted)]">
+      <p className="text-sm text-[var(--aipets-muted)]">
         {t('settings.reactShell.pendingDescription', {
           defaultValue: 'This page has no React version yet. The route exists so links reach a page.',
         })}

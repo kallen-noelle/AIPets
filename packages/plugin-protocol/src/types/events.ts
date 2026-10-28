@@ -63,7 +63,7 @@ export interface ModuleIdentity {
  */
 export interface ExtensionIdentity {
   /**
-   * Stable extension identifier from `extension.airi.json`.
+   * Stable extension identifier from `extension.aipets.json`.
    */
   id: string
   /**

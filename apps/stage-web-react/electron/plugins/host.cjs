@@ -1,7 +1,7 @@
 /**
  * Plugin host of the stage-web-react desktop shell.
  *
- * A plugin is a local folder with an `extension.airi.json` manifest and an ESM
+ * A plugin is a local folder with an `extension.aipets.json` manifest and an ESM
  * entrypoint. The host installs the folder into the user data directory,
  * enables or disables it, and serves its UI through the `plugin-assets://`
  * scheme.
@@ -18,8 +18,8 @@ const { pathToFileURL } = require('node:url')
 const { BrowserWindow, net, protocol } = require('electron')
 
 const SCHEME = 'plugin-assets'
-const MANIFEST_FILE = 'extension.airi.json'
-const MANIFEST_KIND = 'manifest.extension.airi.moeru.ai'
+const MANIFEST_FILE = 'extension.aipets.json'
+const MANIFEST_KIND = 'manifest.extension.aipets.app'
 const MANIFEST_VERSION = 2
 const GAMELET_KIT_ID = 'kit.gamelet'
 const MAX_LOG_ENTRIES = 80

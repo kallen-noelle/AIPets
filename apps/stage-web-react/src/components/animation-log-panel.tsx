@@ -18,7 +18,7 @@ const phaseColors: Record<string, string> = {
 }
 
 function phaseClass(phase: string): string {
-  return phaseColors[phase] ?? 'text-[var(--airi-muted)]'
+  return phaseColors[phase] ?? 'text-[var(--aipets-muted)]'
 }
 
 function formatTime(t: number): string {
@@ -76,10 +76,10 @@ export function AnimationLogPanel() {
       onToggle={event => setOpen(event.currentTarget.open)}
       className={[
         'w-full max-w-xl rounded-2xl border p-4 text-sm',
-        'border-[var(--airi-border)] bg-[var(--airi-card)]/80',
+        'border-[var(--aipets-border)] bg-[var(--aipets-card)]/80',
       ].join(' ')}
     >
-      <summary className="cursor-pointer text-[var(--airi-muted)]">
+      <summary className="cursor-pointer text-[var(--aipets-muted)]">
         Animation playback log
         {' · '}
         {entries.length}
@@ -95,7 +95,7 @@ export function AnimationLogPanel() {
             type="button"
             className={[
               'rounded-full px-3 py-1 text-xs transition',
-              'bg-[var(--airi-card)] text-[var(--airi-fg)] hover:bg-[var(--airi-hover)]',
+              'bg-[var(--aipets-card)] text-[var(--aipets-fg)] hover:bg-[var(--aipets-hover)]',
             ].join(' ')}
             onClick={() => {
               animationLog.clear()
@@ -107,7 +107,7 @@ export function AnimationLogPanel() {
         </div>
 
         {visible.length === 0
-          ? <p className="text-xs text-[var(--airi-muted)]">No entries yet. Send a chat message to trace the pipeline.</p>
+          ? <p className="text-xs text-[var(--aipets-muted)]">No entries yet. Send a chat message to trace the pipeline.</p>
           : (
               <ol className="max-h-72 flex flex-col gap-1 overflow-y-auto text-xs font-mono">
                 {visible.map((entry, index) => {
@@ -147,15 +147,15 @@ export function AnimationLogPanel() {
                         className="flex items-start gap-2 text-left"
                         onClick={() => setExpanded(isExpanded ? null : index)}
                       >
-                        <span className="shrink-0 text-[var(--airi-muted)]">{formatTime(entry.t)}</span>
+                        <span className="shrink-0 text-[var(--aipets-muted)]">{formatTime(entry.t)}</span>
                         <span className={`shrink-0 ${phaseClass(entry.phase)}`}>{entry.phase.padEnd(9, ' ')}</span>
-                        <span className="text-[var(--airi-fg)]">{entry.message}</span>
+                        <span className="text-[var(--aipets-fg)]">{entry.message}</span>
                       </button>
                       {detail && (
                         <div className="ml-16 flex items-start gap-2">
                           <pre
                             className={[
-                              'flex-1 overflow-x-auto whitespace-pre-wrap break-all rounded bg-[var(--airi-bg)] p-1.5',
+                              'flex-1 overflow-x-auto whitespace-pre-wrap break-all rounded bg-[var(--aipets-bg)] p-1.5',
                               isExpanded ? '' : 'max-h-8 overflow-hidden opacity-60',
                             ].join(' ')}
                           >
@@ -168,7 +168,7 @@ export function AnimationLogPanel() {
                               'shrink-0 rounded px-2 py-0.5 text-[10px] transition',
                               isCopied
                                 ? 'bg-emerald-500/20 text-emerald-300'
-                                : 'bg-[var(--airi-card)] text-[var(--airi-muted)] hover:text-[var(--airi-fg)]',
+                                : 'bg-[var(--aipets-card)] text-[var(--aipets-muted)] hover:text-[var(--aipets-fg)]',
                             ].join(' ')}
                             title="Copy full detail"
                           >

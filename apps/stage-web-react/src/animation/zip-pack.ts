@@ -107,9 +107,9 @@ export async function loadPackFromZip(blob: Blob): Promise<LoadedZipPack> {
   }
 }
 
-const packsMetaKey = 'airi:react:animation-packs'
-const activePackKey = 'airi:react:active-pack'
-const blobKey = (id: string) => `airi-react-pack-${id}`
+const packsMetaKey = 'aipets:react:animation-packs'
+const activePackKey = 'aipets:react:active-pack'
+const blobKey = (id: string) => `aipets-react-pack-${id}`
 
 export interface PackMeta {
   id: string

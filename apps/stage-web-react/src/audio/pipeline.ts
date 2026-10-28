@@ -16,9 +16,9 @@ export const microphoneDefaults = {
 
 /** Storage keys of the noise handling switches, shared by settings and recorder. */
 export const audioToggleKeys = {
-  echoCancellation: 'airi:react:audio/echo-cancellation',
-  noiseSuppression: 'airi:react:audio/noise-suppression',
-  autoGainControl: 'airi:react:audio/auto-gain-control',
+  echoCancellation: 'aipets:react:audio/echo-cancellation',
+  noiseSuppression: 'aipets:react:audio/noise-suppression',
+  autoGainControl: 'aipets:react:audio/auto-gain-control',
 }
 
 export interface MicrophoneOptions {

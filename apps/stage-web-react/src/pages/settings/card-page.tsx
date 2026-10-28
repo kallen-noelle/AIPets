@@ -7,19 +7,19 @@ import { characterNameKey, characterPersonaKey, chatModelKey, memoryWindowKey } 
 import { useStoredValue } from '../../settings/persisted'
 
 const fieldClass = [
-  'w-full rounded-xl border border-[var(--airi-border)] bg-transparent px-3 py-2 text-sm',
-  'outline-none focus:border-[var(--airi-fg)]',
+  'w-full rounded-xl border border-[var(--aipets-border)] bg-transparent px-3 py-2 text-sm',
+  'outline-none focus:border-[var(--aipets-fg)]',
 ].join(' ')
 
 const sectionClass = [
-  'flex flex-col gap-4 border border-[var(--airi-border)] rounded-2xl',
-  'bg-[var(--airi-card)] p-4',
+  'flex flex-col gap-4 border border-[var(--aipets-border)] rounded-2xl',
+  'bg-[var(--aipets-card)] p-4',
 ].join(' ')
 
-const legendClass = 'text-xs font-medium tracking-[0.2em] uppercase text-[var(--airi-muted)]'
-const hintClass = 'text-xs text-[var(--airi-muted)]'
+const legendClass = 'text-xs font-medium tracking-[0.2em] uppercase text-[var(--aipets-muted)]'
+const hintClass = 'text-xs text-[var(--aipets-muted)]'
 const pairClass = 'grid gap-4 sm:grid-cols-2'
-const sliderClass = 'w-full accent-[var(--airi-fg)]'
+const sliderClass = 'w-full accent-[var(--aipets-fg)]'
 
 /**
  * Character settings.
@@ -57,7 +57,7 @@ export function CardPage() {
         <h1 className="text-2xl font-semibold">
           {t('settings.pages.card.title', { defaultValue: 'Card' })}
         </h1>
-        <p className="text-sm text-[var(--airi-muted)]">
+        <p className="text-sm text-[var(--aipets-muted)]">
           {t('settings.reactShell.cardDescription', {
             defaultValue: 'The name and persona the assistant uses in chat.',
           })}
@@ -184,7 +184,7 @@ export function CardPage() {
           </p>
           <button
             type="button"
-            className="text-xs text-[var(--airi-muted)] underline-offset-2 transition hover:text-[var(--airi-fg)] hover:underline"
+            className="text-xs text-[var(--aipets-muted)] underline-offset-2 transition hover:text-[var(--aipets-fg)] hover:underline"
             onClick={() => setAppearance({})}
           >
             {t('settings.reactShell.characterAppearanceReset', { defaultValue: 'Reset' })}

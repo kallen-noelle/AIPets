@@ -63,6 +63,9 @@ flatpak-repo/
 
 # Vite
 dist
+
+# electron-builder output
+release
 # Nuxt
 .nuxt
 # vite-plugin-inspect

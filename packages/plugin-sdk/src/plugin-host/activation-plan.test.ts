@@ -12,7 +12,7 @@ function createManifest(
 ): ExtensionManifestV2 {
   return {
     manifestVersion: 2,
-    kind: 'manifest.extension.airi.moeru.ai',
+    kind: 'manifest.extension.aipets.app',
     id,
     version: '1.0.0',
     engines: {

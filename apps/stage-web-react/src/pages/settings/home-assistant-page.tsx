@@ -4,8 +4,8 @@ import { PageHeader, SectionCard, TextField, ToggleField } from '../../component
 import { useStoredValue } from '../../settings/persisted'
 
 const enabledKey = 'settings/home-assistant/enabled'
-const baseUrlKey = 'airi:react:home-assistant/base-url'
-const tokenKey = 'airi:react:home-assistant/token'
+const baseUrlKey = 'aipets:react:home-assistant/base-url'
+const tokenKey = 'aipets:react:home-assistant/token'
 
 export function HomeAssistantPage() {
   const { t } = useTranslation()
@@ -42,7 +42,7 @@ export function HomeAssistantPage() {
           onChange={setToken}
         />
 
-        <p className="text-xs text-[var(--airi-muted)]">
+        <p className="text-xs text-[var(--aipets-muted)]">
           {t('settings.pages.modules.home-assistant.note', {
             defaultValue: 'The token stays on this device. It does not sync to your account.',
           })}

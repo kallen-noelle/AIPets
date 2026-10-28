@@ -17,12 +17,10 @@
     "@proj-airi/server-sdk": "workspace:*",
     "cac": "catalog:",
     "debug": "catalog:",
-    "destr": "catalog:",
-    "vue": "catalog:"
+    "destr": "catalog:"
   },
   "devDependencies": {
     "@anthropic-ai/claude-code": "catalog:",
-    "tsx": "catalog:",
-    "vue-tsc": "catalog:"
+    "tsx": "catalog:"
   }
 }

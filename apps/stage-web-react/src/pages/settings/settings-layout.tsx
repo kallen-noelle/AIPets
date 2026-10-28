@@ -6,24 +6,24 @@ import { settingsEntries } from '../../settings/registry'
 
 const navItemClass = [
   'flex items-center gap-2.5 rounded-xl px-3 py-2 text-sm transition',
-  'text-[var(--airi-muted)] hover:bg-[var(--airi-hover)] hover:text-[var(--airi-fg)]',
+  'text-[var(--aipets-muted)] hover:bg-[var(--aipets-hover)] hover:text-[var(--aipets-fg)]',
 ].join(' ')
 
-const navItemActiveClass = 'bg-[var(--airi-card)] text-[var(--airi-fg)]'
+const navItemActiveClass = 'bg-[var(--aipets-card)] text-[var(--aipets-fg)]'
 
 /**
  * The desktop window draws a native backplate. A translucent page background
  * lets the material show through. A browser tab keeps the solid background.
  */
 const desktopShellClass = 'bg-[rgba(14,14,18,0.72)] backdrop-blur-xl'
-const browserShellClass = 'bg-[var(--airi-bg)]'
+const browserShellClass = 'bg-[var(--aipets-bg)]'
 
 export function SettingsLayout() {
   const { t } = useTranslation()
   const desktop = Boolean(getDesktopBridge())
 
   return (
-    <div className={['min-h-screen text-[var(--airi-fg)]', desktop ? desktopShellClass : browserShellClass].join(' ')}>
+    <div className={['min-h-screen text-[var(--aipets-fg)]', desktop ? desktopShellClass : browserShellClass].join(' ')}>
       <div className="mx-auto max-w-6xl w-full flex flex-col gap-6 px-4 py-6 lg:flex-row lg:px-8">
         <aside className="lg:w-60 lg:shrink-0">
           <div className="mb-4 flex items-center gap-2">
@@ -34,7 +34,7 @@ export function SettingsLayout() {
           <div className="mb-4 flex items-center justify-between gap-2">
             <Link
               to="/"
-              className="inline-flex items-center gap-2 text-sm text-[var(--airi-muted)] hover:text-[var(--airi-fg)]"
+              className="inline-flex items-center gap-2 text-sm text-[var(--aipets-muted)] hover:text-[var(--aipets-fg)]"
             >
               <span className="i-solar:alt-arrow-left-line-duotone" />
               {t('settings.reactShell.backToStage', { defaultValue: 'Back to stage' })}

@@ -44,7 +44,7 @@ This table is the agreed scope of the fork. The `Status` column tells what this 
 | Capability | Status | Detail |
 | --- | --- | --- |
 | Web app | Keep | `apps/stage-web-react`. React, Vite, UnoCSS. |
-| Desktop app | Adopt | `apps/stage-tamagotchi` Electron shell. |
+| Desktop app | Adopt | The `electron/` shell of `apps/stage-web-react`, packaged with electron-builder. |
 | Mobile app | Removed | `apps/stage-pocket` is deleted. |
 | Brain: chat channels | Trim | No Telegram, no Discord, no X. Their packages are deleted. The Satori adapter `integrations/satori-bot` stays. |
 | Brain: memory | Adopt | In-browser DuckDB WASM and `pglite`, plus the Alaya memory layer. |
@@ -59,10 +59,9 @@ This table is the agreed scope of the fork. The `Status` column tells what this 
 | Backend | Adopt | `server/` and the hosted API. |
 | Input devices | Adopt | Gamepad and DualSense drivers. |
 | Desktop native | Adopt | Native window and screen capture helpers. |
+| Accounts and sign-in | Removed | `apps/ui-server-auth` is deleted. |
 | Internationalization | Trim | Chinese and English only. |
-| Accounts and sign-in | Open | Decision pending. |
-| `apps/component-calling` | Keep, not wired | The experiment stays in the tree. Nothing imports it. |
-| `apps/ui-server-auth` | Open | Depends on the accounts decision. |
+| `apps/component-calling` | Removed | The experiment is deleted. |
 | Package scope | Keep | npm packages stay under `@proj-airi/*`. Only the project name changes. |
 
 ## Architecture
@@ -71,12 +70,11 @@ This table is the agreed scope of the fork. The `Status` column tells what this 
 flowchart LR
   subgraph Apps[Stage applications]
     Web[stage-web-react]
-    Desktop[stage-tamagotchi]
+    Desktop[stage-web-react electron]
   end
 
   subgraph Shared[Shared product packages]
     Animation[character-animation]
-    StageUI[stage-ui]
     Audio[pipelines-audio]
     SDK[server-sdk\nserver-shared]
   end
@@ -94,11 +92,10 @@ flowchart LR
   end
 
   Web --> Animation
-  Web --> StageUI
+  Web --> Audio
   Desktop --> Animation
-  Desktop --> StageUI
-  StageUI --> Audio
-  StageUI --> SDK
+  Desktop --> Audio
+  Web --> SDK
   Desktop --> Runtime
   SDK <-->|server channel| Runtime
   Edge --> API
@@ -140,8 +137,17 @@ pnpm dev:web
 ### Desktop app
 
 ```shell
-pnpm dev:tamagotchi
+pnpm -F @proj-airi/stage-web-react dev       # Vite dev server
+pnpm -F @proj-airi/stage-web-react electron  # Electron window on the dev server
 ```
+
+Build the Windows installer:
+
+```shell
+pnpm -F @proj-airi/stage-web-react electron:dist
+```
+
+The installer is written to `apps/stage-web-react/release/`. That folder is not committed.
 
 ### Backend
 

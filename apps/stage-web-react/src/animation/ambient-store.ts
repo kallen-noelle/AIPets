@@ -13,7 +13,7 @@ export interface AmbientProgramRecord {
 }
 
 export function ambientProgramStorageKey(characterId: string): string {
-  return `airi:react:character/${characterId}/ambient-program`
+  return `aipets:react:character/${characterId}/ambient-program`
 }
 
 function isAmbientProgramRecord(value: unknown): value is AmbientProgramRecord {

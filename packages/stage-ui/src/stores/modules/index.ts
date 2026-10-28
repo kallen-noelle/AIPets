@@ -1,6 +1,0 @@
-export * from './airi-card'
-export * from './consciousness'
-export * from './consciousness-settings'
-export * from './hearing'
-export * from './speech'
-export * from './vision'

@@ -8,8 +8,8 @@ import { PageHeader, SectionCard } from '../../components/fields'
 import { getDesktopBridge } from '../../desktop/bridge'
 
 const buttonClass = [
-  'rounded-xl border border-[var(--airi-border)] px-3 py-1.5 text-xs transition',
-  'hover:bg-[var(--airi-hover)] disabled:opacity-40',
+  'rounded-xl border border-[var(--aipets-border)] px-3 py-1.5 text-xs transition',
+  'hover:bg-[var(--aipets-hover)] disabled:opacity-40',
 ].join(' ')
 
 export function PluginsPage() {
@@ -72,7 +72,7 @@ export function PluginsPage() {
       />
 
       {!bridge && (
-        <p className="text-xs text-[var(--airi-muted)]">
+        <p className="text-xs text-[var(--aipets-muted)]">
           {t('settings.reactShell.desktopBrowserHint', {
             defaultValue: 'These controls need the desktop app. This page runs in a browser tab now.',
           })}
@@ -90,7 +90,7 @@ export function PluginsPage() {
       {error && <p className="text-xs text-rose-400">{error}</p>}
 
       {plugins.length === 0 && (
-        <p className="text-xs text-[var(--airi-muted)]">
+        <p className="text-xs text-[var(--aipets-muted)]">
           {t('settings.reactShell.noPlugins', { defaultValue: 'No plugins installed.' })}
         </p>
       )}
@@ -100,7 +100,7 @@ export function PluginsPage() {
 
         return (
           <SectionCard key={plugin.id} title={`${plugin.name} · ${plugin.version}`}>
-            <p className="text-xs text-[var(--airi-muted)]">
+            <p className="text-xs text-[var(--aipets-muted)]">
               {plugin.description || plugin.id}
             </p>
 
@@ -125,7 +125,7 @@ export function PluginsPage() {
                 {t('settings.reactShell.removePlugin', { defaultValue: 'Remove' })}
               </button>
 
-              <span className="text-xs text-[var(--airi-muted)]">
+              <span className="text-xs text-[var(--aipets-muted)]">
                 {plugin.enabled
                   ? t('settings.reactShell.pluginEnabled', { defaultValue: 'Enabled' })
                   : t('settings.reactShell.pluginDisabled', { defaultValue: 'Disabled' })}
@@ -160,10 +160,10 @@ export function PluginsPage() {
 
             {plugin.logs.length > 0 && (
               <details>
-                <summary className="cursor-pointer text-xs text-[var(--airi-muted)]">
+                <summary className="cursor-pointer text-xs text-[var(--aipets-muted)]">
                   {t('settings.reactShell.pluginLogs', { defaultValue: 'Logs' })}
                 </summary>
-                <ul className="mt-2 flex flex-col gap-1 text-[11px] text-[var(--airi-muted)]">
+                <ul className="mt-2 flex flex-col gap-1 text-[11px] text-[var(--aipets-muted)]">
                   {plugin.logs.map(log => (
                     <li key={`${log.at}-${log.message}`}>
                       {new Date(log.at).toLocaleTimeString()}

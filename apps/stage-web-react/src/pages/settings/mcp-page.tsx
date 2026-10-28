@@ -60,7 +60,7 @@ export function McpPage() {
 
         <button
           type="button"
-          className="self-start border border-[var(--airi-border)] rounded-xl px-3 py-1.5 text-xs transition hover:bg-[var(--airi-hover)] disabled:opacity-40"
+          className="self-start border border-[var(--aipets-border)] rounded-xl px-3 py-1.5 text-xs transition hover:bg-[var(--aipets-hover)] disabled:opacity-40"
           disabled={testing || !url.trim()}
           onClick={() => void test()}
         >
@@ -72,7 +72,7 @@ export function McpPage() {
         </button>
 
         {result && (
-          <p className={result.error ? 'text-xs text-rose-400' : 'text-xs text-[var(--airi-muted)]'}>
+          <p className={result.error ? 'text-xs text-rose-400' : 'text-xs text-[var(--aipets-muted)]'}>
             {result.error
               ? result.error
               : t('settings.reactShell.mcpToolsFound', {

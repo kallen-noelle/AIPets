@@ -14,6 +14,7 @@ import { DesktopPage } from './pages/settings/desktop-page'
 import { HearingPage } from './pages/settings/hearing-page'
 import { HomeAssistantPage } from './pages/settings/home-assistant-page'
 import { McpPage } from './pages/settings/mcp-page'
+import { MemoryEntriesPage } from './pages/settings/memory-entries-page'
 import { MemoryLongTermPage } from './pages/settings/memory-long-term-page'
 import { MemoryPage } from './pages/settings/memory-page'
 import { MemoryShortTermPage } from './pages/settings/memory-short-term-page'
@@ -23,6 +24,7 @@ import { ModulesPage } from './pages/settings/modules-page'
 import { PluginsPage } from './pages/settings/plugins-page'
 import { ProviderDetailPage } from './pages/settings/provider-detail-page'
 import { ProvidersPage } from './pages/settings/providers-page'
+import { RecipesPage } from './pages/settings/recipes-page'
 import { ScenePage } from './pages/settings/scene-page'
 import { SettingsIndex } from './pages/settings/settings-index'
 import { SettingsLayout } from './pages/settings/settings-layout'
@@ -30,7 +32,10 @@ import { SpeechPage } from './pages/settings/speech-page'
 import { StickersPage } from './pages/settings/stickers-page'
 import { SystemPage } from './pages/settings/system-page'
 import { ToolCardsPage } from './pages/settings/tool-cards-page'
+import { TranscriberPage } from './pages/settings/transcriber-page'
 import { VisionPage } from './pages/settings/vision-page'
+import { VoiceprintPage } from './pages/settings/voiceprint-page'
+import { WakeWordsPage } from './pages/settings/wake-words-page'
 import { WebSearchPage } from './pages/settings/web-search-page'
 import { StagePage } from './pages/stage-page'
 import { WidgetPage } from './pages/widget-page'
@@ -50,13 +55,7 @@ export const router = createHashRouter([
     element: <WidgetPage />,
   },
   // Routes the Vue app serves today. The React pages for them are pending.
-  { path: '/onboarding', element: <PendingPage title="onboarding" /> },
-  { path: '/devtools', element: <PendingPage title="devtools" /> },
   { path: '/widgets', element: <PendingPage title="widgets" /> },
-  { path: '/caption', element: <PendingPage title="caption" /> },
-  { path: '/spotlight', element: <PendingPage title="spotlight" /> },
-  { path: '/chat-floating', element: <PendingPage title="chat-floating" /> },
-  { path: '/editor', element: <PendingPage title="editor" /> },
   { path: '/desktop-overlay', element: <PendingPage title="desktop-overlay" /> },
   {
     path: '/settings',
@@ -77,9 +76,9 @@ export const router = createHashRouter([
       { path: 'modules', element: <ModulesPage /> },
       { path: 'modules/speech', element: <SpeechPage /> },
       { path: 'modules/hearing', element: <HearingPage /> },
-      { path: 'modules/hearing/transcriber', element: <PendingPage title="transcriber" /> },
-      { path: 'modules/hearing/wake-words', element: <PendingPage title="wake-words" /> },
-      { path: 'modules/hearing/voiceprint', element: <PendingPage title="voiceprint" /> },
+      { path: 'modules/hearing/transcriber', element: <TranscriberPage /> },
+      { path: 'modules/hearing/wake-words', element: <WakeWordsPage /> },
+      { path: 'modules/hearing/voiceprint', element: <VoiceprintPage /> },
       { path: 'modules/consciousness', element: <ConsciousnessPage /> },
       { path: 'modules/vision', element: <VisionPage /> },
       { path: 'modules/stickers', element: <StickersPage /> },
@@ -88,7 +87,8 @@ export const router = createHashRouter([
       { path: 'modules/tool-cards', element: <ToolCardsPage /> },
       { path: 'modules/memory-short-term', element: <MemoryShortTermPage /> },
       { path: 'modules/memory-long-term', element: <MemoryLongTermPage /> },
-      { path: 'modules/memory-long-term/recipes', element: <PendingPage title="recipes" /> },
+      { path: 'modules/memory-long-term/memories', element: <MemoryEntriesPage /> },
+      { path: 'modules/memory-long-term/recipes', element: <RecipesPage /> },
       { path: 'modules/home-assistant', element: <HomeAssistantPage /> },
       { path: 'modules/mcp', element: <McpPage /> },
       { path: 'modules/beat-sync', element: <BeatSyncPage /> },

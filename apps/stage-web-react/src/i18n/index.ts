@@ -7,7 +7,7 @@ import { initReactI18next } from 'react-i18next'
 export const supportedLanguages = ['en', 'zh-Hans'] as const
 export type SupportedLanguage = typeof supportedLanguages[number]
 
-export const languageStorageKey = 'airi:react:language'
+export const languageStorageKey = 'aipets:react:language'
 
 /**
  * The shared locale files use Vue i18n syntax with single braces.

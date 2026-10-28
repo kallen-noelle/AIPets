@@ -1,1 +1,1 @@
-export const sceneBackgroundKey = 'airi:react:scene/background'
+export const sceneBackgroundKey = 'aipets:react:scene/background'

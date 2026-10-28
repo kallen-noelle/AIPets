@@ -83,7 +83,7 @@ export async function openMcpSession(url: string, signal?: AbortSignal): Promise
       params: {
         protocolVersion: PROTOCOL_VERSION,
         capabilities: {},
-        clientInfo: { name: 'airi-react', version: '0.1.0' },
+        clientInfo: { name: 'aipets-react', version: '0.1.0' },
       },
     }),
     signal,

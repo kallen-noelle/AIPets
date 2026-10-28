@@ -21,24 +21,24 @@ export function SettingsIndex() {
               key={entry.id}
               to={entry.path}
               className={[
-                'group flex items-start gap-3 rounded-2xl border border-[var(--airi-border)]',
-                'bg-[var(--airi-card)] p-4 transition hover:bg-[var(--airi-hover)]',
+                'group flex items-start gap-3 rounded-2xl border border-[var(--aipets-border)]',
+                'bg-[var(--aipets-card)] p-4 transition hover:bg-[var(--aipets-hover)]',
               ].join(' ')}
             >
-              <span className={`${entry.icon} mt-0.5 text-2xl text-[var(--airi-fg)]`} />
+              <span className={`${entry.icon} mt-0.5 text-2xl text-[var(--aipets-fg)]`} />
 
               <span className="min-w-0 flex flex-col gap-1">
                 <span className="flex items-center gap-2">
                   <span className="font-medium">{t(entry.titleKey, { defaultValue: entry.id })}</span>
                   {!ready && (
-                    <span className="rounded-full bg-[var(--airi-hover)] px-2 py-0.5 text-[10px] text-[var(--airi-muted)]">
+                    <span className="rounded-full bg-[var(--aipets-hover)] px-2 py-0.5 text-[10px] text-[var(--aipets-muted)]">
                       {t('settings.reactShell.planned', { defaultValue: 'Planned' })}
                     </span>
                   )}
                 </span>
 
                 {entry.descriptionKey && (
-                  <span className="text-xs text-[var(--airi-muted)]">
+                  <span className="text-xs text-[var(--aipets-muted)]">
                     {t(entry.descriptionKey, { defaultValue: '' })}
                   </span>
                 )}

@@ -72,13 +72,13 @@ function readActiveProviders(): Record<string, string> {
 }
 
 const inputClass = [
-  'w-full rounded-xl border border-[var(--airi-border)] bg-transparent px-3 py-2 text-sm',
-  'outline-none focus:border-[var(--airi-fg)]',
+  'w-full rounded-xl border border-[var(--aipets-border)] bg-transparent px-3 py-2 text-sm',
+  'outline-none focus:border-[var(--aipets-fg)]',
 ].join(' ')
 
 const secondaryButtonClass = [
-  'rounded-full border border-[var(--airi-border)] px-4 py-1.5 text-xs',
-  'transition hover:bg-[var(--airi-hover)] disabled:opacity-40',
+  'rounded-full border border-[var(--aipets-border)] px-4 py-1.5 text-xs',
+  'transition hover:bg-[var(--aipets-hover)] disabled:opacity-40',
 ].join(' ')
 
 export function ProviderDetailPage() {
@@ -134,7 +134,7 @@ export function ProviderDetailPage() {
   if (!provider || !definition) {
     return (
       <section className="flex flex-col gap-4">
-        <p className="text-sm text-[var(--airi-muted)]">Provider not found.</p>
+        <p className="text-sm text-[var(--aipets-muted)]">Provider not found.</p>
         <Link to="/settings/providers" className="text-sm underline">Back to providers</Link>
       </section>
     )
@@ -206,16 +206,16 @@ export function ProviderDetailPage() {
   return (
     <section className="flex flex-col gap-5">
       <header className="flex flex-col gap-1">
-        <Link to="/settings/providers" className="text-xs text-[var(--airi-muted)] hover:underline">
+        <Link to="/settings/providers" className="text-xs text-[var(--aipets-muted)] hover:underline">
           {t('settings.reactShell.backToProviders', { defaultValue: 'Back to providers' })}
         </Link>
         <h1 className="text-2xl font-semibold">{definition.nameLocalize({ t: translate })}</h1>
-        <p className="text-sm text-[var(--airi-muted)]">
+        <p className="text-sm text-[var(--aipets-muted)]">
           {definition.descriptionLocalize({ t: translate })}
         </p>
       </header>
 
-      <div className="flex flex-col gap-4 border border-[var(--airi-border)] rounded-2xl bg-[var(--airi-card)] p-4">
+      <div className="flex flex-col gap-4 border border-[var(--aipets-border)] rounded-2xl bg-[var(--aipets-card)] p-4">
         {fields.map(({ key, meta }) => {
           const value = config[key]
           const label = localized(meta.labelLocalized) ?? key
@@ -251,7 +251,7 @@ export function ProviderDetailPage() {
                   ))}
                 </select>
                 {localized(meta.descriptionLocalized) && (
-                  <span className="text-xs text-[var(--airi-muted)]">{localized(meta.descriptionLocalized)}</span>
+                  <span className="text-xs text-[var(--aipets-muted)]">{localized(meta.descriptionLocalized)}</span>
                 )}
               </label>
             )
@@ -269,7 +269,7 @@ export function ProviderDetailPage() {
                 onChange={event => setField(key, event.target.value)}
               />
               {localized(meta.descriptionLocalized) && (
-                <span className="text-xs text-[var(--airi-muted)]">{localized(meta.descriptionLocalized)}</span>
+                <span className="text-xs text-[var(--aipets-muted)]">{localized(meta.descriptionLocalized)}</span>
               )}
             </label>
           )
@@ -283,12 +283,12 @@ export function ProviderDetailPage() {
       </div>
 
       {groups.includes('speech') && (
-        <div className="flex flex-col gap-3 border border-[var(--airi-border)] rounded-2xl bg-[var(--airi-card)] p-4">
+        <div className="flex flex-col gap-3 border border-[var(--aipets-border)] rounded-2xl bg-[var(--aipets-card)] p-4">
           <div>
             <h2 className="text-sm font-semibold">
               {t('settings.reactShell.voicePreview', { defaultValue: 'Voice preview' })}
             </h2>
-            <p className="text-xs text-[var(--airi-muted)]">
+            <p className="text-xs text-[var(--aipets-muted)]">
               {t('settings.reactShell.voicePreviewHint', {
                 defaultValue: 'Uses the values in this form. Save after the preview works.',
               })}
@@ -316,12 +316,12 @@ export function ProviderDetailPage() {
       )}
 
       {groups.length > 0 && (
-        <div className="flex flex-col gap-3 border border-[var(--airi-border)] rounded-2xl bg-[var(--airi-card)] p-4">
+        <div className="flex flex-col gap-3 border border-[var(--aipets-border)] rounded-2xl bg-[var(--aipets-card)] p-4">
           <div>
             <h2 className="text-sm font-semibold">
               {t('settings.reactShell.activeProvider', { defaultValue: 'Active provider' })}
             </h2>
-            <p className="text-xs text-[var(--airi-muted)]">
+            <p className="text-xs text-[var(--aipets-muted)]">
               {t('settings.reactShell.activeProviderHint', {
                 defaultValue: 'The chat and the speech pages use the active provider of their kind.',
               })}
@@ -350,7 +350,7 @@ export function ProviderDetailPage() {
         <button
           type="button"
           onClick={save}
-          className="rounded-full bg-[var(--airi-fg)] px-5 py-2 text-sm text-[var(--airi-bg)] font-medium"
+          className="rounded-full bg-[var(--aipets-fg)] px-5 py-2 text-sm text-[var(--aipets-bg)] font-medium"
         >
           {t('settings.reactShell.save', { defaultValue: 'Save' })}
         </button>

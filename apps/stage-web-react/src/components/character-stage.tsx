@@ -314,7 +314,7 @@ export function CharacterStage({ manifestUrl, pack, appearance, speechText, onRe
       {bubbleText && (
         <div
           aria-live="polite"
-          className="airi-stage-bubble"
+          className="aipets-stage-bubble"
           data-visible={bubbleVisible}
         >
           {bubbleText}

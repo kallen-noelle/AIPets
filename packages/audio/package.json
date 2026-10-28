@@ -41,14 +41,7 @@
     "typecheck": "tsc --noEmit",
     "test:run": "vitest run"
   },
-  "peerDependencies": {
-    "vue": ">=3"
-  },
-  "peerDependenciesMeta": {
-    "vue": {
-      "optional": true
-    }
-  },
+  "peerDependencies": {},
   "dependencies": {
     "@alexanderolsen/libsamplerate-js": "catalog:",
     "@moeru/std": "catalog:",
@@ -58,7 +51,6 @@
     "nanoid": "catalog:"
   },
   "devDependencies": {
-    "@types/audioworklet": "catalog:",
-    "vue": "catalog:"
+    "@types/audioworklet": "catalog:"
   }
 }

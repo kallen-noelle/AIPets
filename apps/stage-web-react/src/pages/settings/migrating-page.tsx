@@ -23,11 +23,11 @@ export function MigratingPage() {
         <h1 className="text-2xl font-semibold">{title}</h1>
       </header>
 
-      <div className="flex flex-col gap-2 border border-[var(--airi-border)] rounded-2xl bg-[var(--airi-card)] p-5">
+      <div className="flex flex-col gap-2 border border-[var(--aipets-border)] rounded-2xl bg-[var(--aipets-card)] p-5">
         <p className="text-sm font-medium">
           {t('settings.reactShell.migrating', { defaultValue: 'This page is moving to React' })}
         </p>
-        <p className="text-xs text-[var(--airi-muted)]">
+        <p className="text-xs text-[var(--aipets-muted)]">
           {t('settings.reactShell.migratingDescription', {
             defaultValue: 'The Vue version still serves this page until its React port lands.',
           })}

@@ -51,12 +51,12 @@ export function ModulesPage() {
         <h1 className="text-2xl font-semibold">
           {t('settings.pages.modules.title', { defaultValue: 'Modules' })}
         </h1>
-        <p className="text-sm text-[var(--airi-muted)]">
+        <p className="text-sm text-[var(--aipets-muted)]">
           {t('settings.pages.modules.description', { defaultValue: '' })}
         </p>
       </header>
 
-      <div className="flex gap-2 border-b border-[var(--airi-border)]">
+      <div className="flex gap-2 border-b border-[var(--aipets-border)]">
         {tabs.map(tab => (
           <button
             key={tab.category}
@@ -65,8 +65,8 @@ export function ModulesPage() {
             className={[
               'px-3 py-2 text-xs font-semibold tracking-wider uppercase transition',
               tab.category === activeTab.category
-                ? 'text-[var(--airi-fg)] border-b-2 border-[var(--airi-fg)]'
-                : 'text-[var(--airi-muted)] hover:text-[var(--airi-fg)]',
+                ? 'text-[var(--aipets-fg)] border-b-2 border-[var(--aipets-fg)]'
+                : 'text-[var(--aipets-muted)] hover:text-[var(--aipets-fg)]',
             ].join(' ')}
           >
             {t(`settings.pages.modules.categories.${tab.category}`, { defaultValue: tab.category })}
@@ -83,8 +83,8 @@ export function ModulesPage() {
               key={module.id}
               to={module.path}
               className={[
-                'flex items-start gap-3 rounded-2xl border border-[var(--airi-border)]',
-                'bg-[var(--airi-card)] p-4 transition hover:bg-[var(--airi-hover)]',
+                'flex items-start gap-3 rounded-2xl border border-[var(--aipets-border)]',
+                'bg-[var(--aipets-card)] p-4 transition hover:bg-[var(--aipets-hover)]',
               ].join(' ')}
             >
               <span className={`${module.icon} mt-0.5 text-2xl`} />
@@ -102,7 +102,7 @@ export function ModulesPage() {
                   )}
                 </span>
 
-                <span className="text-xs text-[var(--airi-muted)]">
+                <span className="text-xs text-[var(--aipets-muted)]">
                   {t(module.descriptionKey, { defaultValue: '' })}
                 </span>
               </span>

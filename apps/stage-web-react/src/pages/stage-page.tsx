@@ -52,6 +52,7 @@ import { characterPersonaKey } from '../chat/types'
 import { AnimationLogPanel } from '../components/animation-log-panel'
 import { CharacterStage } from '../components/character-stage'
 import { ChatPanel } from '../components/chat-panel'
+import { ConfigurationHint } from '../components/configuration-hint'
 import { DirectorMonitorPanel } from '../components/director-monitor-panel'
 import { isDesktop } from '../desktop/bridge'
 import { readStored, useStoredValue } from '../settings/persisted'
@@ -73,7 +74,7 @@ function withAppearanceOverride(
 
 const buttonClass = [
   'rounded-full px-4 py-2 text-sm font-medium transition',
-  'bg-[var(--airi-card)] text-[var(--airi-fg)] hover:bg-[var(--airi-hover)] active:scale-95',
+  'bg-[var(--aipets-card)] text-[var(--aipets-fg)] hover:bg-[var(--aipets-hover)] active:scale-95',
 ].join(' ')
 
 const debugButtonClass = [
@@ -758,8 +759,8 @@ export function StagePage() {
   return (
     <div
       className={[
-        'relative min-h-screen w-full text-[var(--airi-fg)]',
-        isDesktop() ? 'bg-transparent' : 'bg-[var(--airi-bg)]',
+        'relative min-h-screen w-full text-[var(--aipets-fg)]',
+        isDesktop() ? 'bg-transparent' : 'bg-[var(--aipets-bg)]',
       ].join(' ')}
     >
       {background && (
@@ -768,29 +769,31 @@ export function StagePage() {
             className="pointer-events-none absolute inset-0 bg-cover bg-center"
             style={{ backgroundImage: `url(${background})` }}
           />
-          <div className="pointer-events-none absolute inset-0 bg-[var(--airi-bg)]/60" />
+          <div className="pointer-events-none absolute inset-0 bg-[var(--aipets-bg)]/60" />
         </>
       )}
 
       <div className="relative mx-auto max-w-[1440px] flex flex-col gap-6 px-6 py-8 lg:h-screen">
         <header className="flex items-start justify-between gap-4">
           <div className="flex flex-col gap-1">
-            <p className="text-xs text-[var(--airi-muted)] tracking-[0.3em] uppercase">aipets</p>
+            <p className="text-xs text-[var(--aipets-muted)] tracking-[0.3em] uppercase">aipets</p>
             <h1 className="text-2xl font-semibold">aipets Stage</h1>
-            <p className="text-sm text-[var(--airi-muted)]">{packLabel}</p>
+            <p className="text-sm text-[var(--aipets-muted)]">{packLabel}</p>
           </div>
 
           <Link
             to="/settings"
             className={[
               'inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm',
-              'bg-[var(--airi-card)] text-[var(--airi-fg)] hover:bg-[var(--airi-hover)]',
+              'bg-[var(--aipets-card)] text-[var(--aipets-fg)] hover:bg-[var(--aipets-hover)]',
             ].join(' ')}
           >
             <span className="i-solar:settings-bold-duotone" />
             {t('settings.reactShell.openSettings', { defaultValue: 'Settings' })}
           </Link>
         </header>
+
+        <ConfigurationHint />
 
         <div className="min-h-0 flex flex-1 flex-col gap-6 lg:flex-row">
           <main className="flex flex-1 flex-col items-center justify-center gap-6">
@@ -808,8 +811,8 @@ export function StagePage() {
                       className={[
                         'rounded-full border px-4 py-1.5 text-xs transition',
                         active
-                          ? 'bg-[var(--airi-card)]'
-                          : 'border-[var(--airi-border)] bg-[var(--airi-card)] text-[var(--airi-fg)] hover:bg-[var(--airi-hover)]',
+                          ? 'bg-[var(--aipets-card)]'
+                          : 'border-[var(--aipets-border)] bg-[var(--aipets-card)] text-[var(--aipets-fg)] hover:bg-[var(--aipets-hover)]',
                       ].join(' ')}
                     >
                       {character.name}
@@ -822,7 +825,7 @@ export function StagePage() {
             <div className="relative w-full flex items-center justify-center">
               {!characterEnabled
                 ? (
-                    <p className="max-w-md text-center text-sm text-[var(--airi-muted)]">
+                    <p className="max-w-md text-center text-sm text-[var(--aipets-muted)]">
                       {t('settings.reactShell.stageCharacterHidden', {
                         defaultValue: 'The character is hidden. Enable it on the Card settings page.',
                       })}
@@ -870,20 +873,20 @@ export function StagePage() {
                         />
                       )}
 
-              {beatRunning && beats > 0 && <div key={beats} className="airi-beat-ring" />}
+              {beatRunning && beats > 0 && <div key={beats} className="aipets-beat-ring" />}
             </div>
 
             {error
               ? <p className="max-w-md text-center text-sm text-rose-400">{error}</p>
               : (
-                  <p className="text-xs text-[var(--airi-muted)]">
+                  <p className="text-xs text-[var(--aipets-muted)]">
                     chain
                     {' '}
-                    <span className="text-[var(--airi-fg)]">{snapshot.base}</span>
+                    <span className="text-[var(--aipets-fg)]">{snapshot.base}</span>
                     {' · '}
                     clip
                     {' '}
-                    <span className="text-[var(--airi-fg)]">{snapshot.clipId ?? 'none'}</span>
+                    <span className="text-[var(--aipets-fg)]">{snapshot.clipId ?? 'none'}</span>
                   </p>
                 )}
 
@@ -906,7 +909,7 @@ export function StagePage() {
               </button>
             </div>
 
-            <div className="flex flex-wrap items-center justify-center gap-2 text-xs text-[var(--airi-muted)]">
+            <div className="flex flex-wrap items-center justify-center gap-2 text-xs text-[var(--aipets-muted)]">
               <span className="tracking-[0.2em] uppercase">
                 {t('settings.reactShell.beatSyncStageTitle', { defaultValue: 'Beat sync' })}
               </span>
@@ -967,21 +970,21 @@ export function StagePage() {
 
             <details className={[
               'w-full max-w-xl rounded-2xl border p-4 text-sm',
-              'border-[var(--airi-border)] bg-[var(--airi-card)]/80',
+              'border-[var(--aipets-border)] bg-[var(--aipets-card)]/80',
             ].join(' ')}
             >
-              <summary className="cursor-pointer text-[var(--airi-muted)]">
+              <summary className="cursor-pointer text-[var(--aipets-muted)]">
                 Animation plan debug
                 {' · '}
                 {catalog ? `${catalog.clips.length} semantic clips` : 'no catalog'}
               </summary>
 
               <div className="mt-3 flex flex-col gap-3">
-                <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-[var(--airi-muted)]">
+                <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-[var(--aipets-muted)]">
                   <span>
                     mood
                     {' '}
-                    <span className="text-[var(--airi-fg)]">{affect.state?.label ?? 'none'}</span>
+                    <span className="text-[var(--aipets-fg)]">{affect.state?.label ?? 'none'}</span>
                   </span>
                   <span>
                     v
@@ -1015,7 +1018,7 @@ export function StagePage() {
                 <textarea
                   className={[
                     'min-h-40 w-full resize-y rounded-xl border p-3 font-mono text-xs',
-                    'border-[var(--airi-border)] bg-[var(--airi-bg)] text-[var(--airi-fg)]',
+                    'border-[var(--aipets-border)] bg-[var(--aipets-bg)] text-[var(--aipets-fg)]',
                   ].join(' ')}
                   value={planText}
                   onChange={event => setPlanText(event.target.value)}
@@ -1035,14 +1038,14 @@ export function StagePage() {
 
                 <div className="flex flex-wrap items-center gap-2">
                   <input
-                    className="w-36 border border-[var(--airi-border)] rounded-xl bg-[var(--airi-bg)] px-3 py-2 text-xs text-[var(--airi-fg)] font-mono"
+                    className="w-36 border border-[var(--aipets-border)] rounded-xl bg-[var(--aipets-bg)] px-3 py-2 text-xs text-[var(--aipets-fg)] font-mono"
                     value={longActionName}
                     onChange={event => setLongActionName(event.target.value)}
                     placeholder="Long action name"
                     spellCheck={false}
                   />
                   <input
-                    className="w-24 border border-[var(--airi-border)] rounded-xl bg-[var(--airi-bg)] px-3 py-2 text-xs text-[var(--airi-fg)] font-mono"
+                    className="w-24 border border-[var(--aipets-border)] rounded-xl bg-[var(--aipets-bg)] px-3 py-2 text-xs text-[var(--aipets-fg)] font-mono"
                     value={longActionDurationMs}
                     onChange={event => setLongActionDurationMs(event.target.value)}
                     inputMode="numeric"
@@ -1070,7 +1073,7 @@ export function StagePage() {
           </main>
 
           <aside className={[
-            'h-[70vh] w-full shrink-0 overflow-hidden rounded-2xl border border-[var(--airi-border)]',
+            'h-[70vh] w-full shrink-0 overflow-hidden rounded-2xl border border-[var(--aipets-border)]',
             'lg:h-auto lg:w-[400px]',
           ].join(' ')}
           >

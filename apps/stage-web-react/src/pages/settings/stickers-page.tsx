@@ -84,7 +84,7 @@ export function StickersPage() {
 
         <button
           type="button"
-          className="self-start border border-[var(--airi-border)] rounded-xl px-3 py-1.5 text-xs transition hover:bg-[var(--airi-hover)]"
+          className="self-start border border-[var(--aipets-border)] rounded-xl px-3 py-1.5 text-xs transition hover:bg-[var(--aipets-hover)]"
           onClick={() => inputRef.current?.click()}
         >
           <span className="i-solar:add-circle-bold-duotone" />
@@ -96,7 +96,7 @@ export function StickersPage() {
 
         {stickers.length === 0
           ? (
-              <p className="text-xs text-[var(--airi-muted)]">
+              <p className="text-xs text-[var(--aipets-muted)]">
                 {t('settings.reactShell.stickersEmpty', { defaultValue: 'No stickers yet.' })}
               </p>
             )
@@ -107,11 +107,11 @@ export function StickersPage() {
                     <img
                       src={sticker.dataUrl}
                       alt={sticker.name}
-                      className="aspect-square w-full border border-[var(--airi-border)] rounded-lg object-contain"
+                      className="aspect-square w-full border border-[var(--aipets-border)] rounded-lg object-contain"
                     />
                     <button
                       type="button"
-                      className="text-xs text-[var(--airi-muted)] hover:text-rose-400"
+                      className="text-xs text-[var(--aipets-muted)] hover:text-rose-400"
                       onClick={() => removeSticker(sticker.id)}
                     >
                       {t('settings.reactShell.deleteEntry', { defaultValue: 'Delete' })}
@@ -121,7 +121,7 @@ export function StickersPage() {
               </ul>
             )}
 
-        <p className="text-xs text-[var(--airi-muted)]">
+        <p className="text-xs text-[var(--aipets-muted)]">
           {t('settings.pages.modules.stickers.local-only', {
             defaultValue: 'Images stay on this device. Cloud chat sync transfers text only.',
           })}

@@ -6,7 +6,6 @@ const sharedConfig: UserConfig = {
   format: 'esm',
   external: [
     'electron',
-    'vue',
   ],
   exports: true,
 }
@@ -33,7 +32,6 @@ export default defineConfig([
     unbundle: true,
     platform: 'browser',
     entry: {
-      vue: 'src/vue/index.ts',
       renderer: 'src/renderer.ts',
     },
     inlineOnly: false,

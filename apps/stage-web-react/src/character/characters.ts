@@ -59,11 +59,11 @@ interface CharacterInput {
   clipCount?: number
 }
 
-export const activeCharacterKey = 'airi:react:character/active'
+export const activeCharacterKey = 'aipets:react:character/active'
 /** Appearance fields the card page overrides on top of the character folder. */
-export const characterAppearanceOverrideKey = 'airi:react:character/appearance-override'
+export const characterAppearanceOverrideKey = 'aipets:react:character/appearance-override'
 /** Whether the stage shows the character. */
-export const characterEnabledKey = 'airi:react:character/enabled'
+export const characterEnabledKey = 'aipets:react:character/enabled'
 
 export type CharacterAppearanceOverride = Partial<CharacterAppearance>
 

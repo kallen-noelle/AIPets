@@ -91,7 +91,7 @@ export function CharactersPage() {
         {loadError && <p className="text-xs text-rose-400">{loadError}</p>}
 
         {!loadError && !characters.length && (
-          <p className="text-xs text-[var(--airi-muted)]">
+          <p className="text-xs text-[var(--aipets-muted)]">
             {t('settings.reactShell.noCharacters', { defaultValue: 'No characters found.' })}
           </p>
         )}
@@ -109,15 +109,15 @@ export function CharactersPage() {
                 className={[
                   'flex flex-col gap-2 rounded-2xl border p-3 text-left transition',
                   isActive
-                    ? 'border-[var(--airi-fg)] bg-[var(--airi-hover)]'
-                    : 'border-[var(--airi-border)] hover:bg-[var(--airi-hover)]',
+                    ? 'border-[var(--aipets-fg)] bg-[var(--aipets-hover)]'
+                    : 'border-[var(--aipets-border)] hover:bg-[var(--aipets-hover)]',
                 ].join(' ')}
               >
                 {preview
-                  ? <img src={preview} alt="" className="h-28 w-full rounded-xl bg-[var(--airi-card)] object-contain" />
-                  : <div className="h-28 w-full rounded-xl bg-[var(--airi-card)]" />}
+                  ? <img src={preview} alt="" className="h-28 w-full rounded-xl bg-[var(--aipets-card)] object-contain" />
+                  : <div className="h-28 w-full rounded-xl bg-[var(--aipets-card)]" />}
                 <span className="text-sm font-medium">{character.name}</span>
-                <span className="text-xs text-[var(--airi-muted)]">
+                <span className="text-xs text-[var(--aipets-muted)]">
                   {character.role || character.id}
                   {' · '}
                   {t('settings.reactShell.clipCount', {
@@ -183,7 +183,7 @@ export function CharactersPage() {
 
           <button
             type="button"
-            className="self-start text-xs text-[var(--airi-muted)] hover:text-rose-400"
+            className="self-start text-xs text-[var(--aipets-muted)] hover:text-rose-400"
             onClick={() => setOverride({})}
           >
             {t('settings.reactShell.resetAppearance', { defaultValue: 'Reset appearance' })}

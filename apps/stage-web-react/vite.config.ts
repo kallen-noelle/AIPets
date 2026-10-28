@@ -58,6 +58,9 @@ function characterAssets(): Plugin {
 }
 
 export default defineConfig({
+  // Relative asset URLs let the packaged Electron app load `dist/index.html`
+  // over `file://`.
+  base: './',
   plugins: [
     react(),
     UnoCSS(),

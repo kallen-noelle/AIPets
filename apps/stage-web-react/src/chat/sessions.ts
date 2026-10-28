@@ -8,9 +8,9 @@ export interface ChatSession {
   messages: ChatMessage[]
 }
 
-export const chatSessionsKey = 'airi:react:chat/sessions'
-export const chatActiveSessionKey = 'airi:react:chat/active-session'
-const legacyMessagesKey = 'airi:react:chat/messages'
+export const chatSessionsKey = 'aipets:react:chat/sessions'
+export const chatActiveSessionKey = 'aipets:react:chat/active-session'
+const legacyMessagesKey = 'aipets:react:chat/messages'
 
 export function createSession(): ChatSession {
   const now = Date.now()

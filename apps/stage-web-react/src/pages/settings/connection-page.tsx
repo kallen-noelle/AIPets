@@ -6,18 +6,18 @@ import { useStoredValue } from '../../settings/persisted'
 export const websocketUrlKey = 'settings/connection/websocket-url'
 export const websocketTokenKey = 'settings/connection/websocket-auth-token'
 
-const defaultWebSocketUrl = import.meta.env.VITE_AIRI_WS_URL || 'ws://localhost:6121/ws'
+const defaultWebSocketUrl = import.meta.env.VITE_AIPETS_WS_URL || 'ws://localhost:6121/ws'
 
 type CheckStatus = 'idle' | 'checking' | 'connected' | 'failed'
 
 const fieldClass = [
-  'w-full rounded-xl border border-[var(--airi-border)] bg-transparent px-3 py-2 text-sm',
-  'outline-none focus:border-[var(--airi-fg)]',
+  'w-full rounded-xl border border-[var(--aipets-border)] bg-transparent px-3 py-2 text-sm',
+  'outline-none focus:border-[var(--aipets-fg)]',
 ].join(' ')
 
 const buttonClass = [
-  'rounded-full border border-[var(--airi-border)] px-4 py-1.5 text-xs transition',
-  'hover:bg-[var(--airi-hover)] disabled:opacity-40',
+  'rounded-full border border-[var(--aipets-border)] px-4 py-1.5 text-xs transition',
+  'hover:bg-[var(--aipets-hover)] disabled:opacity-40',
 ].join(' ')
 
 export function ConnectionPage() {
@@ -84,14 +84,14 @@ export function ConnectionPage() {
         <h1 className="text-2xl font-semibold">
           {t('settings.pages.connection.title', { defaultValue: 'Connection' })}
         </h1>
-        <p className="text-sm text-[var(--airi-muted)]">
+        <p className="text-sm text-[var(--aipets-muted)]">
           {t('settings.reactShell.connectionDescription', {
             defaultValue: 'The WebSocket server that relays events between modules.',
           })}
         </p>
       </header>
 
-      <div className="flex flex-col gap-4 border border-[var(--airi-border)] rounded-2xl bg-[var(--airi-card)] p-4">
+      <div className="flex flex-col gap-4 border border-[var(--aipets-border)] rounded-2xl bg-[var(--aipets-card)] p-4">
         <label className="flex flex-col gap-1 text-sm">
           <span>{t('settings.reactShell.connectionUrl', { defaultValue: 'Server address' })}</span>
           <input
@@ -100,7 +100,7 @@ export function ConnectionPage() {
             placeholder={defaultWebSocketUrl}
             onChange={event => setUrl(event.target.value)}
           />
-          <span className="text-xs text-[var(--airi-muted)]">
+          <span className="text-xs text-[var(--aipets-muted)]">
             {t('settings.reactShell.connectionUrlHint', {
               defaultValue: 'Use ws:// or wss://. The default is ws://localhost:6121/ws.',
             })}
@@ -128,7 +128,7 @@ export function ConnectionPage() {
               ? 'text-emerald-400'
               : status === 'failed'
                 ? 'text-rose-400'
-                : 'text-[var(--airi-muted)]',
+                : 'text-[var(--aipets-muted)]',
           ].join(' ')}
           >
             {labels[status]}

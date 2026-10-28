@@ -35,7 +35,7 @@ export function MemoryShortTermPage() {
             type="number"
             min={2}
             max={50}
-            className="w-28 border border-[var(--airi-border)] rounded-xl bg-transparent px-3 py-2 text-sm"
+            className="w-28 border border-[var(--aipets-border)] rounded-xl bg-transparent px-3 py-2 text-sm"
             value={windowSize}
             disabled={!enabled}
             onChange={event => changeWindow(event.target.value)}

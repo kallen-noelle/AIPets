@@ -43,7 +43,7 @@
 | 能力 | 状态 | 说明 |
 | --- | --- | --- |
 | 网页端 | 保留 | `apps/stage-web-react`。React、Vite、UnoCSS。 |
-| 桌面端 | 接入 | `apps/stage-tamagotchi` Electron 外壳。 |
+| 桌面端 | 接入 | `apps/stage-web-react` 的 `electron/` 外壳，用 electron-builder 打包。 |
 | 移动端 | 已移除 | `apps/stage-pocket` 已删除。 |
 | 大脑：聊天渠道 | 裁剪 | 不做 Telegram、Discord、X，对应包已删除。保留 Satori 适配器 `integrations/satori-bot`。 |
 | 大脑：记忆 | 接入 | 纯浏览器 DuckDB WASM 与 `pglite`，以及 Alaya 记忆层。 |
@@ -59,9 +59,8 @@
 | 输入设备 | 接入 | 手柄与 DualSense 驱动。 |
 | 桌面原生 | 接入 | 原生窗口与屏幕捕获能力。 |
 | 国际化 | 裁剪 | 只保留中文与英文。 |
-| 登录与账号 | 待定 | 尚未决定。 |
-| `apps/component-calling` | 保留不接入 | 实验应用留在仓库里，没有任何代码引用它。 |
-| `apps/ui-server-auth` | 待定 | 取决于登录与账号的决定。 |
+| 登录与账号 | 已移除 | `apps/ui-server-auth` 已删除。 |
+| `apps/component-calling` | 已移除 | 实验应用已删除。 |
 | 包作用域 | 保留 | npm 包保持 `@proj-airi/*`，只改项目名。 |
 
 ## 架构
@@ -70,12 +69,11 @@
 flowchart LR
   subgraph Apps[Stage applications]
     Web[stage-web-react]
-    Desktop[stage-tamagotchi]
+    Desktop[stage-web-react electron]
   end
 
   subgraph Shared[Shared product packages]
     Animation[character-animation]
-    StageUI[stage-ui]
     Audio[pipelines-audio]
     SDK[server-sdk\nserver-shared]
   end
@@ -93,11 +91,10 @@ flowchart LR
   end
 
   Web --> Animation
-  Web --> StageUI
+  Web --> Audio
   Desktop --> Animation
-  Desktop --> StageUI
-  StageUI --> Audio
-  StageUI --> SDK
+  Desktop --> Audio
+  Web --> SDK
   Desktop --> Runtime
   SDK <-->|server channel| Runtime
   Edge --> API
@@ -138,8 +135,17 @@ pnpm dev:web
 ### 桌面端
 
 ```shell
-pnpm dev:tamagotchi
+pnpm -F @proj-airi/stage-web-react dev       # 启动 Vite 开发服务器
+pnpm -F @proj-airi/stage-web-react electron  # 在开发服务器上打开 Electron 窗口
 ```
+
+构建 Windows 安装包：
+
+```shell
+pnpm -F @proj-airi/stage-web-react electron:dist
+```
+
+安装包写入 `apps/stage-web-react/release/`，该目录不入库。
 
 ### 后端
 
