@@ -2452,6 +2452,48 @@ reactShell:
   theme: 主题
   themeDark: 深色
   themeLight: 浅色
+  desktopTitle: 桌面
+  desktopDescription: 桌面端的窗口、电源、屏幕与音频控制。
+  desktopBrowserHint: 这些功能需要桌面应用。当前页面运行在浏览器标签中。
+  windowTray: 窗口与托盘
+  closeToTray: 关闭到托盘
+  closeToTrayHint: 关闭窗口后宠物仍留在托盘运行。
+  quitHint: 使用托盘菜单中的退出结束程序。
+  powerTitle: 电池与电源
+  batteryLevel: 电量
+  batteryCharging: 充电中
+  batteryDischarging: 使用电池
+  batteryUnsupported: 当前浏览器无法读取电池状态。
+  acPower: 电源
+  acPowerLine: 交流电源
+  idleState: 空闲状态
+  lastPowerEvent: 最近电源事件
+  screenTitle: 屏幕捕捉
+  screenHint: 捕捉主屏幕。Windows 下系统音频会随视频一起提供。
+  primaryDisplay: 主屏
+  startCapture: 开始捕捉
+  stopCapture: 停止捕捉
+  captureWithAudio: 屏幕与系统音频已开启。
+  captureWithoutAudio: 屏幕已开启，但没有系统音频。
+  captureFailed: '屏幕捕捉失败：{message}'
+  audioTitle: 音频设备
+  audioHint: 麦克风用于录制语音。系统音频来自屏幕捕捉。
+  microphone: 麦克风
+  speaker: 扬声器
+  systemDefault: 系统默认
+  noDevices: 未找到音频设备。允许麦克风权限后可看到设备名称。
+  refreshDevices: 刷新设备
+  pluginsTitle: 插件
+  pluginsDescription: 安装本地插件文件夹，启用后打开插件窗口。
+  installPlugin: 安装文件夹
+  noPlugins: 还没有安装插件。
+  enablePlugin: 启用
+  disablePlugin: 禁用
+  removePlugin: 移除
+  pluginEnabled: 已启用
+  pluginDisabled: 已禁用
+  pluginBindings: 游戏窗
+  pluginLogs: 日志
   migrating: 该页面正在迁移到 React
   migratingDescription: 在 React 版本完成之前，Vue 版本仍提供该页面。
   planned: 待迁移
@@ -2705,3 +2747,57 @@ reactShell:
   beatSyncFile: 音频文件
   beatSyncStop: 停止
   beatSyncMeter: '{beats} 拍 · {bpm} BPM'
+  windowsTitle: 窗口
+  windowsHint: 宠物、设置和小组件是独立窗口，每个窗口各自记住位置。
+  openWidgetWindow: 打开小组件窗口
+  openSettingsWindow: 打开设置窗口
+  closeWindow: 关闭
+  windowFullscreen: 全屏
+  windowFocused: 已聚焦
+  windowOpen: 已打开
+  petAlwaysOnTop: 置顶
+  focusWindow: 聚焦
+  exitFullscreen: 退出全屏
+  toggleFullscreen: 全屏
+  audioPipelineTitle: 音频管线
+  audioPipelineHint: 回声消除避免宠物听到自己的声音。语音检测会报告你何时说话。
+  echoCancellation: 回声消除
+  echoCancellationHint: 从麦克风输入中移除扬声器输出。
+  noiseSuppression: 噪声抑制
+  autoGainControl: 自动增益
+  monitorMic: 开始语音检测
+  stopMonitor: 停止检测
+  voiceDetected: 检测到语音
+  voiceSilent: 静音
+  microphoneFailed: '麦克风失败：{message}'
+  assetCacheTitle: 本地资产存储
+  assetCacheHint: URL 动画包的片段会保存在本机。下次启动从本地读取，断网也能使用。
+  assetCacheEntries: 已缓存文件
+  refreshCache: 刷新
+  clearAssetCache: 清除缓存
+  widgetTitle: aipets 小组件
+  hidePet: 隐藏宠物
+  showPet: 显示宠物
+  animationDirectorModel: 导演模型
+  animationDirectorModelPlaceholder: 留空则使用聊天模型
+  animationDirectorProviderHint: 使用当前聊天提供商。导演调用失败或超时不会阻塞回复。
+  charactersDescription: 选择舞台显示的角色，并调整其外观。
+  characterStage: 舞台
+  characterStageDescription: 关闭此开关后，舞台会隐藏角色。
+  showCharacter: 显示角色
+  characterList: 角色列表
+  characterListDescription: 角色从生成的资产索引加载。
+  noCharacters: 未找到角色。
+  clipCount: '{count} 段动作'
+  appearance: 外观
+  appearanceDescription: 这些值会覆盖角色文件夹中的外观。
+  scale: 缩放
+  offsetX: 水平偏移
+  offsetY: 垂直偏移
+  fade: 淡入淡出（毫秒）
+  mirror: 镜像
+  clickEnabled: 响应点击
+  resetAppearance: 重置外观
+  builtinCharacters: 内置角色
+  importedPacks: 导入的动画包
+  providerGroup: 提供商分组

@@ -92,6 +92,22 @@ export const settingsEntries: SettingsEntry[] = [
     status: 'ready',
   },
   {
+    id: 'desktop',
+    path: '/settings/desktop',
+    titleKey: 'settings.reactShell.desktopTitle',
+    descriptionKey: 'settings.reactShell.desktopDescription',
+    icon: 'i-solar:monitor-bold-duotone',
+    status: 'ready',
+  },
+  {
+    id: 'plugins',
+    path: '/settings/plugins',
+    titleKey: 'settings.reactShell.pluginsTitle',
+    descriptionKey: 'settings.reactShell.pluginsDescription',
+    icon: 'i-solar:plug-circle-bold-duotone',
+    status: 'ready',
+  },
+  {
     id: 'system',
     path: '/settings/system',
     titleKey: 'settings.pages.system.title',

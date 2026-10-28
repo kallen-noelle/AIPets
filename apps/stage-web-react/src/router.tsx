@@ -10,6 +10,7 @@ import { CharactersPage } from './pages/settings/characters-page'
 import { ConnectionPage } from './pages/settings/connection-page'
 import { ConsciousnessPage } from './pages/settings/consciousness-page'
 import { DataPage } from './pages/settings/data-page'
+import { DesktopPage } from './pages/settings/desktop-page'
 import { HearingPage } from './pages/settings/hearing-page'
 import { HomeAssistantPage } from './pages/settings/home-assistant-page'
 import { McpPage } from './pages/settings/mcp-page'
@@ -19,6 +20,7 @@ import { MemoryShortTermPage } from './pages/settings/memory-short-term-page'
 import { MigratingPage } from './pages/settings/migrating-page'
 import { ModelsPage } from './pages/settings/models-page'
 import { ModulesPage } from './pages/settings/modules-page'
+import { PluginsPage } from './pages/settings/plugins-page'
 import { ProviderDetailPage } from './pages/settings/provider-detail-page'
 import { ProvidersPage } from './pages/settings/providers-page'
 import { ScenePage } from './pages/settings/scene-page'
@@ -31,6 +33,7 @@ import { ToolCardsPage } from './pages/settings/tool-cards-page'
 import { VisionPage } from './pages/settings/vision-page'
 import { WebSearchPage } from './pages/settings/web-search-page'
 import { StagePage } from './pages/stage-page'
+import { WidgetPage } from './pages/widget-page'
 
 export const router = createHashRouter([
   {
@@ -40,6 +43,11 @@ export const router = createHashRouter([
   {
     path: '/chat',
     element: <ChatPage />,
+  },
+  // The small always-on-top window of the desktop app.
+  {
+    path: '/widget',
+    element: <WidgetPage />,
   },
   // Routes the Vue app serves today. The React pages for them are pending.
   { path: '/onboarding', element: <PendingPage title="onboarding" /> },
@@ -57,6 +65,8 @@ export const router = createHashRouter([
       { index: true, element: <SettingsIndex /> },
       { path: 'system', element: <SystemPage /> },
       { path: 'system/developer', element: <PendingPage title="developer" /> },
+      { path: 'desktop', element: <DesktopPage /> },
+      { path: 'plugins', element: <PluginsPage /> },
       { path: 'characters', element: <CharactersPage /> },
       { path: 'card', element: <CardPage /> },
       { path: 'memory', element: <MemoryPage /> },

@@ -775,8 +775,8 @@ export function StagePage() {
       <div className="relative mx-auto max-w-[1440px] flex flex-col gap-6 px-6 py-8 lg:h-screen">
         <header className="flex items-start justify-between gap-4">
           <div className="flex flex-col gap-1">
-            <p className="text-xs text-[var(--airi-muted)] tracking-[0.3em] uppercase">aipetdex</p>
-            <h1 className="text-2xl font-semibold">aipetdex Stage</h1>
+            <p className="text-xs text-[var(--airi-muted)] tracking-[0.3em] uppercase">aipets</p>
+            <h1 className="text-2xl font-semibold">aipets Stage</h1>
             <p className="text-sm text-[var(--airi-muted)]">{packLabel}</p>
           </div>
 

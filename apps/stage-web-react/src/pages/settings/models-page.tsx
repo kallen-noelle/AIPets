@@ -1,3 +1,4 @@
+import type { AssetCacheStats } from '../../animation/asset-cache'
 import type { PackMeta } from '../../animation/zip-pack'
 import type { BuiltinCharacter } from '../../character/characters'
 
@@ -5,6 +6,7 @@ import { errorMessageFrom } from '@moeru/std'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import { clearAssetCache, readAssetCacheStats } from '../../animation/asset-cache'
 import {
   getActivePackId,
   importPack,
@@ -36,6 +38,8 @@ export function ModelsPage() {
   const [activeCharacterId, setActiveCharacterId] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [importing, setImporting] = useState(false)
+  const [cache, setCache] = useState<AssetCacheStats | null>(null)
+  const [cacheBusy, setCacheBusy] = useState(false)
 
   const refresh = useCallback(() => {
     setPacks(listPackMeta())
@@ -47,6 +51,11 @@ export function ModelsPage() {
     refresh()
 
     let disposed = false
+
+    void readAssetCacheStats().then((stats) => {
+      if (!disposed)
+        setCache(stats)
+    })
 
     void loadBuiltinCharacters()
       .then((next) => {
@@ -111,6 +120,19 @@ export function ModelsPage() {
   const remove = async (id: string) => {
     await removePack(id)
     refresh()
+  }
+
+  const refreshCache = async () => {
+    setCacheBusy(true)
+    setCache(await readAssetCacheStats())
+    setCacheBusy(false)
+  }
+
+  const clearCache = async () => {
+    setCacheBusy(true)
+    await clearAssetCache()
+    setCache(await readAssetCacheStats())
+    setCacheBusy(false)
   }
 
   return (
@@ -291,6 +313,37 @@ export function ModelsPage() {
               })}
             </div>
           )}
+
+      <section className="flex flex-col gap-3 border border-[var(--airi-border)] rounded-2xl bg-[var(--airi-card)] p-4">
+        <div className="flex flex-col gap-1">
+          <h2 className="text-sm font-medium">
+            {t('settings.reactShell.assetCacheTitle', { defaultValue: 'Local asset storage' })}
+          </h2>
+          <p className="text-xs text-[var(--airi-muted)]">
+            {t('settings.reactShell.assetCacheHint', {
+              defaultValue: 'Clips of a pack served by a URL are kept on this device. The next start reads them from disk, and the pack works offline.',
+            })}
+          </p>
+        </div>
+
+        <p className="text-xs text-[var(--airi-muted)]">
+          {t('settings.reactShell.assetCacheEntries', { defaultValue: 'Cached files' })}
+          {': '}
+          {cache?.entries ?? 0}
+          {' · '}
+          {((cache?.bytes ?? 0) / 1024 / 1024).toFixed(1)}
+          {' MB'}
+        </p>
+
+        <div className="flex flex-wrap gap-2">
+          <button type="button" className={buttonClass} disabled={cacheBusy} onClick={() => void refreshCache()}>
+            {t('settings.reactShell.refreshCache', { defaultValue: 'Refresh' })}
+          </button>
+          <button type="button" className={buttonClass} disabled={cacheBusy} onClick={() => void clearCache()}>
+            {t('settings.reactShell.clearAssetCache', { defaultValue: 'Clear cache' })}
+          </button>
+        </div>
+      </section>
     </section>
   )
 }

@@ -1,6 +1,7 @@
 import type { AnimationCommand, AnimationEvent, CharacterCatalog, ClickArea, LoadedPack } from '@proj-airi/character-animation'
 import type { MouseEvent } from 'react'
 
+import type { LocalAnimationPack } from '../animation/pack'
 import type { VideoSlot } from '../animation/video-player'
 import type { LoadedZipPack } from '../animation/zip-pack'
 import type { CharacterAppearance } from '../character/characters'
@@ -52,6 +53,7 @@ export function CharacterStage({ manifestUrl, pack, appearance, speechText, onRe
   const stageRef = useRef<HTMLDivElement>(null)
   const controllerRef = useRef<AnimationController | null>(null)
   const playerRef = useRef<CrossfadeVideoPlayer | null>(null)
+  const remotePackRef = useRef<LocalAnimationPack | null>(null)
   const resolveRef = useRef<(src: string) => string>(src => src)
   const onClipEndedRef = useRef(onClipEnded)
   const drag = useDragPhysics(stageRef)
@@ -205,9 +207,12 @@ export function CharacterStage({ manifestUrl, pack, appearance, speechText, onRe
     else if (manifestUrl) {
       void loadAnimationPackFromUrl(manifestUrl)
         .then((loaded) => {
-          if (cancelled)
+          if (cancelled) {
+            loaded.dispose()
             return
+          }
 
+          remotePackRef.current = loaded
           start(loaded.pack, loaded.resolve, loaded.catalog)
         })
         .catch((error: unknown) => {
@@ -227,6 +232,8 @@ export function CharacterStage({ manifestUrl, pack, appearance, speechText, onRe
       playerRef.current = null
       controllerRef.current?.dispose()
       controllerRef.current = null
+      remotePackRef.current?.dispose()
+      remotePackRef.current = null
     }
   }, [manifestUrl, pack, onReady, onError])
 

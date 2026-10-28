@@ -1,5 +1,7 @@
 import { useCallback, useEffect, useState } from 'react'
 
+import { onDesktopMessage, postDesktopMessage } from '../desktop/channel'
+
 /**
  * Reads a value that Vue `useLocalStorage` may have written.
  *
@@ -24,6 +26,9 @@ export function readStored<T>(key: string, fallback: T): T {
 export function writeStored<T>(key: string, value: T) {
   localStorage.setItem(key, typeof value === 'string' ? value : JSON.stringify(value))
   notifyStored(key)
+  // Electron keeps one localStorage per origin, but a write here must also
+  // reach the other windows of the desktop app without a main-process trip.
+  postDesktopMessage({ type: 'settings-changed', key, value })
 }
 
 const storedListeners = new Map<string, Set<() => void>>()
@@ -69,11 +74,16 @@ export function useStoredValue<T>(key: string, fallback: T) {
     }
 
     const unsubscribe = subscribeStored(key, () => setValue(readStored(key, fallback)))
+    const unsubscribeChannel = onDesktopMessage((message) => {
+      if (message.type === 'settings-changed' && message.key === key)
+        setValue(readStored(key, fallback))
+    })
 
     window.addEventListener('storage', onStorage)
     return () => {
       window.removeEventListener('storage', onStorage)
       unsubscribe()
+      unsubscribeChannel()
     }
   }, [key, fallback])
 

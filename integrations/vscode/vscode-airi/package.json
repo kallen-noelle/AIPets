@@ -1,6 +1,6 @@
 {
   "publisher": "proj-airi",
-  "name": "vscode-airi",
+  "name": "airi-vscode",
   "displayName": "AIRI VSCode adapter",
   "type": "module",
   "version": "0.12.0",

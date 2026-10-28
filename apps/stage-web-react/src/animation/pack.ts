@@ -2,6 +2,8 @@ import type { CharacterCatalog, LoadedPack, PackSummary } from '@proj-airi/chara
 
 import { parseAnimationManifest, parseCharacterCatalog } from '@proj-airi/character-animation'
 
+import { prefetchAssets, readCachedAsset } from './asset-cache'
+
 export interface LocalAnimationPack {
   pack: LoadedPack
   /** Optional semantic catalog used by AI direction and explicit clip plans. */
@@ -9,6 +11,8 @@ export interface LocalAnimationPack {
   summary: PackSummary
   /** Turns a manifest-relative clip path into a URL the browser can load. */
   resolve: (src: string) => string
+  /** Releases the blob URLs that came from the local asset cache. */
+  dispose: () => void
 }
 
 async function loadCatalog(base: URL): Promise<CharacterCatalog | undefined> {
@@ -56,16 +60,44 @@ export async function loadAnimationPackFromUrl(manifestUrl: string): Promise<Loc
   const pack = parsed.pack
   const catalog = await loadCatalog(base)
 
+  // Clips that the cache already holds become blob URLs, so the first frame
+  // does not wait for the network. The rest are copied in the background.
+  const cached = new Map<string, string>()
+  const objectUrls: string[] = []
+
+  for (const clip of pack.allClips) {
+    const blob = await readCachedAsset(new URL(clip.src, base).href)
+    if (!blob)
+      continue
+
+    const objectUrl = URL.createObjectURL(blob)
+    cached.set(clip.src, objectUrl)
+    objectUrls.push(objectUrl)
+  }
+
+  const assetUrls = pack.allClips.map(clip => new URL(clip.src, base).href)
+  if (pack.manifest.preview)
+    assetUrls.push(new URL(pack.manifest.preview, base).href)
+
+  void prefetchAssets(assetUrls)
+
   return {
     pack,
     ...(catalog ? { catalog } : {}),
-    resolve: src => new URL(src, base).href,
+    resolve: src => cached.get(src) ?? new URL(src, base).href,
     summary: {
       id: pack.manifest.id,
       name: pack.manifest.name,
       canvas: pack.manifest.canvas,
       previewUrl: pack.manifest.preview ? new URL(pack.manifest.preview, base).href : undefined,
       clipCount: pack.allClips.length,
+    },
+    dispose: () => {
+      for (const objectUrl of objectUrls)
+        URL.revokeObjectURL(objectUrl)
+
+      objectUrls.length = 0
+      cached.clear()
     },
   }
 }

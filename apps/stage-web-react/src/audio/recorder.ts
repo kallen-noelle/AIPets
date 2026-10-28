@@ -1,3 +1,6 @@
+import { readStored } from '../settings/persisted'
+import { audioToggleKeys, openMicrophone } from './pipeline'
+
 export interface Recording {
   /** Base64 audio without a data URL prefix. */
   data: string
@@ -132,19 +135,12 @@ export function classifyMicError(cause: unknown): MicErrorCode {
  * DashScope accepts WAV for `input_audio`. Browsers record WebM or MP4, so the
  * clip is decoded and re-encoded before sending.
  */
-export async function startRecording(): Promise<Recorder> {
-  const access = navigator.mediaDevices.getUserMedia({ audio: true })
-  const stream = await new Promise<MediaStream>((resolve, reject) => {
-    // A browser can keep the request pending while the user ignores the
-    // permission prompt. The timeout turns that silence into an error.
-    const timer = setTimeout(() => reject(new Error('The microphone did not respond in 30 seconds')), 30_000)
-    access.then((value) => {
-      clearTimeout(timer)
-      resolve(value)
-    }, (error) => {
-      clearTimeout(timer)
-      reject(error)
-    })
+export async function startRecording(options: { deviceId?: string } = {}): Promise<Recorder> {
+  const stream = await openMicrophone({
+    deviceId: options.deviceId,
+    echoCancellation: readStored(audioToggleKeys.echoCancellation, true),
+    noiseSuppression: readStored(audioToggleKeys.noiseSuppression, true),
+    autoGainControl: readStored(audioToggleKeys.autoGainControl, true),
   })
 
   const recorder = new MediaRecorder(stream)

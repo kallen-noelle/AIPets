@@ -1,8 +1,9 @@
 {
   "name": "@proj-airi/stage-web-react",
+  "productName": "aipets",
   "type": "module",
   "private": true,
-  "description": "React frontend for aipetdex",
+  "description": "React frontend for aipets",
   "author": {
     "name": "Moeru AI Project AIRI Team",
     "email": "airi@moeru.ai",

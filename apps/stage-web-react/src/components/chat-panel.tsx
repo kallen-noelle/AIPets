@@ -829,7 +829,9 @@ export function ChatPanel({ variant = 'page' }: ChatPanelProps) {
 
       setStarting(true)
 
-      recorderRef.current = await startRecording()
+      recorderRef.current = await startRecording({
+        deviceId: readStored('airi:react:audio/input-device', '') || undefined,
+      })
       recordingKindRef.current = hearingMode === 'provider' ? 'provider' : 'omni'
       setStarting(false)
       setRecording(true)

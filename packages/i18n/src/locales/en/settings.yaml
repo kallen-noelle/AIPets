@@ -2667,6 +2667,48 @@ reactShell:
   theme: Theme
   themeDark: Dark
   themeLight: Light
+  desktopTitle: Desktop
+  desktopDescription: Window, power, screen, and audio controls for the desktop app.
+  desktopBrowserHint: These controls need the desktop app. This page runs in a browser tab now.
+  windowTray: Window and tray
+  closeToTray: Close to the tray
+  closeToTrayHint: Closing the window keeps the pet running in the tray.
+  quitHint: Use Quit in the tray menu to exit.
+  powerTitle: Battery and power
+  batteryLevel: Battery level
+  batteryCharging: Charging
+  batteryDischarging: On battery
+  batteryUnsupported: This browser cannot read the battery.
+  acPower: Power source
+  acPowerLine: AC power
+  idleState: Idle state
+  lastPowerEvent: Last power event
+  screenTitle: Screen capture
+  screenHint: The capture takes the primary screen. On Windows the system audio comes with the video.
+  primaryDisplay: Primary
+  startCapture: Start capture
+  stopCapture: Stop capture
+  captureWithAudio: Screen and system audio are live.
+  captureWithoutAudio: Screen is live without system audio.
+  captureFailed: 'Screen capture failed: {message}'
+  audioTitle: Audio devices
+  audioHint: The microphone records speech. System audio arrives with a screen capture.
+  microphone: Microphone
+  speaker: Speaker
+  systemDefault: System default
+  noDevices: No audio devices found. Allow microphone access to see device names.
+  refreshDevices: Refresh devices
+  pluginsTitle: Plugins
+  pluginsDescription: Install a local plugin folder, enable it, and open its window.
+  installPlugin: Install folder
+  noPlugins: No plugins installed.
+  enablePlugin: Enable
+  disablePlugin: Disable
+  removePlugin: Remove
+  pluginEnabled: Enabled
+  pluginDisabled: Disabled
+  pluginBindings: Gamelet windows
+  pluginLogs: Logs
   migrating: This page is moving to React
   migratingDescription: The Vue version still serves this page until its React port lands.
   planned: Planned
@@ -2920,3 +2962,57 @@ reactShell:
   beatSyncFile: Audio file
   beatSyncStop: Stop
   beatSyncMeter: '{beats} beats · {bpm} BPM'
+  windowsTitle: Windows
+  windowsHint: The pet, the settings, and the widget are separate windows. Each one keeps its own position.
+  openWidgetWindow: Open widget window
+  openSettingsWindow: Open settings window
+  closeWindow: Close
+  windowFullscreen: Fullscreen
+  windowFocused: Focused
+  windowOpen: Open
+  petAlwaysOnTop: Always on top
+  focusWindow: Focus
+  exitFullscreen: Exit fullscreen
+  toggleFullscreen: Fullscreen
+  audioPipelineTitle: Audio pipeline
+  audioPipelineHint: Echo cancellation stops the pet from hearing its own voice. The voice detector reports when you speak.
+  echoCancellation: Echo cancellation
+  echoCancellationHint: Remove the speaker output from the microphone input.
+  noiseSuppression: Noise suppression
+  autoGainControl: Automatic gain
+  monitorMic: Start voice monitor
+  stopMonitor: Stop monitor
+  voiceDetected: Voice detected
+  voiceSilent: Silence
+  microphoneFailed: 'Microphone failed: {message}'
+  assetCacheTitle: Local asset storage
+  assetCacheHint: Clips of a pack served by a URL are kept on this device. The next start reads them from disk, and the pack works offline.
+  assetCacheEntries: Cached files
+  refreshCache: Refresh
+  clearAssetCache: Clear cache
+  widgetTitle: aipets widget
+  hidePet: Hide pet
+  showPet: Show pet
+  animationDirectorModel: Director model
+  animationDirectorModelPlaceholder: Leave empty to use the chat model
+  animationDirectorProviderHint: Uses the active chat provider. A failed or timed-out director call never blocks the reply.
+  charactersDescription: Pick the character the stage shows and tune how it appears.
+  characterStage: Stage
+  characterStageDescription: The stage hides the character when this switch is off.
+  showCharacter: Show character
+  characterList: Character list
+  characterListDescription: Characters load from the generated asset index.
+  noCharacters: No characters found.
+  clipCount: '{count} clips'
+  appearance: Appearance
+  appearanceDescription: These values override the look the character folder ships.
+  scale: Scale
+  offsetX: Horizontal offset
+  offsetY: Vertical offset
+  fade: Fade (ms)
+  mirror: Mirror
+  clickEnabled: React to clicks
+  resetAppearance: Reset appearance
+  builtinCharacters: Built-in characters
+  importedPacks: Imported packs
+  providerGroup: Provider group
