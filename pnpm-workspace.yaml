@@ -64,9 +64,7 @@ catalog:
   '@better-auth/cli': ^1.4.22
   '@better-auth/drizzle-adapter': 1.6.25
   '@better-auth/oauth-provider': 1.6.25
-  '@cortex-js/compute-engine': ^0.153.0
   '@dotenvx/dotenvx': ^2.21.0
-  '@duckdb/duckdb-wasm': 1.29.1-dev68.0
   '@electric-sql/pglite': ^0.5.6
   '@electric-sql/pglite-pgvector': 0.0.7
   '@electron-toolkit/eslint-config-ts': ^3.1.0
@@ -104,7 +102,6 @@ catalog:
   '@opentelemetry/sdk-trace-node': ^2.10.0
   '@opentelemetry/semantic-conventions': ^1.43.0
   '@pixiv/three-vrm': ^3.5.5
-  '@proj-airi/drizzle-duckdb-wasm': ^0.6.0
   '@proj-airi/unocss-preset-chromatic': ^1.1.4
   '@proj-airi/unplugin-fetch': ^0.2.3
   '@sherpaw/asr': 0.3.0
@@ -120,7 +117,6 @@ catalog:
   '@types/semver': ^7.8.0
   '@types/three': ^0.185.4
   '@types/unist': ^3.0.3
-  '@types/vscode': ^1.134.0
   '@types/w3c-web-hid': ^1.0.7
   '@types/ws': ^8.18.1
   '@unocss/eslint-config': 66.7.5
@@ -129,19 +125,13 @@ catalog:
   '@unocss/preset-web-fonts': 66.7.5
   '@unocss/reset': 66.7.5
   '@velin-dev/core': ^0.4.0
-  '@velin-dev/core-vue': 1.0.0-beta.6
-  '@vieval/ui': ^0.10.3
   '@vishot/cli': ^0.2.0
   '@vitejs/plugin-react': ^6.1.2
-  '@xsai-apple-speech/transcription-native': 0.1.3
-  '@xsai-apple-speech/transcription-native-darwin-arm64': 0.1.3
-  '@xsai-apple-speech/transcription-native-darwin-x64': 0.1.3
   '@xsai-ext/providers': 0.5.1
   '@xsai-ext/responses': 0.5.1
   '@xsai-transformers/shared': ^0.1.0
   '@xsai/generate-speech': 0.5.1
   '@xsai/generate-text': 0.5.1
-  '@xsai/generate-transcription': 0.5.1
   '@xsai/model': 0.5.1
   '@xsai/shared': 0.5.1
   '@xsai/shared-chat': 0.5.1
@@ -213,7 +203,6 @@ catalog:
   rollup: ^4.62.5
   semver: ^7.8.5
   simple-git-hooks: ^2.13.1
-  speech-rule-engine: 5.0.0-rc.4
   sponsorkit: 17.1.0
   sponsors-svg: ^0.3.0
   srvx: ^0.12.7
@@ -242,8 +231,6 @@ catalog:
   vieval: ^0.10.3
   vite: ^8.3.4
   vite-plugin-inspect: 12.0.0-beta.1
-  vscode-ext-gen: ^1.6.0
-  web-worker: ^1.5.0
   wlipsync: ^1.3.1
   ws: ^8.21.3
   xast-util-to-xml: ^4.0.0
