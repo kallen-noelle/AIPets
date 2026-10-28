@@ -8,8 +8,6 @@ import type {
   SequenceStep,
 } from '@proj-airi/character-animation'
 
-import type { DirectorAutonomy } from './director-config'
-
 import {
   sequenceStepDurationMs,
   truncateSequenceToBudget,
@@ -19,7 +17,6 @@ import {
 
 import { requestChatCompletion } from '../chat/client'
 import { animationLog } from './animation-log'
-import { cueLimitFor } from './director-config'
 import { directorMonitor } from './director-monitor'
 import { buildStatePrompt } from './state-context'
 
@@ -53,8 +50,6 @@ export interface DirectorRequest {
   catalog: CharacterCatalog
   history: DirectorHistoryTurn[]
   replyText: string
-  autonomy: DirectorAutonomy
-  maxCues: number
   /** Long-term memory text the chat turn already uses. */
   memory?: string
   /** Clips the character just played, newest first. */
@@ -143,13 +138,13 @@ function splitActionCandidates(
   }
 }
 
-function buildRules(maxCues: number): string[] {
+function buildRules(): string[] {
   return [
     '- 先检查用户信息：出现长动作列表里的名称时，idle.steps 必须包含该名称的 long 步骤，durationMs 约 30000。',
     '- kind 为 long 时，actionId 只能取长动作列表里的名称，durationMs 在 5000 到 60000。',
     '- affect.valence 在 -0.10 到 0.10，affect.arousal 在 -0.08 到 0.08。',
     '- affect 必须有非零增量：valence 与 arousal 至少一个不为 0。',
-    `- cues 必须至少 1 条，最多 ${maxCues} 条。`,
+    '- cues 必须至少 1 条。数量按本轮情境决定，不要凑数。',
     '- anchor 只能是 {"type":"replyStart"}、{"type":"sentence","index":1}、{"type":"afterSpeech"} 或 {"type":"silence","seconds":5}。',
     '- cues.clipId 只能取短动作列表里的名称。',
     '- 同一个 clipId 不要重复。',
@@ -163,7 +158,6 @@ function buildPlanSections(
   request: DirectorRequest,
   shortClips: ClipDescriptor[],
   longActionIds: string[],
-  maxCues: number,
 ): string[] {
   // Action names only. The pack file paths never reach the prompt.
   const animations = {
@@ -181,7 +175,7 @@ function buildPlanSections(
     `动作：${JSON.stringify(animations)}`,
     '',
     '规则：',
-    ...buildRules(maxCues),
+    ...buildRules(),
   ]
 }
 
@@ -189,7 +183,6 @@ function buildSystemPrompt(
   request: DirectorRequest,
   shortClips: ClipDescriptor[],
   longActionIds: string[],
-  maxCues: number,
 ): string {
   const history = request.history
     .slice(-4)
@@ -208,7 +201,7 @@ function buildSystemPrompt(
     '对话历史：',
     history || '(none)',
     '',
-    ...buildPlanSections(request, shortClips, longActionIds, maxCues),
+    ...buildPlanSections(request, shortClips, longActionIds),
     '',
     '回复例子：',
     '例 1，用户信息「吹笛子给我看吧」：',
@@ -225,7 +218,6 @@ function buildSystemPrompt(
  * prompt, so this section only carries state, candidates, rules, and format.
  */
 export function buildInlinePlanInstructions(request: DirectorRequest): string {
-  const maxCues = cueLimitFor(request.autonomy, request.maxCues)
   const { longActionIds, shortClips } = splitActionCandidates(request.catalog.clips, request.longActions ?? [])
   if (!shortClips.length)
     return ''
@@ -234,7 +226,7 @@ export function buildInlinePlanInstructions(request: DirectorRequest): string {
     '动作编排：',
     '回复正文写完后，必须另起一行输出动画计划，cues 不得为空。计划只写一次，不要在正文里提到它。',
     '',
-    ...buildPlanSections(request, shortClips, longActionIds, maxCues),
+    ...buildPlanSections(request, shortClips, longActionIds),
     '',
     '格式：',
     '<<<PLAN',
@@ -369,7 +361,6 @@ function acceptPlan(
   request: DirectorRequest,
   candidates: ClipDescriptor[],
   longActionIds: string[],
-  maxCues: number,
 ): DirectorResult | null {
   const nameIndex = createNameIndex(candidates)
   // Validate against a catalog whose ids are the names the prompt showed, so a
@@ -382,7 +373,7 @@ function acceptPlan(
   const validation = validatePerformancePlan(input, {
     catalog: nameCatalog,
     longActionIds,
-    maxCues,
+    maxCues: Number.POSITIVE_INFINITY,
   })
   if (!validation.ok || !validation.plan) {
     animationLog.write('director', 'abort: validation failed', { issues: validation.issues })
@@ -390,12 +381,6 @@ function acceptPlan(
   }
 
   let plan = validation.plan
-  if (request.autonomy === 'L1') {
-    plan = {
-      cues: plan.cues.filter(cue => cue.intensity >= 0.7),
-    }
-    animationLog.write('director', 'L1 filtered cues', { remainingCues: plan.cues.length })
-  }
 
   plan = {
     ...plan,
@@ -432,12 +417,11 @@ export function resolveInlinePlan(planText: string, request: DirectorRequest): D
   if (!input)
     return null
 
-  const maxCues = cueLimitFor(request.autonomy, request.maxCues)
   const { longActionIds, shortClips } = splitActionCandidates(request.catalog.clips, request.longActions ?? [])
   if (!shortClips.length)
     return null
 
-  return acceptPlan(input, request, shortClips, longActionIds, maxCues)
+  return acceptPlan(input, request, shortClips, longActionIds)
 }
 
 /**
@@ -448,7 +432,6 @@ export function resolveInlinePlan(planText: string, request: DirectorRequest): D
  * existing state machine.
  */
 export async function requestPerformancePlan(request: DirectorRequest): Promise<DirectorResult | null> {
-  const maxCues = cueLimitFor(request.autonomy, request.maxCues)
   // Long action names also exist as short clips in older packs. Keeping both in
   // the prompt makes the model pick the short clip for a named long action.
   const { longActionIds, shortClips } = splitActionCandidates(request.catalog.clips, request.longActions ?? [])
@@ -456,8 +439,6 @@ export async function requestPerformancePlan(request: DirectorRequest): Promise<
 
   animationLog.write('director', 'requestPerformancePlan: start', {
     model: request.model,
-    autonomy: request.autonomy,
-    maxCues,
     affectLabel: request.affect.label,
     affectVA: [request.affect.valence, request.affect.arousal],
     replyPreview: truncate(request.replyText, 60),
@@ -483,7 +464,7 @@ export async function requestPerformancePlan(request: DirectorRequest): Promise<
   }, timeoutMs)
 
   const messages = [
-    { role: 'system' as const, content: buildSystemPrompt(request, candidates, longActionIds, maxCues) },
+    { role: 'system' as const, content: buildSystemPrompt(request, candidates, longActionIds) },
     { role: 'user' as const, content: buildUserPrompt(request) },
   ]
   const exchangeId = directorMonitor.begin({
@@ -514,7 +495,7 @@ export async function requestPerformancePlan(request: DirectorRequest): Promise<
 
     animationLog.write('director', 'parsed JSON', { keys: Object.keys(parsed), parsed })
 
-    return acceptPlan(parsed, request, candidates, longActionIds, maxCues)
+    return acceptPlan(parsed, request, candidates, longActionIds)
   }
   catch (error) {
     const name = error instanceof DOMException ? error.name : (error as Error | null)?.message ?? 'unknown'

@@ -9,6 +9,8 @@ export interface ChatMessage {
   createdAt: number
   /** Data URL of an attached or generated image. */
   image?: string
+  /** Marks an image as a sticker, so the chat draws it small. */
+  sticker?: boolean
   /** The tool calls this reply made, kept for the transcript. */
   toolCalls?: ChatToolTrace[]
 }

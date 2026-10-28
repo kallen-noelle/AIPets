@@ -21,23 +21,21 @@ export function ToolCardsPage() {
       <SectionCard>
         <ToggleField
           label={t('settings.pages.modules.tool-cards.enable', { defaultValue: 'Make cards for tool results' })}
-          description={t('settings.pages.modules.tool-cards.enable-description', { defaultValue: '' })}
+          description={t('settings.reactShell.toolCardsEnableHint', {
+            defaultValue: 'Show each tool call and its result in the chat transcript.',
+          })}
           checked={enabled}
           onChange={setEnabled}
         />
 
         <ToggleField
           label={t('settings.pages.modules.tool-cards.reply-cards', { defaultValue: 'Draw cards in replies' })}
-          description={t('settings.pages.modules.tool-cards.reply-cards-description', { defaultValue: '' })}
+          description={t('settings.reactShell.toolCardsReplyHint', {
+            defaultValue: 'On: draw a result card. Off: draw one compact line per call.',
+          })}
           checked={replyCardsEnabled}
           onChange={setReplyCardsEnabled}
         />
-
-        <p className="text-xs text-[var(--airi-muted)]">
-          {t('settings.reactShell.notInChat', {
-            defaultValue: 'The value is saved now. The React chat does not call this tool yet.',
-          })}
-        </p>
       </SectionCard>
     </section>
   )

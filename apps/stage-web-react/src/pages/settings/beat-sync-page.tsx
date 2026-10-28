@@ -1,42 +1,28 @@
+import type { BeatSyncParameters, BeatSyncSpectrumScale } from '../../audio/beat-sync'
+
 import { useTranslation } from 'react-i18next'
 
+import {
+  beatSyncParametersKey,
+  beatSyncSpectrumScaleKey,
+  defaultBeatSyncParameters,
+} from '../../audio/beat-sync'
 import { PageHeader, SectionCard, SelectField, SliderField, ToggleField } from '../../components/fields'
 import { useStoredValue } from '../../settings/persisted'
 
-interface AnalyserParameters {
-  minBeatInterval: number
-  sensitivity: number
-  lowpassFilterFrequency: number
-  highpassFilterFrequency: number
-  envelopeFilterFrequency: number
-  warmup: boolean
-  bufferDuration: number
-  adaptiveThreshold: boolean
-  spectralFlux: boolean
-}
-
-const parametersKey = 'settings/beat-sync/parameters'
-const spectrumScaleKey = 'settings/beat-sync/spectrum-scale'
-
-const defaultParameters: AnalyserParameters = {
-  minBeatInterval: 0.2,
-  sensitivity: 0.7,
-  lowpassFilterFrequency: 200,
-  highpassFilterFrequency: 30,
-  envelopeFilterFrequency: 12,
-  warmup: false,
-  bufferDuration: 4,
-  adaptiveThreshold: false,
-  spectralFlux: false,
-}
-
 export function BeatSyncPage() {
   const { t } = useTranslation()
-  const [parameters, setParameters] = useStoredValue<AnalyserParameters>(parametersKey, defaultParameters)
-  const [spectrumScale, setSpectrumScale] = useStoredValue(spectrumScaleKey, 'logarithm')
+  const [parameters, setParameters] = useStoredValue<BeatSyncParameters>(
+    beatSyncParametersKey,
+    defaultBeatSyncParameters,
+  )
+  const [spectrumScale, setSpectrumScale] = useStoredValue<BeatSyncSpectrumScale>(
+    beatSyncSpectrumScaleKey,
+    'logarithm',
+  )
 
-  const patch = (next: Partial<AnalyserParameters>) => {
-    setParameters({ ...defaultParameters, ...parameters, ...next })
+  const patch = (next: Partial<BeatSyncParameters>) => {
+    setParameters({ ...defaultBeatSyncParameters, ...parameters, ...next })
   }
 
   return (
@@ -49,7 +35,7 @@ export function BeatSyncPage() {
       <SectionCard
         title={t('settings.reactShell.beatSyncParameters', { defaultValue: 'Detection parameters' })}
         description={t('settings.reactShell.beatSyncNote', {
-          defaultValue: 'Beat Sync visualizes audio. The React stage does not run it yet.',
+          defaultValue: 'The stage runs this detector on a microphone or a local audio file. Start it from the stage page.',
         })}
       >
         <SliderField
@@ -131,7 +117,7 @@ export function BeatSyncPage() {
             { value: 'logarithm', label: t('settings.reactShell.beatSyncLogarithm', { defaultValue: 'Logarithmic' }) },
             { value: 'linear', label: t('settings.reactShell.beatSyncLinear', { defaultValue: 'Linear' }) },
           ]}
-          onChange={setSpectrumScale}
+          onChange={value => setSpectrumScale(value === 'linear' ? 'linear' : 'logarithm')}
         />
       </SectionCard>
     </section>

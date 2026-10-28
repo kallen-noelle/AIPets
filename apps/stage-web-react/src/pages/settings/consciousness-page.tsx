@@ -1,35 +1,55 @@
 import { portableProviderDefinitions } from '@proj-airi/provider-inference'
 import { useTranslation } from 'react-i18next'
 
+import { chatModelKey, chatProviderKey } from '../../chat/types'
 import { PageHeader, SectionCard, SelectField, SliderField, TextField, ToggleField } from '../../components/fields'
 import { useProviders } from '../../providers/store'
 import { useStoredValue } from '../../settings/persisted'
 
-const providerKey = 'settings/consciousness/active-provider'
-const modelKey = 'settings/consciousness/active-model'
 const temperatureKey = 'settings/consciousness/active-temperature'
 const topPKey = 'settings/consciousness/active-top-p'
 const temperatureEnabledKey = 'settings/consciousness/temperature-enabled'
 const topPEnabledKey = 'settings/consciousness/top-p-enabled'
 
+/**
+ * The consciousness page edits the values the chat request uses.
+ *
+ * It writes the chat provider and model keys directly, so the chat panel, the
+ * director, and this page always agree on one active model. The sampling
+ * toggles gate the optional request fields.
+ */
 export function ConsciousnessPage() {
   const { t } = useTranslation()
   const providers = useProviders()
 
-  const [providerId, setProviderId] = useStoredValue(providerKey, '')
-  const [model, setModel] = useStoredValue(modelKey, '')
+  const [providerId, setProviderId] = useStoredValue(chatProviderKey, '')
+  const [model, setModel] = useStoredValue(chatModelKey, '')
   const [temperature, setTemperature] = useStoredValue(temperatureKey, 0.7)
   const [topP, setTopP] = useStoredValue(topPKey, 1)
   const [temperatureEnabled, setTemperatureEnabled] = useStoredValue(temperatureEnabledKey, false)
   const [topPEnabled, setTopPEnabled] = useStoredValue(topPEnabledKey, false)
 
+  const chatProviders = Object.values(providers).filter((provider) => {
+    const definition = portableProviderDefinitions.find(item => item.id === provider.definitionId)
+    return definition?.tasks.includes('chat') ?? false
+  })
+
+  const duplicateDefinitions = new Set(
+    chatProviders
+      .map(provider => provider.definitionId)
+      .filter((definitionId, index, all) => all.indexOf(definitionId) !== index),
+  )
+
   const options = [
     { value: '', label: t('settings.reactShell.providerNone', { defaultValue: 'None' }) },
-    ...Array.from(new Set(Object.values(providers).map(provider => provider.definitionId)))
-      .map((definitionId) => {
-        const definition = portableProviderDefinitions.find(item => item.id === definitionId)
-        return { value: definitionId, label: definition?.name ?? definitionId }
-      }),
+    ...chatProviders.map((provider) => {
+      const definition = portableProviderDefinitions.find(item => item.id === provider.definitionId)
+      const name = definition?.name ?? provider.definitionId
+      const label = duplicateDefinitions.has(provider.definitionId)
+        ? `${name} · ${provider.id.slice(0, 6)}`
+        : name
+      return { value: provider.id, label }
+    }),
   ]
 
   return (
@@ -39,7 +59,11 @@ export function ConsciousnessPage() {
         description={t('settings.pages.modules.consciousness.description', { defaultValue: '' })}
       />
 
-      <SectionCard>
+      <SectionCard
+        description={t('settings.reactShell.consciousnessHint', {
+          defaultValue: 'The chat panel and the animation director use this provider and model.',
+        })}
+      >
         <SelectField
           label={t('settings.reactShell.providerLabel', { defaultValue: 'Provider' })}
           value={providerId}

@@ -33,6 +33,10 @@ export interface ChatRequest {
   model: string
   messages: ChatTurn[]
   tools?: ChatToolSchema[]
+  /** Sampling temperature. Applied only when the consciousness page enables it. */
+  temperature?: number
+  /** Nucleus sampling value. Applied only when the consciousness page enables it. */
+  topP?: number
   signal?: AbortSignal
   /** Receives the exact JSON body sent to the provider. */
   onRequest?: (body: string) => void
@@ -81,6 +85,8 @@ function completionBody(request: ChatRequest, stream: boolean): string {
   return JSON.stringify({
     model: request.model,
     messages: request.messages,
+    ...(request.temperature !== undefined ? { temperature: request.temperature } : {}),
+    ...(request.topP !== undefined ? { top_p: request.topP } : {}),
     ...(request.tools?.length ? { tools: request.tools } : {}),
     ...(stream ? { stream: true } : {}),
   })

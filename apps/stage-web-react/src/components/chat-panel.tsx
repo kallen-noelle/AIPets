@@ -1,5 +1,4 @@
 import type { DirectorRequest, DirectorResult } from '../animation/director'
-import type { DirectorAutonomy } from '../animation/director-config'
 import type { MicErrorCode, Recorder } from '../audio/recorder'
 import type { ChatTurn } from '../chat/client'
 import type { ChatSession } from '../chat/sessions'
@@ -17,9 +16,7 @@ import { animationLog } from '../animation/animation-log'
 import { buildInlinePlanInstructions, requestPerformancePlan, resolveInlinePlan, splitInlinePlan } from '../animation/director'
 import { directorBus } from '../animation/director-bus'
 import {
-  directorAutonomyKey,
   directorDefaults,
-  directorMaxCuesKey,
   directorModelKey,
 } from '../animation/director-config'
 import { directorMonitor } from '../animation/director-monitor'
@@ -41,6 +38,7 @@ import {
   memoryWindowKey,
 } from '../chat/types'
 import { generateImage } from '../image/generation'
+import { refreshMcpTools } from '../mcp/tools'
 import { composeMemoryPrompt, getMemoryEnabled, indexFor } from '../memory/store'
 import { useProviders } from '../providers/store'
 import { definitionHasTask } from '../providers/tasks'
@@ -49,6 +47,7 @@ import { isLocalRecognitionAvailable, startLocalRecognition } from '../speech/lo
 import { transcribeWithOmni } from '../speech/omni-transcription'
 import { speak, speakLocally, stopSpeaking } from '../speech/playback'
 import { transcribeAudio } from '../speech/recognition'
+import { pickSticker, useStickers } from '../stickers/store'
 
 const fieldClass = [
   'rounded-xl border border-[var(--airi-border)] bg-transparent px-3 py-2 text-sm',
@@ -199,6 +198,19 @@ export function ChatPanel({ variant = 'page' }: ChatPanelProps) {
   const [persona] = useStoredValue(characterPersonaKey, '')
   const [memoryEnabled] = useStoredValue(memoryEnabledKey, true)
   const [memoryWindow] = useStoredValue(memoryWindowKey, 10)
+  // The consciousness page owns these values. The chat request reads them.
+  const [temperature] = useStoredValue('settings/consciousness/active-temperature', 0.7)
+  const [temperatureEnabled] = useStoredValue('settings/consciousness/temperature-enabled', false)
+  const [topP] = useStoredValue('settings/consciousness/active-top-p', 1)
+  const [topPEnabled] = useStoredValue('settings/consciousness/top-p-enabled', false)
+  // The vision page decides whether an image reaches the model.
+  const [visionUseForChat] = useStoredValue('settings/vision/use-for-chat', true)
+  const [visionProviderId] = useStoredValue('settings/vision/active-provider', '')
+  const [visionModel] = useStoredValue('settings/vision/active-model', '')
+  const [toolCardsEnabled] = useStoredValue('settings/tool-cards/enabled', true)
+  const [toolReplyCards] = useStoredValue('settings/tool-cards/reply-cards', true)
+  const stickers = useStickers()
+  const [stickerPickerOpen, setStickerPickerOpen] = useState(false)
   const [packHistoryTurns, setPackHistoryTurns] = useState<number | null>(null)
   const [input, setInput] = useState('')
   const [sending, setSending] = useState(false)
@@ -302,8 +314,6 @@ export function ChatPanel({ variant = 'page' }: ChatPanelProps) {
       return null
     }
 
-    const autonomy = readStored<DirectorAutonomy>(directorAutonomyKey, directorDefaults.autonomy)
-    const maxCues = readStored(directorMaxCuesKey, directorDefaults.maxCues)
     const directorModel = readStored(directorModelKey, directorDefaults.model) || model || 'gpt-4o-mini'
     const turns = history.flatMap(message => message.role === 'user' || message.role === 'assistant'
       ? [{ role: message.role, content: message.content }]
@@ -321,8 +331,6 @@ export function ChatPanel({ variant = 'page' }: ChatPanelProps) {
       catalog: context.catalog,
       history: turns,
       replyText,
-      autonomy,
-      maxCues,
       recentClipIds: recentClipIds(),
       longActions: context.longActions,
     }
@@ -347,8 +355,6 @@ export function ChatPanel({ variant = 'page' }: ChatPanelProps) {
     animationLog.write('director', 'run: calling director model', {
       directorModel: request.model,
       chatModel: model,
-      autonomy: request.autonomy,
-      maxCues: request.maxCues,
       catalogClips: request.catalog.clips.length,
       replyPreview: replyText.slice(0, 60),
     })
@@ -366,10 +372,10 @@ export function ChatPanel({ variant = 'page' }: ChatPanelProps) {
       return
 
     const config = selected.config
-    const baseUrl = typeof config.baseUrl === 'string' && config.baseUrl
+    const chatBaseUrl = typeof config.baseUrl === 'string' && config.baseUrl
       ? config.baseUrl
       : 'https://api.openai.com/v1'
-    const apiKey = typeof config.apiKey === 'string' ? config.apiKey : ''
+    const chatApiKey = typeof config.apiKey === 'string' ? config.apiKey : ''
 
     const controller = new AbortController()
     abortRef.current = controller
@@ -389,13 +395,29 @@ export function ChatPanel({ variant = 'page' }: ChatPanelProps) {
       ? packHistoryTurns
       : memoryWindow
     const visible = memoryEnabled ? takeRecentRounds(conversation, Math.max(2, historyTurns)) : conversation.slice(-1)
+
+    // The vision page can point image turns at a separate provider and model.
+    // The director keeps the chat connection, because it only reads text.
+    const visibleHasImage = visible.some(message => message.role === 'user' && message.image)
+    const visionConfig = visionProviderId ? providers[visionProviderId]?.config : undefined
+    const useVisionModel = visionUseForChat
+      && visibleHasImage
+      && Boolean(visionModel.trim())
+      && Boolean(visionConfig)
+    const baseUrl = useVisionModel && typeof visionConfig?.baseUrl === 'string' && visionConfig.baseUrl
+      ? visionConfig.baseUrl
+      : chatBaseUrl
+    const apiKey = useVisionModel && typeof visionConfig?.apiKey === 'string'
+      ? visionConfig.apiKey
+      : chatApiKey
+    const turnModel = useVisionModel ? visionModel.trim() : model
     const basePrompt = persona.trim()
       ? `You are ${characterName}.\n${persona.trim()}`
       : `You are ${characterName}.`
     const memoryIndex = getMemoryEnabled() ? indexFor(characterName) : ''
     // With the director on, the reply and the plan share one call. The plan
     // section only adds state, candidates, rules, and the output format.
-    const inlineRequest = buildDirectorRequest('', history, { baseUrl, apiKey })
+    const inlineRequest = buildDirectorRequest('', history, { baseUrl: chatBaseUrl, apiKey: chatApiKey })
     const planInstructions = inlineRequest ? buildInlinePlanInstructions(inlineRequest) : ''
     // The inline plan section already carries the state facts. Without it, the
     // state must still reach the reply, so the reply follows the current world
@@ -413,13 +435,20 @@ export function ChatPanel({ variant = 'page' }: ChatPanelProps) {
       planInstructions,
     ].filter(Boolean).join('\n\n')
 
+    try {
+      await refreshMcpTools()
+    }
+    catch {
+      // A missing or failing MCP server must not break the turn.
+    }
+
     const tools = resolveChatTools(characterName)
     const toolSchemas = tools.map(toChatToolSchema)
 
     const turns: ChatTurn[] = [
       { role: 'system', content: systemPrompt },
       ...visible.map((message): ChatTurn => {
-        if (message.image && message.role === 'user') {
+        if (visionUseForChat && message.image && message.role === 'user') {
           return {
             role: message.role,
             content: [
@@ -436,7 +465,7 @@ export function ChatPanel({ variant = 'page' }: ChatPanelProps) {
     // The monitor records every chat model call. The call also carries the
     // director plan when the director is on, so one exchange covers both.
     const monitorStart = performance.now()
-    const monitorId = directorMonitor.begin({ model: model || 'gpt-4o-mini', characterName })
+    const monitorId = directorMonitor.begin({ model: turnModel || 'gpt-4o-mini', characterName })
 
     let accumulated = ''
     const traces: ChatToolTrace[] = []
@@ -468,9 +497,11 @@ export function ChatPanel({ variant = 'page' }: ChatPanelProps) {
         const reply = await streamChatTurn({
           baseUrl,
           apiKey,
-          model: model || 'gpt-4o-mini',
+          model: turnModel || 'gpt-4o-mini',
           signal: controller.signal,
           messages: turns,
+          ...(temperatureEnabled ? { temperature } : {}),
+          ...(topPEnabled ? { topP } : {}),
           tools: allowTools && toolSchemas.length ? toolSchemas : undefined,
           onRequest: (body: string) => directorMonitor.addRequest(monitorId, body),
           onResponse: (body: string) => directorMonitor.addResponse(monitorId, body),
@@ -538,9 +569,23 @@ export function ChatPanel({ variant = 'page' }: ChatPanelProps) {
         ...(traces.length ? { toolCalls: traces } : {}),
       }
 
+      // A text reply can end with one sticker, at the chance the page sets.
+      const replies: ChatMessage[] = [assistant]
+      const sticker = replyText ? pickSticker() : null
+      if (sticker) {
+        replies.push({
+          id: crypto.randomUUID(),
+          role: 'assistant',
+          content: '',
+          createdAt: Date.now(),
+          image: sticker.dataUrl,
+          sticker: true,
+        })
+      }
+
       patchSession(session.id, current => ({
         ...current,
-        messages: [...history, assistant],
+        messages: [...history, ...replies],
         updatedAt: Date.now(),
       }))
 
@@ -560,12 +605,12 @@ export function ChatPanel({ variant = 'page' }: ChatPanelProps) {
         }
         else {
           animationLog.write('director', 'inline plan dropped; falling back to director call')
-          runDirector(replyText, history, { baseUrl, apiKey })
+          runDirector(replyText, history, { baseUrl: chatBaseUrl, apiKey: chatApiKey })
         }
       }
       else {
         directorMonitor.setPlan(monitorId, null, 'not requested: the director is off')
-        runDirector(replyText, history, { baseUrl, apiKey })
+        runDirector(replyText, history, { baseUrl: chatBaseUrl, apiKey: chatApiKey })
       }
 
       if (ttsEnabled) {
@@ -667,6 +712,25 @@ export function ChatPanel({ variant = 'page' }: ChatPanelProps) {
       setInput('')
       setPendingImage(null)
     }
+    void runCompletion(active, history)
+  }
+
+  /** Sends one sticker as a user turn. */
+  const sendSticker = (dataUrl: string) => {
+    if (!selected || !active || sending)
+      return
+
+    const userMessage: ChatMessage = {
+      id: crypto.randomUUID(),
+      role: 'user',
+      content: '',
+      createdAt: Date.now(),
+      image: dataUrl,
+      sticker: true,
+    }
+    const history = [...messages, userMessage]
+    patchSession(active.id, session => ({ ...session, messages: history, updatedAt: Date.now() }))
+    setStickerPickerOpen(false)
     void runCompletion(active, history)
   }
 
@@ -1019,25 +1083,48 @@ export function ChatPanel({ variant = 'page' }: ChatPanelProps) {
             >
               {message.content}
               {message.image && (
-                <img src={message.image} alt="" className="mt-2 max-h-60 rounded-lg" />
+                <img
+                  src={message.image}
+                  alt=""
+                  className={message.sticker
+                    ? 'mt-1 h-24 w-24 rounded-lg object-contain'
+                    : 'mt-2 max-h-60 rounded-lg'}
+                />
               )}
-              {message.toolCalls?.length && (
-                <ul className="mt-2 flex flex-col gap-1 border-t border-[var(--airi-border)] pt-2 text-xs">
-                  {message.toolCalls.map(trace => (
-                    <li key={trace.id}>
-                      <details>
-                        <summary className={trace.ok ? 'cursor-pointer text-[var(--airi-muted)]' : 'cursor-pointer text-rose-400'}>
-                          {trace.name}
-                        </summary>
-                        <pre className="mt-1 overflow-x-auto whitespace-pre-wrap break-all text-[var(--airi-muted)]">
-                          {trace.arguments}
-                          {'\n\n'}
-                          {trace.result}
-                        </pre>
-                      </details>
-                    </li>
-                  ))}
-                </ul>
+              {toolCardsEnabled && message.toolCalls?.length && (
+                <div className="mt-2 flex flex-col gap-1 border-t border-[var(--airi-border)] pt-2 text-xs">
+                  {message.toolCalls.map(trace => (toolReplyCards
+                    ? (
+                        <div
+                          key={trace.id}
+                          className="border border-[var(--airi-border)] rounded-lg bg-[var(--airi-bg)]/40 p-2"
+                        >
+                          <div className="flex items-center justify-between gap-2">
+                            <span className="font-medium">{trace.name}</span>
+                            <span className={trace.ok ? 'text-[var(--airi-muted)]' : 'text-rose-400'}>
+                              {trace.ok
+                                ? t('settings.reactShell.toolCardOk', { defaultValue: 'Done' })
+                                : t('settings.reactShell.toolCardFailed', { defaultValue: 'Failed' })}
+                            </span>
+                          </div>
+                          <p className="line-clamp-3 mt-1 whitespace-pre-wrap break-all text-[var(--airi-muted)]">
+                            {trace.result.slice(0, 240)}
+                          </p>
+                        </div>
+                      )
+                    : (
+                        <details key={trace.id}>
+                          <summary className={trace.ok ? 'cursor-pointer text-[var(--airi-muted)]' : 'cursor-pointer text-rose-400'}>
+                            {trace.name}
+                          </summary>
+                          <pre className="mt-1 overflow-x-auto whitespace-pre-wrap break-all text-[var(--airi-muted)]">
+                            {trace.arguments}
+                            {'\n\n'}
+                            {trace.result}
+                          </pre>
+                        </details>
+                      )))}
+                </div>
               )}
             </div>
           ))}
@@ -1100,6 +1187,18 @@ export function ChatPanel({ variant = 'page' }: ChatPanelProps) {
               <span className="i-solar:gallery-bold-duotone" />
               {t('settings.reactShell.chatAttach', { defaultValue: 'Image' })}
             </button>
+
+            {stickers.length > 0 && (
+              <button
+                type="button"
+                className={toolButtonClass}
+                disabled={!ready || sending}
+                onClick={() => setStickerPickerOpen(open => !open)}
+              >
+                <span className="i-solar:sticker-smile-circle-bold-duotone" />
+                {t('settings.reactShell.chatSticker', { defaultValue: 'Sticker' })}
+              </button>
+            )}
 
             <button
               type="button"
@@ -1165,6 +1264,21 @@ export function ChatPanel({ variant = 'page' }: ChatPanelProps) {
               >
                 {t('settings.reactShell.chatRemoveImage', { defaultValue: 'Remove image' })}
               </button>
+            </div>
+          )}
+
+          {stickerPickerOpen && (
+            <div className="flex flex-wrap gap-2 border border-[var(--airi-border)] rounded-2xl bg-[var(--airi-card)] p-2">
+              {stickers.map(sticker => (
+                <button
+                  key={sticker.id}
+                  type="button"
+                  className="h-14 w-14 overflow-hidden border border-[var(--airi-border)] rounded-lg transition hover:bg-[var(--airi-hover)]"
+                  onClick={() => sendSticker(sticker.dataUrl)}
+                >
+                  <img src={sticker.dataUrl} alt={sticker.name} className="h-full w-full object-contain" />
+                </button>
+              ))}
             </div>
           )}
 

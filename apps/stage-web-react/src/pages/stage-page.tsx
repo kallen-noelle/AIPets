@@ -12,7 +12,6 @@ import type {
 } from '@proj-airi/character-animation'
 
 import type { DirectorLongAction } from '../animation/director'
-import type { DirectorAutonomy } from '../animation/director-config'
 import type { LoadedZipPack } from '../animation/zip-pack'
 import type { BuiltinCharacter, CharacterAppearance, CharacterAppearanceOverride } from '../character/characters'
 import type { StageSnapshot } from '../components/character-stage'
@@ -26,12 +25,17 @@ import { Link } from 'react-router'
 import { animationLog } from '../animation/animation-log'
 import { describeLongActions } from '../animation/director'
 import { directorBus } from '../animation/director-bus'
-import { cueLimitFor, directorAutonomyKey, directorDefaults, directorMaxCuesKey } from '../animation/director-config'
 import { recordClipPlayed } from '../animation/playback-history'
 import { sessionController, useSessionPhase } from '../animation/session-controller'
 import { useAmbient } from '../animation/use-ambient'
 import { WaitingSequenceRunner } from '../animation/waiting-sequence'
 import { getActivePackId, loadStoredPack, setActivePackId } from '../animation/zip-pack'
+import {
+  beatSyncParametersKey,
+  BeatSyncRunner,
+  beatSyncSpectrumScaleKey,
+  defaultBeatSyncParameters,
+} from '../audio/beat-sync'
 import { affectStore, useAffect } from '../character/affect-store'
 import {
   applyCharacterPersona,
@@ -193,6 +197,13 @@ export function StagePage() {
   const [speaking, setSpeaking] = useState(false)
   const [thinking, setThinking] = useState(false)
   const [paused, setPaused] = useState(false)
+  const [beatRunning, setBeatRunning] = useState(false)
+  const [beats, setBeats] = useState(0)
+  const [bpm, setBpm] = useState(0)
+  const [beatStarting, setBeatStarting] = useState(false)
+  const [beatError, setBeatError] = useState<string | null>(null)
+  const beatFileRef = useRef<HTMLInputElement>(null)
+  const beatRunnerRef = useRef<BeatSyncRunner | null>(null)
   const [activePack, setActivePack] = useState<LoadedZipPack | null>(null)
   const [packLongActions, setPackLongActions] = useState<DirectorLongAction[]>([])
   const [characters, setCharacters] = useState<BuiltinCharacter[]>([])
@@ -609,11 +620,9 @@ export function StagePage() {
     animationLog.write('bus', 'stage subscribed to plans')
 
     return directorBus.subscribePlans((plan) => {
-      const autonomy = readStored<DirectorAutonomy>(directorAutonomyKey, directorDefaults.autonomy)
-      const configuredMax = readStored(directorMaxCuesKey, directorDefaults.maxCues)
       const validation = validatePerformancePlan(plan, {
         catalog,
-        maxCues: cueLimitFor(autonomy, configuredMax),
+        maxCues: Number.POSITIVE_INFINITY,
         longActionIds: Object.keys(activePack?.pack.longActions ?? {}),
       })
       if (validation.ok && validation.plan)
@@ -703,6 +712,49 @@ export function StagePage() {
       })
   }
 
+  const startBeats = async (kind: 'microphone' | 'file', file?: File) => {
+    setBeatError(null)
+    setBeatStarting(true)
+
+    try {
+      const parameters = readStored(beatSyncParametersKey, defaultBeatSyncParameters)
+      const spectrumScale = readStored<'logarithm' | 'linear'>(beatSyncSpectrumScaleKey, 'logarithm')
+      const runner = await BeatSyncRunner.start({ kind, file }, parameters, spectrumScale, {
+        onBeat: (info) => {
+          setBeats(info.index)
+          setBpm(info.bpm)
+        },
+        onError: message => setBeatError(message),
+      })
+
+      beatRunnerRef.current?.stop()
+      beatRunnerRef.current = runner
+      setBeats(0)
+      setBpm(0)
+      setBeatRunning(true)
+    }
+    catch (cause) {
+      setBeatError(errorMessageFrom(cause) ?? 'Beat sync failed')
+    }
+    finally {
+      setBeatStarting(false)
+    }
+  }
+
+  const stopBeats = useCallback(() => {
+    beatRunnerRef.current?.stop()
+    beatRunnerRef.current = null
+    setBeatRunning(false)
+    setBeats(0)
+    setBpm(0)
+  }, [])
+
+  // A page change must not leave the microphone or the audio file running.
+  useEffect(() => () => {
+    beatRunnerRef.current?.stop()
+    beatRunnerRef.current = null
+  }, [])
+
   return (
     <div
       className={[
@@ -767,33 +819,20 @@ export function StagePage() {
               </div>
             )}
 
-            {!characterEnabled
-              ? (
-                  <p className="max-w-md text-center text-sm text-[var(--airi-muted)]">
-                    {t('settings.reactShell.stageCharacterHidden', {
-                      defaultValue: 'The character is hidden. Enable it on the Card settings page.',
-                    })}
-                  </p>
-                )
-              : activeCharacter
+            <div className="relative w-full flex items-center justify-center">
+              {!characterEnabled
                 ? (
-                    <CharacterStage
-                      manifestUrl={characterManifestUrl(activeCharacter)}
-                      appearance={withAppearanceOverride(activeCharacter.appearance, appearanceOverride)}
-                      onController={handleController}
-                      onSnapshot={handleSnapshot}
-                      onUserClick={handleUserClick}
-                      onReady={handleReady}
-                      onClipEnded={ambient.handleClipEnded}
-                      onError={handleError}
-                      speechText={speechBubble}
-                    />
+                    <p className="max-w-md text-center text-sm text-[var(--airi-muted)]">
+                      {t('settings.reactShell.stageCharacterHidden', {
+                        defaultValue: 'The character is hidden. Enable it on the Card settings page.',
+                      })}
+                    </p>
                   )
-                : activePack
+                : activeCharacter
                   ? (
                       <CharacterStage
-                        pack={activePack}
-                        appearance={withAppearanceOverride(activePack.profile.appearance, appearanceOverride)}
+                        manifestUrl={characterManifestUrl(activeCharacter)}
+                        appearance={withAppearanceOverride(activeCharacter.appearance, appearanceOverride)}
                         onController={handleController}
                         onSnapshot={handleSnapshot}
                         onUserClick={handleUserClick}
@@ -803,19 +842,36 @@ export function StagePage() {
                         speechText={speechBubble}
                       />
                     )
-                  : (
-                      <CharacterStage
-                        manifestUrl={demoManifestUrl}
-                        appearance={withAppearanceOverride(defaultCharacterAppearance, appearanceOverride)}
-                        onController={handleController}
-                        onSnapshot={handleSnapshot}
-                        onUserClick={handleUserClick}
-                        onReady={handleReady}
-                        onClipEnded={ambient.handleClipEnded}
-                        onError={handleError}
-                        speechText={speechBubble}
-                      />
-                    )}
+                  : activePack
+                    ? (
+                        <CharacterStage
+                          pack={activePack}
+                          appearance={withAppearanceOverride(activePack.profile.appearance, appearanceOverride)}
+                          onController={handleController}
+                          onSnapshot={handleSnapshot}
+                          onUserClick={handleUserClick}
+                          onReady={handleReady}
+                          onClipEnded={ambient.handleClipEnded}
+                          onError={handleError}
+                          speechText={speechBubble}
+                        />
+                      )
+                    : (
+                        <CharacterStage
+                          manifestUrl={demoManifestUrl}
+                          appearance={withAppearanceOverride(defaultCharacterAppearance, appearanceOverride)}
+                          onController={handleController}
+                          onSnapshot={handleSnapshot}
+                          onUserClick={handleUserClick}
+                          onReady={handleReady}
+                          onClipEnded={ambient.handleClipEnded}
+                          onError={handleError}
+                          speechText={speechBubble}
+                        />
+                      )}
+
+              {beatRunning && beats > 0 && <div key={beats} className="airi-beat-ring" />}
+            </div>
 
             {error
               ? <p className="max-w-md text-center text-sm text-rose-400">{error}</p>
@@ -849,6 +905,65 @@ export function StagePage() {
                 {paused ? 'Resume' : 'Pause'}
               </button>
             </div>
+
+            <div className="flex flex-wrap items-center justify-center gap-2 text-xs text-[var(--airi-muted)]">
+              <span className="tracking-[0.2em] uppercase">
+                {t('settings.reactShell.beatSyncStageTitle', { defaultValue: 'Beat sync' })}
+              </span>
+
+              <input
+                ref={beatFileRef}
+                type="file"
+                accept="audio/*"
+                className="hidden"
+                onChange={(event) => {
+                  const file = event.target.files?.[0]
+                  event.target.value = ''
+                  if (file)
+                    void startBeats('file', file)
+                }}
+              />
+
+              <button
+                type="button"
+                className={buttonClass}
+                disabled={beatStarting}
+                onClick={() => void startBeats('microphone')}
+              >
+                <span className="i-solar:microphone-bold-duotone" />
+                {' '}
+                {t('settings.reactShell.beatSyncMic', { defaultValue: 'Microphone' })}
+              </button>
+
+              <button
+                type="button"
+                className={buttonClass}
+                disabled={beatStarting}
+                onClick={() => beatFileRef.current?.click()}
+              >
+                <span className="i-solar:music-note-bold-duotone" />
+                {' '}
+                {t('settings.reactShell.beatSyncFile', { defaultValue: 'Audio file' })}
+              </button>
+
+              {beatRunning && (
+                <button type="button" className={buttonClass} onClick={stopBeats}>
+                  <span className="i-solar:stop-bold-duotone" />
+                  {' '}
+                  {t('settings.reactShell.beatSyncStop', { defaultValue: 'Stop' })}
+                </button>
+              )}
+
+              <span>
+                {t('settings.reactShell.beatSyncMeter', {
+                  defaultValue: '{{beats}} beats · {{bpm}} BPM',
+                  beats,
+                  bpm,
+                })}
+              </span>
+            </div>
+
+            {beatError && <p className="text-xs text-rose-400">{beatError}</p>}
 
             <details className={[
               'w-full max-w-xl rounded-2xl border p-4 text-sm',

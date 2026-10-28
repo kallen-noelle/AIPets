@@ -2,6 +2,7 @@ import type { ChatToolCall, ChatToolSchema } from './client'
 
 import { errorMessageFrom } from '@moeru/std'
 
+import { getMcpTools } from '../mcp/tools'
 import {
   FORGET_MEMORY_TOOL_NAME,
   forgetMemory,
@@ -432,6 +433,7 @@ export function resolveChatTools(personaId: string): ChatToolDefinition[] {
     ...webSearchTool(),
     ...homeAssistantTools(),
     timeTool(),
+    ...getMcpTools(),
   ]
 }
 

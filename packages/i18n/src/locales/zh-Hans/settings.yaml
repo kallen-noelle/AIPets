@@ -622,7 +622,7 @@ pages:
       desktop_window_centered: 桌面窗口已移至屏幕中央。
       desktop_reset: 桌面数据重置。
   animation:
-    description: 让聊天模型在每次回复后选择一段有边界的表演计划。
+    description: 让聊天模型在每次回复后自行安排表演计划。
     title: 动画导演
   models:
     description: 切换角色的 Live2D、VRM、Spine 模型
@@ -2585,7 +2585,6 @@ reactShell:
   visionUseForChat: 用该模型读取对话图片
   visionUseForToolImages: 用该模型读取工具图片
   notInChat: 配置已保存，React 对话暂时还不会调用该工具。
-  stickersLibraryNote: 表情包图片与表情包对话尚未加入 React 版本。
   artistryModel: 绘图模型
   artistryModelDescription: DashScope 默认使用 wanx2.1-t2i-turbo。
   artistryProviderNote: 绘图会复用你在对话中选择的服务商 API Key。
@@ -2605,7 +2604,7 @@ reactShell:
   memoryMakeGeneral: 改为通用
   memoryFormIncomplete: 记忆需要名称和内容。
   memoryLongTermDescription: 角色跨对话保留的记忆，这个列表的索引会加入提示词。
-  chatCallingTool: 正在调用 {{tool}}...
+  chatCallingTool: 正在调用 {tool}...
   voicePreview: 语音试听
   voicePreviewHint: 使用当前表单里的配置，试听成功后再保存。
   voicePreviewPlay: 播放
@@ -2617,7 +2616,7 @@ reactShell:
   pendingDescription: React 版本还没有这个页面，这里先保留路由，避免链接失效。
   pendingBack: 返回舞台
   beatSyncParameters: 检测参数
-  beatSyncNote: Beat Sync 用于音频可视化，React 舞台暂未运行该模块。
+  beatSyncNote: 舞台会用麦克风或本地音频文件运行这个检测器，请在舞台页启动。
   beatSyncSensitivity: 灵敏度
   beatSyncMinInterval: 最小节拍间隔（秒）
   beatSyncBuffer: 缓冲时长（秒）
@@ -2634,7 +2633,6 @@ reactShell:
   mcpCommandHint: 例如 npx，或本地可执行文件路径。
   mcpArgs: 启动参数
   mcpArgsHint: 以空格分隔，例如 -y @modelcontextprotocol/server-filesystem。
-  mcpNote: React 版本会保存该配置，MCP 工具仅在桌面端加载。
   homeAssistantBaseUrl: 基础地址
   homeAssistantToken: 访问令牌
   homeAssistantExposure: 实体暴露范围
@@ -2674,3 +2672,34 @@ reactShell:
   chatPreparing: 正在打开麦克风…
   chatMicDenied: 麦克风权限被拒绝。请在浏览器地址栏允许麦克风权限后重试。
   chatMicMissing: 当前设备没有检测到麦克风。
+  chatMicBusy: 麦克风正被其他应用占用。
+  chatMicOverconstrained: 麦克风不满足请求的约束条件。
+  chatMicInsecure: 使用麦克风需要安全上下文（HTTPS 或 localhost）。
+  chatMicTimeout: 麦克风没有及时响应。
+  chatMicUnknown: 无法打开麦克风。
+  consciousnessHint: 对话与动画导演会使用这里的服务商和模型。
+  toolCardsEnableHint: 在对话中显示每次工具调用及其结果。
+  toolCardsReplyHint: 开启时绘制结果卡片，关闭时每次调用只显示一行。
+  toolCardOk: 完成
+  toolCardFailed: 失败
+  stickersEnableHint: 在对话中加入表情包按钮，并允许角色用表情包回复。
+  stickersLibraryHint: 可上传单张不超过 1.5 MB 的图片，浏览器最多保留 24 张。
+  stickersAdd: 添加表情包
+  stickersEmpty: 还没有表情包。
+  stickersTooLarge: 图片过大，请使用小于 1.5 MB 的图片。
+  chatSticker: 表情包
+  mcpBrowserTitle: 浏览器连接
+  mcpBrowserHint: 浏览器通过 streamable HTTP 地址连接 MCP 服务端，测试成功后工具会出现在对话中。
+  mcpEnable: 使用这个 MCP 服务端
+  mcpUrl: 服务端地址
+  mcpUrlHint: 例如 https://example.com/mcp，服务端需要允许本页面跨域访问。
+  mcpTest: 测试连接
+  mcpTesting: 连接中…
+  mcpToolsFound: '{count} 个工具已可在对话中使用。'
+  mcpDesktopTitle: 桌面端启动命令
+  mcpDesktopHint: 桌面端可以用该命令启动本地服务端，浏览器端不会执行。
+  beatSyncStageTitle: 节拍同步
+  beatSyncMic: 麦克风
+  beatSyncFile: 音频文件
+  beatSyncStop: 停止
+  beatSyncMeter: '{beats} 拍 · {bpm} BPM'

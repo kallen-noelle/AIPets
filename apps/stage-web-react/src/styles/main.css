@@ -97,3 +97,32 @@ body {
   border-top-color: rgb(255 255 255 / 92%);
   border-bottom: none;
 }
+
+/*
+ * Beat ring: one short glow per detected beat.
+ * The stage page remounts this node for every beat, so the animation restarts.
+ */
+.airi-beat-ring {
+  position: absolute;
+  inset: 6%;
+  z-index: 5;
+  border: 2px solid rgb(129 140 248 / 70%);
+  border-radius: 9999px;
+  pointer-events: none;
+  opacity: 0;
+  animation: airi-beat-pulse 480ms ease-out;
+}
+
+@keyframes airi-beat-pulse {
+  0% {
+    opacity: 0.8;
+    transform: scale(0.92);
+    box-shadow: 0 0 24px rgb(129 140 248 / 60%);
+  }
+
+  100% {
+    opacity: 0;
+    transform: scale(1.06);
+    box-shadow: 0 0 48px rgb(129 140 248 / 0%);
+  }
+}

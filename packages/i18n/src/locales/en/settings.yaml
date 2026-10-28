@@ -659,7 +659,7 @@ pages:
       desktop_window_centered: Desktop window moved to screen center.
       desktop_reset: Desktop data reset.
   animation:
-    description: Let the chat model choose a bounded performance plan after each reply.
+    description: Let the chat model choose a performance plan after each reply.
     title: Animation director
   models:
     description: Live2D, VRM, Spine, MMD, etc.
@@ -2799,7 +2799,6 @@ reactShell:
   visionUseForChat: Use this model for chat images
   visionUseForToolImages: Use this model for tool images
   notInChat: The value is saved now. The React chat does not call this tool yet.
-  stickersLibraryNote: Sticker artwork and chatting with stickers are not part of the React app yet.
   artistryModel: Image model
   artistryModelDescription: DashScope uses wanx2.1-t2i-turbo by default.
   artistryProviderNote: Image generation reuses the API key of the chat provider you select in chat.
@@ -2819,7 +2818,7 @@ reactShell:
   memoryMakeGeneral: Make general
   memoryFormIncomplete: A memory needs a name and a body.
   memoryLongTermDescription: Memories the character keeps across chats. The index of this list is part of the prompt.
-  chatCallingTool: Calling {{tool}}...
+  chatCallingTool: Calling {tool}...
   voicePreview: Voice preview
   voicePreviewHint: Uses the values in this form. Save after the preview works.
   voicePreviewPlay: Play
@@ -2831,7 +2830,7 @@ reactShell:
   pendingDescription: This page has no React version yet. The route exists so links reach a page.
   pendingBack: Back to the stage
   beatSyncParameters: Detection parameters
-  beatSyncNote: Beat Sync visualizes audio. The React stage does not run it yet.
+  beatSyncNote: The stage runs this detector on a microphone or a local audio file. Start it from the stage page.
   beatSyncSensitivity: Sensitivity
   beatSyncMinInterval: Minimum beat interval (s)
   beatSyncBuffer: Buffer duration (s)
@@ -2848,7 +2847,6 @@ reactShell:
   mcpCommandHint: For example npx, or the path of a local executable.
   mcpArgs: Arguments
   mcpArgsHint: Space separated. For example -y @modelcontextprotocol/server-filesystem.
-  mcpNote: The React app stores this config. MCP tools load only in the desktop app.
   homeAssistantBaseUrl: Base URL
   homeAssistantToken: Access token
   homeAssistantExposure: Entity exposure
@@ -2888,3 +2886,34 @@ reactShell:
   chatPreparing: Opening the microphone...
   chatMicDenied: Microphone permission was denied. Allow it in the browser address bar and try again.
   chatMicMissing: No microphone was found on this device.
+  chatMicBusy: The microphone is already in use by another app.
+  chatMicOverconstrained: The microphone does not satisfy the requested constraints.
+  chatMicInsecure: Microphone access requires a secure context (HTTPS or localhost).
+  chatMicTimeout: The microphone did not respond in time.
+  chatMicUnknown: The microphone could not be opened.
+  consciousnessHint: The chat and the animation director use this provider and model.
+  toolCardsEnableHint: Show each tool call and its result in the chat transcript.
+  toolCardsReplyHint: 'On: draw a result card. Off: draw one compact line per call.'
+  toolCardOk: Done
+  toolCardFailed: Failed
+  stickersEnableHint: Add a sticker button to the chat and let the character answer with a sticker.
+  stickersLibraryHint: Upload images up to 1.5 MB each. Up to 24 stickers stay in this browser.
+  stickersAdd: Add stickers
+  stickersEmpty: No stickers yet.
+  stickersTooLarge: The image is too large. Use one under 1.5 MB.
+  chatSticker: Sticker
+  mcpBrowserTitle: Browser connection
+  mcpBrowserHint: The browser reaches an MCP server through its streamable HTTP URL. The tools appear in chat after a test.
+  mcpEnable: Use this MCP server
+  mcpUrl: Server URL
+  mcpUrlHint: For example https://example.com/mcp. The server must accept CORS from this page.
+  mcpTest: Test connection
+  mcpTesting: Connecting...
+  mcpToolsFound: '{count} tools are ready for chat.'
+  mcpDesktopTitle: Desktop launch command
+  mcpDesktopHint: The desktop app can start a local server with this command. The browser app does not.
+  beatSyncStageTitle: Beat sync
+  beatSyncMic: Microphone
+  beatSyncFile: Audio file
+  beatSyncStop: Stop
+  beatSyncMeter: '{beats} beats · {bpm} BPM'
