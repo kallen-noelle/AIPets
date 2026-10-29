@@ -8,7 +8,7 @@
  * 4. `desktop_click_target` updates pointer intent and clicked-candidate state.
  *
  * Usage:
- *   pnpm -F @proj-airi/computer-use-mcp smoke:desktop-v3
+ *   pnpm -F @proj-aipets/computer-use-mcp smoke:desktop-v3
  */
 
 import { dirname, resolve } from 'node:path'
@@ -20,20 +20,20 @@ import { StdioClientTransport } from '@modelcontextprotocol/sdk/client/stdio.js'
 
 const packageDir = resolve(dirname(fileURLToPath(import.meta.url)), '../..')
 const WHITESPACE_SPLIT_RE = /\s+/u
-const SMOKE_TARGET_LABEL = 'AIRI Desktop V3 Smoke Button'
+const SMOKE_TARGET_LABEL = 'AIPETS Desktop V3 Smoke Button'
 
 const DEFAULT_SMOKE_URL = `data:text/html;charset=utf-8,${encodeURIComponent(`<!doctype html>
 <html>
   <head>
-    <title>AIRI Desktop V3 Smoke</title>
+    <title>AIPETS Desktop V3 Smoke</title>
     <style>
       body { font-family: sans-serif; padding: 48px; }
       button { font-size: 18px; padding: 12px 18px; }
     </style>
   </head>
   <body>
-    <h1>AIRI Desktop V3 Smoke</h1>
-    <button id="airi-desktop-v3-smoke-button">AIRI Desktop V3 Smoke Button</button>
+    <h1>AIPETS Desktop V3 Smoke</h1>
+    <button id="aipets-desktop-v3-smoke-button">AIPETS Desktop V3 Smoke Button</button>
   </body>
 </html>`)}`
 
@@ -146,7 +146,7 @@ export function selectDesktopV3SmokeCandidate(
 
   if (!selected) {
     if (!requested) {
-      throw new Error('desktop_observe did not return the AIRI Desktop V3 Smoke Button chrome_dom candidate')
+      throw new Error('desktop_observe did not return the AIPETS Desktop V3 Smoke Button chrome_dom candidate')
     }
     throw new Error(`desktop_observe did not return requested candidate "${requested}"`)
   }
@@ -344,7 +344,7 @@ export async function runDesktopV3Smoke(): Promise<Record<string, unknown>> {
     stderr: 'pipe',
   })
   const client = new Client({
-    name: '@proj-airi/computer-use-mcp-smoke-desktop-v3',
+    name: '@proj-aipets/computer-use-mcp-smoke-desktop-v3',
     version: '0.1.0',
   })
 
@@ -475,7 +475,7 @@ const invokedPath = argv[1] ? pathToFileURL(argv[1]).href : undefined
 if (invokedPath === import.meta.url) {
   if (argv.includes('--help') || argv.includes('-h')) {
     console.info(`Usage:
-  pnpm -F @proj-airi/computer-use-mcp smoke:desktop-v3
+  pnpm -F @proj-aipets/computer-use-mcp smoke:desktop-v3
 
 Environment:
   COMPUTER_USE_DESKTOP_V3_SMOKE_URL            Target URL. Defaults to an inline data: smoke page.

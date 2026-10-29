@@ -13,7 +13,7 @@
  * `createLocalShellRunner` backed by `child_process.spawn`.
  *
  * Usage:
- *   pnpm -F @proj-airi/computer-use-mcp e2e:terminal-exec
+ *   pnpm -F @proj-aipets/computer-use-mcp e2e:terminal-exec
  */
 
 import { mkdtempSync, writeFileSync } from 'node:fs'
@@ -77,7 +77,7 @@ async function createClient(): Promise<Client> {
   })
 
   const client = new Client({
-    name: '@proj-airi/e2e-terminal-exec',
+    name: '@proj-aipets/e2e-terminal-exec',
     version: '0.1.0',
   })
 

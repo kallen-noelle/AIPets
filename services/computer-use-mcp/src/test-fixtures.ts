@@ -20,7 +20,7 @@ export function createTestConfig(overrides: Partial<ComputerUseConfig> = {}): Co
     maxPendingActions: 24,
     allowedBounds: { x: 0, y: 0, width: 1280, height: 720 },
     allowApps: [],
-    denyApps: ['airi'],
+    denyApps: ['aipets'],
     denyWindowTitles: ['keychain'],
     openableApps: ['Finder', 'Terminal', 'Cursor', 'Visual Studio Code', 'Google Chrome'],
     timeoutMs: 15_000,
@@ -32,9 +32,9 @@ export function createTestConfig(overrides: Partial<ComputerUseConfig> = {}): Co
     requireCoordinateAlignmentForMutatingActions: true,
     terminalShell: '/bin/zsh',
     remoteSshHost: '20.196.212.37',
-    remoteSshUser: 'airi',
+    remoteSshUser: 'aipets',
     remoteSshPort: 22,
-    remoteRunnerCommand: '$HOME/.local/bin/airi-desktop-runner',
+    remoteRunnerCommand: '$HOME/.local/bin/aipets-desktop-runner',
     remoteDisplaySize: {
       width: 1280,
       height: 720,
@@ -85,7 +85,7 @@ export function createRemoteExecutionTarget(overrides: Partial<ExecutionTarget> 
     mode: 'remote',
     transport: 'ssh-stdio',
     hostName: 'fake-remote',
-    remoteUser: 'airi',
+    remoteUser: 'aipets',
     displayId: ':99',
     sessionTag: 'vm-local-1',
     isolated: true,
@@ -158,7 +158,7 @@ export function createLastScreenshot(overrides: Partial<LastScreenshotInfo> = {}
 
 export function createTerminalState(overrides: Partial<TerminalState> = {}): TerminalState {
   return {
-    effectiveCwd: '/workspace/airi',
+    effectiveCwd: '/workspace/aipets',
     lastExitCode: 0,
     lastCommandSummary: 'pwd',
     ...overrides,

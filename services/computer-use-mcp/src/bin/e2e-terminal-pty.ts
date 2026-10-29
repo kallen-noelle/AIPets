@@ -15,7 +15,7 @@
  * Node.js process on the host machine.
  *
  * Usage:
- *   pnpm -F @proj-airi/computer-use-mcp e2e:terminal-pty
+ *   pnpm -F @proj-aipets/computer-use-mcp e2e:terminal-pty
  */
 
 import { dirname, resolve } from 'node:path'
@@ -73,7 +73,7 @@ async function createClient(): Promise<Client> {
   })
 
   const client = new Client({
-    name: '@proj-airi/e2e-terminal-pty',
+    name: '@proj-aipets/e2e-terminal-pty',
     version: '0.1.0',
   })
 

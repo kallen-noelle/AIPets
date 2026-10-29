@@ -13,9 +13,9 @@ The important truth is:
 - `exec` is already a real mainline surface.
 - `PTY` is no longer just a loose tool set; the workflow engine now has self-acquire support.
 - Service-layer terminal E2Es for the current lane are present and treated as the terminal proof line.
-- The AIRI chat terminal demo is now aligned with terminal lane v2 and no longer pre-creates PTY.
+- The AIPETS chat terminal demo is now aligned with terminal lane v2 and no longer pre-creates PTY.
 - The desktop shell now distinguishes `pty_session` from `terminal_and_apps`.
-- AIRI chat self-acquire is now part of the strict release gate set, so PTY mainline support is no longer intentionally held back.
+- AIPETS chat self-acquire is now part of the strict release gate set, so PTY mainline support is no longer intentionally held back.
 
 Do not rely on compressed chat summaries to resume this work. Use this file as the handoff source of truth and update it when terminal-lane behavior changes materially.
 
@@ -101,23 +101,23 @@ It currently uses:
 
 This is the current service-level proof for terminal lane v2.
 
-### 5. AIRI chat self-acquire demo is now on the v2 path
+### 5. AIPETS chat self-acquire demo is now on the v2 path
 
-`src/bin/e2e-airi-chat-terminal-self-acquire.ts` follows the same product story:
+`src/bin/e2e-aipets-chat-terminal-self-acquire.ts` follows the same product story:
 
 - no harness-side `pty_create`
-- AIRI calls the real workflow
+- AIPETS calls the real workflow
 - the workflow self-acquires PTY for the interactive validation step
-- AIRI finishes with a natural-language summary for demo use
+- AIPETS finishes with a natural-language summary for demo use
 
 The latest successful reports live under:
 
-- `.computer-use-mcp/reports/airi-chat-terminal-self-acquire-*`
+- `.computer-use-mcp/reports/aipets-chat-terminal-self-acquire-*`
 
 The current package commands are:
 
-- `pnpm -F @proj-airi/computer-use-mcp e2e:airi-chat-terminal-self-acquire`
-- `pnpm -F @proj-airi/computer-use-mcp demo:terminal-self-acquire`
+- `pnpm -F @proj-aipets/computer-use-mcp e2e:aipets-chat-terminal-self-acquire`
+- `pnpm -F @proj-aipets/computer-use-mcp demo:terminal-self-acquire`
 
 ### 6. Support matrix already reflects the new direction
 
@@ -132,11 +132,11 @@ Relevant entries in `src/support-matrix.ts`:
 
 The current strict release gates are:
 
-- `pnpm -F @proj-airi/computer-use-mcp e2e:developer-workflow`
-- `pnpm -F @proj-airi/computer-use-mcp e2e:terminal-exec`
-- `pnpm -F @proj-airi/computer-use-mcp e2e:terminal-pty`
-- `pnpm -F @proj-airi/computer-use-mcp e2e:terminal-self-acquire`
-- `pnpm -F @proj-airi/computer-use-mcp e2e:airi-chat-terminal-self-acquire`
+- `pnpm -F @proj-aipets/computer-use-mcp e2e:developer-workflow`
+- `pnpm -F @proj-aipets/computer-use-mcp e2e:terminal-exec`
+- `pnpm -F @proj-aipets/computer-use-mcp e2e:terminal-pty`
+- `pnpm -F @proj-aipets/computer-use-mcp e2e:terminal-self-acquire`
+- `pnpm -F @proj-aipets/computer-use-mcp e2e:aipets-chat-terminal-self-acquire`
 
 ## What Is Still Not Finished
 
@@ -167,7 +167,7 @@ If you are continuing terminal lane work, read these first:
 2. `src/workflows/surface-resolver.ts`
 3. `src/terminal/interactive-patterns.ts`
 4. `src/bin/e2e-terminal-self-acquire.ts`
-5. `src/bin/e2e-airi-chat-terminal-self-acquire.ts`
+5. `src/bin/e2e-aipets-chat-terminal-self-acquire.ts`
 6. `src/support-matrix.ts`
 7. `apps/stage-tamagotchi/src/renderer/App.vue`
 8. `apps/stage-tamagotchi/src/renderer/modules/computer-use-approval.ts`
@@ -180,24 +180,24 @@ Use these as the baseline checks for terminal lane work:
 
 ### Service-level terminal lane
 
-- `pnpm -F @proj-airi/computer-use-mcp e2e:terminal-exec`
-- `pnpm -F @proj-airi/computer-use-mcp e2e:terminal-pty`
-- `pnpm -F @proj-airi/computer-use-mcp e2e:terminal-self-acquire`
-- `pnpm -F @proj-airi/computer-use-mcp e2e:airi-chat-terminal-self-acquire`
+- `pnpm -F @proj-aipets/computer-use-mcp e2e:terminal-exec`
+- `pnpm -F @proj-aipets/computer-use-mcp e2e:terminal-pty`
+- `pnpm -F @proj-aipets/computer-use-mcp e2e:terminal-self-acquire`
+- `pnpm -F @proj-aipets/computer-use-mcp e2e:aipets-chat-terminal-self-acquire`
 
 ### Core test coverage
 
-- `pnpm -F @proj-airi/computer-use-mcp exec vitest run --config ./vitest.config.ts`
+- `pnpm -F @proj-aipets/computer-use-mcp exec vitest run --config ./vitest.config.ts`
 
 ### Typecheck
 
-- `pnpm -F @proj-airi/computer-use-mcp typecheck`
-- `pnpm -F @proj-airi/stage-ui typecheck`
+- `pnpm -F @proj-aipets/computer-use-mcp typecheck`
+- `pnpm -F @proj-aipets/stage-ui typecheck`
 
-If `pnpm -F @proj-airi/stage-tamagotchi typecheck` behaves oddly in the current environment, run the two underlying commands directly:
+If `pnpm -F @proj-aipets/stage-tamagotchi typecheck` behaves oddly in the current environment, run the two underlying commands directly:
 
-- `pnpm -F @proj-airi/stage-tamagotchi run typecheck:node`
-- `pnpm -F @proj-airi/stage-tamagotchi run typecheck:web`
+- `pnpm -F @proj-aipets/stage-tamagotchi run typecheck:node`
+- `pnpm -F @proj-aipets/stage-tamagotchi run typecheck:web`
 
 ## Handoff Rules
 
@@ -206,7 +206,7 @@ If you change terminal lane behavior, update this file before stopping.
 At minimum, always rewrite these four facts:
 
 1. Is PTY self-acquire the mainline, or does any path still depend on pre-created PTY?
-2. Is AIRI chat E2E aligned with the service-level terminal lane, or still on an older path?
+2. Is AIPETS chat E2E aligned with the service-level terminal lane, or still on an older path?
 3. Is desktop approval using real `pty_session` semantics, or still old `terminal_and_apps` semantics?
 4. Which terminal capabilities are `product-supported` vs only `covered` in `src/support-matrix.ts`?
 

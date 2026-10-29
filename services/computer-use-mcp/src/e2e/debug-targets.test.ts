@@ -5,8 +5,8 @@ import { describe, expect, it } from 'vitest'
 import {
 
   isChatSurfaceTarget,
-  isInspectableAiriRendererTarget,
-  prioritizeInspectableAiriTargets,
+  isInspectableAipetsRendererTarget,
+  prioritizeInspectableAipetsTargets,
 } from './debug-targets'
 
 function createTarget(partial: Partial<DebugTargetLike>): DebugTargetLike {
@@ -21,21 +21,21 @@ function createTarget(partial: Partial<DebugTargetLike>): DebugTargetLike {
 
 describe('debug target helpers', () => {
   it('filters out helper renderer pages like beat-sync and devtools', () => {
-    expect(isInspectableAiriRendererTarget(createTarget({
+    expect(isInspectableAipetsRendererTarget(createTarget({
       url: 'http://localhost:5173/beat-sync.html',
     }))).toBe(false)
 
-    expect(isInspectableAiriRendererTarget(createTarget({
+    expect(isInspectableAipetsRendererTarget(createTarget({
       url: 'http://localhost:5173/__inspect__',
     }))).toBe(false)
 
-    expect(isInspectableAiriRendererTarget(createTarget({
+    expect(isInspectableAipetsRendererTarget(createTarget({
       url: 'http://localhost:5173/',
     }))).toBe(true)
   })
 
-  it('prioritizes chat and main AIRI surfaces ahead of generic pages', () => {
-    const targets = prioritizeInspectableAiriTargets([
+  it('prioritizes chat and main AIPETS surfaces ahead of generic pages', () => {
+    const targets = prioritizeInspectableAipetsTargets([
       createTarget({
         id: 'generic',
         title: '',
@@ -43,7 +43,7 @@ describe('debug target helpers', () => {
       }),
       createTarget({
         id: 'main',
-        title: 'AIRI',
+        title: 'AIPETS',
         url: 'http://localhost:5173/',
       }),
       createTarget({
@@ -56,21 +56,21 @@ describe('debug target helpers', () => {
     expect(targets.map(target => target.id)).toEqual(['chat', 'main', 'generic'])
   })
 
-  it('detects chat surfaces from either target metadata or AIRI debug snapshots', () => {
+  it('detects chat surfaces from either target metadata or AIPETS debug snapshots', () => {
     expect(isChatSurfaceTarget(createTarget({
       title: 'Chat',
       url: 'http://localhost:5173/',
     }))).toBe(true)
 
     expect(isChatSurfaceTarget(createTarget({
-      title: 'AIRI',
+      title: 'AIPETS',
       url: 'http://localhost:5173/',
     }), {
       route: '#/chat',
     })).toBe(true)
 
     expect(isChatSurfaceTarget(createTarget({
-      title: 'AIRI',
+      title: 'AIPETS',
       url: 'http://localhost:5173/',
     }), {
       route: '#/',

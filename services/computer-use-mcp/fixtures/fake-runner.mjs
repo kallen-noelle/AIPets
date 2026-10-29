@@ -8,7 +8,7 @@ const state = {
   sessionTag: env.FAKE_RUNNER_SESSION_TAG || 'vm-local-1',
   displayId: env.FAKE_RUNNER_DISPLAY_ID || ':99',
   hostName: env.FAKE_RUNNER_HOST_NAME || 'fake-remote',
-  remoteUser: env.FAKE_RUNNER_REMOTE_USER || 'airi',
+  remoteUser: env.FAKE_RUNNER_REMOTE_USER || 'aipets',
   width: Number.parseInt(env.FAKE_RUNNER_WIDTH || '1280', 10),
   height: Number.parseInt(env.FAKE_RUNNER_HEIGHT || '720', 10),
   observationBaseUrl: env.FAKE_RUNNER_OBSERVATION_BASE_URL || '',

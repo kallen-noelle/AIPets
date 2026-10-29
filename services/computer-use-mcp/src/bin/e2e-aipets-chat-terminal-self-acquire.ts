@@ -1,6 +1,6 @@
 import type { ChildProcessWithoutNullStreams } from 'node:child_process'
 
-import type { AiriDebugSnapshotLike, DebugTargetLike } from '../e2e/debug-targets'
+import type { AipetsDebugSnapshotLike, DebugTargetLike } from '../e2e/debug-targets'
 
 import { Buffer } from 'node:buffer'
 import { execFile, spawn } from 'node:child_process'
@@ -17,7 +17,7 @@ import WebSocket from 'ws'
 import { hasCompletedChatTurn } from '../e2e/chat-turn'
 import {
   isChatSurfaceTarget,
-  prioritizeInspectableAiriTargets,
+  prioritizeInspectableAipetsTargets,
 } from '../e2e/debug-targets'
 import { getProviderBootstrapConfig, resolvePreferredChatProviderId } from '../e2e/provider-bootstrap'
 import { errorMessageFromValue } from '../utils/error-message'
@@ -73,7 +73,7 @@ interface ReportShape {
 const execFileAsync = promisify(execFile)
 const packageDir = resolve(dirname(fileURLToPath(import.meta.url)), '../..')
 const repoDir = resolve(packageDir, '../..')
-const preferredDebugPort = Number(env.AIRI_E2E_DEBUG_PORT || '9222')
+const preferredDebugPort = Number(env.AIPETS_E2E_DEBUG_PORT || '9222')
 const runId = new Date().toISOString().replaceAll(':', '-').replaceAll('.', '-')
 const repoChangesCommand = 'git diff --stat -- services/computer-use-mcp packages/stage-ui apps/stage-tamagotchi'
 const summaryMarker = 'Terminal self-acquire demo complete.'
@@ -82,7 +82,7 @@ const QUOTED_VALUE_RE = /^['"]|['"]$/gu
 const DEVTOOLS_BROWSER_WS_PATH_RE = /\/devtools\/browser\/[^/]+$/
 const DEVTOOLS_LISTENING_RE = /DevTools listening on (ws:\/\/\S+)/
 const promptText = [
-  `Use MCP tools to validate the AIRI repository at ${repoDir}.`,
+  `Use MCP tools to validate the AIPETS repository at ${repoDir}.`,
   'Call the real workflow, do not narrate or simulate tool results.',
   '1. Call computer_use::workflow_validate_workspace with these exact arguments:',
   `   - projectPath: ${repoDir}`,
@@ -95,7 +95,7 @@ const promptText = [
   '4. Reply in plain text with 3 short bullet points for a management audience.',
   '5. Mention that validation started on exec, the workflow self-acquired PTY for the interactive validation command, and the workflow completed successfully.',
 ].join('\n')
-const reportDir = resolve(packageDir, '.computer-use-mcp', 'reports', `airi-chat-terminal-self-acquire-${runId}`)
+const reportDir = resolve(packageDir, '.computer-use-mcp', 'reports', `aipets-chat-terminal-self-acquire-${runId}`)
 const reportPath = resolve(reportDir, 'report.json')
 const demoSummaryPath = resolve(reportDir, 'demo-summary.md')
 const screenshotsDir = resolve(reportDir, 'screenshots')
@@ -224,7 +224,7 @@ async function findAvailablePort(preferredPort: number, attempts = 20) {
 async function terminateExistingStageTamagotchiInstances() {
   const patterns = [
     resolve(repoDir, 'apps', 'stage-tamagotchi'),
-    '@proj-airi/stage-tamagotchi',
+    '@proj-aipets/stage-tamagotchi',
     resolve(repoDir, 'node_modules', '.pnpm', 'electron@'),
   ]
 
@@ -260,9 +260,9 @@ function summarizeMessageText(value: unknown) {
 }
 
 function getPreferredModels(providerId: string) {
-  const requested = env.AIRI_E2E_MODELS?.trim()
-    ? env.AIRI_E2E_MODELS.split(',')
-    : [env.AIRI_E2E_MODEL?.trim() || '']
+  const requested = env.AIPETS_E2E_MODELS?.trim()
+    ? env.AIPETS_E2E_MODELS.split(',')
+    : [env.AIPETS_E2E_MODEL?.trim() || '']
 
   const explicit = requested
     .map(model => model?.trim())
@@ -416,7 +416,7 @@ async function writeDemoSummary(params: {
   screenshotPaths: string[]
 }) {
   const lines = [
-    '# AIRI Terminal Self-Acquire Demo',
+    '# AIPETS Terminal Self-Acquire Demo',
     '',
     `Report: ${reportPath}`,
     `Provider: ${params.providerId}`,
@@ -424,7 +424,7 @@ async function writeDemoSummary(params: {
     `PTY session: ${params.ptySessionId}`,
     '',
     '## What This Demonstrates',
-    '- AIRI started on the normal workflow terminal path (`exec`).',
+    '- AIPETS started on the normal workflow terminal path (`exec`).',
     '- The workflow recognized that the validation step needed an interactive terminal and self-acquired PTY inside the workflow.',
     `- The validation step executed on PTY session \`${params.ptySessionId}\` without an outward reroute.`,
     `- Verification evidence included ${params.auditDeltaCount} PTY audit entries and ${params.newTraceCount} new trace entries.`,
@@ -441,7 +441,7 @@ async function writeDemoSummary(params: {
   ]
 
   if (params.demoSummaryText?.trim()) {
-    lines.push('', '## AIRI Final Visible Summary', '', params.demoSummaryText.trim())
+    lines.push('', '## AIPETS Final Visible Summary', '', params.demoSummaryText.trim())
   }
 
   if (params.screenshotPaths.length > 0) {
@@ -488,9 +488,9 @@ async function bringTargetToFront(client: CdpClient, label: string) {
   await sleep(750)
 }
 
-async function getAiriDebugSnapshot(client: CdpClient) {
-  return await client.evaluate<AiriDebugSnapshotLike | undefined>(`(() => {
-    const bridge = window.__AIRI_DEBUG__
+async function getAipetsDebugSnapshot(client: CdpClient) {
+  return await client.evaluate<AipetsDebugSnapshotLike | undefined>(`(() => {
+    const bridge = window.__AIPETS_DEBUG__
     if (!bridge || typeof bridge.getSnapshot !== 'function') {
       return undefined
     }
@@ -499,16 +499,16 @@ async function getAiriDebugSnapshot(client: CdpClient) {
   })()`)
 }
 
-async function callAiriDebugBridge<T>(client: CdpClient, method: string, args: unknown[] = []) {
+async function callAipetsDebugBridge<T>(client: CdpClient, method: string, args: unknown[] = []) {
   return await client.evaluate<T>(`(async () => {
-    const bridge = window.__AIRI_DEBUG__
+    const bridge = window.__AIPETS_DEBUG__
     if (!bridge) {
-      throw new Error('AIRI debug bridge is unavailable')
+      throw new Error('AIPETS debug bridge is unavailable')
     }
 
     const fn = bridge[${JSON.stringify(method)}]
     if (typeof fn !== 'function') {
-      throw new Error('AIRI debug bridge method is unavailable: ${method}')
+      throw new Error('AIPETS debug bridge method is unavailable: ${method}')
     }
 
     return await fn.apply(bridge, ${JSON.stringify(args)})
@@ -518,7 +518,7 @@ async function callAiriDebugBridge<T>(client: CdpClient, method: string, args: u
 async function waitForChatSurfaceReady(client: CdpClient, label: string) {
   return await waitFor(label, async () => {
     try {
-      const snapshot = await callAiriDebugBridge<Record<string, any>>(client, 'getSnapshot')
+      const snapshot = await callAipetsDebugBridge<Record<string, any>>(client, 'getSnapshot')
       if (snapshot.dom?.hasTextarea) {
         return snapshot
       }
@@ -531,13 +531,13 @@ async function waitForChatSurfaceReady(client: CdpClient, label: string) {
   }, 30_000, 250)
 }
 
-async function findTargetWithAiriDebugBridge(
+async function findTargetWithAipetsDebugBridge(
   browserWsUrl: string,
   label: string,
-  predicate?: (target: DebugTarget, snapshot: AiriDebugSnapshotLike) => boolean,
+  predicate?: (target: DebugTarget, snapshot: AipetsDebugSnapshotLike) => boolean,
 ) {
   return await waitFor(label, async () => {
-    const targets = prioritizeInspectableAiriTargets(await listDebugTargets(browserWsUrl).catch(() => []))
+    const targets = prioritizeInspectableAipetsTargets(await listDebugTargets(browserWsUrl).catch(() => []))
 
     for (const target of targets) {
       let client: CdpClient | undefined
@@ -550,7 +550,7 @@ async function findTargetWithAiriDebugBridge(
         )
         const snapshot = await withTimeout(
           `${label} snapshot ${target.title || target.url || target.id}`,
-          getAiriDebugSnapshot(client),
+          getAipetsDebugSnapshot(client),
           2_500,
         )
         if (!snapshot) {
@@ -586,13 +586,13 @@ async function prepareMcpConfig() {
     mcpServers: {
       computer_use: {
         command: 'pnpm',
-        args: ['-F', '@proj-airi/computer-use-mcp', 'start'],
+        args: ['-F', '@proj-aipets/computer-use-mcp', 'start'],
         cwd: repoDir,
         enabled: true,
         env: {
           COMPUTER_USE_EXECUTOR: 'dry-run',
           COMPUTER_USE_APPROVAL_MODE: 'never',
-          COMPUTER_USE_SESSION_TAG: `airi-chat-terminal-self-acquire-${runId}`,
+          COMPUTER_USE_SESSION_TAG: `aipets-chat-terminal-self-acquire-${runId}`,
           COMPUTER_USE_ALLOWED_BOUNDS: '0,0,1920,1080',
           COMPUTER_USE_OPENABLE_APPS: 'Finder,Terminal,Visual Studio Code,Cursor',
           COMPUTER_USE_SESSION_ROOT: mcpSessionRoot,
@@ -638,12 +638,12 @@ async function main() {
   const debugPort = await findAvailablePort(preferredDebugPort)
   const rootEnvValues = await readRootEnvValues()
   const resolvedPreferredProviderId = resolvePreferredChatProviderId({
-    requestedProviderId: env.AIRI_E2E_PROVIDER?.trim(),
+    requestedProviderId: env.AIPETS_E2E_PROVIDER?.trim(),
     processEnv: env,
     dotenvValues: rootEnvValues,
   })
   const providerAttemptOrder = Array.from(new Set([
-    env.AIRI_E2E_PROVIDER?.trim(),
+    env.AIPETS_E2E_PROVIDER?.trim(),
     resolvedPreferredProviderId,
     'google-generative-ai',
     'github-models',
@@ -660,7 +660,7 @@ async function main() {
     const stageLogStream = createWriteStream(stageLogPath, { flags: 'a' })
     addTimeline('start-stage-tamagotchi')
 
-    stageProcess = spawn('pnpm', ['-F', '@proj-airi/stage-tamagotchi', 'dev'], {
+    stageProcess = spawn('pnpm', ['-F', '@proj-aipets/stage-tamagotchi', 'dev'], {
       cwd: repoDir,
       env: {
         ...env,
@@ -699,9 +699,9 @@ async function main() {
     }, 120_000, 500)
     addTimeline('remote-debug-browser-ready', { browserWsUrl: activeBrowserWsUrl, debugPort })
 
-    const mainTargetMatch = await findTargetWithAiriDebugBridge(
+    const mainTargetMatch = await findTargetWithAipetsDebugBridge(
       activeBrowserWsUrl,
-      'AIRI main target',
+      'AIPETS main target',
       (_target, snapshot) => !String(snapshot.route || '').includes('/chat'),
     )
     const mainTarget = mainTargetMatch.target
@@ -717,13 +717,13 @@ async function main() {
 
     try {
       await withTimeout(
-        'AIRI debug bridge openChat',
-        callAiriDebugBridge(mainTargetClient, 'openChat'),
+        'AIPETS debug bridge openChat',
+        callAipetsDebugBridge(mainTargetClient, 'openChat'),
         8_000,
       )
       addTimeline('chat-open-requested', { mode: 'separate-window' })
 
-      const chatTargetMatch = await findTargetWithAiriDebugBridge(
+      const chatTargetMatch = await findTargetWithAipetsDebugBridge(
         activeBrowserWsUrl,
         'Chat target',
         (target, snapshot) => isChatSurfaceTarget(target, snapshot),
@@ -753,19 +753,19 @@ async function main() {
       })
 
       await mainTargetClient.close().catch(() => {})
-      const refreshedMainTargetMatch = await findTargetWithAiriDebugBridge(
+      const refreshedMainTargetMatch = await findTargetWithAipetsDebugBridge(
         activeBrowserWsUrl,
-        'AIRI main target (fallback refresh)',
+        'AIPETS main target (fallback refresh)',
         (_target, snapshot) => !String(snapshot.route || '').includes('/chat'),
       )
       mainTargetClient = await CdpClient.connect(refreshedMainTargetMatch.target)
       await bringTargetToFront(mainTargetClient, 'main-fallback-refresh')
 
-      await callAiriDebugBridge(mainTargetClient, 'navigateTo', ['/chat'])
+      await callAipetsDebugBridge(mainTargetClient, 'navigateTo', ['/chat'])
 
-      await waitFor('chat route in main AIRI window', async () => {
+      await waitFor('chat route in main AIPETS window', async () => {
         try {
-          const snapshot = await callAiriDebugBridge<Record<string, any>>(mainTargetClient!, 'getSnapshot')
+          const snapshot = await callAipetsDebugBridge<Record<string, any>>(mainTargetClient!, 'getSnapshot')
           const onChatRoute = String(snapshot.route || '').includes('/chat')
           const hasTextarea = Boolean(snapshot.dom?.hasTextarea)
           return onChatRoute && hasTextarea ? snapshot : undefined
@@ -786,14 +786,14 @@ async function main() {
       })
       chatClientSharesMainTarget = true
       addTimeline('chat-target-ready', {
-        title: 'AIRI',
+        title: 'AIPETS',
         url: 'http://localhost:5173/#/chat',
         mode: 'same-window-route',
       })
     }
 
     screenshotPaths.push(await captureChatScreenshot(chatTargetClient, 'chat-ready'))
-    await callAiriDebugBridge(chatTargetClient, 'clearEvents')
+    await callAipetsDebugBridge(chatTargetClient, 'clearEvents')
     let selectionSnapshot: Record<string, any> | undefined
     let selectedProviderId = ''
     let selectedModelCandidates: string[] = []
@@ -805,7 +805,7 @@ async function main() {
         dotenvValues: rootEnvValues,
       })
       const candidateModels = getPreferredModels(providerId)
-      const candidateSnapshot = await callAiriDebugBridge<Record<string, any>>(chatTargetClient, 'ensureConsciousnessSelection', [{
+      const candidateSnapshot = await callAipetsDebugBridge<Record<string, any>>(chatTargetClient, 'ensureConsciousnessSelection', [{
         provider: providerId,
         preferredModels: candidateModels,
         providerConfig: providerBootstrapConfig,
@@ -829,7 +829,7 @@ async function main() {
     }
 
     if (!selectionSnapshot) {
-      throw new Error(`No chat provider is available for AIRI chat E2E. Tried: ${providerAttemptOrder.join(', ')}`)
+      throw new Error(`No chat provider is available for AIPETS chat E2E. Tried: ${providerAttemptOrder.join(', ')}`)
     }
 
     addTimeline('consciousness-selection-ready', {
@@ -839,8 +839,8 @@ async function main() {
       providerAvailable: Boolean(selectionSnapshot.provider?.providerAvailable),
     })
 
-    await callAiriDebugBridge(chatTargetClient, 'clearEvents')
-    const resetSnapshot = await callAiriDebugBridge<Record<string, any>>(chatTargetClient, 'resetChatSession')
+    await callAipetsDebugBridge(chatTargetClient, 'clearEvents')
+    const resetSnapshot = await callAipetsDebugBridge<Record<string, any>>(chatTargetClient, 'resetChatSession')
     report.debugSnapshots.push(resetSnapshot)
     addTimeline('chat-session-reset', {
       providerConfigured: Boolean(resetSnapshot.provider?.configured),
@@ -850,9 +850,9 @@ async function main() {
       activeSessionId: String(resetSnapshot.chat?.activeSessionId || ''),
     })
 
-    const availableTools = await waitFor('computer_use tools inside AIRI', async () => {
+    const availableTools = await waitFor('computer_use tools inside AIPETS', async () => {
       try {
-        const tools = await callAiriDebugBridge<Array<Record<string, unknown>>>(chatTargetClient!, 'listMcpTools')
+        const tools = await callAipetsDebugBridge<Array<Record<string, unknown>>>(chatTargetClient!, 'listMcpTools')
         const names = new Set(tools.map(tool => String(tool.name || '')))
         const requiredTools = [
           'computer_use::workflow_validate_workspace',
@@ -878,7 +878,7 @@ async function main() {
       toolCount: Array.isArray(availableTools) ? availableTools.length : 0,
     })
 
-    const ptyStatusResult = await callAiriDebugBridge<Record<string, unknown>>(chatTargetClient, 'callMcpTool', [{
+    const ptyStatusResult = await callAipetsDebugBridge<Record<string, unknown>>(chatTargetClient, 'callMcpTool', [{
       name: 'computer_use::pty_get_status',
       arguments: {},
     }])
@@ -894,7 +894,7 @@ async function main() {
       `pty_get_status expected ptyAvailable=true, got ${String(ptyStatusData.ptyAvailable)}${typeof ptyStatusData.error === 'string' ? ` (${ptyStatusData.error})` : ''}`,
     )
 
-    const baselineStateResult = await callAiriDebugBridge<Record<string, unknown>>(chatTargetClient, 'callMcpTool', [{
+    const baselineStateResult = await callAipetsDebugBridge<Record<string, unknown>>(chatTargetClient, 'callMcpTool', [{
       name: 'computer_use::desktop_get_state',
       arguments: {},
     }])
@@ -903,7 +903,7 @@ async function main() {
     const baselineAuditCount = Array.isArray(baselineRunState.ptyAuditLog) ? baselineRunState.ptyAuditLog.length : 0
     const baselinePtySessionCount = Array.isArray(baselineRunState.ptySessions) ? baselineRunState.ptySessions.length : 0
 
-    const baselineTraceResult = await callAiriDebugBridge<Record<string, unknown>>(chatTargetClient, 'callMcpTool', [{
+    const baselineTraceResult = await callAipetsDebugBridge<Record<string, unknown>>(chatTargetClient, 'callMcpTool', [{
       name: 'computer_use::desktop_get_session_trace',
       arguments: { limit: 200 },
     }])
@@ -916,13 +916,13 @@ async function main() {
     })
 
     const baselineMessageCount = Number(resetSnapshot.chat?.messageCount || 0)
-    await callAiriDebugBridge(chatTargetClient, 'sendChatPrompt', [promptText])
+    await callAipetsDebugBridge(chatTargetClient, 'sendChatPrompt', [promptText])
     addTimeline('chat-send-dispatched', {
       baselineMessageCount,
     })
 
     await waitFor('chat submission', async () => {
-      const snapshot = await callAiriDebugBridge<Record<string, any>>(chatTargetClient!, 'getSnapshot')
+      const snapshot = await callAipetsDebugBridge<Record<string, any>>(chatTargetClient!, 'getSnapshot')
       report.debugSnapshots.push(snapshot)
 
       const messageCount = Number(snapshot.chat?.messageCount || 0)
@@ -942,7 +942,7 @@ async function main() {
     }, 20_000, 500)
 
     const finalSnapshot = await waitFor('chat completion after terminal self-acquire turn', async () => {
-      const snapshot = await callAiriDebugBridge<Record<string, any>>(chatTargetClient!, 'getSnapshot')
+      const snapshot = await callAipetsDebugBridge<Record<string, any>>(chatTargetClient!, 'getSnapshot')
       report.debugSnapshots.push(snapshot)
 
       const sending = Boolean(snapshot.chat?.sending)
@@ -972,13 +972,13 @@ async function main() {
       return undefined
     }, 240_000, 1_000)
 
-    const finalStateResult = await callAiriDebugBridge<Record<string, unknown>>(chatTargetClient, 'callMcpTool', [{
+    const finalStateResult = await callAipetsDebugBridge<Record<string, unknown>>(chatTargetClient, 'callMcpTool', [{
       name: 'computer_use::desktop_get_state',
       arguments: {},
     }])
     report.internalMcp.desktopState = requireStructuredContent(finalStateResult, 'computer_use::desktop_get_state (final)')
 
-    const finalTraceResult = await callAiriDebugBridge<Record<string, unknown>>(chatTargetClient, 'callMcpTool', [{
+    const finalTraceResult = await callAipetsDebugBridge<Record<string, unknown>>(chatTargetClient, 'callMcpTool', [{
       name: 'computer_use::desktop_get_session_trace',
       arguments: { limit: 200 },
     }])
@@ -995,7 +995,7 @@ async function main() {
     }
 
     if (report.final.lastMessageRole === 'error') {
-      throw new Error(`AIRI chat failed on ${report.final.providerId}/${report.final.modelId}: ${report.final.lastMessageText || 'unknown error'}`)
+      throw new Error(`AIPETS chat failed on ${report.final.providerId}/${report.final.modelId}: ${report.final.lastMessageText || 'unknown error'}`)
     }
 
     const finalRunState = ((report.internalMcp.desktopState as Record<string, unknown>).runState || {}) as Record<string, unknown>
@@ -1054,7 +1054,7 @@ async function main() {
       'PTY audit delta must include send_input for vim --version',
     )
 
-    const ptyReadResult = await callAiriDebugBridge<Record<string, unknown>>(chatTargetClient, 'callMcpTool', [{
+    const ptyReadResult = await callAipetsDebugBridge<Record<string, unknown>>(chatTargetClient, 'callMcpTool', [{
       name: 'computer_use::pty_read_screen',
       arguments: { sessionId: ptySessionId },
     }])
@@ -1074,7 +1074,7 @@ async function main() {
 
     screenshotPaths.push(await captureChatScreenshot(chatTargetClient, 'post-workflow-self-acquire-turn'))
 
-    await callAiriDebugBridge(chatTargetClient, 'clearEvents')
+    await callAipetsDebugBridge(chatTargetClient, 'clearEvents')
     const summaryPrompt = [
       'Do not call any more tools.',
       'Reply in plain text only.',
@@ -1086,14 +1086,14 @@ async function main() {
     ].join('\n')
     const summaryBaselineMessageCount = Number(finalSnapshot.chat?.messageCount || 0)
 
-    await callAiriDebugBridge(chatTargetClient, 'sendChatPrompt', [summaryPrompt])
+    await callAipetsDebugBridge(chatTargetClient, 'sendChatPrompt', [summaryPrompt])
     addTimeline('demo-summary-send-dispatched', {
       baselineMessageCount: summaryBaselineMessageCount,
       summaryMarker,
     })
 
     await waitFor('demo summary submission', async () => {
-      const snapshot = await callAiriDebugBridge<Record<string, any>>(chatTargetClient!, 'getSnapshot')
+      const snapshot = await callAipetsDebugBridge<Record<string, any>>(chatTargetClient!, 'getSnapshot')
       report.debugSnapshots.push(snapshot)
 
       const messageCount = Number(snapshot.chat?.messageCount || 0)
@@ -1113,7 +1113,7 @@ async function main() {
     }, 20_000, 500)
 
     const demoSummarySnapshot = await waitFor('demo summary completion', async () => {
-      const snapshot = await callAiriDebugBridge<Record<string, any>>(chatTargetClient!, 'getSnapshot')
+      const snapshot = await callAipetsDebugBridge<Record<string, any>>(chatTargetClient!, 'getSnapshot')
       report.debugSnapshots.push(snapshot)
 
       const sending = Boolean(snapshot.chat?.sending)
@@ -1143,7 +1143,7 @@ async function main() {
       return undefined
     }, 120_000, 1_000)
 
-    const chatMessages = await callAiriDebugBridge<Array<Record<string, unknown>>>(chatTargetClient, 'getChatMessages', [6])
+    const chatMessages = await callAipetsDebugBridge<Array<Record<string, unknown>>>(chatTargetClient, 'getChatMessages', [6])
     const latestAssistantSummary = [...chatMessages]
       .reverse()
       .find(message => String(message.role || '') === 'assistant' && String(message.text || '').includes(summaryMarker))
@@ -1185,7 +1185,7 @@ async function main() {
       screenshotPaths,
     })
 
-    await callAiriDebugBridge(chatTargetClient, 'callMcpTool', [{
+    await callAipetsDebugBridge(chatTargetClient, 'callMcpTool', [{
       name: 'computer_use::pty_destroy',
       arguments: { sessionId: ptySessionId },
     }]).catch(() => undefined)

@@ -20,7 +20,7 @@ describe('resolveComputerUseConfig', () => {
   it('parses remote linux-x11 settings from env', () => {
     process.env.COMPUTER_USE_EXECUTOR = 'linux-x11'
     process.env.COMPUTER_USE_REMOTE_SSH_HOST = '20.196.212.37'
-    process.env.COMPUTER_USE_REMOTE_SSH_USER = 'airi'
+    process.env.COMPUTER_USE_REMOTE_SSH_USER = 'aipets'
     process.env.COMPUTER_USE_REMOTE_SSH_PORT = '2201'
     process.env.COMPUTER_USE_REMOTE_RUNNER_COMMAND = '~/.local/bin/custom-runner'
     process.env.COMPUTER_USE_REMOTE_DISPLAY_SIZE = '1366x768'
@@ -32,7 +32,7 @@ describe('resolveComputerUseConfig', () => {
 
     expect(config.executor).toBe('linux-x11')
     expect(config.remoteSshHost).toBe('20.196.212.37')
-    expect(config.remoteSshUser).toBe('airi')
+    expect(config.remoteSshUser).toBe('aipets')
     expect(config.remoteSshPort).toBe(2201)
     expect(config.remoteRunnerCommand).toBe('$HOME/.local/bin/custom-runner')
     expect(config.remoteDisplaySize).toEqual({
@@ -59,7 +59,7 @@ describe('resolveComputerUseConfig', () => {
 
     expect(config.executor).toBe('macos-local')
     expect(config.openableApps).toEqual(['Finder', 'Terminal', 'Cursor', 'Visual Studio Code', 'Google Chrome'])
-    expect(config.denyApps).toContain('airi')
+    expect(config.denyApps).toContain('aipets')
     expect(config.terminalShell).toBeTruthy()
     expect(config.permissionChainHint).toContain('swift/quartz + open')
     expect(config.requireAllowedBoundsForMutatingActions).toBe(false)

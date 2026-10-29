@@ -1,6 +1,6 @@
 import type { ChildProcessWithoutNullStreams } from 'node:child_process'
 
-import type { AiriDebugSnapshotLike } from '../e2e/debug-targets'
+import type { AipetsDebugSnapshotLike } from '../e2e/debug-targets'
 
 import { execFile, spawn } from 'node:child_process'
 import { createWriteStream } from 'node:fs'
@@ -20,7 +20,7 @@ import { hasCompletedChatTurn } from '../e2e/chat-turn'
 import {
 
   isChatSurfaceTarget,
-  prioritizeInspectableAiriTargets,
+  prioritizeInspectableAipetsTargets,
 } from '../e2e/debug-targets'
 import { getProviderBootstrapConfig } from '../e2e/provider-bootstrap'
 import { errorMessageFromValue } from '../utils/error-message'
@@ -73,29 +73,29 @@ interface ReportShape {
 
 const packageDir = resolve(dirname(fileURLToPath(import.meta.url)), '../..')
 const repoDir = resolve(packageDir, '../..')
-const preferredDebugPort = Number(env.AIRI_E2E_DEBUG_PORT || '9222')
+const preferredDebugPort = Number(env.AIPETS_E2E_DEBUG_PORT || '9222')
 const runId = new Date().toISOString().replaceAll(':', '-').replaceAll('.', '-')
-const preferredProviderId = env.AIRI_E2E_PROVIDER?.trim() || 'github-models'
+const preferredProviderId = env.AIPETS_E2E_PROVIDER?.trim() || 'github-models'
 const preferredModelCandidates = Array.from(new Set(
-  (env.AIRI_E2E_MODELS?.trim()
-    ? env.AIRI_E2E_MODELS.split(',')
-    : [env.AIRI_E2E_MODEL?.trim() || 'openai/gpt-4o-mini', 'openai/gpt-4.1-mini'])
+  (env.AIPETS_E2E_MODELS?.trim()
+    ? env.AIPETS_E2E_MODELS.split(',')
+    : [env.AIPETS_E2E_MODEL?.trim() || 'openai/gpt-4o-mini', 'openai/gpt-4.1-mini'])
     .map(model => model?.trim())
     .filter((model): model is string => Boolean(model)),
 ))
-const promptMarker = `airi-e2e-${runId.slice(-8)}`
+const promptMarker = `aipets-e2e-${runId.slice(-8)}`
 // NOTICE: keep the default prompt ASCII-only. On macOS, injecting non-ASCII
 // text through Quartz events can interact with the active IME composition state,
 // which makes the follow-up Enter key commit composition instead of submitting
-// the AIRI chat textarea. The prompt remains overrideable via AIRI_E2E_PROMPT.
-const promptBaseText = env.AIRI_E2E_PROMPT?.trim() || 'Reply with one short sentence only: hello from AIRI desktop E2E.'
+// the AIPETS chat textarea. The prompt remains overrideable via AIPETS_E2E_PROMPT.
+const promptBaseText = env.AIPETS_E2E_PROMPT?.trim() || 'Reply with one short sentence only: hello from AIPETS desktop E2E.'
 const WHITESPACE_SPLIT_RE = /\s+/
 const DOTENV_LINE_SPLIT_RE = /\r?\n/u
 const QUOTED_VALUE_RE = /^['"]|['"]$/gu
 const DEVTOOLS_BROWSER_WS_PATH_RE = /\/devtools\/browser\/[^/]+$/
 const DEVTOOLS_LISTENING_RE = /DevTools listening on (ws:\/\/\S+)/
 const promptText = `${promptBaseText} [${promptMarker}]`
-const reportDir = resolve(packageDir, '.computer-use-mcp', 'reports', `airi-chat-observable-${runId}`)
+const reportDir = resolve(packageDir, '.computer-use-mcp', 'reports', `aipets-chat-observable-${runId}`)
 const reportPath = resolve(reportDir, 'report.json')
 const stageLogPath = resolve(reportDir, 'stage-tamagotchi.log')
 const mcpSessionRoot = resolve(reportDir, 'computer-use-session')
@@ -203,7 +203,7 @@ async function findAvailablePort(preferredPort: number, attempts = 20) {
 async function terminateExistingStageTamagotchiInstances() {
   const patterns = [
     resolve(repoDir, 'apps', 'stage-tamagotchi'),
-    '@proj-airi/stage-tamagotchi',
+    '@proj-aipets/stage-tamagotchi',
     resolve(repoDir, 'node_modules', '.pnpm', 'electron@'),
   ]
 
@@ -383,9 +383,9 @@ async function bringTargetToFront(client: CdpClient, label: string) {
   await sleep(750)
 }
 
-async function getAiriDebugSnapshot(client: CdpClient) {
-  return await client.evaluate<AiriDebugSnapshotLike | undefined>(`(() => {
-    const bridge = window.__AIRI_DEBUG__
+async function getAipetsDebugSnapshot(client: CdpClient) {
+  return await client.evaluate<AipetsDebugSnapshotLike | undefined>(`(() => {
+    const bridge = window.__AIPETS_DEBUG__
     if (!bridge || typeof bridge.getSnapshot !== 'function') {
       return undefined
     }
@@ -397,7 +397,7 @@ async function getAiriDebugSnapshot(client: CdpClient) {
 async function waitForChatSurfaceReady(client: CdpClient, label: string) {
   return await waitFor(label, async () => {
     try {
-      const snapshot = await client.evaluate<Record<string, any>>('window.__AIRI_DEBUG__.getSnapshot()')
+      const snapshot = await client.evaluate<Record<string, any>>('window.__AIPETS_DEBUG__.getSnapshot()')
       if (snapshot.dom?.hasTextarea) {
         return snapshot
       }
@@ -410,13 +410,13 @@ async function waitForChatSurfaceReady(client: CdpClient, label: string) {
   }, 30_000, 250)
 }
 
-async function findTargetWithAiriDebugBridge(
+async function findTargetWithAipetsDebugBridge(
   browserWsUrl: string,
   label: string,
-  predicate?: (target: DebugTarget, snapshot: AiriDebugSnapshotLike) => boolean,
+  predicate?: (target: DebugTarget, snapshot: AipetsDebugSnapshotLike) => boolean,
 ) {
   return await waitFor(label, async () => {
-    const targets = prioritizeInspectableAiriTargets(await listDebugTargets(browserWsUrl).catch(() => []))
+    const targets = prioritizeInspectableAipetsTargets(await listDebugTargets(browserWsUrl).catch(() => []))
 
     for (const target of targets) {
       let client: CdpClient | undefined
@@ -429,7 +429,7 @@ async function findTargetWithAiriDebugBridge(
         )
         const snapshot = await withTimeout(
           `${label} snapshot ${target.title || target.url || target.id}`,
-          getAiriDebugSnapshot(client),
+          getAipetsDebugSnapshot(client),
           2_500,
         )
         if (!snapshot) {
@@ -495,7 +495,7 @@ async function main() {
     const stageLogStream = createWriteStream(stageLogPath, { flags: 'a' })
     addTimeline('start-stage-tamagotchi')
 
-    stageProcess = spawn('pnpm', ['-F', '@proj-airi/stage-tamagotchi', 'dev'], {
+    stageProcess = spawn('pnpm', ['-F', '@proj-aipets/stage-tamagotchi', 'dev'], {
       cwd: repoDir,
       env: {
         ...env,
@@ -533,9 +533,9 @@ async function main() {
     }, 120_000, 500)
     addTimeline('remote-debug-browser-ready', { browserWsUrl: activeBrowserWsUrl, debugPort })
 
-    const mainTargetMatch = await findTargetWithAiriDebugBridge(
+    const mainTargetMatch = await findTargetWithAipetsDebugBridge(
       activeBrowserWsUrl,
-      'AIRI main target',
+      'AIPETS main target',
       (_target, snapshot) => !String(snapshot.route || '').includes('/chat'),
     )
     const mainTarget = mainTargetMatch.target
@@ -563,7 +563,7 @@ async function main() {
         COMPUTER_USE_APPROVAL_MODE: 'never',
         COMPUTER_USE_OPENABLE_APPS: 'Terminal,Cursor,Google Chrome,Electron',
         COMPUTER_USE_DENY_APPS: '1Password,Keychain,System Settings,Activity Monitor',
-        COMPUTER_USE_SESSION_TAG: `airi-e2e-${runId}`,
+        COMPUTER_USE_SESSION_TAG: `aipets-e2e-${runId}`,
         COMPUTER_USE_ALLOWED_BOUNDS: env.COMPUTER_USE_ALLOWED_BOUNDS || '0,0,2560,1600',
         COMPUTER_USE_SESSION_ROOT: mcpSessionRoot,
       },
@@ -571,7 +571,7 @@ async function main() {
     })
 
     mcpClient = new Client({
-      name: '@proj-airi/computer-use-mcp-e2e-airi-chat',
+      name: '@proj-aipets/computer-use-mcp-e2e-aipets-chat',
       version: '0.1.0',
     })
 
@@ -607,13 +607,13 @@ async function main() {
 
     try {
       await withTimeout(
-        'AIRI debug bridge openChat',
-        mainTargetClient.evaluate('window.__AIRI_DEBUG__.openChat()'),
+        'AIPETS debug bridge openChat',
+        mainTargetClient.evaluate('window.__AIPETS_DEBUG__.openChat()'),
         8_000,
       )
       addTimeline('chat-open-requested', { mode: 'separate-window' })
 
-      const chatTargetMatch = await findTargetWithAiriDebugBridge(
+      const chatTargetMatch = await findTargetWithAipetsDebugBridge(
         activeBrowserWsUrl,
         'Chat target',
         (target, snapshot) => isChatSurfaceTarget(target, snapshot),
@@ -643,11 +643,11 @@ async function main() {
         reason: errorMessageFromValue(error),
       })
 
-      await mainTargetClient.evaluate(`window.__AIRI_DEBUG__.navigateTo('/chat')`)
+      await mainTargetClient.evaluate(`window.__AIPETS_DEBUG__.navigateTo('/chat')`)
 
-      await waitFor('chat route in main AIRI window', async () => {
+      await waitFor('chat route in main AIPETS window', async () => {
         try {
-          const snapshot = await mainTargetClient!.evaluate<Record<string, any>>('window.__AIRI_DEBUG__.getSnapshot()')
+          const snapshot = await mainTargetClient!.evaluate<Record<string, any>>('window.__AIPETS_DEBUG__.getSnapshot()')
           const onChatRoute = String(snapshot.route || '').includes('/chat')
           const hasTextarea = Boolean(snapshot.dom?.hasTextarea)
           return onChatRoute && hasTextarea ? snapshot : undefined
@@ -668,7 +668,7 @@ async function main() {
       })
       chatClientSharesMainTarget = true
       addTimeline('chat-target-ready', {
-        title: 'AIRI',
+        title: 'AIPETS',
         url: 'http://localhost:5173/#/chat',
         mode: 'same-window-route',
       })
@@ -694,7 +694,7 @@ async function main() {
         || data.observation) as Record<string, unknown> | undefined
       const windows = Array.isArray(observationPayload?.windows) ? observationPayload.windows as Array<Record<string, unknown>> : []
       const frontmostAppName = String(observationPayload?.frontmostAppName || '')
-      const chatWindow = windows.find(window => String(window.title || '').includes('AIRI'))
+      const chatWindow = windows.find(window => String(window.title || '').includes('AIPETS'))
       if (!frontmostAppName.includes('Electron')) {
         return undefined
       }
@@ -712,8 +712,8 @@ async function main() {
       mode: chatSurfaceMode,
     })
 
-    await chatTargetClient.evaluate('window.__AIRI_DEBUG__.clearEvents()')
-    const selectionSnapshot = await chatTargetClient.evaluate<Record<string, any>>(`window.__AIRI_DEBUG__.ensureConsciousnessSelection(${JSON.stringify({
+    await chatTargetClient.evaluate('window.__AIPETS_DEBUG__.clearEvents()')
+    const selectionSnapshot = await chatTargetClient.evaluate<Record<string, any>>(`window.__AIPETS_DEBUG__.ensureConsciousnessSelection(${JSON.stringify({
       provider: preferredProviderId,
       preferredModels: preferredModelCandidates,
       providerConfig: providerBootstrapConfig,
@@ -729,11 +729,11 @@ async function main() {
     })
 
     if (preferredProviderId === 'github-models' && !selectionSnapshot.provider?.providerAvailable) {
-      throw new Error(`GitHub Models provider is unavailable before chat send. Checked .env at ${rootEnvPath} for bootstrap credentials, but AIRI still did not validate github-models.`)
+      throw new Error(`GitHub Models provider is unavailable before chat send. Checked .env at ${rootEnvPath} for bootstrap credentials, but AIPETS still did not validate github-models.`)
     }
 
-    await chatTargetClient.evaluate('window.__AIRI_DEBUG__.clearEvents()')
-    const resetSnapshot = await chatTargetClient.evaluate<Record<string, any>>('window.__AIRI_DEBUG__.resetChatSession()')
+    await chatTargetClient.evaluate('window.__AIPETS_DEBUG__.clearEvents()')
+    const resetSnapshot = await chatTargetClient.evaluate<Record<string, any>>('window.__AIPETS_DEBUG__.resetChatSession()')
     report.debugSnapshots.push(resetSnapshot)
     addTimeline('chat-session-reset', {
       providerConfigured: Boolean(resetSnapshot.provider?.configured),
@@ -843,7 +843,7 @@ async function main() {
     })
 
     const submittedSnapshot = await waitFor('chat submit', async () => {
-      const snapshot = await chatTargetClient!.evaluate<Record<string, any>>('window.__AIRI_DEBUG__.getSnapshot()')
+      const snapshot = await chatTargetClient!.evaluate<Record<string, any>>('window.__AIPETS_DEBUG__.getSnapshot()')
       report.debugSnapshots.push(snapshot)
 
       const messageCount = Number(snapshot.chat?.messageCount || 0)
@@ -879,7 +879,7 @@ async function main() {
 
     let capturedStreamingScreenshot = false
     const finalSnapshot = await waitFor('chat completion or error', async () => {
-      const snapshot = await chatTargetClient!.evaluate<Record<string, any>>('window.__AIRI_DEBUG__.getSnapshot()')
+      const snapshot = await chatTargetClient!.evaluate<Record<string, any>>('window.__AIPETS_DEBUG__.getSnapshot()')
       report.debugSnapshots.push(snapshot)
 
       if (!capturedStreamingScreenshot && snapshot.chat?.sending && typeof snapshot.chat?.streamingText === 'string' && snapshot.chat.streamingText.trim().length > 0) {
@@ -958,7 +958,7 @@ async function main() {
     }
 
     if (report.final.lastMessageRole === 'error') {
-      throw new Error(`AIRI chat failed on ${report.final.providerId}/${report.final.modelId}: ${report.final.lastMessageText || 'unknown error'}`)
+      throw new Error(`AIPETS chat failed on ${report.final.providerId}/${report.final.modelId}: ${report.final.lastMessageText || 'unknown error'}`)
     }
 
     if (report.paths.auditLogPath) {

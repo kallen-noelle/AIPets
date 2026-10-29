@@ -8,7 +8,7 @@ const defaultDeniedApps = [
   'keychain',
   'system settings',
   'activity monitor',
-  'airi',
+  'aipets',
 ]
 
 const defaultOpenableApps = [
@@ -218,7 +218,7 @@ export function resolveComputerUseConfig(): ComputerUseConfig {
     remoteSshHost,
     remoteSshUser,
     remoteSshPort: parseInteger(env.COMPUTER_USE_REMOTE_SSH_PORT, 22),
-    remoteRunnerCommand: normalizeHomePathToken(env.COMPUTER_USE_REMOTE_RUNNER_COMMAND?.trim() || '$HOME/.local/bin/airi-desktop-runner'),
+    remoteRunnerCommand: normalizeHomePathToken(env.COMPUTER_USE_REMOTE_RUNNER_COMMAND?.trim() || '$HOME/.local/bin/aipets-desktop-runner'),
     remoteDisplaySize,
     remoteObservationBaseUrl,
     remoteObservationServePort,

@@ -38,8 +38,6 @@ const imageExtensions = ['.png', '.jpg', '.jpeg', '.webp']
 const defaultCanvas = { width: 640, height: 360 }
 const defaultAppearance = {
   scale: 1,
-  offsetX: 0,
-  offsetY: 0,
   fadeMs: 180,
   mirror: false,
   clickEnabled: true,
@@ -247,8 +245,6 @@ function resolveAppearance(id, input) {
 
   return {
     scale,
-    offsetX: numberOr(appearance.offsetX, defaultAppearance.offsetX, 'appearance.offsetX', id),
-    offsetY: numberOr(appearance.offsetY, defaultAppearance.offsetY, 'appearance.offsetY', id),
     fadeMs: Math.max(0, numberOr(appearance.fadeMs, defaultAppearance.fadeMs, 'appearance.fadeMs', id)),
     mirror: booleanOr(appearance.mirror, defaultAppearance.mirror, 'appearance.mirror', id),
     clickEnabled: booleanOr(appearance.clickEnabled, defaultAppearance.clickEnabled, 'appearance.clickEnabled', id),

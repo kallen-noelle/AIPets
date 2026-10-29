@@ -8,7 +8,7 @@
  *                                                      |
  *                                              window.postMessage
  *                                                      |
- *                                                content.js (MAIN world, __AIRI_DG__)
+ *                                                content.js (MAIN world, __AIPETS_DG__)
  *                                                      |
  *                                              window.postMessage (reply)
  *                                                      |
@@ -16,7 +16,7 @@
  *
  * Why this bridge is needed:
  * - chrome.runtime.onMessage can only be received in the ISOLATED world
- * - window.__AIRI_DG__ lives in the MAIN world (needs real DOM access)
+ * - window.__AIPETS_DG__ lives in the MAIN world (needs real DOM access)
  * - The two worlds communicate via window.postMessage
  *
  * Adapted from an earlier Chrome extension message bridge.

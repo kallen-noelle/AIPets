@@ -160,8 +160,8 @@ const components = vueFiles.filter(file => !file.endsWith('.story.vue') && !file
   return {
     file,
     stories: coverage.get(file) ?? [],
-    sharedImports: dependencies.filter(item => item.source.startsWith('@proj-airi/ui') || item.source.startsWith('@proj-airi/stage-ui')).map(item => `${item.source}:${item.local}`),
-    localComponents: dependencies.filter(item => item.component && !item.source.startsWith('@proj-airi/ui') && !item.source.startsWith('@proj-airi/stage-ui')).map(item => item.component),
+    sharedImports: dependencies.filter(item => item.source.startsWith('@proj-aipets/ui') || item.source.startsWith('@proj-aipets/stage-ui')).map(item => `${item.source}:${item.local}`),
+    localComponents: dependencies.filter(item => item.component && !item.source.startsWith('@proj-aipets/ui') && !item.source.startsWith('@proj-aipets/stage-ui')).map(item => item.component),
     unresolvedVueImports: dependencies.filter(item => !item.component && item.source.endsWith('.vue')).map(item => item.source),
     rawControls,
   }

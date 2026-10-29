@@ -8,7 +8,7 @@ import { createTestConfig } from './test-fixtures'
 const baseConfig: ComputerUseConfig = createTestConfig({
   executor: 'dry-run',
   permissionChainHint: 'Terminal -> local dry-run',
-  denyApps: ['airi'],
+  denyApps: ['aipets'],
   requireAllowedBoundsForMutatingActions: false,
   requireCoordinateAlignmentForMutatingActions: false,
   requireSessionTagForMutatingActions: false,
@@ -93,7 +93,7 @@ describe('evaluateActionPolicy', () => {
       action: {
         kind: 'secret_read_env_value',
         input: {
-          filePath: '/workspace/airi/.env',
+          filePath: '/workspace/aipets/.env',
           keys: ['DISCORD_BOT_TOKEN'],
         },
       },
@@ -125,7 +125,7 @@ describe('evaluateActionPolicy', () => {
       config: baseConfig,
       context: {
         available: true,
-        appName: 'AIRI',
+        appName: 'AIPETS',
         platform: 'darwin',
       },
       operationsExecuted: 0,

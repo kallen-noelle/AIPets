@@ -1,10 +1,10 @@
 # computer-use-mcp
 
-AIRI-specific macOS desktop orchestration MCP service.
+AIPETS-specific macOS desktop orchestration MCP service.
 
 ## Why This Exists
 
-This package exists because AIRI already has many useful pieces in the monorepo —
+This package exists because AIPETS already has many useful pieces in the monorepo —
 providers, chat UX, MCP attachment, desktop app surfaces, browser integrations,
 tool bridges, and workflow-related logic — but those pieces are still too easy to
 use as isolated features instead of one coherent agent system.
@@ -12,7 +12,7 @@ use as isolated features instead of one coherent agent system.
 `computer-use-mcp` is the missing execution substrate for that gap.
 
 The current goal is not to add "another computer use demo". The goal is to give
-AIRI a unified way to:
+AIPETS a unified way to:
 
 - observe the current desktop or browser state
 - choose the right execution surface for the task
@@ -22,7 +22,7 @@ AIRI a unified way to:
 
 In short:
 
-- AIRI remains the control plane and agent shell
+- AIPETS remains the control plane and agent shell
 - `computer-use-mcp` is the local execution and workflow substrate
 - the value is in orchestration, not in cursor movement by itself
 
@@ -31,7 +31,7 @@ In short:
 This package is no longer positioned as a generic remote computer-use experiment.
 The current v1 shape is:
 
-- AIRI keeps the control plane:
+- AIPETS keeps the control plane:
   - MCP tool surface
   - approval queue protocol
   - audit log
@@ -43,14 +43,14 @@ The current v1 shape is:
   - app open/focus
   - mouse/keyboard injection
   - background terminal command execution
-- AIRI desktop adds a native approval adapter:
+- AIPETS desktop adds a native approval adapter:
   - `approval_required` still comes from MCP
   - Electron shows a native dialog
-  - AIRI automatically calls approve/reject on the user's behalf
+  - AIPETS automatically calls approve/reject on the user's behalf
 
 The intended story is:
 
-- AIRI uses tools first
+- AIPETS uses tools first
 - visual observation is supplementary, not the primary execution path
 - terminal commands are executed by a background shell runner, not by scripting Terminal tabs
 - desktop/Electron/native apps and browser DOM are treated as different execution surfaces
@@ -65,9 +65,9 @@ What makes it different:
 - it keeps action policy, approval, trace history, and audit output per run
 - it distinguishes between desktop control and browser DOM control instead of forcing everything through blind clicks
 - it prefers deterministic execution paths (`terminal_exec`, workflows, `browser_dom_*`) before raw coordinate actions
-- it is designed to be called by AIRI automatically as part of a task flow, not merely driven by a human demo operator
+- it is designed to be called by AIPETS automatically as part of a task flow, not merely driven by a human demo operator
 
-That means the package is useful only when it helps AIRI turn scattered local
+That means the package is useful only when it helps AIPETS turn scattered local
 capabilities into one observable, controllable task system.
 
 ## Current Executor Modes
@@ -160,7 +160,7 @@ The current macOS v1 boundary is intentionally narrow and explicit:
 - `allowApps` is not used as a hard gate for click/type/scroll
 - `denyApps` still blocks sensitive foreground apps
 - `COMPUTER_USE_OPENABLE_APPS` only gates `desktop_open_app` and `desktop_focus_app`
-- AIRI itself is in the default deny list to avoid self-operation
+- AIPETS itself is in the default deny list to avoid self-operation
 - terminal commands always require approval
 - app open/focus always require approval
 - click/type/press/scroll still use per-action approval
@@ -186,7 +186,7 @@ macOS orchestration:
 - `COMPUTER_USE_OPENABLE_APPS`
   - default `Terminal,Cursor,Google Chrome`
 - `COMPUTER_USE_DENY_APPS`
-  - default includes `1Password`, `Keychain`, `System Settings`, `Activity Monitor`, `AIRI`
+  - default includes `1Password`, `Keychain`, `System Settings`, `Activity Monitor`, `AIPETS`
 - `COMPUTER_USE_DENY_WINDOW_TITLES`
 - `COMPUTER_USE_TERMINAL_SHELL`
   - default current shell, otherwise `/bin/zsh`
@@ -231,9 +231,9 @@ Binary overrides:
 - `COMPUTER_USE_SSH_BINARY`
 - `COMPUTER_USE_TAR_BINARY`
 
-## AIRI Integration
+## AIPETS Integration
 
-AIRI still connects through `mcp.json`.
+AIPETS still connects through `mcp.json`.
 Example local macOS entry:
 
 ```json
@@ -243,10 +243,10 @@ Example local macOS entry:
       "command": "pnpm",
       "args": [
         "-F",
-        "@proj-airi/computer-use-mcp",
+        "@proj-aipets/computer-use-mcp",
         "start"
       ],
-      "cwd": "/path/to/your/airi/repo",
+      "cwd": "/path/to/your/aipets/repo",
       "env": {
         "COMPUTER_USE_EXECUTOR": "macos-local",
         "COMPUTER_USE_APPROVAL_MODE": "actions",
@@ -257,19 +257,19 @@ Example local macOS entry:
 }
 ```
 
-On the AIRI desktop side, approvals are handled like this:
+On the AIPETS desktop side, approvals are handled like this:
 
 1. model calls a `computer_use::*` tool
 2. MCP returns `approval_required`
 3. Electron shows a native approval dialog
-4. AIRI automatically calls `desktop_approve_pending_action` or `desktop_reject_pending_action`
+4. AIPETS automatically calls `desktop_approve_pending_action` or `desktop_reject_pending_action`
 5. terminal/app approvals can be reused for the current run only
 
 For browser DOM automation, `computer-use-mcp` also exposes a local WebSocket bridge that matches the user's Chrome extension bridge pattern:
 
 1. `computer-use-mcp` listens on `ws://127.0.0.1:8765` by default
 2. the unpacked browser extension background service worker connects to that socket
-3. AIRI can then call `browser_dom_*` MCP tools against the active browser tab
+3. AIPETS can then call `browser_dom_*` MCP tools against the active browser tab
 
 If you override `COMPUTER_USE_BROWSER_DOM_BRIDGE_HOST` or
 `COMPUTER_USE_BROWSER_DOM_BRIDGE_PORT`, mirror the same endpoint in the Chrome
@@ -278,22 +278,22 @@ so the background worker reconnects to the correct socket.
 
 Use the two surfaces differently:
 
-- `desktop_*` for AIRI itself, native macOS apps, Electron windows, Finder, Terminal, VS Code
+- `desktop_*` for AIPETS itself, native macOS apps, Electron windows, Finder, Terminal, VS Code
 - `browser_dom_*` for real browser pages, cross-frame DOM reads, form filling, selector-based interaction, and iframe-heavy flows
-- `browser_agent_run` for goal-driven browser tasks where AIRI should delegate the web exploration loop instead of manually hard-coding each browser step
+- `browser_agent_run` for goal-driven browser tasks where AIPETS should delegate the web exploration loop instead of manually hard-coding each browser step
 
 ## Validation Commands
 
-- `pnpm -F @proj-airi/computer-use-mcp typecheck`
-- `pnpm -F @proj-airi/computer-use-mcp test`
-- `pnpm -F @proj-airi/computer-use-mcp smoke:stdio`
-- `pnpm -F @proj-airi/computer-use-mcp smoke:macos`
-- `pnpm -F @proj-airi/computer-use-mcp e2e:airi-chat`
+- `pnpm -F @proj-aipets/computer-use-mcp typecheck`
+- `pnpm -F @proj-aipets/computer-use-mcp test`
+- `pnpm -F @proj-aipets/computer-use-mcp smoke:stdio`
+- `pnpm -F @proj-aipets/computer-use-mcp smoke:macos`
+- `pnpm -F @proj-aipets/computer-use-mcp e2e:aipets-chat`
 
 Legacy remote validation remains available:
 
-- `pnpm -F @proj-airi/computer-use-mcp bootstrap:remote`
-- `pnpm -F @proj-airi/computer-use-mcp smoke:remote`
+- `pnpm -F @proj-aipets/computer-use-mcp bootstrap:remote`
+- `pnpm -F @proj-aipets/computer-use-mcp smoke:remote`
 
 ## Demo Story To Record
 
@@ -302,9 +302,9 @@ runner instead of a flashy cursor dance.
 
 Recommended recording structure:
 
-1. Show the AIRI desktop window, a terminal, and the generated report directory.
-2. Start the local AIRI desktop app and the `computer-use-mcp` service.
-3. Show that AIRI can call the MCP tools automatically instead of only listing them.
+1. Show the AIPETS desktop window, a terminal, and the generated report directory.
+2. Start the local AIPETS desktop app and the `computer-use-mcp` service.
+3. Show that AIPETS can call the MCP tools automatically instead of only listing them.
 4. Demonstrate one short task that exercises the full loop:
   - observe state
   - execute a tool or workflow
@@ -316,7 +316,7 @@ Good first demos:
 
 - open a workspace, confirm `pwd`, inspect local changes, and run `pnpm typecheck`
 - create and run a Python hello-world project through `terminal_exec`
-- use desktop control for AIRI or native apps and use `browser_dom_*` only when the task truly moves into a browser page
+- use desktop control for AIPETS or native apps and use `browser_dom_*` only when the task truly moves into a browser page
 
 Less convincing demos:
 

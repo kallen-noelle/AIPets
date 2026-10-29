@@ -11,7 +11,7 @@ export async function runSwiftScript(params: {
   source: string
   stdinPayload?: unknown
 }) {
-  const tempDir = await mkdtemp(join(tmpdir(), 'airi-computer-use-'))
+  const tempDir = await mkdtemp(join(tmpdir(), 'aipets-computer-use-'))
   const scriptPath = join(tempDir, 'script.swift')
 
   await writeFile(scriptPath, params.source, 'utf-8')

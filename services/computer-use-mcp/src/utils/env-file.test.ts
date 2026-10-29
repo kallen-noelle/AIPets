@@ -8,7 +8,7 @@ import { maskEnvValuePreview, readEnvValue } from './env-file'
 
 describe('readEnvValue', () => {
   it('returns the first matching key from an env file', async () => {
-    const dir = await mkdtemp(join(tmpdir(), 'airi-env-read-'))
+    const dir = await mkdtemp(join(tmpdir(), 'aipets-env-read-'))
     const envPath = join(dir, '.env')
 
     try {
@@ -20,7 +20,7 @@ describe('readEnvValue', () => {
 
       await expect(readEnvValue({
         filePath: envPath,
-        keys: ['AIRI_E2E_DISCORD_TOKEN', 'DISCORD_BOT_TOKEN'],
+        keys: ['AIPETS_E2E_DISCORD_TOKEN', 'DISCORD_BOT_TOKEN'],
       })).resolves.toEqual({
         filePath: envPath,
         key: 'DISCORD_BOT_TOKEN',
@@ -33,15 +33,15 @@ describe('readEnvValue', () => {
   })
 
   it('rejects placeholder values by default', async () => {
-    const dir = await mkdtemp(join(tmpdir(), 'airi-env-read-'))
+    const dir = await mkdtemp(join(tmpdir(), 'aipets-env-read-'))
     const envPath = join(dir, '.env')
 
     try {
-      await writeFile(envPath, 'AIRI_E2E_DISCORD_TOKEN=replace-with-your-discord-bot-token\n')
+      await writeFile(envPath, 'AIPETS_E2E_DISCORD_TOKEN=replace-with-your-discord-bot-token\n')
 
       await expect(readEnvValue({
         filePath: envPath,
-        keys: ['AIRI_E2E_DISCORD_TOKEN'],
+        keys: ['AIPETS_E2E_DISCORD_TOKEN'],
       })).rejects.toThrow(/placeholder\/template value/)
     }
     finally {

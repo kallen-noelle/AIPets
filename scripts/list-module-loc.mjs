@@ -8,7 +8,7 @@ import { spawnSync } from 'node:child_process'
 import { argv, cwd } from 'node:process'
 
 const ROOT = cwd()
-const SEARCH_ROOTS = ['apps', 'packages', 'plugins', 'services', 'integrations', 'docs']
+const SEARCH_ROOTS = ['apps', 'packages', 'plugins', 'services', 'docs']
 const IGNORE_DIRS = new Set(['node_modules', '.git', 'dist', 'build', '.next', '.nuxt', '.turbo', 'coverage', '.cache', 'out', '.vite'])
 
 function walk(dir, out) {

@@ -59,7 +59,7 @@ describe('sponsorKit OpenCollective pnpm patch', () => {
       includePastSponsors: true,
       opencollective: {
         key: 'personal-token-example',
-        slug: 'proj-airi',
+        slug: 'proj-aipets',
       },
     })
 

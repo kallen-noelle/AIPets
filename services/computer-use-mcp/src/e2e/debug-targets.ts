@@ -6,7 +6,7 @@ export interface DebugTargetLike {
   webSocketDebuggerUrl?: string
 }
 
-export interface AiriDebugSnapshotLike {
+export interface AipetsDebugSnapshotLike {
   route?: string
   documentTitle?: string
 }
@@ -16,9 +16,9 @@ function containsFragment(input: string, fragments: string[]) {
 }
 
 // NOTICE: The remote debug endpoint exposes multiple renderer pages for Electron.
-// We only want actual AIRI app pages here; helper pages like beat-sync and devtools
-// will never expose `window.__AIRI_DEBUG__` and should be deprioritized early.
-export function isInspectableAiriRendererTarget(target: DebugTargetLike) {
+// We only want actual AIPETS app pages here; helper pages like beat-sync and devtools
+// will never expose `window.__AIPETS_DEBUG__` and should be deprioritized early.
+export function isInspectableAipetsRendererTarget(target: DebugTargetLike) {
   if (target.type !== 'page') {
     return false
   }
@@ -35,19 +35,19 @@ export function isInspectableAiriRendererTarget(target: DebugTargetLike) {
   ])
 }
 
-export function prioritizeInspectableAiriTargets(targets: DebugTargetLike[]) {
+export function prioritizeInspectableAipetsTargets(targets: DebugTargetLike[]) {
   return [...targets]
-    .filter(isInspectableAiriRendererTarget)
-    .sort((left, right) => scoreInspectableAiriTarget(right) - scoreInspectableAiriTarget(left))
+    .filter(isInspectableAipetsRendererTarget)
+    .sort((left, right) => scoreInspectableAipetsTarget(right) - scoreInspectableAipetsTarget(left))
 }
 
-function scoreInspectableAiriTarget(target: DebugTargetLike) {
+function scoreInspectableAipetsTarget(target: DebugTargetLike) {
   let score = 0
 
   if (target.title === 'Chat') {
     score += 40
   }
-  else if (target.title === 'AIRI') {
+  else if (target.title === 'AIPETS') {
     score += 20
   }
 
@@ -61,7 +61,7 @@ function scoreInspectableAiriTarget(target: DebugTargetLike) {
   return score
 }
 
-export function isChatSurfaceTarget(target: DebugTargetLike, snapshot?: AiriDebugSnapshotLike) {
+export function isChatSurfaceTarget(target: DebugTargetLike, snapshot?: AipetsDebugSnapshotLike) {
   if (target.title === 'Chat' || target.url.includes('#/chat')) {
     return true
   }

@@ -1,6 +1,6 @@
-# AIRI Desktop Grounding — Chrome Extension
+# AIPETS Desktop Grounding — Chrome Extension
 
-Read-only Chrome DOM observation bridge for the AIRI Desktop Grounding layer.
+Read-only Chrome DOM observation bridge for the AIPETS Desktop Grounding layer.
 
 ## What it does
 
@@ -24,7 +24,7 @@ background.js (Service Worker)
     ↕ chrome.tabs.sendMessage
 msg_bridge.js (ISOLATED world)
     ↕ window.postMessage
-content.js (MAIN world, window.__AIRI_DG__)
+content.js (MAIN world, window.__AIPETS_DG__)
 ```
 
 ## Installation (development)

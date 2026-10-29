@@ -1,8 +1,8 @@
 /**
- * content.js — AIRI Desktop Grounding: read-only DOM observation
+ * content.js — AIPETS Desktop Grounding: read-only DOM observation
  *
  * Injected into every frame (including cross-origin iframes) in the MAIN world.
- * Namespace: window.__AIRI_DG__
+ * Namespace: window.__AIPETS_DG__
  *
  * IMPORTANT: This script is READ-ONLY. It does NOT perform any DOM mutations,
  * clicks, typing, or navigation. All execution is done via real macOS OS-level
@@ -16,7 +16,7 @@
  */
 (function () {
   'use strict'
-  if (window.__AIRI_DG__)
+  if (window.__AIPETS_DG__)
     return // Prevent re-entry
 
   const MAX_INTERACTIVE = 200
@@ -134,8 +134,8 @@
 
   // ---- Core API (read-only) ----
 
-  const __AIRI_DG__ = {
-    version: '1.0-airi-dg',
+  const __AIPETS_DG__ = {
+    version: '1.0-aipets-dg',
 
     /**
      * Collect the DOM structure of the current frame.
@@ -337,7 +337,7 @@
     },
   }
 
-  window.__AIRI_DG__ = __AIRI_DG__
+  window.__AIPETS_DG__ = __AIPETS_DG__
 
   // ---- Message handler: ISOLATED world bridge → MAIN world ----
   window.addEventListener('message', (evt) => {
@@ -348,12 +348,12 @@
       return
 
     const { reqId, method, args } = data
-    const fn = __AIRI_DG__[method]
+    const fn = __AIPETS_DG__[method]
     let result
 
     if (typeof fn === 'function') {
       try {
-        result = { success: true, data: fn.apply(__AIRI_DG__, args || []) }
+        result = { success: true, data: fn.apply(__AIPETS_DG__, args || []) }
       }
       catch (e) {
         result = { success: false, error: e.message || String(e) }

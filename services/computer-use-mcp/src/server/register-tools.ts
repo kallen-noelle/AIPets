@@ -365,8 +365,8 @@ export function registerComputerUseTools(params: RegisterComputerUseToolsOptions
   server.tool(
     'secret_read_env_value',
     {
-      filePath: z.string().min(1).describe('Absolute or explicit env file path to inspect, for example /Users/example-user/airi/.env'),
-      keys: z.array(z.string().min(1)).min(1).max(16).describe('Candidate env variable names to try in order, e.g. ["AIRI_E2E_DISCORD_TOKEN", "DISCORD_BOT_TOKEN"]'),
+      filePath: z.string().min(1).describe('Absolute or explicit env file path to inspect, for example /Users/example-user/aipets/.env'),
+      keys: z.array(z.string().min(1)).min(1).max(16).describe('Candidate env variable names to try in order, e.g. ["AIPETS_E2E_DISCORD_TOKEN", "DISCORD_BOT_TOKEN"]'),
       allowPlaceholder: z.boolean().optional().describe('Whether to allow obvious placeholder/template values such as replace-with-your-token'),
     },
     async (input: SecretReadEnvValueActionInput) => executeAction({ kind: 'secret_read_env_value', input }, 'secret_read_env_value'),

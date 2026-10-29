@@ -1,12 +1,12 @@
 /**
- * background.js — MV3 Service Worker for AIRI Desktop Grounding
+ * background.js — MV3 Service Worker for AIPETS Desktop Grounding
  *
- * Routes commands from the AIRI extension bridge → chrome.tabs.sendMessage
- * → msg_bridge.js → content.js (__AIRI_DG__)
+ * Routes commands from the AIPETS extension bridge → chrome.tabs.sendMessage
+ * → msg_bridge.js → content.js (__AIPETS_DG__)
  *
  * IMPORTANT: This background does NOT use offscreen documents or Python bridges.
  * It receives commands directly from the existing BrowserDomExtensionBridge
- * WebSocket connection in the AIRI computer-use-mcp service.
+ * WebSocket connection in the AIPETS computer-use-mcp service.
  *
  * Only read-only observation commands are supported.
  * All DOM-mutating actions (click, type, hover, scroll) have been removed
@@ -20,10 +20,10 @@
 
 /* global chrome */
 
-const AIRI_BRIDGE_URL = 'ws://127.0.0.1:8765'
-const AIRI_BRIDGE_HELLO = {
+const AIPETS_BRIDGE_URL = 'ws://127.0.0.1:8765'
+const AIPETS_BRIDGE_HELLO = {
   type: 'hello',
-  source: 'airi-chrome-extension',
+  source: 'aipets-chrome-extension',
   version: '1.1.0',
 }
 const BRIDGE_RECONNECT_MIN_MS = 1_000
@@ -134,12 +134,12 @@ async function ensureBridgeConnected() {
   clearBridgeReconnectTimer()
 
   try {
-    const socket = new WebSocket(AIRI_BRIDGE_URL)
+    const socket = new WebSocket(AIPETS_BRIDGE_URL)
     bridgeSocket = socket
 
     socket.addEventListener('open', () => {
       bridgeReconnectDelayMs = BRIDGE_RECONNECT_MIN_MS
-      sendBridgePayload(AIRI_BRIDGE_HELLO)
+      sendBridgePayload(AIPETS_BRIDGE_HELLO)
     })
 
     socket.addEventListener('message', (event) => {
@@ -397,10 +397,10 @@ async function readAllFramesDOMWithOffsets(tabId, frameIds, opts) {
   })
 }
 
-// ---- Handle external commands (from AIRI extension bridge) ----
+// ---- Handle external commands (from AIPETS extension bridge) ----
 
 /**
- * Handle a command from the AIRI BrowserDomExtensionBridge.
+ * Handle a command from the AIPETS BrowserDomExtensionBridge.
  *
  * Only read-only observation commands are supported:
  * - getActiveTab: get the active tab info
@@ -564,11 +564,11 @@ async function handleCommand(cmd) {
 }
 
 // ---- Listen for external messages ----
-// The AIRI BrowserDomExtensionBridge connects via chrome.runtime.onMessageExternal
+// The AIPETS BrowserDomExtensionBridge connects via chrome.runtime.onMessageExternal
 // or through the existing WebSocket bridge mechanism
 
 chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
-  if (msg.type === 'AIRI_DG_COMMAND') {
+  if (msg.type === 'AIPETS_DG_COMMAND') {
     handleCommand(msg.data)
       .then(resp => sendResponse(resp))
       .catch(e => sendResponse({ ok: false, error: String(e) }))

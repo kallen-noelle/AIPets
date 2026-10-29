@@ -2,7 +2,7 @@ const DEFAULT_GITHUB_MODELS_BASE_URL = 'https://models.github.ai/inference'
 const DEFAULT_GOOGLE_GENERATIVE_AI_BASE_URL = 'https://generativelanguage.googleapis.com/v1beta/openai/'
 
 const githubModelsApiKeyCandidates = [
-  'AIRI_E2E_GITHUB_MODELS_API_KEY',
+  'AIPETS_E2E_GITHUB_MODELS_API_KEY',
   'GITHUB_MODELS_API_KEY',
   'GITHUB_TOKEN',
   'GH_TOKEN',
@@ -10,7 +10,7 @@ const githubModelsApiKeyCandidates = [
 ] as const
 
 const googleGenerativeApiKeyCandidates = [
-  'AIRI_E2E_GOOGLE_API_KEY',
+  'AIPETS_E2E_GOOGLE_API_KEY',
   'GOOGLE_API_KEY',
   'GEMINI_API_KEY',
   'GOOGLE_GENERATIVE_AI_API_KEY',

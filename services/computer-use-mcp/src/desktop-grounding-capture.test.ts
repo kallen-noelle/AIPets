@@ -26,14 +26,14 @@ function makeAxSnapshot(): AXSnapshot {
   const root = {
     uid: 'root',
     role: 'AXApplication',
-    title: 'AIRI',
+    title: 'AIPETS',
     children: [],
   }
 
   return {
     snapshotId: 'ax_1',
     pid: 123,
-    appName: 'AIRI',
+    appName: 'AIPETS',
     root,
     uidToNode: new Map([['root', root]]),
     capturedAt: new Date().toISOString(),
@@ -65,11 +65,11 @@ describe('captureDesktopGrounding', () => {
     })
 
     const genericObservation: WindowObservation = {
-      frontmostAppName: 'AIRI',
+      frontmostAppName: 'AIPETS',
       windows: [
         {
-          id: 'airi:1',
-          appName: 'AIRI',
+          id: 'aipets:1',
+          appName: 'AIPETS',
           title: 'Shared Title',
           bounds: { x: 10, y: 20, width: 1200, height: 800 },
         },

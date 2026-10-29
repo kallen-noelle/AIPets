@@ -1,8 +1,8 @@
-# AIRI Coding CLI + Chafa Architecture
+# AIPETS Coding CLI + Chafa Architecture
 
 ## Purpose
 
-Define a narrow architecture for a terminal-facing AIRI coding CLI that can
+Define a narrow architecture for a terminal-facing AIPETS coding CLI that can
 optionally render an animated avatar through `chafa`, without coupling terminal
 presentation to the `computer-use-mcp` runtime.
 
@@ -25,7 +25,7 @@ The correct dependency order is:
 
 ## Confirmed Decisions
 
-1. Future CLI package location: `packages/airi-cli`.
+1. Future CLI package location: `packages/aipets-cli`.
 2. First integration channel: in-process runner callback.
 3. JSONL over stdin/file remains a follow-up adapter for replay, fixtures, and
    tooling interoperability.
@@ -45,12 +45,12 @@ The correct dependency order is:
 ## Proposed Location Split
 
 - Core runtime: `services/computer-use-mcp`.
-- CLI package: `packages/airi-cli`.
+- CLI package: `packages/aipets-cli`.
 - Event contract: initially colocated with the runner that emits it, then
   exported for CLI consumption.
-- Text renderer: `packages/airi-cli/src/renderers/text.ts`.
-- Chafa adapter: `packages/airi-cli/src/renderers/chafa-avatar.ts`.
-- JSONL adapter: `packages/airi-cli/src/adapters/jsonl.ts`.
+- Text renderer: `packages/aipets-cli/src/renderers/text.ts`.
+- Chafa adapter: `packages/aipets-cli/src/renderers/chafa-avatar.ts`.
+- JSONL adapter: `packages/aipets-cli/src/adapters/jsonl.ts`.
 
 ## Runner Event Contract Draft
 
@@ -230,7 +230,7 @@ Initial CLI flags:
 
 ### Stage 2: Text CLI
 
-- scaffold `packages/airi-cli`
+- scaffold `packages/aipets-cli`
 - consume runner events
 - render run, step, tool, error, and final report state in plain text
 
@@ -261,7 +261,7 @@ Layering:
 
 - no renderer code in `computer-use-mcp` runtime
 - no `chafa` dependency in runtime packages
-- CLI code stays under `packages/airi-cli`
+- CLI code stays under `packages/aipets-cli`
 
 Runtime:
 
@@ -289,5 +289,5 @@ Scope:
 ## Suggested Follow-up PRs
 
 - `feat(cli): define coding runner event contract`
-- `feat(cli): scaffold airi coding cli text renderer`
-- `feat(cli): add optional terminal AIRI avatar renderer with chafa`
+- `feat(cli): scaffold aipets coding cli text renderer`
+- `feat(cli): add optional terminal AIPETS avatar renderer with chafa`

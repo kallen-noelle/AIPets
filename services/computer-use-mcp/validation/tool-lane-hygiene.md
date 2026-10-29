@@ -21,13 +21,13 @@ pnpm install --ignore-scripts --frozen-lockfile
 Result: passed. Lockfile stayed unchanged; lifecycle scripts were intentionally skipped for local verification setup.
 
 ```sh
-pnpm -F @proj-airi/computer-use-mcp exec vitest run src/server/tool-lane-hygiene.test.ts --config ./vitest.config.ts
+pnpm -F @proj-aipets/computer-use-mcp exec vitest run src/server/tool-lane-hygiene.test.ts --config ./vitest.config.ts
 ```
 
 Result: passed. 1 test file, 9 tests.
 
 ```sh
-pnpm -F @proj-airi/computer-use-mcp exec vitest run \
+pnpm -F @proj-aipets/computer-use-mcp exec vitest run \
   src/server/tool-lane-hygiene.test.ts \
   src/server/register-tools-coordinate-contract.test.ts \
   src/server/register-tools-pty-approval.test.ts \
@@ -54,7 +54,7 @@ git diff --check
 Result: passed.
 
 ```sh
-pnpm -F @proj-airi/computer-use-mcp typecheck
+pnpm -F @proj-aipets/computer-use-mcp typecheck
 ```
 
 Result: failed on existing baseline files outside this change:

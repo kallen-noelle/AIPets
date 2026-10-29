@@ -12,7 +12,7 @@
  * policy / action-executor pipeline.
  *
  * Usage:
- *   pnpm -F @proj-airi/computer-use-mcp exec tsx ./src/bin/smoke-workflow.ts
+ *   pnpm -F @proj-aipets/computer-use-mcp exec tsx ./src/bin/smoke-workflow.ts
  */
 
 import { mkdtempSync, writeFileSync } from 'node:fs'
@@ -77,7 +77,7 @@ async function createClient(overrides: Record<string, string> = {}): Promise<Cli
   })
 
   const client = new Client({
-    name: '@proj-airi/computer-use-mcp-smoke-workflow',
+    name: '@proj-aipets/computer-use-mcp-smoke-workflow',
     version: '0.1.0',
   })
 

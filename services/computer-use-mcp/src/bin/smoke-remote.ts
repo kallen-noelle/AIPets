@@ -79,7 +79,7 @@ async function main() {
     stderr: 'pipe',
   })
   const client = new Client({
-    name: '@proj-airi/computer-use-mcp-remote-smoke',
+    name: '@proj-aipets/computer-use-mcp-remote-smoke',
     version: '0.1.0',
   })
 
@@ -159,7 +159,7 @@ async function main() {
     const typeText = await client.callTool({
       name: 'desktop_type_text',
       arguments: {
-        text: 'AIRI remote linux-x11 smoke',
+        text: 'AIPETS remote linux-x11 smoke',
         pressEnter: false,
         captureAfter: true,
       },

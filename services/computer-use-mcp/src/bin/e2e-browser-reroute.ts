@@ -8,7 +8,7 @@
  * stable accessibility path rather than a guaranteed browser surface.
  *
  * Usage:
- *   pnpm -F @proj-airi/computer-use-mcp exec tsx ./src/bin/e2e-browser-reroute.ts
+ *   pnpm -F @proj-aipets/computer-use-mcp exec tsx ./src/bin/e2e-browser-reroute.ts
  */
 
 import { dirname, resolve } from 'node:path'
@@ -62,7 +62,7 @@ async function createClient(): Promise<Client> {
   })
 
   const client = new Client({
-    name: '@proj-airi/e2e-browser-reroute',
+    name: '@proj-aipets/e2e-browser-reroute',
     version: '0.1.0',
   })
 

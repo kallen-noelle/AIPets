@@ -9,8 +9,8 @@ import { runProcess } from '../utils/process'
 
 const packageDir = resolve(dirname(fileURLToPath(import.meta.url)), '../..')
 const distDir = resolve(packageDir, 'dist')
-const remoteInstallDir = normalizeRemoteShellPath(env.COMPUTER_USE_REMOTE_INSTALL_DIR?.trim() || '$HOME/.local/share/airi-desktop-runner')
-const remoteRunnerPath = normalizeRemoteShellPath(env.COMPUTER_USE_REMOTE_RUNNER_COMMAND?.trim() || '$HOME/.local/bin/airi-desktop-runner')
+const remoteInstallDir = normalizeRemoteShellPath(env.COMPUTER_USE_REMOTE_INSTALL_DIR?.trim() || '$HOME/.local/share/aipets-desktop-runner')
+const remoteRunnerPath = normalizeRemoteShellPath(env.COMPUTER_USE_REMOTE_RUNNER_COMMAND?.trim() || '$HOME/.local/bin/aipets-desktop-runner')
 
 async function buildLocalBundle() {
   await runProcess('pnpm', ['build'], {

@@ -4,16 +4,16 @@ Scope: `services/computer-use-mcp/**`
 
 ## Mission
 
-`computer-use-mcp` is AIRI's deterministic execution substrate.
+`computer-use-mcp` is AIPETS's deterministic execution substrate.
 
-- AIRI owns planning, chat UX, approval UX, provider integration, and MCP attachment.
+- AIPETS owns planning, chat UX, approval UX, provider integration, and MCP attachment.
 - `computer-use-mcp` owns execution primitives, workflow orchestration, terminal/browser/desktop surfaces, trace, audit, and safety checks.
 - Treat terminal, browser, editor, and desktop operations as one task system. Do not split them into disconnected demos.
 
 ## Agent Collaboration Policy
 
 This policy is scoped to `services/computer-use-mcp/**`. Do not copy it into the
-monorepo-level `AGENTS.md` as a global AIRI rule: other packages may not have
+monorepo-level `AGENTS.md` as a global AIPETS rule: other packages may not have
 the same runtime risk profile, Spark agent setup, or review workflow.
 
 Use `GPT-5.5 Controller + Spark / mini Read-only Worker Pool` as the default
@@ -42,7 +42,7 @@ shape for non-trivial work in this package.
 
 ## Boundary Reminder
 
-- Keep provider-specific behavior in AIRI / `packages/stage-ui/**`.
+- Keep provider-specific behavior in AIPETS / `packages/stage-ui/**`.
 - Keep OS-executor and workflow orchestration logic here.
 - Do not expand this workstream into browser, native click/type/press, or VS Code productization until terminal lane is actually closed.
 

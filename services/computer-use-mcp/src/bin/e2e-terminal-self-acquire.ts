@@ -20,7 +20,7 @@
  * NOTE: No pre-created PTY. The workflow self-acquires.
  *
  * Usage:
- *   pnpm -F @proj-airi/computer-use-mcp e2e:terminal-self-acquire
+ *   pnpm -F @proj-aipets/computer-use-mcp e2e:terminal-self-acquire
  */
 
 import { mkdtempSync, writeFileSync } from 'node:fs'
@@ -83,7 +83,7 @@ async function createClient(): Promise<Client> {
   })
 
   const client = new Client({
-    name: '@proj-airi/e2e-terminal-self-acquire',
+    name: '@proj-aipets/e2e-terminal-self-acquire',
     version: '0.1.0',
   })
 

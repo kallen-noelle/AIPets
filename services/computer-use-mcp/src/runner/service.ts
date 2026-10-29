@@ -142,7 +142,7 @@ export class LinuxX11RunnerService {
 
     this.sessionTag = params.sessionTag
     this.displaySize = params.displaySize
-    this.runtimeDir = await mkdtemp(join(tmpdir(), `airi-linux-x11-${sanitizeFileSegment(params.sessionTag, 'session')}-`))
+    this.runtimeDir = await mkdtemp(join(tmpdir(), `aipets-linux-x11-${sanitizeFileSegment(params.sessionTag, 'session')}-`))
     this.observationBaseUrl = params.observationBaseUrl ? new URL(params.observationBaseUrl) : undefined
     this.observationServePort = params.observationServePort
     this.observationToken = params.observationToken?.trim() || randomBytes(12).toString('hex')
