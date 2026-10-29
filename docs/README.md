@@ -1,12 +1,11 @@
 # aipets documentation
 
-This folder holds the documentation for the fork. The main project description is in
-[../README.md](../README.md).
+This folder holds the documentation for this project. The main project description is in
+[../README.md](../README.md), which is written in Chinese. The English version is
+[README.en.md](./README.en.md).
 
 | Document | Content |
 | --- | --- |
-| [../README.md](../README.md) | Project description, range, architecture, and development commands. |
-| [README.zh-CN.md](./README.zh-CN.md) | The Chinese project description. |
 | [ai/animation-video-stage-plan.md](./ai/animation-video-stage-plan.md) | The transparent video stage plan. |
 | [ai/animation-ai-director-plan.md](./ai/animation-ai-director-plan.md) | The AI director plan. |
 | [../DESIGN.md](../DESIGN.md) | The UI design guide. |
