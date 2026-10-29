@@ -14,7 +14,7 @@
 
 <h1 align="center">aipets</h1>
 
-<p align="center">A talking digital pet rendered with transparent video clips. Second-time development of Project AIRI.</p>
+<p align="center">A talking digital pet rendered with transparent video clips.</p>
 
 <p align="center">
   [<a href="./README.md">English</a>] [<a href="./docs/README.zh-CN.md">简体中文</a>]
@@ -22,11 +22,9 @@
 
 > [!NOTE]
 >
-> This repository is a fork of [Project AIRI](https://github.com/moeru-ai/airi). The upstream project renders a
-> virtual character with Live2D, VRM, or MMD. This fork replaces the body with transparent video clips and keeps
-> the rest of the stack.
+> This repository renders a virtual character with transparent video clips and does not use Live2D, VRM, or MMD.
 >
-> The fork keeps the browser app and the Electron desktop app. It drops the mobile app, the game integrations,
+> The project keeps the browser app and the Electron desktop app. It drops the mobile app, the game integrations,
 > and most translation locales. Read [Range](#range) for the full decision table.
 
 ## What this project does
@@ -39,14 +37,14 @@ plays next. A crossfade player swaps between two video elements so the pet never
 
 ## Range
 
-This table is the agreed scope of the fork. The `Status` column tells what this repository keeps.
+This table is the agreed scope of the project. The `Status` column tells what this repository keeps.
 
 | Capability | Status | Detail |
 | --- | --- | --- |
 | Web app | Keep | `apps/stage-web-react`. React, Vite, UnoCSS. |
 | Desktop app | Adopt | The `electron/` shell of `apps/stage-web-react`, packaged with electron-builder. |
 | Mobile app | Removed | `apps/stage-pocket` is deleted. |
-| Brain: chat channels | Trim | No Telegram, no Discord, no X. Their packages are deleted. The Satori adapter `integrations/satori-bot` stays. |
+| Brain: chat channels | Trim | No Telegram, no Discord, no X. Their packages are deleted. The Satori adapter `integrations/satori-bot` is deleted too. |
 | Brain: memory | Adopt | In-browser DuckDB WASM and `pglite`, plus the Alaya memory layer. |
 | Brain: local inference | Adopt | WebGPU inference in the browser. Work in progress. |
 | Ears | Adopt | Audio input, speech recognition, and voice activity detection. |
@@ -62,7 +60,7 @@ This table is the agreed scope of the fork. The `Status` column tells what this 
 | Accounts and sign-in | Removed | `apps/ui-server-auth` is deleted. |
 | Internationalization | Trim | Chinese and English only. |
 | `apps/component-calling` | Removed | The experiment is deleted. |
-| Package scope | Keep | npm packages stay under `@proj-airi/*`. Only the project name changes. |
+| Package scope | Keep | npm packages stay under `@proj-aipets/*`. Only the project name changes. |
 
 ## Architecture
 
@@ -137,14 +135,14 @@ pnpm dev:web
 ### Desktop app
 
 ```shell
-pnpm -F @proj-airi/stage-web-react dev       # Vite dev server
-pnpm -F @proj-airi/stage-web-react electron  # Electron window on the dev server
+pnpm -F @proj-aipets/stage-web-react dev       # Vite dev server
+pnpm -F @proj-aipets/stage-web-react electron  # Electron window on the dev server
 ```
 
 Build the Windows installer:
 
 ```shell
-pnpm -F @proj-airi/stage-web-react electron:dist
+pnpm -F @proj-aipets/stage-web-react electron:dist
 ```
 
 The installer is written to `apps/stage-web-react/release/`. That folder is not committed.
@@ -158,14 +156,14 @@ pnpm dev:backend
 ### Checks
 
 ```shell
-pnpm -F @proj-airi/stage-web-react typecheck
-pnpm -F @proj-airi/character-animation exec vitest run
+pnpm -F @proj-aipets/stage-web-react typecheck
+pnpm -F @proj-aipets/character-animation exec vitest run
 pnpm lint
 ```
 
 ## Supported LLM providers (powered by [xsai](https://github.com/moeru-ai/xsai))
 
-This fork keeps a short list. A generic OpenAI-compatible endpoint still works for anything else.
+This project keeps a short list. A generic OpenAI-compatible endpoint still works for anything else.
 
 - [x] [OpenAI](https://platform.openai.com/docs/guides/gpt/chat-completions-api)
   - [x] [Azure OpenAI API](https://learn.microsoft.com/en-us/azure/ai-services/openai/reference)
@@ -198,10 +196,8 @@ MIT. See [LICENSE](./LICENSE).
 
 ## Acknowledgements
 
-This project is a fork of [Project AIRI](https://github.com/moeru-ai/airi) by the Moeru AI team. The animation
-core, the stage packages, the server channel, and the design language come from that project.
+The animation core, the stage packages, the server channel, and the design language build on these projects.
 
-- [Project AIRI](https://github.com/moeru-ai/airi)
 - [Reka UI](https://github.com/unovue/reka-ui): the headless UI base behind `packages/ui`
 - [`xsai`](https://github.com/moeru-ai/xsai): the LLM and model client
 - [pixiv/ChatVRM](https://github.com/pixiv/ChatVRM) and [josephrocca/ChatVRM-js](https://github.com/josephrocca/ChatVRM-js)

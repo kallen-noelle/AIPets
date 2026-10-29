@@ -18,7 +18,7 @@
         "$TURBO_ROOT$/packages/*/.env*"
       ]
     },
-    "@proj-airi/electron-native-backdrop#build": {
+    "@proj-aipets/electron-native-backdrop#build": {
       "cache": false,
       "outputs": ["dist/**"]
     }

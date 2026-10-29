@@ -1,5 +1,5 @@
 {
-  "name": "@proj-airi/root",
+  "name": "@proj-aipets/root",
   "type": "module",
   "version": "0.12.0",
   "private": true,
@@ -12,14 +12,14 @@
   "license": "MIT",
   "scripts": {
     "postinstall": "pnpm exec simple-git-hooks && pnpm run build:packages",
-    "dev": "pnpm -r -F @proj-airi/stage-web-react dev",
-    "dev:web": "pnpm -rF @proj-airi/stage-web-react run dev",
+    "dev": "pnpm -r -F @proj-aipets/stage-web-react dev",
+    "dev:web": "pnpm -rF @proj-aipets/stage-web-react run dev",
     "dev:backend": "docker compose -f server/docker-compose.yaml up --build",
-    "dev:server": "pnpm -rF @proj-airi/server-runtime run dev",
+    "dev:server": "pnpm -rF @proj-aipets/server-runtime run dev",
     "dev:apps": "pnpm -rF=\"./apps/*\" run --parallel dev",
     "dev:packages": "pnpm -rF=\"./packages/*\" --parallel run dev",
     "build": "turbo run build -F=\"./packages/*\" -F=\"./apps/*\" -F=\"./server/**\"",
-    "build:web": "turbo run build -F @proj-airi/stage-web-react",
+    "build:web": "turbo run build -F @proj-aipets/stage-web-react",
     "build:apps": "turbo run build -F=\"./apps/*\"",
     "build:packages": "turbo run build -F=\"./packages/*\"",
     "build:engines": "turbo run build -F=\"./engines/*\"",
@@ -91,7 +91,6 @@
   "workspaces": [
     "packages/**",
     "plugins/**",
-    "integrations/**",
     "services/**",
     "examples/**",
     "engines/**",

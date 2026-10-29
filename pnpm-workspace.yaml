@@ -5,7 +5,7 @@ minimumReleaseAgeExclude:
   - '@auv-js/*'
   - '@gd-kirie/*'
   - '@moeru/*'
-  - '@proj-airi/*'
+  - '@proj-aipets/*'
   - '@sherpaw/*'
   - '@vishot/*'
   - '@vieval/*'
@@ -23,7 +23,6 @@ shellEmulator: true
 packages:
   - packages/**
   - plugins/**
-  - integrations/**
   - services/**
   - examples/**
   - evals/**
@@ -124,7 +123,6 @@ catalog:
   '@unocss/preset-mini': 66.7.5
   '@unocss/preset-web-fonts': 66.7.5
   '@unocss/reset': 66.7.5
-  '@velin-dev/core': ^0.4.0
   '@vishot/cli': ^0.2.0
   '@vitejs/plugin-react': ^6.1.2
   '@xsai-ext/providers': 0.5.1
@@ -141,7 +139,6 @@ catalog:
   '@xsai/tool': 0.5.1
   '@xsai/utils-chat': 0.5.1
   async-mutex: 0.5.0
-  best-effort-json-parser: ^1.5.1
   better-auth: 1.6.25
   builder-util-runtime: ^9.7.0
   bumpp: ^12.2.1

@@ -2,7 +2,7 @@
   "version": "0.2.0",
   "configurations": [
     {
-      // Start `pnpm -F @proj-airi/stage-web-react dev` first. This launches the
+      // Start `pnpm -F @proj-aipets/stage-web-react dev` first. This launches the
       // Electron main process against the running Vite server.
       "name": "Debug Electron main process",
       "type": "node",
@@ -10,7 +10,7 @@
       "runtimeExecutable": "pnpm",
       "runtimeArgs": [
         "-F",
-        "@proj-airi/stage-web-react",
+        "@proj-aipets/stage-web-react",
         "exec",
         "electron",
         "electron/main.cjs",

@@ -92,11 +92,11 @@ components.d.ts
 **/public/assets/fonts/
 
 # Code generation
-**/vscode-airi/src/generated/
-**/vscode-airi/LICENSE
+**/vscode-aipets/src/generated/
+**/vscode-aipets/LICENSE
 
 # Make it easy for devenv users to override their local environment.
-# See: https://github.com/moeru-ai/airi/pull/110#discussion_r2024378953
+# See: https://gitee.com/kallen-noelle/AdoptAI/pull/110#discussion_r2024378953
 .direnv
 .pre-commit-config.yaml
 .envrc
@@ -152,7 +152,7 @@ __screenshots__
 # cannot drift from its source.
 packages/i18n/glossary/glossary.tbx
 
-/airi-docs/
+/aipets-docs/
 .worktrees/
 
 # Sherpaw models downloaded by the Vite plugin
