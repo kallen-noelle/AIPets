@@ -215,7 +215,7 @@ export class ExtensionHost {
   private readonly modules = new KitApiBindingRegistryService()
   private readonly extensionModuleResources = new Map<string, ExtensionModuleResourceTracker>()
   private readonly permissions = new PermissionService()
-  private readonly airiVersion?: string
+  private readonly aipetsVersion?: string
   private readonly permissionResolver?: ExtensionHostOptions['permissionResolver']
   private readonly persistedPermissionGrants = new Map<string, ModulePermissionGrant>()
   private readonly resources = new ResourceService()
@@ -225,10 +225,10 @@ export class ExtensionHost {
   constructor(options: ExtensionHostOptions = {}) {
     this.loader = new FileSystemLoader()
     this.runtime = options.runtime ?? 'electron'
-    if (options.airiVersion && !semver.valid(options.airiVersion)) {
-      throw new Error(`AIRI version must be a valid semantic version: ${options.airiVersion}`)
+    if (options.aipetsVersion && !semver.valid(options.aipetsVersion)) {
+      throw new Error(`AIPETS version must be a valid semantic version: ${options.aipetsVersion}`)
     }
-    this.airiVersion = options.airiVersion
+    this.aipetsVersion = options.aipetsVersion
     this.permissionResolver = options.permissionResolver
     this.resources.setValue(protocolListProvidersEventName, [] as Array<{ name: string }>)
     this.markCapabilityReady(protocolListProvidersEventName, { source: 'plugin-host' })
@@ -243,9 +243,9 @@ export class ExtensionHost {
     if (!manifest.engines.runtimes.includes(runtime)) {
       throw new Error(`Extension \`${manifest.id}\` does not support runtime \`${runtime}\`.`)
     }
-    if (this.airiVersion && !semver.satisfies(this.airiVersion, manifest.engines.airi, { includePrerelease: true })) {
+    if (this.aipetsVersion && !semver.satisfies(this.aipetsVersion, manifest.engines.aipets, { includePrerelease: true })) {
       throw new Error(
-        `Extension \`${manifest.id}\` requires AIRI \`${manifest.engines.airi}\`, but the running version is \`${this.airiVersion}\`.`,
+        `Extension \`${manifest.id}\` requires AIPETS \`${manifest.engines.aipets}\`, but the running version is \`${this.aipetsVersion}\`.`,
       )
     }
   }

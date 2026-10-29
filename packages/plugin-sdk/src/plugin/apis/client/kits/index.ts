@@ -14,7 +14,7 @@ import type { KitCapabilityDescriptor, KitDescriptor } from '../../../../plugin-
  * Returns:
  * - The permission/event key string for listing kits
  */
-export const pluginKitApiListEventName = 'proj-airi:plugin-sdk:apis:client:kits:list'
+export const pluginKitApiListEventName = 'proj-aipets:plugin-sdk:apis:client:kits:list'
 /**
  * Identifies the bound API call used to read one kit's capability descriptors.
  *
@@ -27,7 +27,7 @@ export const pluginKitApiListEventName = 'proj-airi:plugin-sdk:apis:client:kits:
  * Returns:
  * - The permission/event key string for reading kit capabilities
  */
-export const pluginKitApiGetCapabilitiesEventName = 'proj-airi:plugin-sdk:apis:client:kits:get-capabilities'
+export const pluginKitApiGetCapabilitiesEventName = 'proj-aipets:plugin-sdk:apis:client:kits:get-capabilities'
 /**
  * Identifies the shared resource namespace that exposes host kit descriptors.
  *
@@ -40,7 +40,7 @@ export const pluginKitApiGetCapabilitiesEventName = 'proj-airi:plugin-sdk:apis:c
  * Returns:
  * - The resource key string for the kit registry
  */
-export const pluginKitRegistryResourceKey = 'proj-airi:plugin-sdk:resources:kits'
+export const pluginKitRegistryResourceKey = 'proj-aipets:plugin-sdk:resources:kits'
 
 /**
  * Defines the host-side callbacks needed by the low-level kit client.

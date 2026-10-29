@@ -196,7 +196,7 @@ interface FakemicTaskExecution {
   run: (task: RunnerTestCase, invokeHandler: () => Promise<void>) => Promise<void>
 }
 
-const registryKey = Symbol.for('airi.vitest-plugin-fakemic.executions')
+const registryKey = Symbol.for('aipets.vitest-plugin-fakemic.executions')
 const registryHost = globalThis as typeof globalThis & Record<typeof registryKey, WeakMap<RunnerTestCase, FakemicTaskExecution> | undefined>
 
 // NOTICE:

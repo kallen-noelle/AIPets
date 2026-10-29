@@ -2,7 +2,7 @@ import type {
   ExtensionIdentity as ProtocolExtensionIdentity,
   ModulePermissionDeclaration as ProtocolModulePermissionDeclaration,
   ModulePermissionGrant as ProtocolModulePermissionGrant,
-} from '@proj-airi/plugin-protocol/types'
+} from '@proj-aipets/plugin-protocol/types'
 import type { GenericSchema } from 'valibot'
 
 import type { KitDescriptor } from './kits'
@@ -251,15 +251,15 @@ export interface ExtensionKitManifest {
 export interface ExtensionManifestV2 {
   /** Manifest schema version expected by the current Host. */
   manifestVersion: 2
-  /** Manifest kind discriminator used to identify AIRI Extension manifests. */
+  /** Manifest kind discriminator used to identify AIPETS Extension manifests. */
   kind: 'manifest.extension.aipets.app'
   /** Stable Extension identifier used for installation and session identity. */
   id: string
   /** Extension package version. */
   version: string
-  /** AIRI compatibility range and supported runtimes. */
+  /** AIPETS compatibility range and supported runtimes. */
   engines: {
-    airi: string
+    aipets: string
     runtimes: PluginRuntime[]
   }
   /** Runtime-specific Extension entrypoints that the Host can resolve and import. */
@@ -426,7 +426,7 @@ export const extensionManifestV2Schema = pipe(
     id: extensionIdSchema,
     version: exactSemanticVersionSchema,
     engines: strictObject({
-      airi: semanticVersionRangeSchema,
+      aipets: semanticVersionRangeSchema,
       runtimes: pipe(
         array(pluginRuntimeSchema),
         minLength(1),
@@ -497,8 +497,8 @@ export interface ExtensionHostInstallContext {
  * - The host bootstrap options consumed by {@link import('../core').ExtensionHost}
  */
 export interface ExtensionHostOptions {
-  /** Running AIRI version used to enforce `engines.airi` before setup. */
-  airiVersion?: string
+  /** Running AIPETS version used to enforce `engines.aipets` before setup. */
+  aipetsVersion?: string
   /** Installable host features that can register kits, resources, and capabilities. @default [] */
   contributions?: ExtensionHostContribution[]
   /** Callback that decides the granted permission set for one extension session. */

@@ -1,21 +1,21 @@
-# @proj-airi/server-sdk
+# @proj-aipets/server-sdk
 
 The SDK for cliet-side code to connect to the server-side components.
 
 ## Usage
 
 ```shell
-ni @proj-airi/server-sdk -D # from @antfu/ni, can be installed via `npm i -g @antfu/ni`
-pnpm i @proj-airi/server-sdk -D
-yarn i @proj-airi/server-sdk -D
-npm i @proj-airi/server-sdk -D
+ni @proj-aipets/server-sdk -D # from @antfu/ni, can be installed via `npm i -g @antfu/ni`
+pnpm i @proj-aipets/server-sdk -D
+yarn i @proj-aipets/server-sdk -D
+npm i @proj-aipets/server-sdk -D
 ```
 
 ```typescript
-import { Client } from '@proj-airi/server-sdk'
+import { Client } from '@proj-aipets/server-sdk'
 
 const client = new Client({
-  name: 'your airi plugin',
+  name: 'your aipets plugin',
   autoConnect: false,
 })
 
@@ -41,7 +41,7 @@ Useful runtime helpers:
 
 ### Read chat images and recordings
 
-Chat events do not carry image or audio bytes. `output:gen-ai:chat:message` lists the images and recordings of the user message in `gen-ai:chat.attachments`, each with a reference such as `airi-asset:<id>`. Read the bytes with `getAsset`:
+Chat events do not carry image or audio bytes. `output:gen-ai:chat:message` lists the images and recordings of the user message in `gen-ai:chat.attachments`, each with a reference such as `aipets-asset:<id>`. Read the bytes with `getAsset`:
 
 ```typescript
 client.onEvent('output:gen-ai:chat:message', async (event) => {

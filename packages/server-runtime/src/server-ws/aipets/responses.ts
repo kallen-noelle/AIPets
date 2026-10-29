@@ -1,12 +1,12 @@
-import type { ExtensionIdentity, MessageHeartbeat, MessageHeartbeatKind, MetadataEventSource, WebSocketEvent } from '@proj-airi/server-shared/types'
+import type { ExtensionIdentity, MessageHeartbeat, MessageHeartbeatKind, MetadataEventSource, WebSocketEvent } from '@proj-aipets/server-shared/types'
 
-import { ServerErrorMessages } from '@proj-airi/server-shared'
-import { WebSocketEventSource } from '@proj-airi/server-shared/types'
+import { ServerErrorMessages } from '@proj-aipets/server-shared'
+import { WebSocketEventSource } from '@proj-aipets/server-shared/types'
 import { nanoid } from 'nanoid'
 
 import packageJSON from '../../../package.json'
 
-/** Creates AIRI server event metadata and preserves optional parent correlation. */
+/** Creates AIPETS server event metadata and preserves optional parent correlation. */
 export function createEventMetadata(
   serverInstanceId: string,
   parentId?: string,
@@ -27,7 +27,7 @@ export function createEventMetadata(
   }
 }
 
-/** Creates AIRI server response event factories. */
+/** Creates AIPETS server response event factories. */
 export function createResponses(serverInstanceId: string) {
   return {
     authenticated(parentId?: string) {

@@ -35,7 +35,7 @@ export type ActivationDiagnosticCode
   = | 'duplicate-installed-extension'
     | 'duplicate-loaded-extension'
     | 'enabled-extension-not-installed'
-    | 'incompatible-airi-version'
+    | 'incompatible-aipets-version'
     | 'incompatible-runtime'
     | 'duplicate-extension-provider'
     | 'host-kit-id-conflict'
@@ -74,8 +74,8 @@ export interface ActivationPlannerInput {
   hostProvidedKits: readonly HostProvidedKitDeclaration[]
   /** Runtime that will load the target Extensions. */
   runtime: PluginRuntime
-  /** Running AIRI version. When omitted, the Planner skips AIRI compatibility validation. @default undefined */
-  airiVersion?: string
+  /** Running AIPETS version. When omitted, the Planner skips AIPETS compatibility validation. @default undefined */
+  aipetsVersion?: string
   /** Whether the Host can run enabled Extensions. */
   systemEnabled: boolean
 }
@@ -191,13 +191,13 @@ export function planExtensionActivation(input: ActivationPlannerInput): Activati
         message: `Extension "${extensionId}" does not support runtime "${input.runtime}".`,
       })
     }
-    if (input.airiVersion && !semver.satisfies(input.airiVersion, manifest.engines.airi, { includePrerelease: true })) {
+    if (input.aipetsVersion && !semver.satisfies(input.aipetsVersion, manifest.engines.aipets, { includePrerelease: true })) {
       diagnostics.push({
-        code: 'incompatible-airi-version',
+        code: 'incompatible-aipets-version',
         extensionIds: [extensionId],
-        requestedVersion: manifest.engines.airi,
-        providerVersion: input.airiVersion,
-        message: `Extension "${extensionId}" requires AIRI ${manifest.engines.airi}, but the Host runs ${input.airiVersion}.`,
+        requestedVersion: manifest.engines.aipets,
+        providerVersion: input.aipetsVersion,
+        message: `Extension "${extensionId}" requires AIPETS ${manifest.engines.aipets}, but the Host runs ${input.aipetsVersion}.`,
       })
     }
   }

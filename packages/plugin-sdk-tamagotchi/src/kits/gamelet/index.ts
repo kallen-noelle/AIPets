@@ -1,5 +1,5 @@
-import type { ExtensionModuleRef } from '@proj-airi/plugin-sdk'
-import type { HostDataRecord } from '@proj-airi/plugin-sdk/plugin-host'
+import type { ExtensionModuleRef } from '@proj-aipets/plugin-sdk'
+import type { HostDataRecord } from '@proj-aipets/plugin-sdk/plugin-host'
 
 import { nanoid } from 'nanoid/non-secure'
 

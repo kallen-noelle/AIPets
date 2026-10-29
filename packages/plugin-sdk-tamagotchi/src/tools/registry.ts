@@ -1,4 +1,4 @@
-import type { HostDataRecord } from '@proj-airi/plugin-sdk/plugin-host'
+import type { HostDataRecord } from '@proj-aipets/plugin-sdk/plugin-host'
 
 /**
  * Describes the user-facing metadata for a Tamagotchi extension tool.

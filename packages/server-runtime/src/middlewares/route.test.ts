@@ -1,4 +1,4 @@
-import type { RouteTargetExpression, WebSocketBaseEvent, WebSocketEventOf, WebSocketEvents } from '@proj-airi/server-shared/types'
+import type { RouteTargetExpression, WebSocketBaseEvent, WebSocketEventOf, WebSocketEvents } from '@proj-aipets/server-shared/types'
 
 import type { AuthenticatedPeer } from '../types'
 
@@ -39,8 +39,8 @@ function createPeer(options: {
 function createExtensionModulePeer(): AuthenticatedPeer {
   const peer = createPeer({
     id: 'peer-extension',
-    name: 'airi-extension-chess',
-    extension: 'airi-extension-chess',
+    name: 'aipets-extension-chess',
+    extension: 'aipets-extension-chess',
     instanceId: 'extension-session-1',
   })
 
@@ -50,7 +50,7 @@ function createExtensionModulePeer(): AuthenticatedPeer {
       identity: {
         id: 'chess-gamelet',
         extension: {
-          id: 'airi-extension-chess',
+          id: 'aipets-extension-chess',
           sessionId: 'extension-session-1',
         },
       },
@@ -217,7 +217,7 @@ describe('route middleware', () => {
   it('matches destinations by extension identity labels', () => {
     const peer = createPeer({
       id: 'peer-extension-labels',
-      name: 'airi-extension',
+      name: 'aipets-extension',
       extensionLabels: { surface: 'websocket-extension' },
     })
 

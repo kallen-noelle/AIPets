@@ -1,4 +1,4 @@
-import type { WebSocketEvent } from '@proj-airi/server-shared/types'
+import type { WebSocketEvent } from '@proj-aipets/server-shared/types'
 
 import type { Peer } from './types'
 
@@ -36,7 +36,7 @@ vi.mock('h3', () => ({
   },
 }))
 
-vi.mock('@proj-airi/better-ws/server/h3', () => ({
+vi.mock('@proj-aipets/better-ws/server/h3', () => ({
   toH3Handler: vi.fn((server: TestWsServer, options: { state: (peer: Peer) => { rawPeer: Peer } }) => ({
     open(peer: Peer) {
       server.accept({
@@ -252,7 +252,7 @@ describe('setupApp event forwarding', () => {
 
     sendEvent(handler, modulePeer.peer, {
       type: 'asset:get:request',
-      data: { ref: 'airi-asset:abc' },
+      data: { ref: 'aipets-asset:abc' },
       metadata: {
         source: { kind: 'plugin', id: 'someone-else', plugin: { id: 'someone-else' } },
         event: { id: 'request-1' },

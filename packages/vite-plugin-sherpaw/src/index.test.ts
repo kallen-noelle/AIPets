@@ -3,7 +3,7 @@ import { join } from 'node:path'
 
 import Basemove from 'unplugin-basemove/vite'
 
-import { paraformerBilingualZhEn, sherpawModelPath, xAsrBilingualZhEnInt8, zipformerMultilingual } from '@proj-airi/provider-inference/sherpaw-transcription/models'
+import { paraformerBilingualZhEn, sherpawModelPath, xAsrBilingualZhEnInt8, zipformerMultilingual } from '@proj-aipets/provider-inference/sherpaw-transcription/models'
 import { build, createServer } from 'vite'
 import { afterEach, beforeEach, expect, it, vi } from 'vitest'
 
@@ -27,7 +27,7 @@ beforeEach(async () => {
   cacheDir = join(root, 'cache')
   await mkdir(join(root, 'public'), { recursive: true })
   await writeFile(join(root, 'index.html'), '<script type="module" src="/main.js"></script>')
-  await writeFile(join(root, 'main.js'), `import { assets } from '@proj-airi/vite-plugin-sherpaw/assets'; globalThis.modelAssets = assets`)
+  await writeFile(join(root, 'main.js'), `import { assets } from '@proj-aipets/vite-plugin-sherpaw/assets'; globalThis.modelAssets = assets`)
   for (const [index, model] of [...models, keywordPack].entries()) {
     const cache = join(cacheDir, sherpawModelPath(model))
     await mkdir(cache, { recursive: true })
@@ -204,7 +204,7 @@ it('serves development models from the local cache and leaves other models remot
     const origin = server.resolvedUrls?.local[0]
     if (!origin)
       throw new Error('Vite did not expose a local test URL.')
-    const module = await server.transformRequest('@proj-airi/vite-plugin-sherpaw/assets')
+    const module = await server.transformRequest('@proj-aipets/vite-plugin-sherpaw/assets')
     expect(module?.code).toContain('paraformer-zh-en')
     expect(module?.code).toContain('zipformer-multilingual')
     expect(module?.code).toContain('x-asr-zh-en-480ms-int8')

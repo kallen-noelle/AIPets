@@ -16,7 +16,7 @@ function createManifest(
     id,
     version: '1.0.0',
     engines: {
-      airi: '^1.0.0',
+      aipets: '^1.0.0',
       runtimes: ['electron'],
     },
     entrypoints: {
@@ -36,14 +36,14 @@ describe('planExtensionActivation', () => {
   it('loads a required Provider before its Consumer', () => {
     const provider = createManifest('provider-extension', {
       provides: [{
-        id: 'dev.airi.example',
+        id: 'dev.aipets.example',
         version: '1.2.0',
         exposure: 'local-only',
       }],
     })
     const consumer = createManifest('consumer-extension', {
       uses: [{
-        id: 'dev.airi.example',
+        id: 'dev.aipets.example',
         version: '^1.0.0',
       }],
     })
@@ -54,7 +54,7 @@ describe('planExtensionActivation', () => {
       proposedEnabledExtensionIds: [consumer.id, provider.id],
       hostProvidedKits: [],
       runtime: 'electron',
-      airiVersion: '1.0.0',
+      aipetsVersion: '1.0.0',
       systemEnabled: true,
     })
 
@@ -68,7 +68,7 @@ describe('planExtensionActivation', () => {
         restartExtensionIds: [],
         resolutions: [{
           consumerExtensionId: 'consumer-extension',
-          kitId: 'dev.airi.example',
+          kitId: 'dev.aipets.example',
           requestedVersion: '^1.0.0',
           optional: false,
           provider: {
@@ -84,14 +84,14 @@ describe('planExtensionActivation', () => {
   it('uses global Extension ID order when newly ready nodes compete with unrelated nodes', () => {
     const provider = createManifest('a-provider', {
       provides: [{
-        id: 'dev.airi.example',
+        id: 'dev.aipets.example',
         version: '1.0.0',
         exposure: 'local-only',
       }],
     })
     const consumer = createManifest('b-consumer', {
       uses: [{
-        id: 'dev.airi.example',
+        id: 'dev.aipets.example',
         version: '^1.0.0',
       }],
     })
@@ -103,7 +103,7 @@ describe('planExtensionActivation', () => {
       proposedEnabledExtensionIds: [independent.id, consumer.id, provider.id],
       hostProvidedKits: [],
       runtime: 'electron',
-      airiVersion: '1.0.0',
+      aipetsVersion: '1.0.0',
       systemEnabled: true,
     })
 
@@ -121,7 +121,7 @@ describe('planExtensionActivation', () => {
   it('rejects a missing required Kit', () => {
     const consumer = createManifest('consumer-extension', {
       uses: [{
-        id: 'dev.airi.missing',
+        id: 'dev.aipets.missing',
         version: '^1.0.0',
       }],
     })
@@ -132,7 +132,7 @@ describe('planExtensionActivation', () => {
       proposedEnabledExtensionIds: [consumer.id],
       hostProvidedKits: [],
       runtime: 'electron',
-      airiVersion: '1.0.0',
+      aipetsVersion: '1.0.0',
       systemEnabled: true,
     })
 
@@ -141,9 +141,9 @@ describe('planExtensionActivation', () => {
       diagnostics: [{
         code: 'missing-required-kit',
         extensionIds: ['consumer-extension'],
-        kitId: 'dev.airi.missing',
+        kitId: 'dev.aipets.missing',
         requestedVersion: '^1.0.0',
-        message: 'Extension "consumer-extension" requires missing Kit "dev.airi.missing" (^1.0.0).',
+        message: 'Extension "consumer-extension" requires missing Kit "dev.aipets.missing" (^1.0.0).',
       }],
     })
   })
@@ -151,7 +151,7 @@ describe('planExtensionActivation', () => {
   it('resolves a required Kit from the Host', () => {
     const consumer = createManifest('consumer-extension', {
       uses: [{
-        id: 'dev.airi.host-example',
+        id: 'dev.aipets.host-example',
         version: '^2.0.0',
       }],
     })
@@ -160,9 +160,9 @@ describe('planExtensionActivation', () => {
       installedManifests: [consumer],
       loadedManifests: [],
       proposedEnabledExtensionIds: [consumer.id],
-      hostProvidedKits: [{ id: 'dev.airi.host-example', version: '2.1.0' }],
+      hostProvidedKits: [{ id: 'dev.aipets.host-example', version: '2.1.0' }],
       runtime: 'electron',
-      airiVersion: '1.0.0',
+      aipetsVersion: '1.0.0',
       systemEnabled: true,
     })
 
@@ -176,7 +176,7 @@ describe('planExtensionActivation', () => {
         restartExtensionIds: [],
         resolutions: [{
           consumerExtensionId: 'consumer-extension',
-          kitId: 'dev.airi.host-example',
+          kitId: 'dev.aipets.host-example',
           requestedVersion: '^2.0.0',
           optional: false,
           provider: { kind: 'host', version: '2.1.0' },
@@ -188,14 +188,14 @@ describe('planExtensionActivation', () => {
   it('rejects duplicate Extension Providers for one Kit', () => {
     const firstProvider = createManifest('first-provider', {
       provides: [{
-        id: 'dev.airi.example',
+        id: 'dev.aipets.example',
         version: '1.0.0',
         exposure: 'local-only',
       }],
     })
     const secondProvider = createManifest('second-provider', {
       provides: [{
-        id: 'dev.airi.example',
+        id: 'dev.aipets.example',
         version: '2.0.0',
         exposure: 'local-only',
       }],
@@ -207,7 +207,7 @@ describe('planExtensionActivation', () => {
       proposedEnabledExtensionIds: [secondProvider.id, firstProvider.id],
       hostProvidedKits: [],
       runtime: 'electron',
-      airiVersion: '1.0.0',
+      aipetsVersion: '1.0.0',
       systemEnabled: true,
     })
 
@@ -216,8 +216,8 @@ describe('planExtensionActivation', () => {
       diagnostics: [{
         code: 'duplicate-extension-provider',
         extensionIds: ['first-provider', 'second-provider'],
-        kitId: 'dev.airi.example',
-        message: 'Extensions "first-provider" and "second-provider" both provide Kit "dev.airi.example".',
+        kitId: 'dev.aipets.example',
+        message: 'Extensions "first-provider" and "second-provider" both provide Kit "dev.aipets.example".',
       }],
     })
   })
@@ -235,16 +235,16 @@ describe('planExtensionActivation', () => {
       loadedManifests: [],
       proposedEnabledExtensionIds: [provider.id],
       hostProvidedKits: [
-        { id: 'dev.airi.alpha', version: '1.0.0' },
-        { id: 'dev.airi.zeta', version: '1.0.0' },
+        { id: 'dev.aipets.alpha', version: '1.0.0' },
+        { id: 'dev.aipets.zeta', version: '1.0.0' },
       ],
       runtime: 'electron',
-      airiVersion: '1.0.0',
+      aipetsVersion: '1.0.0',
       systemEnabled: true,
     })
 
-    const firstResult = plan(createProvider(['dev.airi.zeta', 'dev.airi.alpha']))
-    const secondResult = plan(createProvider(['dev.airi.alpha', 'dev.airi.zeta']))
+    const firstResult = plan(createProvider(['dev.aipets.zeta', 'dev.aipets.alpha']))
+    const secondResult = plan(createProvider(['dev.aipets.alpha', 'dev.aipets.zeta']))
 
     expect(firstResult).toEqual(secondResult)
     expect(firstResult).toEqual({
@@ -253,16 +253,16 @@ describe('planExtensionActivation', () => {
         {
           code: 'host-kit-id-conflict',
           extensionIds: ['extension-provider'],
-          kitId: 'dev.airi.alpha',
+          kitId: 'dev.aipets.alpha',
           providerVersion: '1.0.0',
-          message: 'Extension "extension-provider" cannot provide Host Kit "dev.airi.alpha".',
+          message: 'Extension "extension-provider" cannot provide Host Kit "dev.aipets.alpha".',
         },
         {
           code: 'host-kit-id-conflict',
           extensionIds: ['extension-provider'],
-          kitId: 'dev.airi.zeta',
+          kitId: 'dev.aipets.zeta',
           providerVersion: '1.0.0',
-          message: 'Extension "extension-provider" cannot provide Host Kit "dev.airi.zeta".',
+          message: 'Extension "extension-provider" cannot provide Host Kit "dev.aipets.zeta".',
         },
       ],
     })
@@ -271,7 +271,7 @@ describe('planExtensionActivation', () => {
   it('rejects an Extension Provider that conflicts with a Host Kit', () => {
     const provider = createManifest('extension-provider', {
       provides: [{
-        id: 'dev.airi.host-example',
+        id: 'dev.aipets.host-example',
         version: '1.0.0',
         exposure: 'local-only',
       }],
@@ -281,9 +281,9 @@ describe('planExtensionActivation', () => {
       installedManifests: [provider],
       loadedManifests: [],
       proposedEnabledExtensionIds: [provider.id],
-      hostProvidedKits: [{ id: 'dev.airi.host-example', version: '1.0.0' }],
+      hostProvidedKits: [{ id: 'dev.aipets.host-example', version: '1.0.0' }],
       runtime: 'electron',
-      airiVersion: '1.0.0',
+      aipetsVersion: '1.0.0',
       systemEnabled: true,
     })
 
@@ -292,20 +292,20 @@ describe('planExtensionActivation', () => {
       diagnostics: [{
         code: 'host-kit-id-conflict',
         extensionIds: ['extension-provider'],
-        kitId: 'dev.airi.host-example',
+        kitId: 'dev.aipets.host-example',
         providerVersion: '1.0.0',
-        message: 'Extension "extension-provider" cannot provide Host Kit "dev.airi.host-example".',
+        message: 'Extension "extension-provider" cannot provide Host Kit "dev.aipets.host-example".',
       }],
     })
   })
 
   it('rejects an incompatible required Kit version', () => {
     const consumer = createManifest('consumer-extension', {
-      uses: [{ id: 'dev.airi.example', version: '^2.0.0' }],
+      uses: [{ id: 'dev.aipets.example', version: '^2.0.0' }],
     })
     const provider = createManifest('provider-extension', {
       provides: [{
-        id: 'dev.airi.example',
+        id: 'dev.aipets.example',
         version: '1.5.0',
         exposure: 'local-only',
       }],
@@ -317,7 +317,7 @@ describe('planExtensionActivation', () => {
       proposedEnabledExtensionIds: [provider.id, consumer.id],
       hostProvidedKits: [],
       runtime: 'electron',
-      airiVersion: '1.0.0',
+      aipetsVersion: '1.0.0',
       systemEnabled: true,
     })
 
@@ -326,20 +326,20 @@ describe('planExtensionActivation', () => {
       diagnostics: [{
         code: 'incompatible-kit-version',
         extensionIds: ['consumer-extension', 'provider-extension'],
-        kitId: 'dev.airi.example',
+        kitId: 'dev.aipets.example',
         requestedVersion: '^2.0.0',
         providerVersion: '1.5.0',
-        message: 'Extension "consumer-extension" requires Kit "dev.airi.example" ^2.0.0, but "provider-extension" provides 1.5.0.',
+        message: 'Extension "consumer-extension" requires Kit "dev.aipets.example" ^2.0.0, but "provider-extension" provides 1.5.0.',
       }],
     })
   })
 
   it('matches a compound Consumer range against an exact Provider version', () => {
     const consumer = createManifest('consumer-extension', {
-      uses: [{ id: 'dev.airi.example', version: '>=1 <2' }],
+      uses: [{ id: 'dev.aipets.example', version: '>=1 <2' }],
     })
     const provider = createManifest('provider-extension', {
-      provides: [{ id: 'dev.airi.example', version: '1.5.0', exposure: 'local-only' }],
+      provides: [{ id: 'dev.aipets.example', version: '1.5.0', exposure: 'local-only' }],
     })
 
     const result = planExtensionActivation({
@@ -348,7 +348,7 @@ describe('planExtensionActivation', () => {
       proposedEnabledExtensionIds: [consumer.id, provider.id],
       hostProvidedKits: [],
       runtime: 'electron',
-      airiVersion: '1.0.0',
+      aipetsVersion: '1.0.0',
       systemEnabled: true,
     })
 
@@ -357,14 +357,14 @@ describe('planExtensionActivation', () => {
 
   it('matches prerelease Providers only when the Consumer range includes prereleases', () => {
     const consumer = createManifest('consumer-extension', {
-      uses: [{ id: 'dev.airi.example', version: '>=1.0.0-beta.1 <1.0.0' }],
+      uses: [{ id: 'dev.aipets.example', version: '>=1.0.0-beta.1 <1.0.0' }],
     })
     const provider = createManifest('provider-extension', {
-      provides: [{ id: 'dev.airi.example', version: '1.0.0-beta.2', exposure: 'local-only' }],
+      provides: [{ id: 'dev.aipets.example', version: '1.0.0-beta.2', exposure: 'local-only' }],
     })
     const plan = (requestedVersion: string) => {
       consumer.kits = {
-        uses: [{ id: 'dev.airi.example', version: requestedVersion }],
+        uses: [{ id: 'dev.aipets.example', version: requestedVersion }],
       }
       return planExtensionActivation({
         installedManifests: [consumer, provider],
@@ -372,7 +372,7 @@ describe('planExtensionActivation', () => {
         proposedEnabledExtensionIds: [consumer.id, provider.id],
         hostProvidedKits: [],
         runtime: 'electron',
-        airiVersion: '1.0.0',
+        aipetsVersion: '1.0.0',
         systemEnabled: true,
       })
     }
@@ -383,10 +383,10 @@ describe('planExtensionActivation', () => {
       diagnostics: [{
         code: 'incompatible-kit-version',
         extensionIds: ['consumer-extension', 'provider-extension'],
-        kitId: 'dev.airi.example',
+        kitId: 'dev.aipets.example',
         requestedVersion: '^1.0.0',
         providerVersion: '1.0.0-beta.2',
-        message: 'Extension "consumer-extension" requires Kit "dev.airi.example" ^1.0.0, but "provider-extension" provides 1.0.0-beta.2.',
+        message: 'Extension "consumer-extension" requires Kit "dev.aipets.example" ^1.0.0, but "provider-extension" provides 1.0.0-beta.2.',
       }],
     })
   })
@@ -398,7 +398,7 @@ describe('planExtensionActivation', () => {
       proposedEnabledExtensionIds: ['missing-extension'],
       hostProvidedKits: [],
       runtime: 'electron',
-      airiVersion: '1.0.0',
+      aipetsVersion: '1.0.0',
       systemEnabled: true,
     })
 
@@ -421,7 +421,7 @@ describe('planExtensionActivation', () => {
       proposedEnabledExtensionIds: [extension.id],
       hostProvidedKits: [],
       runtime: 'node',
-      airiVersion: '1.0.0',
+      aipetsVersion: '1.0.0',
       systemEnabled: true,
     })
 
@@ -435,9 +435,9 @@ describe('planExtensionActivation', () => {
     })
   })
 
-  it('rejects an Extension that does not support the AIRI version', () => {
+  it('rejects an Extension that does not support the AIPETS version', () => {
     const extension = createManifest('future-extension')
-    extension.engines.airi = '^2.0.0'
+    extension.engines.aipets = '^2.0.0'
 
     const result = planExtensionActivation({
       installedManifests: [extension],
@@ -445,18 +445,18 @@ describe('planExtensionActivation', () => {
       proposedEnabledExtensionIds: [extension.id],
       hostProvidedKits: [],
       runtime: 'electron',
-      airiVersion: '1.5.0',
+      aipetsVersion: '1.5.0',
       systemEnabled: true,
     })
 
     expect(result).toEqual({
       ok: false,
       diagnostics: [{
-        code: 'incompatible-airi-version',
+        code: 'incompatible-aipets-version',
         extensionIds: ['future-extension'],
         requestedVersion: '^2.0.0',
         providerVersion: '1.5.0',
-        message: 'Extension "future-extension" requires AIRI ^2.0.0, but the Host runs 1.5.0.',
+        message: 'Extension "future-extension" requires AIPETS ^2.0.0, but the Host runs 1.5.0.',
       }],
     })
   })
@@ -472,7 +472,7 @@ describe('planExtensionActivation', () => {
       proposedEnabledExtensionIds: [firstManifest.id],
       hostProvidedKits: [],
       runtime: 'electron',
-      airiVersion: '1.0.0',
+      aipetsVersion: '1.0.0',
       systemEnabled: true,
     })
 
@@ -489,15 +489,15 @@ describe('planExtensionActivation', () => {
   it('returns the same diagnostics for reordered duplicate installed manifests', () => {
     const plainManifest = createManifest('duplicate-extension')
     const conflictingManifest = createManifest('duplicate-extension', {
-      provides: [{ id: 'dev.airi.host-example', version: '1.0.0', exposure: 'local-only' }],
+      provides: [{ id: 'dev.aipets.host-example', version: '1.0.0', exposure: 'local-only' }],
     })
     const plan = (installedManifests: readonly ExtensionManifestV2[]) => planExtensionActivation({
       installedManifests,
       loadedManifests: [],
       proposedEnabledExtensionIds: ['duplicate-extension'],
-      hostProvidedKits: [{ id: 'dev.airi.host-example', version: '1.0.0' }],
+      hostProvidedKits: [{ id: 'dev.aipets.host-example', version: '1.0.0' }],
       runtime: 'electron',
-      airiVersion: '1.0.0',
+      aipetsVersion: '1.0.0',
       systemEnabled: true,
     })
 
@@ -526,7 +526,7 @@ describe('planExtensionActivation', () => {
       proposedEnabledExtensionIds: [installedManifest.id],
       hostProvidedKits: [],
       runtime: 'electron',
-      airiVersion: '1.0.0',
+      aipetsVersion: '1.0.0',
       systemEnabled: true,
     })
 
@@ -542,12 +542,12 @@ describe('planExtensionActivation', () => {
 
   it('rejects a required dependency cycle', () => {
     const firstExtension = createManifest('first-extension', {
-      provides: [{ id: 'dev.airi.first', version: '1.0.0', exposure: 'local-only' }],
-      uses: [{ id: 'dev.airi.second', version: '^1.0.0' }],
+      provides: [{ id: 'dev.aipets.first', version: '1.0.0', exposure: 'local-only' }],
+      uses: [{ id: 'dev.aipets.second', version: '^1.0.0' }],
     })
     const secondExtension = createManifest('second-extension', {
-      provides: [{ id: 'dev.airi.second', version: '1.0.0', exposure: 'local-only' }],
-      uses: [{ id: 'dev.airi.first', version: '^1.0.0' }],
+      provides: [{ id: 'dev.aipets.second', version: '1.0.0', exposure: 'local-only' }],
+      uses: [{ id: 'dev.aipets.first', version: '^1.0.0' }],
     })
 
     const result = planExtensionActivation({
@@ -556,7 +556,7 @@ describe('planExtensionActivation', () => {
       proposedEnabledExtensionIds: [secondExtension.id, firstExtension.id],
       hostProvidedKits: [],
       runtime: 'electron',
-      airiVersion: '1.0.0',
+      aipetsVersion: '1.0.0',
       systemEnabled: true,
     })
 
@@ -572,12 +572,12 @@ describe('planExtensionActivation', () => {
 
   it('rejects a required dependency cycle in the live session graph', () => {
     const firstExtension = createManifest('first-extension', {
-      provides: [{ id: 'dev.airi.first', version: '1.0.0', exposure: 'local-only' }],
-      uses: [{ id: 'dev.airi.second', version: '^1.0.0' }],
+      provides: [{ id: 'dev.aipets.first', version: '1.0.0', exposure: 'local-only' }],
+      uses: [{ id: 'dev.aipets.second', version: '^1.0.0' }],
     })
     const secondExtension = createManifest('second-extension', {
-      provides: [{ id: 'dev.airi.second', version: '1.0.0', exposure: 'local-only' }],
-      uses: [{ id: 'dev.airi.first', version: '^1.0.0' }],
+      provides: [{ id: 'dev.aipets.second', version: '1.0.0', exposure: 'local-only' }],
+      uses: [{ id: 'dev.aipets.first', version: '^1.0.0' }],
     })
 
     const result = planExtensionActivation({
@@ -586,7 +586,7 @@ describe('planExtensionActivation', () => {
       proposedEnabledExtensionIds: [],
       hostProvidedKits: [],
       runtime: 'electron',
-      airiVersion: '1.0.0',
+      aipetsVersion: '1.0.0',
       systemEnabled: false,
     })
 
@@ -602,10 +602,10 @@ describe('planExtensionActivation', () => {
 
   it('stops loaded Consumers before Providers when the system is disabled', () => {
     const provider = createManifest('provider-extension', {
-      provides: [{ id: 'dev.airi.example', version: '1.0.0', exposure: 'local-only' }],
+      provides: [{ id: 'dev.aipets.example', version: '1.0.0', exposure: 'local-only' }],
     })
     const consumer = createManifest('consumer-extension', {
-      uses: [{ id: 'dev.airi.example', version: '^1.0.0' }],
+      uses: [{ id: 'dev.aipets.example', version: '^1.0.0' }],
     })
 
     const result = planExtensionActivation({
@@ -614,7 +614,7 @@ describe('planExtensionActivation', () => {
       proposedEnabledExtensionIds: [provider.id, consumer.id],
       hostProvidedKits: [],
       runtime: 'electron',
-      airiVersion: '1.0.0',
+      aipetsVersion: '1.0.0',
       systemEnabled: false,
     })
 
@@ -628,7 +628,7 @@ describe('planExtensionActivation', () => {
         restartExtensionIds: [],
         resolutions: [{
           consumerExtensionId: 'consumer-extension',
-          kitId: 'dev.airi.example',
+          kitId: 'dev.aipets.example',
           requestedVersion: '^1.0.0',
           optional: false,
           provider: {
@@ -643,10 +643,10 @@ describe('planExtensionActivation', () => {
 
   it('restarts all required Consumers when a Provider restarts', () => {
     const provider = createManifest('provider-extension', {
-      provides: [{ id: 'dev.airi.example', version: '1.0.0', exposure: 'local-only' }],
+      provides: [{ id: 'dev.aipets.example', version: '1.0.0', exposure: 'local-only' }],
     })
     const consumer = createManifest('consumer-extension', {
-      uses: [{ id: 'dev.airi.example', version: '^1.0.0' }],
+      uses: [{ id: 'dev.aipets.example', version: '^1.0.0' }],
     })
 
     const result = planExtensionActivation({
@@ -656,7 +656,7 @@ describe('planExtensionActivation', () => {
       restartExtensionIds: [provider.id],
       hostProvidedKits: [],
       runtime: 'electron',
-      airiVersion: '1.0.0',
+      aipetsVersion: '1.0.0',
       systemEnabled: true,
     })
 
@@ -670,7 +670,7 @@ describe('planExtensionActivation', () => {
         restartExtensionIds: ['consumer-extension', 'provider-extension'],
         resolutions: [{
           consumerExtensionId: 'consumer-extension',
-          kitId: 'dev.airi.example',
+          kitId: 'dev.aipets.example',
           requestedVersion: '^1.0.0',
           optional: false,
           provider: {
@@ -685,7 +685,7 @@ describe('planExtensionActivation', () => {
 
   it('keeps a missing optional Kit as a non-blocking resolution', () => {
     const consumer = createManifest('optional-consumer', {
-      uses: [{ id: 'dev.airi.optional', version: '^1.0.0', optional: true }],
+      uses: [{ id: 'dev.aipets.optional', version: '^1.0.0', optional: true }],
     })
 
     const result = planExtensionActivation({
@@ -694,7 +694,7 @@ describe('planExtensionActivation', () => {
       proposedEnabledExtensionIds: [consumer.id],
       hostProvidedKits: [],
       runtime: 'electron',
-      airiVersion: '1.0.0',
+      aipetsVersion: '1.0.0',
       systemEnabled: true,
     })
 
@@ -708,7 +708,7 @@ describe('planExtensionActivation', () => {
         restartExtensionIds: [],
         resolutions: [{
           consumerExtensionId: 'optional-consumer',
-          kitId: 'dev.airi.optional',
+          kitId: 'dev.aipets.optional',
           requestedVersion: '^1.0.0',
           optional: true,
           provider: { kind: 'unresolved', reason: 'missing' },
@@ -719,8 +719,8 @@ describe('planExtensionActivation', () => {
 
   it('rejects an Extension that requires its own Kit', () => {
     const extension = createManifest('self-dependent-extension', {
-      provides: [{ id: 'dev.airi.self', version: '1.0.0', exposure: 'local-only' }],
-      uses: [{ id: 'dev.airi.self', version: '^1.0.0' }],
+      provides: [{ id: 'dev.aipets.self', version: '1.0.0', exposure: 'local-only' }],
+      uses: [{ id: 'dev.aipets.self', version: '^1.0.0' }],
     })
 
     const result = planExtensionActivation({
@@ -729,7 +729,7 @@ describe('planExtensionActivation', () => {
       proposedEnabledExtensionIds: [extension.id],
       hostProvidedKits: [],
       runtime: 'electron',
-      airiVersion: '1.0.0',
+      aipetsVersion: '1.0.0',
       systemEnabled: true,
     })
 
@@ -753,7 +753,7 @@ describe('planExtensionActivation', () => {
       restartExtensionIds: [extension.id],
       hostProvidedKits: [],
       runtime: 'electron',
-      airiVersion: '1.0.0',
+      aipetsVersion: '1.0.0',
       systemEnabled: true,
     })
 
@@ -769,16 +769,16 @@ describe('planExtensionActivation', () => {
 
   it('returns the same plan for equivalent input permutations', () => {
     const provider = createManifest('provider-extension', {
-      provides: [{ id: 'dev.airi.example', version: '1.0.0', exposure: 'local-only' }],
+      provides: [{ id: 'dev.aipets.example', version: '1.0.0', exposure: 'local-only' }],
     })
     const consumer = createManifest('consumer-extension', {
-      uses: [{ id: 'dev.airi.example', version: '^1.0.0' }],
+      uses: [{ id: 'dev.aipets.example', version: '^1.0.0' }],
     })
     const commonInput = {
       loadedManifests: [],
       hostProvidedKits: [],
       runtime: 'electron' as const,
-      airiVersion: '1.0.0',
+      aipetsVersion: '1.0.0',
       systemEnabled: true,
     }
 
@@ -798,10 +798,10 @@ describe('planExtensionActivation', () => {
 
   it('uses the live session graph to stop old Consumers during Provider reload', () => {
     const provider = createManifest('provider-extension', {
-      provides: [{ id: 'dev.airi.example', version: '1.0.0', exposure: 'local-only' }],
+      provides: [{ id: 'dev.aipets.example', version: '1.0.0', exposure: 'local-only' }],
     })
     const loadedConsumer = createManifest('consumer-extension', {
-      uses: [{ id: 'dev.airi.example', version: '^1.0.0' }],
+      uses: [{ id: 'dev.aipets.example', version: '^1.0.0' }],
     })
     const installedConsumer = createManifest('consumer-extension')
 
@@ -812,7 +812,7 @@ describe('planExtensionActivation', () => {
       restartExtensionIds: [provider.id],
       hostProvidedKits: [],
       runtime: 'electron',
-      airiVersion: '1.0.0',
+      aipetsVersion: '1.0.0',
       systemEnabled: true,
     })
 

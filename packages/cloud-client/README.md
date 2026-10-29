@@ -1,6 +1,6 @@
-# `@proj-airi/cloud-client`
+# `@proj-aipets/cloud-client`
 
-The generated TypeScript client for the AIRI Cloud API.
+The generated TypeScript client for the AIPETS Cloud API.
 
 ## What it does
 
@@ -17,10 +17,10 @@ Cloud owns these domains:
 Give the base URL and the request options in each call. The package has no global configuration.
 
 ```ts
-import { inboxServiceGetInboxUnreadCount } from '@proj-airi/cloud-client'
+import { inboxServiceGetInboxUnreadCount } from '@proj-aipets/cloud-client'
 
 const { data } = await inboxServiceGetInboxUnreadCount({
-  baseUrl: import.meta.env.VITE_CLOUD_API_URL || 'https://cloud.airi.build',
+  baseUrl: import.meta.env.VITE_CLOUD_API_URL || 'https://cloud.aipets.build',
   headers: { Authorization: `Bearer ${accessToken}` },
   throwOnError: true,
 })
@@ -30,14 +30,14 @@ The generated types follow the OpenAPI document. They do not validate a response
 
 ## How to update it
 
-The contract source is the Cloud protobuf API in `proj-airi/backend`. The backend generates OpenAPI through gRPC Gateway.
+The contract source is the Cloud protobuf API in `proj-aipets/backend`. The backend generates OpenAPI through gRPC Gateway.
 
 1. Copy `api/generated/openapiv2/cloud/cloud.swagger.yaml` from the backend to `openapi.yaml`.
-2. Run `pnpm -F @proj-airi/cloud-client generate`.
+2. Run `pnpm -F @proj-aipets/cloud-client generate`.
 
 Do not edit `src/generated` or `openapi.yaml` by hand.
 
 ## When not to use it
 
-- For Auth calls, use the Auth client in `@proj-airi/stage-ui`.
+- For Auth calls, use the Auth client in `@proj-aipets/stage-ui`.
 - For calls to the TS resource API (`server/apps/api`), use its Hono client.

@@ -32,7 +32,7 @@ export interface CapabilityDescriptor {
  * Returns:
  * - The permission/event key string for capability waiting
  */
-export const protocolCapabilityWaitEventName = 'proj-airi:plugin-sdk:apis:protocol:capabilities:wait'
+export const protocolCapabilityWaitEventName = 'proj-aipets:plugin-sdk:apis:protocol:capabilities:wait'
 /**
  * Defines the control-plane RPC that blocks until a capability becomes ready.
  *
@@ -61,7 +61,7 @@ export const protocolCapabilityWait = defineInvokeEventa<CapabilityDescriptor, {
  * Returns:
  * - The permission/event key string for capability snapshots
  */
-export const protocolCapabilitySnapshotEventName = 'proj-airi:plugin-sdk:apis:protocol:capabilities:snapshot'
+export const protocolCapabilitySnapshotEventName = 'proj-aipets:plugin-sdk:apis:protocol:capabilities:snapshot'
 /**
  * Defines the control-plane RPC that returns the current capability snapshot.
  *

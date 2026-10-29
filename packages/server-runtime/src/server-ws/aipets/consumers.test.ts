@@ -7,7 +7,7 @@ import {
   selectConsumerPeerId,
 } from './consumers'
 
-describe('airi websocket consumer selection', () => {
+describe('aipets websocket consumer selection', () => {
   it('selects highest priority then earliest registration', () => {
     expect(selectConsumerPeerId({
       eventType: 'event:test',
@@ -73,7 +73,7 @@ describe('airi websocket consumer selection', () => {
   })
 })
 
-describe('airi websocket consumer registry', () => {
+describe('aipets websocket consumer registry', () => {
   it('registers and unregisters consumers', () => {
     const registry = createConsumerOrchestrator()
 

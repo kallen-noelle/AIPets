@@ -14,10 +14,10 @@ describe('extension manifest schema', () => {
     const result = safeParse(extensionManifestV2Schema, {
       manifestVersion: 2,
       kind: 'manifest.extension.aipets.app' as const,
-      id: 'airi-extension-test',
+      id: 'aipets-extension-test',
       version: '1.0.0',
       engines: {
-        airi: '*',
+        aipets: '*',
         runtimes: ['electron'],
       },
       permissions: {},
@@ -29,7 +29,7 @@ describe('extension manifest schema', () => {
     expect(result.success).toBe(true)
   })
 
-  // https://github.com/moeru-ai/airi/pull/2506#discussion_r4013407993
+  // https://gitee.com/kallen-noelle/AdoptAI/pull/2506#discussion_r4013407993
   it('rejects non-semantic Extension package versions (PR #2506)', () => {
     // ROOT CAUSE:
     //
@@ -38,10 +38,10 @@ describe('extension manifest schema', () => {
     const result = safeParse(extensionManifestV2Schema, {
       manifestVersion: 2,
       kind: 'manifest.extension.aipets.app',
-      id: 'airi-extension-test',
+      id: 'aipets-extension-test',
       version: 'release-1',
       engines: {
-        airi: '*',
+        aipets: '*',
         runtimes: ['electron'],
       },
       permissions: {},
@@ -56,8 +56,8 @@ describe('extension manifest schema', () => {
   it('rejects legacy extension manifests', () => {
     const result = safeParse(extensionManifestV2Schema, {
       apiVersion: 'v1',
-      kind: 'manifest.plugin.airi.moeru.ai',
-      name: 'airi-plugin-test',
+      kind: 'manifest.plugin.aipets.moeru.ai',
+      name: 'aipets-plugin-test',
       permissions: {},
       entrypoints: {
         electron: './plugin.mjs',
@@ -71,10 +71,10 @@ describe('extension manifest schema', () => {
     const result = safeParse(extensionManifestV2Schema, {
       manifestVersion: 2,
       kind: 'manifest.extension.aipets.app',
-      id: 'airi-extension-test',
+      id: 'aipets-extension-test',
       version: '1.0.0',
       engines: {
-        airi: '*',
+        aipets: '*',
         runtimes: ['electron'],
       },
       permissions: {},
@@ -91,10 +91,10 @@ describe('extension manifest schema', () => {
     const result = safeParse(extensionManifestV2Schema, {
       manifestVersion: 2,
       kind: 'manifest.extension.aipets.app',
-      id: 'airi-extension-test',
+      id: 'aipets-extension-test',
       version: '1.0.0',
       engines: {
-        airi: '*',
+        aipets: '*',
         runtimes: ['electron'],
       },
       permissions: {},
@@ -111,7 +111,7 @@ describe('extension manifest schema', () => {
       id: '../outside',
       version: '1.0.0',
       engines: {
-        airi: '*',
+        aipets: '*',
         runtimes: ['electron'],
       },
       permissions: {},
@@ -123,7 +123,7 @@ describe('extension manifest schema', () => {
     expect(result.success).toBe(false)
   })
 
-  // https://github.com/moeru-ai/airi/pull/2506#discussion_r4014945385
+  // https://gitee.com/kallen-noelle/AdoptAI/pull/2506#discussion_r4014945385
   it('rejects Extension ids longer than one portable folder component (PR #2506)', () => {
     // ROOT CAUSE:
     //
@@ -135,7 +135,7 @@ describe('extension manifest schema', () => {
       id: 'a'.repeat(256),
       version: '1.0.0',
       engines: {
-        airi: '*',
+        aipets: '*',
         runtimes: ['electron'],
       },
       permissions: {},
@@ -147,7 +147,7 @@ describe('extension manifest schema', () => {
     expect(result.success).toBe(false)
   })
 
-  // https://github.com/moeru-ai/airi/pull/2506#discussion_r4014945385
+  // https://gitee.com/kallen-noelle/AdoptAI/pull/2506#discussion_r4014945385
   it('rejects Windows device names as Extension ids (PR #2506)', () => {
     // ROOT CAUSE:
     //
@@ -159,7 +159,7 @@ describe('extension manifest schema', () => {
       id: 'con.tools',
       version: '1.0.0',
       engines: {
-        airi: '*',
+        aipets: '*',
         runtimes: ['electron'],
       },
       permissions: {},
@@ -178,7 +178,7 @@ describe('extension manifest schema', () => {
       id: 'agent-activity-provider',
       version: '1.0.0',
       engines: {
-        airi: '*',
+        aipets: '*',
         runtimes: ['electron' as const],
       },
       permissions: {},
@@ -187,12 +187,12 @@ describe('extension manifest schema', () => {
       },
       kits: {
         provides: [{
-          id: 'dev.airi.agent-activity',
+          id: 'dev.aipets.agent-activity',
           version: '1.0.0',
           exposure: 'local-only' as const,
         }],
         uses: [{
-          id: 'dev.airi.character-reaction',
+          id: 'dev.aipets.character-reaction',
           version: '1.0.0',
           optional: true,
         }],
@@ -209,7 +209,7 @@ describe('extension manifest schema', () => {
       id: 'duplicate-kit-provider',
       version: '1.0.0',
       engines: {
-        airi: '*',
+        aipets: '*',
         runtimes: ['electron'],
       },
       permissions: {},
@@ -219,12 +219,12 @@ describe('extension manifest schema', () => {
       kits: {
         provides: [
           {
-            id: 'dev.airi.agent-activity',
+            id: 'dev.aipets.agent-activity',
             version: '1.0.0',
             exposure: 'local-only',
           },
           {
-            id: 'dev.airi.agent-activity',
+            id: 'dev.aipets.agent-activity',
             version: '2.0.0',
             exposure: 'remote-callable',
           },
@@ -252,7 +252,7 @@ describe('extension manifest schema', () => {
       id: 'duplicate-kit-consumer',
       version: '1.0.0',
       engines: {
-        airi: '*',
+        aipets: '*',
         runtimes: ['electron'],
       },
       permissions: {},
@@ -262,12 +262,12 @@ describe('extension manifest schema', () => {
       kits: {
         uses: [
           {
-            id: 'dev.airi.agent-activity',
+            id: 'dev.aipets.agent-activity',
             version: '2.0.0',
             optional: true,
           },
           {
-            id: 'dev.airi.agent-activity',
+            id: 'dev.aipets.agent-activity',
             version: '1.0.0',
           },
         ],
@@ -289,7 +289,7 @@ describe('extension manifest schema', () => {
       id: 'agent-activity-consumer',
       version: '1.0.0',
       engines: {
-        airi: '*',
+        aipets: '*',
         runtimes: ['electron'],
       },
       permissions: {},
@@ -298,7 +298,7 @@ describe('extension manifest schema', () => {
       },
       kits: {
         uses: [{
-          id: 'dev.airi.agent-activity',
+          id: 'dev.aipets.agent-activity',
           version: '^1.0.0',
         }],
       },
@@ -313,11 +313,11 @@ describe('extension manifest schema', () => {
       kind: 'manifest.extension.aipets.app',
       id: 'exact-version-consumer',
       version: '1.0.0',
-      engines: { airi: '*', runtimes: ['electron'] },
+      engines: { aipets: '*', runtimes: ['electron'] },
       permissions: {},
       entrypoints: { electron: './extension.mjs' },
       kits: {
-        uses: [{ id: 'dev.airi.agent-activity', version: '1.0.0' }],
+        uses: [{ id: 'dev.aipets.agent-activity', version: '1.0.0' }],
       },
     })
 
@@ -330,11 +330,11 @@ describe('extension manifest schema', () => {
       kind: 'manifest.extension.aipets.app',
       id: 'compound-range-consumer',
       version: '1.0.0',
-      engines: { airi: '*', runtimes: ['electron'] },
+      engines: { aipets: '*', runtimes: ['electron'] },
       permissions: {},
       entrypoints: { electron: './extension.mjs' },
       kits: {
-        uses: [{ id: 'dev.airi.agent-activity', version: '>=1 <2' }],
+        uses: [{ id: 'dev.aipets.agent-activity', version: '>=1 <2' }],
       },
     })
 
@@ -347,11 +347,11 @@ describe('extension manifest schema', () => {
       kind: 'manifest.extension.aipets.app',
       id: 'invalid-range-consumer',
       version: '1.0.0',
-      engines: { airi: '*', runtimes: ['electron'] },
+      engines: { aipets: '*', runtimes: ['electron'] },
       permissions: {},
       entrypoints: { electron: './extension.mjs' },
       kits: {
-        uses: [{ id: 'dev.airi.agent-activity', version: 'not-a-range' }],
+        uses: [{ id: 'dev.aipets.agent-activity', version: 'not-a-range' }],
       },
     })
 
@@ -365,7 +365,7 @@ describe('extension manifest schema', () => {
       id: 'agent-activity-provider',
       version: '1.0.0',
       engines: {
-        airi: '*',
+        aipets: '*',
         runtimes: ['electron'],
       },
       permissions: {},
@@ -374,7 +374,7 @@ describe('extension manifest schema', () => {
       },
       kits: {
         provides: [{
-          id: 'dev.airi.agent-activity',
+          id: 'dev.aipets.agent-activity',
           version: '^1.0.0',
           exposure: 'local-only',
         }],
@@ -386,24 +386,24 @@ describe('extension manifest schema', () => {
 })
 
 describe('for ExtensionHost', () => {
-  it('rejects an incompatible AIRI version before importing the entrypoint', async () => {
-    const host = new ExtensionHost({ runtime: 'node', airiVersion: '1.0.0' })
+  it('rejects an incompatible AIPETS version before importing the entrypoint', async () => {
+    const host = new ExtensionHost({ runtime: 'node', aipetsVersion: '1.0.0' })
 
     await expect(host.start({
       manifestVersion: 2,
       kind: 'manifest.extension.aipets.app',
       id: 'future-extension',
       version: '1.0.0',
-      engines: { airi: '>=99.0.0', runtimes: ['node'] },
+      engines: { aipets: '>=99.0.0', runtimes: ['node'] },
       permissions: {},
       entrypoints: { node: './missing-entrypoint.mjs' },
-    })).rejects.toThrow('requires AIRI `>=99.0.0`')
+    })).rejects.toThrow('requires AIPETS `>=99.0.0`')
   })
 
   it('runs extension setup and registers multiple module sessions', async () => {
     const host = new ExtensionHost()
     const extension = defineExtension({
-      id: 'airi-extension-test',
+      id: 'aipets-extension-test',
       async setup(ctx) {
         await ctx.modules.register({ id: 'module-a' })
         await ctx.modules.register({ id: 'module-b' })
@@ -414,15 +414,15 @@ describe('for ExtensionHost', () => {
       manifest: {
         manifestVersion: 2,
         kind: 'manifest.extension.aipets.app' as const,
-        id: 'airi-extension-test',
+        id: 'aipets-extension-test',
         version: '1.0.0',
-        engines: { airi: '*', runtimes: ['electron'] },
+        engines: { aipets: '*', runtimes: ['electron'] },
         permissions: {},
         entrypoints: {},
       },
     })
 
-    expect(session.extension.id).toBe('airi-extension-test')
+    expect(session.extension.id).toBe('aipets-extension-test')
     expect(session.extension.version).toBe('1.0.0')
     expect(host.listModules().map(module => module.id)).toEqual(['module-a', 'module-b'])
   })
@@ -430,7 +430,7 @@ describe('for ExtensionHost', () => {
   it('rejects defineExtension entrypoint ids that do not match the manifest id', async () => {
     const host = new ExtensionHost()
     const extension = defineExtension({
-      id: 'airi-extension-entrypoint-id',
+      id: 'aipets-extension-entrypoint-id',
       async setup() {},
     })
 
@@ -438,14 +438,14 @@ describe('for ExtensionHost', () => {
       manifest: {
         manifestVersion: 2,
         kind: 'manifest.extension.aipets.app' as const,
-        id: 'airi-extension-manifest-id',
+        id: 'aipets-extension-manifest-id',
         version: '1.0.0',
-        engines: { airi: '*', runtimes: ['electron'] },
+        engines: { aipets: '*', runtimes: ['electron'] },
         permissions: {},
         entrypoints: {},
       },
     })).rejects.toThrow(
-      'Extension entrypoint id `airi-extension-entrypoint-id` must match manifest id `airi-extension-manifest-id`.',
+      'Extension entrypoint id `aipets-extension-entrypoint-id` must match manifest id `aipets-extension-manifest-id`.',
     )
   })
 
@@ -453,7 +453,7 @@ describe('for ExtensionHost', () => {
     const disposed: string[] = []
     const host = new ExtensionHost()
     const extension = defineExtension({
-      id: 'airi-extension-failing',
+      id: 'aipets-extension-failing',
       async setup(ctx) {
         const first = await ctx.modules.register({ id: 'first' })
         first.subscriptions.add({
@@ -475,9 +475,9 @@ describe('for ExtensionHost', () => {
       manifest: {
         manifestVersion: 2,
         kind: 'manifest.extension.aipets.app' as const,
-        id: 'airi-extension-failing',
+        id: 'aipets-extension-failing',
         version: '1.0.0',
-        engines: { airi: '*', runtimes: ['electron'] },
+        engines: { aipets: '*', runtimes: ['electron'] },
         permissions: {},
         entrypoints: {},
       },
@@ -511,7 +511,7 @@ describe('for ExtensionHost', () => {
     })
     host.registerKitApi(kit)
     const extension = defineExtension({
-      id: 'airi-extension-cleanup-failure',
+      id: 'aipets-extension-cleanup-failure',
       async setup(ctx) {
         const client = await ctx.kits.use(kit)
         client.bind()
@@ -523,15 +523,15 @@ describe('for ExtensionHost', () => {
       manifest: {
         manifestVersion: 2,
         kind: 'manifest.extension.aipets.app' as const,
-        id: 'airi-extension-cleanup-failure',
+        id: 'aipets-extension-cleanup-failure',
         version: '1.0.0',
-        engines: { airi: '*', runtimes: ['electron'] },
+        engines: { aipets: '*', runtimes: ['electron'] },
         permissions: {
           apis: [
             { key: 'kit.cleanup-failure', actions: ['invoke'] },
           ],
           resources: [
-            { key: 'proj-airi:plugin-sdk:resources:kits:kit.cleanup-failure:bindings', actions: ['write'] },
+            { key: 'proj-aipets:plugin-sdk:resources:kits:kit.cleanup-failure:bindings', actions: ['write'] },
           ],
         },
         entrypoints: {},
@@ -573,11 +573,11 @@ describe('for ExtensionHost', () => {
         { key: 'kit.module-dispose', actions: ['invoke'] },
       ],
       resources: [
-        { key: 'proj-airi:plugin-sdk:resources:kits:kit.module-dispose:bindings', actions: ['write'] },
+        { key: 'proj-aipets:plugin-sdk:resources:kits:kit.module-dispose:bindings', actions: ['write'] },
       ],
     }
     const extension = defineExtension({
-      id: 'airi-extension-module-dispose',
+      id: 'aipets-extension-module-dispose',
       async setup(ctx) {
         const module = await ctx.modules.register({
           id: 'module-dispose',
@@ -594,9 +594,9 @@ describe('for ExtensionHost', () => {
       manifest: {
         manifestVersion: 2,
         kind: 'manifest.extension.aipets.app' as const,
-        id: 'airi-extension-module-dispose',
+        id: 'aipets-extension-module-dispose',
         version: '1.0.0',
-        engines: { airi: '*', runtimes: ['electron'] },
+        engines: { aipets: '*', runtimes: ['electron'] },
         permissions,
         entrypoints: {},
       },
@@ -620,7 +620,7 @@ describe('for ExtensionHost', () => {
 
     let observed = ''
     const extension = defineExtension({
-      id: 'airi-extension-direct-kit',
+      id: 'aipets-extension-direct-kit',
       async setup(ctx) {
         const client = await ctx.kits.use(kit)
         observed = client.ping()
@@ -631,9 +631,9 @@ describe('for ExtensionHost', () => {
       manifest: {
         manifestVersion: 2,
         kind: 'manifest.extension.aipets.app' as const,
-        id: 'airi-extension-direct-kit',
+        id: 'aipets-extension-direct-kit',
         version: '1.0.0',
-        engines: { airi: '*', runtimes: ['electron'] },
+        engines: { aipets: '*', runtimes: ['electron'] },
         permissions: {
           apis: [{ key: 'kit.extension-direct', actions: ['invoke'] }],
         },
@@ -641,7 +641,7 @@ describe('for ExtensionHost', () => {
       },
     })
 
-    expect(observed).toContain('airi-extension-direct-kit:')
+    expect(observed).toContain('aipets-extension-direct-kit:')
     expect(observed).toContain(':root')
     expect(host.listModules()).toEqual([])
   })
@@ -656,7 +656,7 @@ describe('for ExtensionHost', () => {
     host.registerKitApi(kit)
 
     const extension = defineExtension({
-      id: 'airi-extension-direct-kit-denied',
+      id: 'aipets-extension-direct-kit-denied',
       async setup(ctx) {
         const result = await ctx.kits.tryUse(kit)
         expect(result.ok).toBe(false)
@@ -671,9 +671,9 @@ describe('for ExtensionHost', () => {
       manifest: {
         manifestVersion: 2,
         kind: 'manifest.extension.aipets.app' as const,
-        id: 'airi-extension-direct-kit-denied',
+        id: 'aipets-extension-direct-kit-denied',
         version: '1.0.0',
-        engines: { airi: '*', runtimes: ['electron'] },
+        engines: { aipets: '*', runtimes: ['electron'] },
         permissions: {
           apis: [{ key: 'kit.other', actions: ['invoke'] }],
         },
@@ -696,7 +696,7 @@ describe('for ExtensionHost', () => {
     host.registerKitApi(kit)
 
     const extension = defineExtension({
-      id: 'airi-extension-direct-kit-resolver-denied',
+      id: 'aipets-extension-direct-kit-resolver-denied',
       async setup(ctx) {
         const result = await ctx.kits.tryUse(kit)
         expect(result.ok).toBe(false)
@@ -711,9 +711,9 @@ describe('for ExtensionHost', () => {
       manifest: {
         manifestVersion: 2,
         kind: 'manifest.extension.aipets.app' as const,
-        id: 'airi-extension-direct-kit-resolver-denied',
+        id: 'aipets-extension-direct-kit-resolver-denied',
         version: '1.0.0',
-        engines: { airi: '*', runtimes: ['electron'] },
+        engines: { aipets: '*', runtimes: ['electron'] },
         permissions: {
           apis: [{ key: 'kit.extension-resolver-denied', actions: ['invoke'] }],
         },
@@ -742,9 +742,9 @@ describe('for ExtensionHost', () => {
     const manifest = {
       manifestVersion: 2,
       kind: 'manifest.extension.aipets.app' as const,
-      id: 'airi-extension-direct-kit-persisted-revoked',
+      id: 'aipets-extension-direct-kit-persisted-revoked',
       version: '1.0.0',
-      engines: { airi: '*', runtimes: ['electron'] },
+      engines: { aipets: '*', runtimes: ['electron'] },
       permissions: {
         apis: [{ key: 'kit.extension-persisted-revoked', actions: ['invoke'] }],
       },
@@ -752,7 +752,7 @@ describe('for ExtensionHost', () => {
     } satisfies ExtensionManifestV2
 
     const grantedExtension = defineExtension({
-      id: 'airi-extension-direct-kit-persisted-revoked',
+      id: 'aipets-extension-direct-kit-persisted-revoked',
       async setup(ctx) {
         const result = await ctx.kits.tryUse(kit)
         expect(result.ok).toBe(true)
@@ -763,7 +763,7 @@ describe('for ExtensionHost', () => {
 
     grantRequestedKit = false
     const revokedExtension = defineExtension({
-      id: 'airi-extension-direct-kit-persisted-revoked',
+      id: 'aipets-extension-direct-kit-persisted-revoked',
       async setup(ctx) {
         const result = await ctx.kits.tryUse(kit)
         expect(result.ok).toBe(false)
@@ -787,7 +787,7 @@ describe('for ExtensionHost', () => {
     host.registerKitApi(kit)
 
     const extension = defineExtension({
-      id: 'airi-extension-module-inherited-grant',
+      id: 'aipets-extension-module-inherited-grant',
       async setup(ctx) {
         const module = await ctx.modules.register({ id: 'module-a' })
         const result = await module.kits.tryUse(kit)
@@ -804,9 +804,9 @@ describe('for ExtensionHost', () => {
       manifest: {
         manifestVersion: 2,
         kind: 'manifest.extension.aipets.app' as const,
-        id: 'airi-extension-module-inherited-grant',
+        id: 'aipets-extension-module-inherited-grant',
         version: '1.0.0',
-        engines: { airi: '*', runtimes: ['electron'] },
+        engines: { aipets: '*', runtimes: ['electron'] },
         permissions: {
           apis: [{ key: 'kit.module-inherited-grant', actions: ['invoke'] }],
         },
@@ -829,7 +829,7 @@ describe('for ExtensionHost', () => {
     host.registerKitApi(kit)
 
     const extension = defineExtension({
-      id: 'airi-extension-module-kit-resolver-denied',
+      id: 'aipets-extension-module-kit-resolver-denied',
       async setup(ctx) {
         const module = await ctx.modules.register({
           id: 'module-a',
@@ -850,9 +850,9 @@ describe('for ExtensionHost', () => {
       manifest: {
         manifestVersion: 2,
         kind: 'manifest.extension.aipets.app' as const,
-        id: 'airi-extension-module-kit-resolver-denied',
+        id: 'aipets-extension-module-kit-resolver-denied',
         version: '1.0.0',
-        engines: { airi: '*', runtimes: ['electron'] },
+        engines: { aipets: '*', runtimes: ['electron'] },
         permissions: {
           apis: [{ key: 'kit.module-resolver-denied', actions: ['invoke'] }],
         },
@@ -871,7 +871,7 @@ describe('for ExtensionHost', () => {
 
     const observed: boolean[] = []
     const extension = defineExtension({
-      id: 'airi-extension-direct-kit-watch',
+      id: 'aipets-extension-direct-kit-watch',
       async setup(ctx) {
         ctx.kits.watch(kit, (availability) => {
           observed.push(availability.available)
@@ -883,9 +883,9 @@ describe('for ExtensionHost', () => {
       manifest: {
         manifestVersion: 2,
         kind: 'manifest.extension.aipets.app' as const,
-        id: 'airi-extension-direct-kit-watch',
+        id: 'aipets-extension-direct-kit-watch',
         version: '1.0.0',
-        engines: { airi: '*', runtimes: ['electron'] },
+        engines: { aipets: '*', runtimes: ['electron'] },
         permissions: {
           apis: [{ key: 'kit.extension-watch', actions: ['invoke'] }],
         },
@@ -908,7 +908,7 @@ describe('for ExtensionHost', () => {
 
     const observed: boolean[] = []
     const extension = defineExtension({
-      id: 'airi-extension-direct-kit-watch-dispose',
+      id: 'aipets-extension-direct-kit-watch-dispose',
       async setup(ctx) {
         ctx.kits.watch(kit, (availability) => {
           observed.push(availability.available)
@@ -920,9 +920,9 @@ describe('for ExtensionHost', () => {
       manifest: {
         manifestVersion: 2,
         kind: 'manifest.extension.aipets.app' as const,
-        id: 'airi-extension-direct-kit-watch-dispose',
+        id: 'aipets-extension-direct-kit-watch-dispose',
         version: '1.0.0',
-        engines: { airi: '*', runtimes: ['electron'] },
+        engines: { aipets: '*', runtimes: ['electron'] },
         permissions: {
           apis: [{ key: 'kit.extension-watch-dispose', actions: ['invoke'] }],
         },
@@ -947,7 +947,7 @@ describe('for ExtensionHost', () => {
 
     let watched = false
     const extension = defineExtension({
-      id: 'airi-extension-kit-test',
+      id: 'aipets-extension-kit-test',
       async setup(ctx) {
         const module = await ctx.modules.register({
           id: 'module-a',
@@ -971,9 +971,9 @@ describe('for ExtensionHost', () => {
       manifest: {
         manifestVersion: 2,
         kind: 'manifest.extension.aipets.app' as const,
-        id: 'airi-extension-kit-test',
+        id: 'aipets-extension-kit-test',
         version: '1.0.0',
-        engines: { airi: '*', runtimes: ['electron'] },
+        engines: { aipets: '*', runtimes: ['electron'] },
         permissions: {
           apis: [{ key: 'kit.*', actions: ['invoke'] }],
         },
@@ -995,7 +995,7 @@ describe('for ExtensionHost', () => {
     const observed: boolean[] = []
     let disposeModule: (() => Promise<void>) | undefined
     const extension = defineExtension({
-      id: 'airi-extension-module-kit-watch-dispose',
+      id: 'aipets-extension-module-kit-watch-dispose',
       async setup(ctx) {
         const module = await ctx.modules.register({
           id: 'module-a',
@@ -1014,9 +1014,9 @@ describe('for ExtensionHost', () => {
       manifest: {
         manifestVersion: 2,
         kind: 'manifest.extension.aipets.app' as const,
-        id: 'airi-extension-module-kit-watch-dispose',
+        id: 'aipets-extension-module-kit-watch-dispose',
         version: '1.0.0',
-        engines: { airi: '*', runtimes: ['electron'] },
+        engines: { aipets: '*', runtimes: ['electron'] },
         permissions: {
           apis: [{ key: 'kit.module-watch-dispose', actions: ['invoke'] }],
         },
@@ -1037,7 +1037,7 @@ describe('for ExtensionHost', () => {
     const host = new ExtensionHost()
     const disposed: string[] = []
     const extension = defineExtension({
-      id: 'airi-extension-duplicate-module',
+      id: 'aipets-extension-duplicate-module',
       async setup(ctx) {
         const first = await ctx.modules.register({ id: 'module-a' })
         first.subscriptions.add({
@@ -1056,9 +1056,9 @@ describe('for ExtensionHost', () => {
       manifest: {
         manifestVersion: 2,
         kind: 'manifest.extension.aipets.app' as const,
-        id: 'airi-extension-duplicate-module',
+        id: 'aipets-extension-duplicate-module',
         version: '1.0.0',
-        engines: { airi: '*', runtimes: ['electron'] },
+        engines: { aipets: '*', runtimes: ['electron'] },
         permissions: {},
         entrypoints: {},
       },
@@ -1075,7 +1075,7 @@ describe('for ExtensionHost', () => {
     const host = new ExtensionHost()
     const cleanupOrder: string[] = []
     const extension = defineExtension({
-      id: 'airi-extension-async-stop-cleanup',
+      id: 'aipets-extension-async-stop-cleanup',
       async setup(ctx) {
         const module = await ctx.modules.register({ id: 'module-a' })
         module.subscriptions.add({
@@ -1091,9 +1091,9 @@ describe('for ExtensionHost', () => {
       manifest: {
         manifestVersion: 2,
         kind: 'manifest.extension.aipets.app' as const,
-        id: 'airi-extension-async-stop-cleanup',
+        id: 'aipets-extension-async-stop-cleanup',
         version: '1.0.0',
-        engines: { airi: '*', runtimes: ['electron'] },
+        engines: { aipets: '*', runtimes: ['electron'] },
         permissions: {},
         entrypoints: {},
       },
@@ -1118,7 +1118,7 @@ describe('for ExtensionHost', () => {
     host.registerKitApi(kit)
 
     const extension = defineExtension({
-      id: 'airi-extension-kit-denied',
+      id: 'aipets-extension-kit-denied',
       async setup(ctx) {
         const module = await ctx.modules.register({
           id: 'module-a',
@@ -1139,9 +1139,9 @@ describe('for ExtensionHost', () => {
       manifest: {
         manifestVersion: 2,
         kind: 'manifest.extension.aipets.app' as const,
-        id: 'airi-extension-kit-denied',
+        id: 'aipets-extension-kit-denied',
         version: '1.0.0',
-        engines: { airi: '*', runtimes: ['electron'] },
+        engines: { aipets: '*', runtimes: ['electron'] },
         permissions: {
           apis: [{ key: 'kit.other', actions: ['invoke'] }],
         },
@@ -1154,14 +1154,14 @@ describe('for ExtensionHost', () => {
 describe('for FileSystemLoader', () => {
   const testPermissions: ModulePermissionDeclaration = {
     apis: [
-      { key: 'proj-airi:plugin-sdk:apis:protocol:capabilities:wait', actions: ['invoke'] },
-      { key: 'proj-airi:plugin-sdk:apis:protocol:resources:providers:list-providers', actions: ['invoke'] },
+      { key: 'proj-aipets:plugin-sdk:apis:protocol:capabilities:wait', actions: ['invoke'] },
+      { key: 'proj-aipets:plugin-sdk:apis:protocol:resources:providers:list-providers', actions: ['invoke'] },
     ],
     resources: [
-      { key: 'proj-airi:plugin-sdk:apis:protocol:resources:providers:list-providers', actions: ['read'] },
+      { key: 'proj-aipets:plugin-sdk:apis:protocol:resources:providers:list-providers', actions: ['read'] },
     ],
     capabilities: [
-      { key: 'proj-airi:plugin-sdk:apis:protocol:resources:providers:list-providers', actions: ['wait'] },
+      { key: 'proj-aipets:plugin-sdk:apis:protocol:resources:providers:list-providers', actions: ['wait'] },
     ],
   }
 
@@ -1177,7 +1177,7 @@ describe('for FileSystemLoader', () => {
       kind: 'manifest.extension.aipets.app' as const,
       id: 'test-define-extension-entrypoint',
       version: '1.0.0',
-      engines: { airi: '*', runtimes: ['electron'] },
+      engines: { aipets: '*', runtimes: ['electron'] },
       permissions: {},
       entrypoints: {
         electron: join(import.meta.dirname, 'testdata', 'test-define-extension-entrypoint.ts'),
@@ -1202,7 +1202,7 @@ describe('for FileSystemLoader', () => {
       kind: 'manifest.extension.aipets.app' as const,
       id: 'test-stoppable-extension-entrypoint',
       version: '1.0.0',
-      engines: { airi: '*', runtimes: ['electron'] },
+      engines: { aipets: '*', runtimes: ['electron'] },
       permissions: {},
       entrypoints: {
         electron: entrypointPath,
@@ -1234,7 +1234,7 @@ describe('for FileSystemLoader', () => {
       kind: 'manifest.extension.aipets.app' as const,
       id: 'test-stoppable-extension-entrypoint',
       version: '1.0.0',
-      engines: { airi: '*', runtimes: ['electron'] },
+      engines: { aipets: '*', runtimes: ['electron'] },
       permissions: {},
       entrypoints: {
         electron: entrypointPath,
@@ -1256,7 +1256,7 @@ describe('for FileSystemLoader', () => {
       kind: 'manifest.extension.aipets.app' as const,
       id: 'test-extension',
       version: '1.0.0',
-      engines: { airi: '*', runtimes: ['node'] },
+      engines: { aipets: '*', runtimes: ['node'] },
       permissions: testPermissions,
       entrypoints: {
         node: join(import.meta.dirname, 'testdata', 'test-define-extension-entrypoint.ts'),
@@ -1276,7 +1276,7 @@ describe('for FileSystemLoader', () => {
       kind: 'manifest.extension.aipets.app' as const,
       id: 'test-extension',
       version: '1.0.0',
-      engines: { airi: '*', runtimes: ['electron'] },
+      engines: { aipets: '*', runtimes: ['electron'] },
       permissions: testPermissions,
       entrypoints: {
         electron: join(import.meta.dirname, 'testdata', 'test-invalid-extension-entrypoint.ts'),
@@ -1291,7 +1291,7 @@ describe('for FileSystemLoader', () => {
       kind: 'manifest.extension.aipets.app' as const,
       id: 'test-extension',
       version: '1.0.0',
-      engines: { airi: '*', runtimes: ['node'] },
+      engines: { aipets: '*', runtimes: ['node'] },
       permissions: testPermissions,
     } satisfies Omit<ExtensionManifestV2, 'entrypoints'>
 
@@ -1334,7 +1334,7 @@ describe('for FileSystemLoader', () => {
       kind: 'manifest.extension.aipets.app' as const,
       id: 'test-extension',
       version: '1.0.0',
-      engines: { airi: '*', runtimes: ['web'] },
+      engines: { aipets: '*', runtimes: ['web'] },
       permissions: testPermissions,
       entrypoints: {
         default: './default-entry.ts',
@@ -1354,7 +1354,7 @@ describe('for FileSystemLoader', () => {
       kind: 'manifest.extension.aipets.app' as const,
       id: 'test-extension',
       version: '1.0.0',
-      engines: { airi: '*', runtimes: ['node'] },
+      engines: { aipets: '*', runtimes: ['node'] },
       permissions: testPermissions,
       entrypoints: {
         node: '/opt/extensions/entry.ts',
@@ -1373,7 +1373,7 @@ describe('for FileSystemLoader', () => {
       kind: 'manifest.extension.aipets.app' as const,
       id: 'test-extension',
       version: '1.0.0',
-      engines: { airi: '*', runtimes: ['node'] },
+      engines: { aipets: '*', runtimes: ['node'] },
       permissions: testPermissions,
       entrypoints: {},
     }, { runtime: 'node' })).toThrow('Extension entrypoint is required for runtime `node`.')
@@ -1389,7 +1389,7 @@ describe('for migrated extension testdata', () => {
       kind: 'manifest.extension.aipets.app' as const,
       id: 'test-plugin',
       version: '1.0.0',
-      engines: { airi: '*', runtimes: ['electron'] },
+      engines: { aipets: '*', runtimes: ['electron'] },
       permissions: {},
       entrypoints: {
         electron: join(import.meta.dirname, 'testdata', 'test-normal-plugin.ts'),
@@ -1408,7 +1408,7 @@ describe('for migrated extension testdata', () => {
       kind: 'manifest.extension.aipets.app' as const,
       id: 'test-plugin-no-connect',
       version: '1.0.0',
-      engines: { airi: '*', runtimes: ['electron'] },
+      engines: { aipets: '*', runtimes: ['electron'] },
       permissions: {},
       entrypoints: {
         electron: join(import.meta.dirname, 'testdata', 'test-no-connect-plugin.ts'),
@@ -1428,7 +1428,7 @@ describe('for migrated extension testdata', () => {
       kind: 'manifest.extension.aipets.app' as const,
       id: 'test-plugin-injected-host-apis',
       version: '1.0.0',
-      engines: { airi: '*', runtimes: ['electron'] },
+      engines: { aipets: '*', runtimes: ['electron'] },
       permissions: {
         apis: [{ key: testWidgetKit.id, actions: ['invoke'] }],
       },

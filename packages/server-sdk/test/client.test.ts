@@ -1,5 +1,5 @@
-import type { ClientConnection, ClientConnector, ClientEvents } from '@proj-airi/better-ws'
-import type { WebSocketEvent, WebSocketEventOf } from '@proj-airi/server-shared/types'
+import type { ClientConnection, ClientConnector, ClientEvents } from '@proj-aipets/better-ws'
+import type { WebSocketEvent, WebSocketEventOf } from '@proj-aipets/server-shared/types'
 
 import { afterEach, describe, expect, it, vi } from 'vitest'
 
@@ -414,17 +414,17 @@ describe('client', () => {
     const connection = connector.open()
     await connected
 
-    const asset = client.getAsset('airi-asset:abc')
+    const asset = client.getAsset('aipets-asset:abc')
     const request = connection.sent.at(-1)!
-    expect(request).toMatchObject({ type: 'asset:get:request', data: { ref: 'airi-asset:abc' } })
+    expect(request).toMatchObject({ type: 'asset:get:request', data: { ref: 'aipets-asset:abc' } })
 
     const answer = (data: WebSocketEventOf<'asset:get:response'>['data'], parentId: string) => ({
       ...serverEvent('asset:get:response', data),
       metadata: { source: { kind: 'plugin', plugin: { id: 'stage' }, id: 'stage-1' }, event: { id: `answer-${parentId}`, parentId } },
     }) as WebSocketEventOf<'asset:get:response'>
     // An answer to another request does not settle this one.
-    connector.emit(answer({ ref: 'airi-asset:abc', error: 'not mine' }, 'other'))
-    connector.emit(answer({ ref: 'airi-asset:abc', mimeType: 'audio/wav', data: 'UklGRg==' }, request.metadata.event.id))
+    connector.emit(answer({ ref: 'aipets-asset:abc', error: 'not mine' }, 'other'))
+    connector.emit(answer({ ref: 'aipets-asset:abc', mimeType: 'audio/wav', data: 'UklGRg==' }, request.metadata.event.id))
 
     await expect(asset).resolves.toEqual({ mimeType: 'audio/wav', data: new Uint8Array([82, 73, 70, 70]) })
   })
@@ -443,10 +443,10 @@ describe('client', () => {
     const connection = connector.open()
     await connected
 
-    const asset = client.getAsset('airi-asset:gone')
+    const asset = client.getAsset('aipets-asset:gone')
     const request = connection.sent.at(-1)!
     connector.emit({
-      ...serverEvent('asset:get:response', { ref: 'airi-asset:gone', error: 'Chat asset is missing' }),
+      ...serverEvent('asset:get:response', { ref: 'aipets-asset:gone', error: 'Chat asset is missing' }),
       metadata: { source: { kind: 'plugin', plugin: { id: 'stage' }, id: 'stage-1' }, event: { id: 'answer', parentId: request.metadata.event.id } },
     } as WebSocketEventOf<'asset:get:response'>)
 

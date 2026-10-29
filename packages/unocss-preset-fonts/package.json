@@ -1,18 +1,18 @@
 {
-  "name": "@proj-airi/unocss-preset-fonts",
+  "name": "@proj-aipets/unocss-preset-fonts",
   "type": "module",
   "version": "0.12.0",
-  "description": "Fonts that are not included by Google Fonts, FontSource but open-source used by Project AIRI",
+  "description": "Fonts that are not included by Google Fonts, FontSource but open-source used by Project AIPETS",
   "author": {
-    "name": "Moeru AI Project AIRI Team",
-    "email": "airi@moeru.ai",
+    "name": "Moeru AI Project AIPETS Team",
+    "email": "aipets@moeru.ai",
     "url": "https://github.com/moeru-ai"
   },
   "license": "MIT",
-  "homepage": "https://github.com/moeru-ai/airi",
+  "homepage": "https://gitee.com/kallen-noelle/AdoptAI",
   "repository": {
     "type": "git",
-    "url": "https://github.com/moeru-ai/airi.git",
+    "url": "https://gitee.com/kallen-noelle/AdoptAI.git",
     "directory": "packages/unocss-preset-fonts"
   },
   "exports": {
@@ -30,8 +30,8 @@
     "@unocss/preset-web-fonts": ">=66"
   },
   "dependencies": {
-    "@proj-airi/font-cjkfonts-allseto": "workspace:^",
-    "@proj-airi/font-departure-mono": "workspace:^",
-    "@proj-airi/font-xiaolai": "workspace:^"
+    "@proj-aipets/font-cjkfonts-allseto": "workspace:^",
+    "@proj-aipets/font-departure-mono": "workspace:^",
+    "@proj-aipets/font-xiaolai": "workspace:^"
   }
 }

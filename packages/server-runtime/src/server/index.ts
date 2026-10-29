@@ -1,4 +1,4 @@
-import type { H3CrossWsApp, H3CrossWsResponse } from '@proj-airi/better-ws/server/h3'
+import type { H3CrossWsApp, H3CrossWsResponse } from '@proj-aipets/better-ws/server/h3'
 
 import type { AppOptions } from '..'
 
@@ -7,7 +7,7 @@ import { networkInterfaces } from 'node:os'
 
 import { useLogg } from '@guiiai/logg'
 import { merge } from '@moeru/std'
-import { createH3CrossWsPlugin } from '@proj-airi/better-ws/server/h3'
+import { createH3CrossWsPlugin } from '@proj-aipets/better-ws/server/h3'
 import { serve } from 'h3'
 
 import { normalizeLoggerConfig, setupApp } from '..'
@@ -93,7 +93,7 @@ export function getLocalIPs(): string[] {
 }
 
 /**
- * Creates the websocket server controller for the AIRI runtime.
+ * Creates the websocket server controller for the AIPETS runtime.
  *
  * Use when:
  * - Starting, stopping, or restarting the standalone runtime server
@@ -109,7 +109,7 @@ export function createServer(opts?: ServerOptions): Server {
   let options = merge<ServerOptions>({ port: 6121, hostname: '127.0.0.1' }, opts)
 
   const { appLogFormat, appLogLevel } = normalizeLoggerConfig(options)
-  const log = useLogg('@proj-airi/server-runtime/server').withLogLevelString(appLogLevel).withFormat(appLogFormat)
+  const log = useLogg('@proj-aipets/server-runtime/server').withLogLevelString(appLogLevel).withFormat(appLogFormat)
   let serverInstance: ServerInstance | null = null
   let startTask: Promise<void> | null = null
 
@@ -190,10 +190,10 @@ export function createServer(opts?: ServerOptions): Server {
         if (hostname === '0.0.0.0') {
           const ips = getLocalIPs().filter(ip => ip !== '127.0.0.1' && ip !== '::1')
           const targets = ips.length > 0 ? ips.join(', ') : 'localhost'
-          log.log(`@proj-airi/server-runtime started on ${protocol}://0.0.0.0:${port} (reachable via: ${targets})`)
+          log.log(`@proj-aipets/server-runtime started on ${protocol}://0.0.0.0:${port} (reachable via: ${targets})`)
         }
         else {
-          log.log(`@proj-airi/server-runtime started on ${protocol}://${hostname}:${port}`)
+          log.log(`@proj-aipets/server-runtime started on ${protocol}://${hostname}:${port}`)
         }
       }
       catch (error) {

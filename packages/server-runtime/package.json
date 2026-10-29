@@ -1,17 +1,17 @@
 {
-  "name": "@proj-airi/server-runtime",
+  "name": "@proj-aipets/server-runtime",
   "type": "module",
   "version": "0.12.0",
-  "description": "Server runtime implementation for AIRI running in different environments",
+  "description": "Server runtime implementation for AIPETS running in different environments",
   "author": {
-    "name": "Moeru AI Project AIRI Team",
-    "email": "airi@moeru.ai",
+    "name": "Moeru AI Project AIPETS Team",
+    "email": "aipets@moeru.ai",
     "url": "https://github.com/moeru-ai"
   },
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/moeru-ai/airi.git",
+    "url": "https://gitee.com/kallen-noelle/AdoptAI.git",
     "directory": "packages/server-runtime"
   },
   "exports": {
@@ -42,8 +42,8 @@
   "dependencies": {
     "@guiiai/logg": "catalog:",
     "@moeru/std": "catalog:",
-    "@proj-airi/better-ws": "workspace:^",
-    "@proj-airi/server-shared": "workspace:^",
+    "@proj-aipets/better-ws": "workspace:^",
+    "@proj-aipets/server-shared": "workspace:^",
     "crossws": "catalog:",
     "h3": "catalog:",
     "nanoid": "catalog:",

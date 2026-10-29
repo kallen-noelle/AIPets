@@ -1,4 +1,4 @@
-import type { WebSocketEvent } from '@proj-airi/server-shared/types'
+import type { WebSocketEvent } from '@proj-aipets/server-shared/types'
 
 import { stringify as stringifySuperJson } from 'superjson'
 import { describe, expect, it } from 'vitest'
@@ -10,7 +10,7 @@ import {
   stringifyEvent,
 } from './codec'
 
-describe('airi websocket codec', () => {
+describe('aipets websocket codec', () => {
   it('parses superjson encoded events', () => {
     const event: WebSocketEvent = {
       type: 'module:authenticate',

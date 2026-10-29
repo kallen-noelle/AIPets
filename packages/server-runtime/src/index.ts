@@ -1,5 +1,5 @@
-import type { WsCloseDetails } from '@proj-airi/better-ws'
-import type { WsPeer } from '@proj-airi/better-ws/server'
+import type { WsCloseDetails } from '@proj-aipets/better-ws'
+import type { WsPeer } from '@proj-aipets/better-ws/server'
 import type {
   DeliveryConfig,
   ExtensionIdentity,
@@ -7,7 +7,7 @@ import type {
   MetadataEventSource,
   WebSocketBaseEvent,
   WebSocketEvent,
-} from '@proj-airi/server-shared/types'
+} from '@proj-aipets/server-shared/types'
 import type { Message as CrossWsMessage, Peer as CrossWsPeer } from 'crossws'
 
 import type {
@@ -21,16 +21,16 @@ import { timingSafeEqual } from 'node:crypto'
 
 import { availableLogLevelStrings, Format, LogLevelString, logLevelStringToLogLevelMap, useLogg } from '@guiiai/logg'
 import { errorMessageFrom } from '@moeru/std'
-import { createServer as createWsServer } from '@proj-airi/better-ws/server'
-import { toH3Handler } from '@proj-airi/better-ws/server/h3'
+import { createServer as createWsServer } from '@proj-aipets/better-ws/server'
+import { toH3Handler } from '@proj-aipets/better-ws/server/h3'
 import {
   createInvalidJsonServerErrorMessage,
   ServerErrorMessages,
-} from '@proj-airi/server-shared'
+} from '@proj-aipets/server-shared'
 import {
   MessageHeartbeat,
   MessageHeartbeatKind,
-} from '@proj-airi/server-shared/types'
+} from '@proj-aipets/server-shared/types'
 import { H3 } from 'h3'
 import { nanoid } from 'nanoid'
 
@@ -46,49 +46,49 @@ import {
   isInvalidEventError,
   parseEvent,
   stringifyEvent,
-} from './server-ws/airi/codec'
+} from './server-ws/aipets/codec'
 import {
   createConsumerOrchestrator,
   isConsumerDeliveryMode,
   normalizeConsumerMode,
   normalizeConsumerPriority,
-} from './server-ws/airi/consumers'
+} from './server-ws/aipets/consumers'
 import {
   resolveHealthCheckIntervalMs,
   serverWsDefaultHeartbeatTtlMs,
-} from './server-ws/airi/liveness'
+} from './server-ws/aipets/liveness'
 import {
   createEventMetadata,
   createResponses,
-} from './server-ws/airi/responses'
+} from './server-ws/aipets/responses'
 import {
   forEachEventMiddlewares,
   resolveEventDelivery,
-} from './server-ws/airi/routing'
+} from './server-ws/aipets/routing'
 
-interface AiriWsMessage {
+interface AipetsWsMessage {
   text: () => string
 }
 
-interface AiriWsPeerState {
+interface AipetsWsPeerState {
   rawPeer: CrossWsPeer
 }
 
-function airiPeerFromRaw(rawPeer: CrossWsPeer): Peer {
-  // CrossWS peers expose the connection fields AIRI historically used directly
+function aipetsPeerFromRaw(rawPeer: CrossWsPeer): Peer {
+  // CrossWS peers expose the connection fields AIPETS historically used directly
   // (`id`, `send`, `close`, `remoteAddress`, and `request`). Keep the cast in
-  // this adapter boundary so protocol code below still depends on the AIRI peer
+  // this adapter boundary so protocol code below still depends on the AIPETS peer
   // contract instead of the concrete transport type.
   return rawPeer as Peer
 }
 
-function rawPeerFrom(wsPeer: WsPeer<AiriWsMessage, AiriWsPeerState>): Peer | undefined {
+function rawPeerFrom(wsPeer: WsPeer<AipetsWsMessage, AipetsWsPeerState>): Peer | undefined {
   const rawPeer = wsPeer.state?.rawPeer
   if (!rawPeer) {
     return undefined
   }
 
-  return airiPeerFromRaw(rawPeer)
+  return aipetsPeerFromRaw(rawPeer)
 }
 
 /**
@@ -196,7 +196,7 @@ export function normalizeLoggerConfig(options?: AppOptions) {
  * - Heartbeat monitoring for liveness detection
  *
  * Use when:
- * - Embedding the AIRI websocket runtime inside a server process
+ * - Embedding the AIPETS websocket runtime inside a server process
  * - Spinning up a testable application instance before binding a socket listener
  *
  * Expects:
@@ -219,8 +219,8 @@ export function setupApp(options?: AppOptions): { app: H3, closeAllPeers: () => 
 
   const { appLogLevel, appLogFormat, websocketLogLevel, websocketLogFormat } = normalizeLoggerConfig(options)
 
-  const appLogger = useLogg('@proj-airi/server-runtime').withLogLevel(logLevelStringToLogLevelMap[appLogLevel]).withFormat(appLogFormat)
-  const logger = useLogg('@proj-airi/server-runtime:websocket').withLogLevel(logLevelStringToLogLevelMap[websocketLogLevel]).withFormat(websocketLogFormat)
+  const appLogger = useLogg('@proj-aipets/server-runtime').withLogLevel(logLevelStringToLogLevelMap[appLogLevel]).withFormat(appLogFormat)
+  const logger = useLogg('@proj-aipets/server-runtime:websocket').withLogLevel(logLevelStringToLogLevelMap[websocketLogLevel]).withFormat(websocketLogFormat)
 
   const app = new H3({
     onError: error => appLogger.withError(error).error('an error occurred'),
@@ -228,8 +228,8 @@ export function setupApp(options?: AppOptions): { app: H3, closeAllPeers: () => 
 
   // === Registries & Orchestrators ===
   // TODO: Move protocol-neutral peer registry, consumer selection, and heartbeat
-  // primitives into `@proj-airi/better-ws/server` so server-runtime only owns
-  // AIRI authentication, registry sync, route policy, and extension events.
+  // primitives into `@proj-aipets/better-ws/server` so server-runtime only owns
+  // AIPETS authentication, registry sync, route policy, and extension events.
   const peers = new Map<string, AuthenticatedPeer>()
   const peersByModule = new Map<string, Map<number | string | undefined, AuthenticatedPeer>>()
   const consumers = createConsumerOrchestrator()
@@ -518,8 +518,8 @@ export function setupApp(options?: AppOptions): { app: H3, closeAllPeers: () => 
   }
 
   // === WebSocket Server Handlers ===
-  // Handles AIRI peer lifecycle: open, message, error, close.
-  const wsServer = createWsServer<AiriWsMessage, AiriWsPeerState>({
+  // Handles AIPETS peer lifecycle: open, message, error, close.
+  const wsServer = createWsServer<AipetsWsMessage, AipetsWsPeerState>({
     peers: {
       unhealthyTimeout: heartbeatTtlMs,
       closeTimeout: heartbeatTtlMs * 2,
@@ -1053,7 +1053,7 @@ export function setupApp(options?: AppOptions): { app: H3, closeAllPeers: () => 
     }
 
     // REVIEW: better-ws now reports silence duration in milliseconds, while the
-    // AIRI runtime peer state still exposes the legacy missedHeartbeats field.
+    // AIPETS runtime peer state still exposes the legacy missedHeartbeats field.
     // Rename this business-facing field with the server-runtime state cleanup.
     peerInfo.missedHeartbeats = silentFor
 
@@ -1112,7 +1112,7 @@ export function setupApp(options?: AppOptions): { app: H3, closeAllPeers: () => 
       return { rawPeer }
     },
     error({ peer, rawPeer, error }) {
-      handlePeerError(peer ? rawPeerFrom(peer) ?? airiPeerFromRaw(rawPeer) : airiPeerFromRaw(rawPeer), error)
+      handlePeerError(peer ? rawPeerFrom(peer) ?? aipetsPeerFromRaw(rawPeer) : aipetsPeerFromRaw(rawPeer), error)
     },
   }))
 

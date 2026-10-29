@@ -1,12 +1,12 @@
 {
-  "name": "@proj-airi/vitest-plugin-fakemic",
+  "name": "@proj-aipets/vitest-plugin-fakemic",
   "type": "module",
   "version": "0.12.0",
   "private": true,
   "description": "Fake microphone test runtime and Vitest integration",
   "author": {
-    "name": "Moeru AI Project AIRI Team",
-    "email": "airi@moeru.ai",
+    "name": "Moeru AI Project AIPETS Team",
+    "email": "aipets@moeru.ai",
     "url": "https://github.com/moeru-ai"
   },
   "license": "MIT",

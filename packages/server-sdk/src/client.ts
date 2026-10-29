@@ -3,7 +3,7 @@ import type {
   ClientConnector,
   PrepareContext,
   ReconnectOptions,
-} from '@proj-airi/better-ws'
+} from '@proj-aipets/better-ws'
 import type {
   ExtensionIdentity,
   ExtensionModuleIdentity,
@@ -13,18 +13,18 @@ import type {
   WebSocketEvent,
   WebSocketEventOptionalSource,
   WebSocketEvents,
-} from '@proj-airi/server-shared/types'
+} from '@proj-aipets/server-shared/types'
 
 import { errorMessageFrom } from '@moeru/std'
 import { decodeBase64 } from '@moeru/std/base64'
-import { createClient as createBetterWsClient } from '@proj-airi/better-ws'
-import { createCrossWsConnector } from '@proj-airi/better-ws/client/crossws'
-import { isTerminalAuthenticationServerErrorMessage, parseServerErrorMessage } from '@proj-airi/server-shared'
-import { MessageHeartbeat, MessageHeartbeatKind } from '@proj-airi/server-shared/types'
+import { createClient as createBetterWsClient } from '@proj-aipets/better-ws'
+import { createCrossWsConnector } from '@proj-aipets/better-ws/client/crossws'
+import { isTerminalAuthenticationServerErrorMessage, parseServerErrorMessage } from '@proj-aipets/server-shared'
+import { MessageHeartbeat, MessageHeartbeatKind } from '@proj-aipets/server-shared/types'
 
 import { parseEvent, stringifyEvent } from './codec'
 
-export type { ClientConnector, ClientEvents } from '@proj-airi/better-ws'
+export type { ClientConnector, ClientEvents } from '@proj-aipets/better-ws'
 
 export type ClientStatus
   = | 'idle'
@@ -138,7 +138,7 @@ function normalizeHeartbeatOptions(heartbeat?: false | ClientHeartbeatOptions): 
   }
 }
 
-/** Wraps a text websocket connector with AIRI protocol serialization. */
+/** Wraps a text websocket connector with AIPETS protocol serialization. */
 export function createTextProtocolConnector<C = undefined>(
   textConnector: ClientConnector<string>,
 ): ClientConnector<WebSocketEvent<C>> {
@@ -359,7 +359,7 @@ export class Client<C = undefined> {
   }
 
   /**
-   * Reads the bytes of an image or recording that a chat message references as `airi-asset:<id>`.
+   * Reads the bytes of an image or recording that a chat message references as `aipets-asset:<id>`.
    *
    * The stage answers the request. The call rejects with the stage error, when the client is not connected, or when
    * no answer arrives within `timeoutMs`.

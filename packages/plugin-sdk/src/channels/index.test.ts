@@ -5,14 +5,14 @@ import { createExtensionChannelScope, createModuleChannelScope } from './index'
 describe('scoped extension channels', () => {
   it('creates independent extension and module scopes over the same context', () => {
     const extension = createExtensionChannelScope({
-      extensionId: 'airi-extension-test',
+      extensionId: 'aipets-extension-test',
       sessionId: 'session-1',
     })
     const module = createModuleChannelScope(extension, {
       moduleId: 'module-a',
     })
 
-    expect(extension.identity.id).toBe('airi-extension-test')
+    expect(extension.identity.id).toBe('aipets-extension-test')
     expect(extension.identity.sessionId).toBe('session-1')
     expect(module.identity.id).toBe('module-a')
     expect(module.identity.extension).toEqual(extension.identity)

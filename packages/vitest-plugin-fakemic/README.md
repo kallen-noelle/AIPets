@@ -10,7 +10,7 @@ import fakemic, {
   electron,
   runAudioTestSession,
   web,
-} from '@proj-airi/vitest-plugin-fakemic'
+} from '@proj-aipets/vitest-plugin-fakemic'
 ```
 
 `src/index.ts` owns project configuration, runtime launch, task collection, and preflight scheduling. `src/runner.ts` owns task execution.

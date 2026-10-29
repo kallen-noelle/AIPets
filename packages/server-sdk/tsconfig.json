@@ -7,10 +7,10 @@
     "module": "ESNext",
     "moduleResolution": "bundler",
     "paths": {
-      "@proj-airi/server-shared": [
+      "@proj-aipets/server-shared": [
         "../server-shared/src/index.ts"
       ],
-      "@proj-airi/server-shared/*": [
+      "@proj-aipets/server-shared/*": [
         "../server-shared/src/*"
       ]
     },

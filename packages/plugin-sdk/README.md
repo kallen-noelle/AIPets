@@ -1,6 +1,6 @@
-# @proj-airi/plugin-sdk
+# @proj-aipets/plugin-sdk
 
-Runtime-agnostic SDK for AIRI extensions.
+Runtime-agnostic SDK for AIPETS extensions.
 
 ## Extension Manifest
 
@@ -13,7 +13,7 @@ Each installable Extension package has an `extension.aipets.json` file at its ro
   "id": "example-extension",
   "version": "1.0.0",
   "engines": {
-    "airi": "*",
+    "aipets": "*",
     "runtimes": ["electron"]
   },
   "entrypoints": {
@@ -23,7 +23,7 @@ Each installable Extension package has an `extension.aipets.json` file at its ro
   "kits": {
     "uses": [
       {
-        "id": "dev.airi.example",
+        "id": "dev.aipets.example",
         "version": "^1.0.0",
         "optional": true
       }
@@ -66,7 +66,7 @@ Example shape:
 ```ts
 export const gameletKitApis = {
   mount: defineInvokeEventa<GameletMountResult, GameletMountInput>(
-    'airi:kit:gamelet:mount',
+    'aipets:kit:gamelet:mount',
   ),
 }
 

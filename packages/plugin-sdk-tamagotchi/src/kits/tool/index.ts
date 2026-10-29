@@ -1,4 +1,4 @@
-import type { ExtensionModuleRef } from '@proj-airi/plugin-sdk'
+import type { ExtensionModuleRef } from '@proj-aipets/plugin-sdk'
 
 import type {
   PluginToolDefinition,

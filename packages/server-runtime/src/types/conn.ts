@@ -1,4 +1,4 @@
-import type { ExtensionIdentity, ExtensionModuleIdentity } from '@proj-airi/server-shared/types'
+import type { ExtensionIdentity, ExtensionModuleIdentity } from '@proj-aipets/server-shared/types'
 
 export interface Peer {
   /**

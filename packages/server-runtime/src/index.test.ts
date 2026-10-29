@@ -1,12 +1,12 @@
-import type { WebSocketBaseEvent, WebSocketEvents } from '@proj-airi/server-shared/types'
+import type { WebSocketBaseEvent, WebSocketEvents } from '@proj-aipets/server-shared/types'
 
-import type { ConsumerStickyAssignment } from './server-ws/airi/consumers'
+import type { ConsumerStickyAssignment } from './server-ws/aipets/consumers'
 
 import { describe, expect, it } from 'vitest'
 
-import { heartbeatFrameFrom } from './server-ws/airi/codec'
-import { selectConsumerPeerId } from './server-ws/airi/consumers'
-import { resolveEventDelivery } from './server-ws/airi/routing'
+import { heartbeatFrameFrom } from './server-ws/aipets/codec'
+import { selectConsumerPeerId } from './server-ws/aipets/consumers'
+import { resolveEventDelivery } from './server-ws/aipets/routing'
 
 function createInputTextEvent(
   overrides: Partial<WebSocketBaseEvent<'input:text', WebSocketEvents['input:text']>> = {},

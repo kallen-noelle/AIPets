@@ -3,7 +3,7 @@ import { defineEventa } from '@moeru/eventa'
 /**
  * Channel name shared by tamagotchi hosts and plugin iframes for extension UI Eventa traffic.
  */
-export const widgetsIframeChannel = 'airi:widgets:ui-iframe:channel'
+export const widgetsIframeChannel = 'aipets:widgets:ui-iframe:channel'
 
 /**
  * Snapshot payload forwarded from the host to initialize one extension UI bridge consumer.

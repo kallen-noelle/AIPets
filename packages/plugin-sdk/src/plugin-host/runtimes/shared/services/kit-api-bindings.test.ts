@@ -9,7 +9,7 @@ describe('kitApiBindingRegistryService', () => {
     const binding = service.bind({
       moduleId: 'chess-gamelet',
       ownerSessionId: 'session-1',
-      ownerExtensionId: 'airi-extension-chess',
+      ownerExtensionId: 'aipets-extension-chess',
       kitId: 'kit.gamelet',
       kitModuleType: 'gamelet',
       config: { title: 'Chess' },

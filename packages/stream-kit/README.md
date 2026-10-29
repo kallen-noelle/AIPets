@@ -1,6 +1,6 @@
-# @proj-airi/stream-kit
+# @proj-aipets/stream-kit
 
-Lifetime, scheduling, and stream helpers for AIRI. The package has no UI, audio, or provider dependency.
+Lifetime, scheduling, and stream helpers for AIPETS. The package has no UI, audio, or provider dependency.
 
 ## Use it for
 
@@ -12,7 +12,7 @@ Lifetime, scheduling, and stream helpers for AIRI. The package has no UI, audio,
 
 ## Do not use it for
 
-- Audio windows, captures, or playback. Use `@proj-airi/pipelines-audio`.
+- Audio windows, captures, or playback. Use `@proj-aipets/pipelines-audio`.
 - Cross-process events. Use `@moeru/eventa`.
 
 ## Tasks
@@ -47,6 +47,6 @@ runner.push(document)
 ## Checks
 
 ```sh
-pnpm -F @proj-airi/stream-kit typecheck
+pnpm -F @proj-aipets/stream-kit typecheck
 pnpm exec vitest run packages/stream-kit
 ```

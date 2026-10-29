@@ -2,7 +2,7 @@ import {
   createAudioTestAPI,
   createAudioTestTask,
   runAudioTestSession,
-} from '@proj-airi/vitest-plugin-fakemic'
+} from '@proj-aipets/vitest-plugin-fakemic'
 import { describe, expect, it, vi } from 'vitest'
 
 const calls: string[] = []

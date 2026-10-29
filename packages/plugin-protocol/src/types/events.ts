@@ -128,7 +128,7 @@ export type MetadataEventSource = ModuleIdentity | ExtensionIdentity | Extension
  *
  * Example:
  *  {
- *    id: "airi.config.stage-ui",
+ *    id: "aipets.config.stage-ui",
  *    version: 2,
  *    schema: { type: "object", properties: { model: { type: "string" } }, required: ["model"] },
  *  }
@@ -522,9 +522,9 @@ export enum MessageHeartbeat {
 }
 
 export enum WebSocketEventSource {
-  Server = 'proj-airi:server-runtime',
-  StageWeb = 'proj-airi:stage-web',
-  StageTamagotchi = 'proj-airi:stage-tamagotchi',
+  Server = 'proj-aipets:server-runtime',
+  StageWeb = 'proj-aipets:stage-web',
+  StageTamagotchi = 'proj-aipets:stage-tamagotchi',
 }
 
 interface InputSource {
@@ -536,7 +536,7 @@ interface InputSource {
 /** An image or recording of the user message of a chat turn. Read its bytes with `asset:get:request`. */
 export interface ChatEventAttachment {
   type: 'image' | 'audio'
-  /** `airi-asset:<id>`. */
+  /** `aipets-asset:<id>`. */
   ref: string
   mimeType?: string
   /** Speech recognized in a recording, when the stage has it. */
@@ -1099,14 +1099,14 @@ type OutputGenAiChatCompleteEvent = {
 } & Partial<WithInputSource<'stage-web' | 'stage-tamagotchi' | 'discord'>> & Partial<WithOutputSource<'gen-ai:chat'>>
 
 /**
- * Chat messages hold `airi-asset:<id>` in place of image and audio bytes, for example in `output:gen-ai:chat:message`.
+ * Chat messages hold `aipets-asset:<id>` in place of image and audio bytes, for example in `output:gen-ai:chat:message`.
  * A module reads the bytes with `asset:get:request`.
  */
-export const ASSET_REF_PREFIX = 'airi-asset:'
+export const ASSET_REF_PREFIX = 'aipets-asset:'
 
 /** Asks the stage for the bytes of one asset reference. */
 export interface AssetGetRequestEvent {
-  /** The reference as it appears in a message, `airi-asset:<id>`. */
+  /** The reference as it appears in a message, `aipets-asset:<id>`. */
   ref: string
 }
 
@@ -1186,7 +1186,7 @@ interface SparkCommandEvent {
    *
    * An omitted list reaches every authenticated peer. An explicit empty list
    * reaches no peer. The delivery loop reads the rule from `collectDestinations`
-   * in `@proj-airi/server-runtime`, which preserves an array-shaped `destinations`
+   * in `@proj-aipets/server-runtime`, which preserves an array-shaped `destinations`
    * and returns `undefined` when the field is absent.
    */
   destinations?: Array<string>
@@ -1507,7 +1507,7 @@ export interface ProtocolEvents<C = undefined> {
    * Reads the bytes of an image or recording that a chat message references (module → stage).
    *
    * Use when:
-   * - A module needs the media of a chat message, which holds `airi-asset:<id>` in place of bytes
+   * - A module needs the media of a chat message, which holds `aipets-asset:<id>` in place of bytes
    *
    * Expectations:
    * - The stage answers only a connection that announced a module. It reads the server-set `metadata.sender`, not `metadata.source`

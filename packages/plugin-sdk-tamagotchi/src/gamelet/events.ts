@@ -1,4 +1,4 @@
-import type { HostDataRecord } from '@proj-airi/plugin-sdk/plugin-host'
+import type { HostDataRecord } from '@proj-aipets/plugin-sdk/plugin-host'
 
 import { defineInvokeEventa } from '@moeru/eventa'
 

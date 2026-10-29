@@ -1,7 +1,7 @@
-import type { KitClientRuntime } from '@proj-airi/plugin-sdk'
-import type { HostDataRecord } from '@proj-airi/plugin-sdk/plugin-host'
+import type { KitClientRuntime } from '@proj-aipets/plugin-sdk'
+import type { HostDataRecord } from '@proj-aipets/plugin-sdk/plugin-host'
 
-import { defineKit } from '@proj-airi/plugin-sdk'
+import { defineKit } from '@proj-aipets/plugin-sdk'
 
 export * from './events'
 

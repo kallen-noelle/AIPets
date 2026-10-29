@@ -6,8 +6,8 @@ import {
   serverWsMinimumHealthCheckIntervalMs,
 } from './liveness'
 
-describe('airi websocket liveness policy', () => {
-  it('uses the AIRI default heartbeat TTL', () => {
+describe('aipets websocket liveness policy', () => {
+  it('uses the AIPETS default heartbeat TTL', () => {
     expect(serverWsDefaultHeartbeatTtlMs).toBe(60_000)
     expect(resolveHealthCheckIntervalMs(serverWsDefaultHeartbeatTtlMs)).toBe(12_000)
   })

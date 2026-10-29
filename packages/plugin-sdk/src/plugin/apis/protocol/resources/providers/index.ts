@@ -12,7 +12,7 @@ import { defineInvokeEventa } from '@moeru/eventa'
  * Returns:
  * - The permission/event key string for provider listing
  */
-export const protocolListProvidersEventName = 'proj-airi:plugin-sdk:apis:protocol:resources:providers:list-providers'
+export const protocolListProvidersEventName = 'proj-aipets:plugin-sdk:apis:protocol:resources:providers:list-providers'
 /**
  * Defines the control-plane RPC that returns the current provider list.
  *

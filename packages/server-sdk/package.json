@@ -1,17 +1,17 @@
 {
-  "name": "@proj-airi/server-sdk",
+  "name": "@proj-aipets/server-sdk",
   "type": "module",
   "version": "0.12.0",
-  "description": "Client-side SDK implementation for connecting to AIRI server components and runtimes",
+  "description": "Client-side SDK implementation for connecting to AIPETS server components and runtimes",
   "author": {
-    "name": "Moeru AI Project AIRI Team",
-    "email": "airi@moeru.ai",
+    "name": "Moeru AI Project AIPETS Team",
+    "email": "aipets@moeru.ai",
     "url": "https://github.com/moeru-ai"
   },
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/moeru-ai/airi.git",
+    "url": "https://gitee.com/kallen-noelle/AdoptAI.git",
     "directory": "packages/server-sdk"
   },
   "exports": {
@@ -39,8 +39,8 @@
   },
   "dependencies": {
     "@moeru/std": "catalog:",
-    "@proj-airi/better-ws": "workspace:^",
-    "@proj-airi/server-shared": "workspace:^",
+    "@proj-aipets/better-ws": "workspace:^",
+    "@proj-aipets/server-shared": "workspace:^",
     "superjson": "catalog:",
     "valibot": "catalog:"
   }

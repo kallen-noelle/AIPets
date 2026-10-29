@@ -1,5 +1,5 @@
-import type { ClientConnection, ClientConnector, ClientEvents } from '@proj-airi/better-ws'
-import type { WebSocketBaseEvent, WebSocketEvent, WebSocketEventOptionalSource, WebSocketEvents } from '@proj-airi/server-shared/types'
+import type { ClientConnection, ClientConnector, ClientEvents } from '@proj-aipets/better-ws'
+import type { WebSocketBaseEvent, WebSocketEvent, WebSocketEventOptionalSource, WebSocketEvents } from '@proj-aipets/server-shared/types'
 
 import type { ExtensionPeerClient } from '../src/extension-peer'
 
@@ -70,7 +70,7 @@ describe('websocket extension peer', () => {
     const fakeClient = new FakeClient()
     const peer = createWebSocketExtensionPeer({
       extension: {
-        id: 'airi-extension-chess',
+        id: 'aipets-extension-chess',
         version: '1.0.0',
         sessionId: 'session-1',
       },
@@ -97,7 +97,7 @@ describe('websocket extension peer', () => {
       type: 'extension:announce',
       data: {
         identity: {
-          id: 'airi-extension-chess',
+          id: 'aipets-extension-chess',
           version: '1.0.0',
           sessionId: 'session-1',
         },
@@ -109,7 +109,7 @@ describe('websocket extension peer', () => {
     const fakeClient = new FakeClient()
     const peer = createWebSocketExtensionPeer({
       extension: {
-        id: 'airi-extension-chess',
+        id: 'aipets-extension-chess',
         sessionId: 'session-1',
       },
       client: fakeClient,
@@ -128,7 +128,7 @@ describe('websocket extension peer', () => {
         identity: {
           id: 'chess-gamelet',
           extension: {
-            id: 'airi-extension-chess',
+            id: 'aipets-extension-chess',
             sessionId: 'session-1',
           },
         },
@@ -141,7 +141,7 @@ describe('websocket extension peer', () => {
     const connector = new FakeConnector()
     const peer = createWebSocketExtensionPeer({
       extension: {
-        id: 'airi-extension-chess',
+        id: 'aipets-extension-chess',
         sessionId: 'session-1',
       },
       clientOptions: {

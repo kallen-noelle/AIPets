@@ -16,7 +16,7 @@ import type { HostDataRecord } from '../../../../plugin-host/shared/types'
  * Returns:
  * - The permission/event key string for listing bindings
  */
-export const pluginBindingApiListEventName = 'proj-airi:plugin-sdk:apis:client:bindings:list'
+export const pluginBindingApiListEventName = 'proj-aipets:plugin-sdk:apis:client:bindings:list'
 /**
  * Identifies the bound API call used to create a new binding record.
  *
@@ -29,7 +29,7 @@ export const pluginBindingApiListEventName = 'proj-airi:plugin-sdk:apis:client:b
  * Returns:
  * - The permission/event key string for announcing bindings
  */
-export const pluginBindingApiAnnounceEventName = 'proj-airi:plugin-sdk:apis:client:bindings:announce'
+export const pluginBindingApiAnnounceEventName = 'proj-aipets:plugin-sdk:apis:client:bindings:announce'
 /**
  * Identifies the bound API call used to activate an existing binding.
  *
@@ -42,7 +42,7 @@ export const pluginBindingApiAnnounceEventName = 'proj-airi:plugin-sdk:apis:clie
  * Returns:
  * - The permission/event key string for activating bindings
  */
-export const pluginBindingApiActivateEventName = 'proj-airi:plugin-sdk:apis:client:bindings:activate'
+export const pluginBindingApiActivateEventName = 'proj-aipets:plugin-sdk:apis:client:bindings:activate'
 /**
  * Identifies the bound API call used to update an existing binding.
  *
@@ -55,7 +55,7 @@ export const pluginBindingApiActivateEventName = 'proj-airi:plugin-sdk:apis:clie
  * Returns:
  * - The permission/event key string for updating bindings
  */
-export const pluginBindingApiUpdateEventName = 'proj-airi:plugin-sdk:apis:client:bindings:update'
+export const pluginBindingApiUpdateEventName = 'proj-aipets:plugin-sdk:apis:client:bindings:update'
 /**
  * Identifies the bound API call used to withdraw an existing binding.
  *
@@ -68,7 +68,7 @@ export const pluginBindingApiUpdateEventName = 'proj-airi:plugin-sdk:apis:client
  * Returns:
  * - The permission/event key string for withdrawing bindings
  */
-export const pluginBindingApiWithdrawEventName = 'proj-airi:plugin-sdk:apis:client:bindings:withdraw'
+export const pluginBindingApiWithdrawEventName = 'proj-aipets:plugin-sdk:apis:client:bindings:withdraw'
 /**
  * Identifies the shared resource namespace that exposes the binding registry.
  *
@@ -81,7 +81,7 @@ export const pluginBindingApiWithdrawEventName = 'proj-airi:plugin-sdk:apis:clie
  * Returns:
  * - The resource key string for the global bindings registry
  */
-export const pluginBindingRegistryResourceKey = 'proj-airi:plugin-sdk:resources:bindings'
+export const pluginBindingRegistryResourceKey = 'proj-aipets:plugin-sdk:resources:bindings'
 
 /**
  * Builds the kit-scoped resource key used for binding write access.
@@ -96,7 +96,7 @@ export const pluginBindingRegistryResourceKey = 'proj-airi:plugin-sdk:resources:
  * - The resource key string for bindings owned by the given kit
  */
 export function getKitBindingResourceKey(kitId: string) {
-  return `proj-airi:plugin-sdk:resources:kits:${kitId}:bindings`
+  return `proj-aipets:plugin-sdk:resources:kits:${kitId}:bindings`
 }
 
 /**

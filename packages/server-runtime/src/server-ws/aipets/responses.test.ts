@@ -1,11 +1,11 @@
-import { WebSocketEventSource } from '@proj-airi/server-shared/types'
+import { WebSocketEventSource } from '@proj-aipets/server-shared/types'
 import { describe, expect, it } from 'vitest'
 
 import packageJSON from '../../../package.json'
 
 import { createEventMetadata, createResponses } from './responses'
 
-describe('airi websocket responses', () => {
+describe('aipets websocket responses', () => {
   it('creates server metadata with source and parent event ids', () => {
     const metadata = createEventMetadata('server-1', 'parent-event-1')
 
@@ -45,12 +45,12 @@ describe('airi websocket responses', () => {
         },
       },
     })
-    expect(responses.extensionAuthenticated({ id: 'airi-extension-chess' }, 'event-2')).toMatchObject({
+    expect(responses.extensionAuthenticated({ id: 'aipets-extension-chess' }, 'event-2')).toMatchObject({
       type: 'extension:authenticated',
       data: {
         authenticated: true,
         identity: {
-          id: 'airi-extension-chess',
+          id: 'aipets-extension-chess',
         },
       },
       metadata: {

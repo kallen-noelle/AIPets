@@ -1,6 +1,6 @@
-import type { MetadataEventSource, ProtocolEvents, RouteConfig, WebSocketEventSource } from '@proj-airi/plugin-protocol/types'
+import type { MetadataEventSource, ProtocolEvents, RouteConfig, WebSocketEventSource } from '@proj-aipets/plugin-protocol/types'
 
-export * from '@proj-airi/plugin-protocol/types'
+export * from '@proj-aipets/plugin-protocol/types'
 
 export interface WebSocketEventBaseMetadata {
   source?: MetadataEventSource

@@ -35,11 +35,11 @@ describe('defineExtension', () => {
   it('defines an extension with setup and module registration context', async () => {
     const setup = vi.fn(async () => {})
     const extension = defineExtension({
-      id: 'airi-extension-test',
+      id: 'aipets-extension-test',
       setup,
     })
 
-    expect(extension.id).toBe('airi-extension-test')
+    expect(extension.id).toBe('aipets-extension-test')
 
     const subscriptions = new DisposableStore()
     await extension.setup({
