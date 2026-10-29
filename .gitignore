@@ -1,6 +1,7 @@
 .Trash/
 .trash/
 .DS_Store
+
 dsh-pet/
 EdgeOne/
 # Node.js
@@ -81,7 +82,7 @@ components.d.ts
 **/.cache/
 **/.vitepress/cache/
 **/*.tsbuildinfo
-
+**/tmp/
 # Netlify
 **/.netlify/*
 **/.netlify/functions-serve/*
@@ -91,12 +92,8 @@ components.d.ts
 # Serving fonts locally
 **/public/assets/fonts/
 
-# Code generation
-**/vscode-aipets/src/generated/
-**/vscode-aipets/LICENSE
 
 # Make it easy for devenv users to override their local environment.
-# See: https://gitee.com/kallen-noelle/AdoptAI/pull/110#discussion_r2024378953
 .direnv
 .pre-commit-config.yaml
 .envrc
@@ -152,7 +149,6 @@ __screenshots__
 # cannot drift from its source.
 packages/i18n/glossary/glossary.tbx
 
-/aipets-docs/
 .worktrees/
 
 # Sherpaw models downloaded by the Vite plugin
