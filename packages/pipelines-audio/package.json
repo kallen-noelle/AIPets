@@ -1,18 +1,18 @@
 {
-  "name": "@proj-airi/pipelines-audio",
+  "name": "@proj-aipets/pipelines-audio",
   "type": "module",
   "version": "0.12.0",
   "private": true,
-  "description": "Audio pipeline orchestration for AIRI (capture, VAD, encode, stream)",
+  "description": "Audio pipeline orchestration for AIPETS (capture, VAD, encode, stream)",
   "author": {
-    "name": "Moeru AI Project AIRI Team",
-    "email": "airi@moeru.ai",
+    "name": "Moeru AI Project AIPETS Team",
+    "email": "aipets@moeru.ai",
     "url": "https://github.com/moeru-ai"
   },
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/moeru-ai/airi.git",
+    "url": "https://gitee.com/kallen-noelle/AdoptAI.git",
     "directory": "packages/pipelines-audio"
   },
   "exports": {
@@ -37,7 +37,7 @@
   "dependencies": {
     "@moeru/eventa": "catalog:",
     "@moeru/std": "catalog:",
-    "@proj-airi/stream-kit": "workspace:^",
+    "@proj-aipets/stream-kit": "workspace:^",
     "clustr": "catalog:",
     "nanoid": "catalog:"
   },

@@ -1,9 +1,9 @@
-import type { MathJson } from '@proj-airi/mathjson'
+import type { MathJson } from '@proj-aipets/mathjson'
 
 import type { MathSpeechExtension, RenderHandler, RenderHandlers } from './extension'
 import type { MathLanguage, MathLocale } from './locale'
 
-import { argsOf, headOf, isFunction, textOf } from '@proj-airi/mathjson'
+import { argsOf, headOf, isFunction, textOf } from '@proj-aipets/mathjson'
 
 import { rawHead } from './heads'
 import { en } from './locales/en'

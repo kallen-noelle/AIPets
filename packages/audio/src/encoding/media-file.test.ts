@@ -1,4 +1,4 @@
-import type { AudioInput, PcmBlock } from '@proj-airi/pipelines-audio'
+import type { AudioInput, PcmBlock } from '@proj-aipets/pipelines-audio'
 
 import { AudioSample, AudioSampleSource } from 'mediabunny'
 import { expect, expectTypeOf, it, vi } from 'vitest'
@@ -58,7 +58,7 @@ it('releases the decoder and errors the stream when the connection aborts before
   await expect(reader.read()).rejects.toBe('Device switched')
 })
 
-// https://github.com/moeru-ai/airi/pull/2769#discussion_r4180881988
+// https://gitee.com/kallen-noelle/AdoptAI/pull/2769#discussion_r4180881988
 it('cannot be shared through AudioInput, because its reader sets the decode speed', () => {
   expectTypeOf(fileSource).returns.not.toExtend<ConstructorParameters<typeof AudioInput>[0]>()
 })

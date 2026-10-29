@@ -26,4 +26,4 @@ class CaptureProcessor extends AudioWorkletProcessor {
   }
 }
 
-registerProcessor('airi-capture', CaptureProcessor)
+registerProcessor('aipets-capture', CaptureProcessor)

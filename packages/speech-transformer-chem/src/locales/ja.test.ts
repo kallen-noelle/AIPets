@@ -1,4 +1,4 @@
-import { MathSpeech } from '@proj-airi/speech-transformer-math'
+import { MathSpeech } from '@proj-aipets/speech-transformer-math'
 import { describe, expect, it } from 'vitest'
 
 import { chemistry } from '..'

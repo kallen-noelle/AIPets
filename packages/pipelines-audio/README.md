@@ -1,6 +1,6 @@
-# @proj-airi/pipelines-audio
+# @proj-aipets/pipelines-audio
 
-Shared audio-pipeline orchestration for AIRI. The package owns input sharing, capture intervals, detector windows, playback groups, and text chunking. It does not depend on a UI.
+Shared audio-pipeline orchestration for AIPETS. The package owns input sharing, capture intervals, detector windows, playback groups, and text chunking. It does not depend on a UI.
 
 ## Use it for
 
@@ -12,7 +12,7 @@ Shared audio-pipeline orchestration for AIRI. The package owns input sharing, ca
 
 - Vue or Electron lifecycle state.
 - Provider credentials and product-specific error UI.
-- Browser sources and file encoding, which belong in `@proj-airi/audio`.
+- Browser sources and file encoding, which belong in `@proj-aipets/audio`.
 
 ## Input, capture, and observation
 
@@ -37,7 +37,7 @@ for await (const event of output)
 - `retain(signal)` returns a lease. Its holder calls `hold(position)` to keep history from that position.
 - `observe(input, options, detector, onResult)` runs a detector over windows with `ordered` or `latest` scheduling.
 - `audioWindows(shape)` is the windowing transform alone, for callers that schedule their own work.
-- Lifetime and stream helpers, such as `createScope` and `createPushStream`, are in `@proj-airi/stream-kit`.
+- Lifetime and stream helpers, such as `createScope` and `createPushStream`, are in `@proj-aipets/stream-kit`.
 
 Observers support sliding windows and growing windows.
 `preRollMs` keeps the history that pending detector windows need, including time spent in inference.
@@ -65,5 +65,5 @@ Playback knows no chat session, turn, or agent notification contract.
 
 ## Checks
 
-Run `pnpm -F @proj-airi/pipelines-audio typecheck` and `pnpm -F @proj-airi/pipelines-audio test:run`.
+Run `pnpm -F @proj-aipets/pipelines-audio typecheck` and `pnpm -F @proj-aipets/pipelines-audio test:run`.
 Public tests cover capture independence, delayed history use, source gaps, file finalization, cancellation, and playback receipts.

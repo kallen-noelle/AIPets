@@ -1,6 +1,6 @@
 import type { LiveAudioSource, PcmBlock } from './index'
 
-import { createPushStream } from '@proj-airi/stream-kit'
+import { createPushStream } from '@proj-aipets/stream-kit'
 import { describe, expect, it, vi } from 'vitest'
 
 import { AudioInput, capture, observe } from './index'
@@ -98,7 +98,7 @@ describe('audioInput', () => {
     second.abort()
   })
 
-  // https://github.com/moeru-ai/airi/pull/2769#discussion_r4179013487
+  // https://gitee.com/kallen-noelle/AdoptAI/pull/2769#discussion_r4179013487
   // ROOT CAUSE:
   //
   // History, position, and sample rate were AudioInput fields, shared by all connections.

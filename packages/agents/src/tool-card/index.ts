@@ -1,4 +1,4 @@
-import type { Conversation } from '@proj-airi/core-agent'
+import type { Conversation } from '@proj-aipets/core-agent'
 
 import type { GenerateText } from '../generate-text'
 

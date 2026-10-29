@@ -1,5 +1,5 @@
 {
-  "name": "@proj-airi/ccc",
+  "name": "@proj-aipets/ccc",
   "type": "module",
   "private": true,
   "exports": "./src/index.ts",

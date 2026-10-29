@@ -1,7 +1,7 @@
-import type { PcmBlock } from '@proj-airi/pipelines-audio'
+import type { PcmBlock } from '@proj-aipets/pipelines-audio'
 
-import { AudioInput, capture, Playback } from '@proj-airi/pipelines-audio'
-import { createPushStream } from '@proj-airi/stream-kit'
+import { AudioInput, capture, Playback } from '@proj-aipets/pipelines-audio'
+import { createPushStream } from '@proj-aipets/stream-kit'
 import { expect, it } from 'vitest'
 
 import { BrowserPlayback, mediaStreamSource, microphoneSource, toMediaStream } from './browser'

@@ -1,7 +1,7 @@
 # Audio adapters
 
-`@proj-airi/audio` owns browser audio resources and format conversion.
-`@proj-airi/pipelines-audio` owns capture intervals, observation windows, and playback groups.
+`@proj-aipets/audio` owns browser audio resources and format conversion.
+`@proj-aipets/pipelines-audio` owns capture intervals, observation windows, and playback groups.
 
 ## Use it for
 
@@ -16,9 +16,9 @@ A source is an `AudioSource`. Its `open(signal)` call returns a PCM stream. Abor
 
 | Source | Module | Live | Owner of the tracks or data |
 | --- | --- | --- | --- |
-| `microphoneSource(constraints, options)` | `@proj-airi/audio/browser` | Yes | The source. It stops the tracks and closes its AudioContext. |
-| `mediaStreamSource(stream, context)` | `@proj-airi/audio/browser` | Yes | The caller. The source disconnects only its own nodes. |
-| `fileSource(blob)` | `@proj-airi/audio/encoding` | No | The caller. Mediabunny decodes the file for each connection. |
+| `microphoneSource(constraints, options)` | `@proj-aipets/audio/browser` | Yes | The source. It stops the tracks and closes its AudioContext. |
+| `mediaStreamSource(stream, context)` | `@proj-aipets/audio/browser` | Yes | The caller. The source disconnects only its own nodes. |
+| `fileSource(blob)` | `@proj-aipets/audio/encoding` | No | The caller. Mediabunny decodes the file for each connection. |
 
 A live source cannot wait for its readers. Wrap a live source in an `AudioInput` to share it. Each consumer subscribes with its own signal.
 
@@ -29,9 +29,9 @@ const events = transcriber.transcribe({ audio: fileSource(recording).open(signal
 ```
 
 ```ts
-import { microphoneSource } from '@proj-airi/audio/browser'
-import { encodeWav } from '@proj-airi/audio/encoding'
-import { AudioInput, capture } from '@proj-airi/pipelines-audio'
+import { microphoneSource } from '@proj-aipets/audio/browser'
+import { encodeWav } from '@proj-aipets/audio/encoding'
+import { AudioInput, capture } from '@proj-aipets/pipelines-audio'
 
 const input = new AudioInput(microphoneSource({ audio: { echoCancellation: true } }), { historyMs: 360 })
 
@@ -51,8 +51,8 @@ The first subscriber opens the microphone. The last subscriber to leave stops th
 ## Playback
 
 ```ts
-import { BrowserPlayback } from '@proj-airi/audio/browser'
-import { Playback } from '@proj-airi/pipelines-audio'
+import { BrowserPlayback } from '@proj-aipets/audio/browser'
+import { Playback } from '@proj-aipets/pipelines-audio'
 
 const playback = new Playback(new BrowserPlayback(audioContext))
 const group = playback.openGroup('answer')
@@ -72,5 +72,5 @@ The caller owns `audioContext` and closes it after its consumers finish.
 
 ## Checks
 
-Run `pnpm -F @proj-airi/audio typecheck` and its Vitest projects.
+Run `pnpm -F @proj-aipets/audio typecheck` and its Vitest projects.
 Node tests cover WAV encoding and file decoding. Browser tests cover Web Audio, microphone sharing, late permission, and track cleanup.

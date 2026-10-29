@@ -1,18 +1,18 @@
 {
-  "name": "@proj-airi/agents",
+  "name": "@proj-aipets/agents",
   "type": "module",
   "version": "0.12.0",
   "private": true,
-  "description": "Single-purpose model agents that AIRI runtimes and evals share",
+  "description": "Single-purpose model agents that AIPETS runtimes and evals share",
   "author": {
-    "name": "Moeru AI Project AIRI Team",
-    "email": "airi@moeru.ai",
+    "name": "Moeru AI Project AIPETS Team",
+    "email": "aipets@moeru.ai",
     "url": "https://github.com/moeru-ai"
   },
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/moeru-ai/airi.git",
+    "url": "https://gitee.com/kallen-noelle/AdoptAI.git",
     "directory": "packages/agents"
   },
   "exports": {
@@ -26,8 +26,8 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@proj-airi/core-agent": "workspace:^",
-    "@proj-airi/provider-inference": "workspace:^",
+    "@proj-aipets/core-agent": "workspace:^",
+    "@proj-aipets/provider-inference": "workspace:^",
     "valibot": "catalog:"
   },
   "devDependencies": {

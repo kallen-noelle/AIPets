@@ -49,7 +49,7 @@ const katexParse = Reflect.get(katex, '__parse') as KatexParse
  * Marks a placeholder of a raw command inside `\text{}`, see {@link liftRaw}. KaTeX rejects private-use characters in
  * text, so the marker is an ASCII word that a reply does not write.
  */
-const rawMarker = 'airiraw'
+const rawMarker = 'aipetsraw'
 
 /** A command that an extension reads from its source, as `\ce{H2O}` of chemistry. */
 interface RawCommand {

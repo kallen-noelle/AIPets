@@ -1,5 +1,5 @@
 // SPDX-FileCopyrightText: Copyright (c) 2026 Ben Williams
-// SPDX-FileCopyrightText: Copyright (c) Moeru AI Project AIRI Team
+// SPDX-FileCopyrightText: Copyright (c) Moeru AI Project AIPETS Team
 // SPDX-License-Identifier: MIT
 // The private backdrop setup comes from electron-window-glass at commit 7a31dea.
 // See THIRD-PARTY-LICENSE.txt for the source and license.

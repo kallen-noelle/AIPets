@@ -136,7 +136,7 @@ describe('tTS Chunker Logic Cleanup', () => {
     // CRLF is one grapheme cluster, but the hard punctuation set contains
     // only separate CR and LF characters. Normalize CRLF before matching
     // punctuation so Windows line endings end the chunk.
-    // https://github.com/moeru-ai/airi/pull/2414
+    // https://gitee.com/kallen-noelle/AdoptAI/pull/2414
     it('treats CRLF as a hard chunk boundary (Issue #2366)', async () => {
       expect(await collectChunkText('abc\r\ndef')).toEqual(['abc', 'def'])
     })
@@ -149,7 +149,7 @@ describe('tTS Chunker Logic Cleanup', () => {
     // We fixed this by preserving each returned cluster.
     // This keeps Thai combining marks intact.
     //
-    // https://github.com/moeru-ai/airi/issues/2366
+    // https://gitee.com/kallen-noelle/AdoptAI/issues/2366
     it('preserves Thai combining clusters while chunking (Issue #2366)', async () => {
       const input = 'ดึกป่านนี้แล้วยังจะหาเรื่องกินอีกนะคะเนี่ย!'
 

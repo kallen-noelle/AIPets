@@ -208,7 +208,7 @@ describe('createPlaybackManager', () => {
     expect(play.mock.calls.map(([item]) => item.id)).toEqual(['a', 'd', 'a2', 'e'])
   })
 
-  // https://github.com/moeru-ai/airi/pull/2740
+  // https://gitee.com/kallen-noelle/AdoptAI/pull/2740
   // ROOT CAUSE:
   //
   // Finalization deleted active playback by item ID alone. An interrupted promise

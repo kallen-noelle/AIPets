@@ -37,7 +37,7 @@ if (platform === 'darwin') {
   console.info('Native module contract smoke passed without creating a window')
 }
 else {
-  const { NativeBackdrop } = await import('@proj-airi/electron-native-backdrop')
+  const { NativeBackdrop } = await import('@proj-aipets/electron-native-backdrop')
   assert.throws(() => new NativeBackdrop(Buffer.alloc(8)), /supports macOS only/)
   console.info('Unsupported-platform policy smoke passed without loading a native module')
 }

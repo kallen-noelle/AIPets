@@ -1,6 +1,6 @@
 import type { AudioInput, AudioRange, Outcome, PcmBlock, Position } from './audio-input'
 
-import { createPushStream } from '@proj-airi/stream-kit'
+import { createPushStream } from '@proj-aipets/stream-kit'
 
 /** One captured interval. Its owner reads `stream` and decides when the interval ends. */
 export interface Capture {

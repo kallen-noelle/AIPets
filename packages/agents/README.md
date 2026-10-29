@@ -1,6 +1,6 @@
-# @proj-airi/agents
+# @proj-aipets/agents
 
-Single-purpose model agents. The AIRI runtimes and the evals in `evals/` use the same agent code.
+Single-purpose model agents. The AIPETS runtimes and the evals in `evals/` use the same agent code.
 
 ## What it does
 
@@ -8,14 +8,14 @@ Each agent owns one prompt, one request shape, and one reply parser. An agent do
 
 | Agent | Entry | Use |
 | --- | --- | --- |
-| Tool card | `@proj-airi/agents/tool-card` | Writes an OpenUI Lang card that shows the results of one tool. It can search icons with the tools that the caller passes. |
-| Voice end judge | `@proj-airi/agents/voice-end-judge` | Decides whether a paused spoken message is finished. |
-| Voice transcription rephrase | `@proj-airi/agents/voice-transcription-rephrase` | Cleans up the speech recognition text of one spoken message. |
+| Tool card | `@proj-aipets/agents/tool-card` | Writes an OpenUI Lang card that shows the results of one tool. It can search icons with the tools that the caller passes. |
+| Voice end judge | `@proj-aipets/agents/voice-end-judge` | Decides whether a paused spoken message is finished. |
+| Voice transcription rephrase | `@proj-aipets/agents/voice-transcription-rephrase` | Cleans up the speech recognition text of one spoken message. |
 
 ## How to use it
 
 ```ts
-import { createVoiceTranscriptionRephraseAgent, generateTextFrom } from '@proj-airi/agents'
+import { createVoiceTranscriptionRephraseAgent, generateTextFrom } from '@proj-aipets/agents'
 
 const agent = createVoiceTranscriptionRephraseAgent({ generateText: generateTextFrom(model, provider) })
 const rewritten = await agent.rephrase(['uh can you hear me'], signal)

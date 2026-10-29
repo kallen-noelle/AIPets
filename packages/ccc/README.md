@@ -1,6 +1,6 @@
-# @proj-airi/ccc
+# @proj-aipets/ccc
 
-Character Card protocol primitives for AIRI.
+Character Card protocol primitives for AIPETS.
 
 ## What it owns
 
@@ -9,13 +9,13 @@ Character Card protocol primitives for AIRI.
 - Shared CCv3 TypeScript contracts.
 - Character Card JSON, Markdown, PNG, and APNG export helpers.
 
-The package is intentionally runtime-agnostic. It does not own AIRI module
+The package is intentionally runtime-agnostic. It does not own AIPETS module
 settings, local persistence, chat message assembly, or editor behavior.
 
 ## Parse a CCv3 document
 
 ```ts
-import { parseCharacterCardV3 } from '@proj-airi/ccc'
+import { parseCharacterCardV3 } from '@proj-aipets/ccc'
 
 const { card, compatibility } = parseCharacterCardV3(jsonText)
 
@@ -40,12 +40,12 @@ needs to distinguish protocol failures from storage or filesystem errors.
 
 ## When not to use it
 
-- Persisting AIRI-specific active-card state.
+- Persisting AIPETS-specific active-card state.
 - Applying speech, vision, body-model, or agent configuration.
 - Constructing provider messages from prompts, greetings, examples, or a
   Lorebook.
 
-Those policies belong to AIRI's character runtime rather than the community
+Those policies belong to AIPETS's character runtime rather than the community
 protocol codec.
 
 ## License

@@ -1,18 +1,18 @@
 {
-  "name": "@proj-airi/electron-eventa",
+  "name": "@proj-aipets/electron-eventa",
   "type": "module",
   "version": "0.12.0",
   "private": true,
   "description": "Shared Eventa contracts for Electron IPC",
   "author": {
-    "name": "Moeru AI Project AIRI Team",
-    "email": "airi@moeru.ai",
+    "name": "Moeru AI Project AIPETS Team",
+    "email": "aipets@moeru.ai",
     "url": "https://github.com/moeru-ai"
   },
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/moeru-ai/airi.git",
+    "url": "https://gitee.com/kallen-noelle/AdoptAI.git",
     "directory": "packages/electron-eventa"
   },
   "exports": {

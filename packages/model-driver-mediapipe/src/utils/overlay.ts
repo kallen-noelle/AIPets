@@ -5,7 +5,7 @@ import { DrawingUtils, HandLandmarker, PoseLandmarker } from '@mediapipe/tasks-v
 const POSE_CONNECTIONS: Readonly<{ start: number, end: number }[]> = PoseLandmarker.POSE_CONNECTIONS
 const HAND_CONNECTIONS: Readonly<{ start: number, end: number }[]> = HandLandmarker.HAND_CONNECTIONS
 
-// NOTICE: Palette inspired by https://github.com/proj-airi/webai-examples (see review link in PR).
+// NOTICE: Palette inspired by https://github.com/proj-aipets/webai-examples (see review link in PR).
 const OVERLAY_PALETTE = [
   { point: 'rgba(80, 200, 255, 0.95)', connector: 'rgba(80, 200, 255, 0.55)' },
   { point: 'rgba(120, 255, 140, 0.95)', connector: 'rgba(120, 255, 140, 0.55)' },

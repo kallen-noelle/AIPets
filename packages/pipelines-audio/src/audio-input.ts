@@ -1,6 +1,6 @@
-import type { Outcome, Scope } from '@proj-airi/stream-kit'
+import type { Outcome, Scope } from '@proj-aipets/stream-kit'
 
-import { createScope } from '@proj-airi/stream-kit'
+import { createScope } from '@proj-aipets/stream-kit'
 
 /** Frame coordinates belong to one source connection and never cross a device change. */
 export interface Position {

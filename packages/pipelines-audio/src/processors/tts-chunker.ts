@@ -2,7 +2,7 @@ import type { ReaderLike } from 'clustr'
 
 import type { TextSegment, TextToken } from '../types'
 
-import { createPushStream } from '@proj-airi/stream-kit'
+import { createPushStream } from '@proj-aipets/stream-kit'
 import { readGraphemeClusters } from 'clustr'
 
 export const TTS_FLUSH_INSTRUCTION = '\u200B'

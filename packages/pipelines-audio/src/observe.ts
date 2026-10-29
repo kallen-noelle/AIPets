@@ -1,6 +1,6 @@
 import type { AudioInput, AudioRange, Outcome, PcmBlock } from './audio-input'
 
-import { createScope } from '@proj-airi/stream-kit'
+import { createScope } from '@proj-aipets/stream-kit'
 
 /** A gap discards overlap. Each detector receives its own sample arrays. */
 export interface AudioWindow extends PcmBlock {

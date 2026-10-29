@@ -1,9 +1,9 @@
 /// <reference types="vite/client" />
 
-import type { LiveAudioSource, PcmBlock } from '@proj-airi/pipelines-audio'
-import type { Scope, StreamController } from '@proj-airi/stream-kit'
+import type { LiveAudioSource, PcmBlock } from '@proj-aipets/pipelines-audio'
+import type { Scope, StreamController } from '@proj-aipets/stream-kit'
 
-import { createPushStream, createScope } from '@proj-airi/stream-kit'
+import { createPushStream, createScope } from '@proj-aipets/stream-kit'
 import { nanoid } from 'nanoid/non-secure'
 
 import CaptureWorkletURL from './capture.worklet?worker&url'
@@ -35,7 +35,7 @@ async function pipeMediaStream(context: AudioContext, stream: MediaStream, scope
 
   const sourceId = nanoid()
   const node = context.createMediaStreamSource(stream)
-  const worklet = new AudioWorkletNode(context, 'airi-capture')
+  const worklet = new AudioWorkletNode(context, 'aipets-capture')
   const mute = context.createGain()
   mute.gain.value = 0
   node.connect(worklet).connect(mute).connect(context.destination)

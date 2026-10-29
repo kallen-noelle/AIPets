@@ -2556,8 +2556,6 @@ reactShell:
   cardSectionChat: 对话
   cardSectionStage: 舞台
   characterScale: 缩放
-  characterOffsetX: 水平偏移
-  characterOffsetY: 垂直偏移
   characterFade: 淡入时长
   characterMirror: 镜像角色
   characterClick: 响应点击
@@ -2568,17 +2566,13 @@ reactShell:
   characterChatModelHint: 服务来源在服务商页配置。留空时使用该服务商的默认模型。
   characterHistoryTurns: 历史轮数
   characterHistoryTurnsHint: 模型保留在上下文中的轮数，最少为 2。
-  characterShowOnStage: 在舞台上显示角色
-  characterShowOnStageHint: 隐藏后对话与设置仍然可用，舞台显示占位提示。
+  instanceShowOnStage: 在舞台上显示该实例
+  instanceShowOnStageHint: 可以同时启用多个实例。停用的实例仍然保留对话、记忆与设置。
   stageCharacterHidden: 角色已隐藏。可在角色设置页重新开启。
   memoryDescription: 控制模型能够看到的对话历史长度。
   memoryEnabled: 发送对话历史
   memoryWindow: 保留消息数
   memoryLongTermNote: 长期记忆存储尚未加入 React 版本。
-  sceneDescription: 角色身后的背景画面。
-  noBackground: 尚未选择背景。
-  chooseBackground: 选择图片
-  clearBackground: 清除背景
   dataDescription: 导出、导入与删除本应用存在浏览器里的数据。
   dataChatsTitle: 对话记录
   dataChatsDescription: 所有对话会话都保存在本浏览器中，可导出 JSON 备份。
@@ -2792,12 +2786,22 @@ reactShell:
   appearance: 外观
   appearanceDescription: 这些值会覆盖角色文件夹中的外观。
   scale: 缩放
-  offsetX: 水平偏移
-  offsetY: 垂直偏移
   fade: 淡入淡出（毫秒）
   mirror: 镜像
   clickEnabled: 响应点击
   resetAppearance: 重置外观
+  instanceList: 实例列表
+  instanceListDescription: 每个实例都是桌面上的独立宠物窗口，可以分别拖动与缩放。
+  addInstance: 多开
+  instanceCount: '{count} 个实例'
+  instanceSettings: 实例配置
+  instanceLabel: 实例 {number} · {name}
+  instancePickHint: 点击编号后配置该实例。
+  deleteInstance: 删除实例
+  enableInstance: 启用该实例
+  disableInstance: 停用该实例
+  enabled: 已启用
+  chatInstance: 宠物实例
   builtinCharacters: 内置角色
   importedPacks: 导入的动画包
   providerGroup: 提供商分组

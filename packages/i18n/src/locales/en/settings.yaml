@@ -2771,8 +2771,6 @@ reactShell:
   cardSectionChat: Chat
   cardSectionStage: Stage
   characterScale: Scale
-  characterOffsetX: Horizontal offset
-  characterOffsetY: Vertical offset
   characterFade: Fade in
   characterMirror: Mirror the character
   characterClick: React to clicks
@@ -2783,17 +2781,13 @@ reactShell:
   characterChatModelHint: The provider comes from the Providers page. An empty value uses its default model.
   characterHistoryTurns: History rounds
   characterHistoryTurnsHint: Rounds the model keeps in context. The minimum is 2.
-  characterShowOnStage: Show the character on the stage
-  characterShowOnStageHint: A hidden character keeps its chat and settings, and the stage shows a placeholder.
+  instanceShowOnStage: Show this instance on the stage
+  instanceShowOnStageHint: Several instances can be on at once. A disabled instance keeps its chat, memory, and settings.
   stageCharacterHidden: The character is hidden. Enable it on the Card settings page.
   memoryDescription: Controls how much conversation history the model receives.
   memoryEnabled: Send conversation history
   memoryWindow: Messages to keep
   memoryLongTermNote: Long-term memory storage is not part of the React app yet.
-  sceneDescription: Background shown behind the character.
-  noBackground: No background selected.
-  chooseBackground: Choose image
-  clearBackground: Clear background
   dataDescription: Export, import, and delete the data this app stores in the browser.
   dataChatsTitle: Chats
   dataChatsDescription: Every chat session lives in this browser. Export a JSON file to back it up.
@@ -3007,12 +3001,23 @@ reactShell:
   appearance: Appearance
   appearanceDescription: These values override the look the character folder ships.
   scale: Scale
-  offsetX: Horizontal offset
-  offsetY: Vertical offset
   fade: Fade (ms)
   mirror: Mirror
   clickEnabled: React to clicks
   resetAppearance: Reset appearance
+  instanceList: Instances
+  instanceListDescription: Each instance is its own desktop pet window with its own position and size.
+  addInstance: Add instance
+  instanceCount: '{count} instances'
+  instanceCount_one: '{count} instance'
+  instanceSettings: Instance settings
+  instanceLabel: 'Instance {number} · {name}'
+  instancePickHint: Pick a number to edit that instance.
+  deleteInstance: Delete instance
+  enableInstance: Enable this instance
+  disableInstance: Disable this instance
+  enabled: Enabled
+  chatInstance: Pet instance
   builtinCharacters: Built-in characters
   importedPacks: Imported packs
   providerGroup: Provider group

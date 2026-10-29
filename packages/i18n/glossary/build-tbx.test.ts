@@ -142,12 +142,12 @@ describe('parseGlossary', () => {
   })
 
   it('allows more than one preferred term, as Crowdin does', () => {
-    // The export from project 816610 gives both `AIRI` and `Project AIRI` the preferred
+    // The export from project 816610 gives both `AIPETS` and `Project AIPETS` the preferred
     // status inside one concept, so nothing here may forbid it.
     const twoPreferred = concept({
       terms: [
-        { 'text': 'AIRI', 'part-of-speech': 'proper noun', 'status': 'preferred' },
-        { 'text': 'Project AIRI', 'part-of-speech': 'proper noun', 'status': 'preferred' },
+        { 'text': 'AIPETS', 'part-of-speech': 'proper noun', 'status': 'preferred' },
+        { 'text': 'Project AIPETS', 'part-of-speech': 'proper noun', 'status': 'preferred' },
       ],
     })
 
@@ -161,10 +161,10 @@ describe('parseGlossary', () => {
     // says, and rejected "proper noun" with a space. A glossary exported from project 816610
     // writes the spaced form on every proper noun, so the requirement was backwards: it
     // would have rejected the data Crowdin itself produces.
-    const spaced = concept({ terms: [{ 'text': 'AIRI', 'part-of-speech': 'proper noun', 'status': 'preferred' }] })
+    const spaced = concept({ terms: [{ 'text': 'AIPETS', 'part-of-speech': 'proper noun', 'status': 'preferred' }] })
 
     expect(parseGlossary([spaced])).toHaveLength(1)
-    expect(() => parseGlossary([concept({ terms: [{ 'text': 'AIRI', 'part-of-speech': 'properNoun', 'status': 'preferred' }] })])).toThrow()
+    expect(() => parseGlossary([concept({ terms: [{ 'text': 'AIPETS', 'part-of-speech': 'properNoun', 'status': 'preferred' }] })])).toThrow()
   })
 
   it('rejects an id that is not kebab case', () => {
@@ -222,7 +222,7 @@ describe('terms.yaml', () => {
     const concepts = await loadConcepts()
 
     // The glossary shares one Crowdin container with the documentation terminology, so a
-    // term may live in prose rather than in a string. `Project AIRI` appears six times in
+    // term may live in prose rather than in a string. `Project AIPETS` appears six times in
     // README.md and in no interface string.
     //
     // The check still has teeth. A term that appears in none of these places can never match
@@ -240,7 +240,7 @@ describe('terms.yaml', () => {
           prose.push(await readFile(path, 'utf8'))
       }
     }
-    // The documentation site lives in moeru-ai/airi-docs, `docs/` keeps the translated READMEs.
+    // The documentation site lives in kallen-noelle/AdoptAI-docs, `docs/` keeps the translated READMEs.
     await readDocs(join(repository, 'docs'))
 
     const haystack = [...await loadEnglishStrings(), ...prose].join('\n').toLowerCase()

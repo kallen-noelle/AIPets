@@ -8,7 +8,7 @@ Each region has its own native backdrop layer. Rounded clips intersect the regio
 Use this package in the Electron main process. Keep its import external in the main bundle.
 
 ```ts
-import { NativeBackdrop } from '@proj-airi/electron-native-backdrop'
+import { NativeBackdrop } from '@proj-aipets/electron-native-backdrop'
 
 const backdrop = new NativeBackdrop(window.getNativeWindowHandle())
 backdrop.setRegions([
@@ -66,9 +66,9 @@ Desktop blur can run in WindowServer. Application CPU time alone does not measur
 ## Build and checks
 
 ```sh
-pnpm -F @proj-airi/electron-native-backdrop build
-pnpm -F @proj-airi/electron-native-backdrop typecheck
-pnpm -F @proj-airi/electron-native-backdrop smoke:native
+pnpm -F @proj-aipets/electron-native-backdrop build
+pnpm -F @proj-aipets/electron-native-backdrop typecheck
+pnpm -F @proj-aipets/electron-native-backdrop smoke:native
 ```
 
 The build uses Xcode clang and headers beside the current Node executable: `../include/node`.

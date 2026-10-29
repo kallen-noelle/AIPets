@@ -1,4 +1,4 @@
-import type { PcmBlock, PlayedAudio, PlayingAudio } from '@proj-airi/pipelines-audio'
+import type { PcmBlock, PlayedAudio, PlayingAudio } from '@proj-aipets/pipelines-audio'
 
 /**
  * One clip on a Web Audio context.

@@ -20,7 +20,7 @@ const completeCard = {
     alternate_greetings: ['Good evening.'],
     group_only_greetings: ['Hello, everyone.'],
     character_version: '1.0.0',
-    creator: 'AIRI',
+    creator: 'AIPETS',
     creator_notes: 'Created for codec coverage.',
     creator_notes_multilingual: {
       ja: 'コーデックテスト用です。',
@@ -43,7 +43,7 @@ const completeCard = {
     character_book: {
       name: 'Observatory',
       extensions: {
-        vendor: 'airi',
+        vendor: 'aipets',
       },
       entries: [
         {
@@ -60,7 +60,7 @@ const completeCard = {
       future_book_field: 42,
     },
     extensions: {
-      airi: {
+      aipets: {
         modules: {},
       },
     },

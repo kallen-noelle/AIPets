@@ -1,4 +1,4 @@
-# `@proj-airi/input-playstation-dualsense-5`
+# `@proj-aipets/input-playstation-dualsense-5`
 
 This package reads and writes Sony PlayStation 5 DualSense reports through WebHID. It has no UI code.
 
@@ -13,7 +13,7 @@ import {
   createDefaultDualSenseOutputState,
   DualSenseController,
   requestDualSenseDevice,
-} from '@proj-airi/input-playstation-dualsense-5'
+} from '@proj-aipets/input-playstation-dualsense-5'
 
 const device = await requestDualSenseDevice()
 if (!device)

@@ -1,4 +1,4 @@
-import type { MathSpeechExtension } from '@proj-airi/speech-transformer-math'
+import type { MathSpeechExtension } from '@proj-aipets/speech-transformer-math'
 
 import type { ChemLocale } from './locale'
 

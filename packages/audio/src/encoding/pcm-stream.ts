@@ -1,5 +1,5 @@
 import type { create } from '@alexanderolsen/libsamplerate-js'
-import type { PcmBlock } from '@proj-airi/pipelines-audio'
+import type { PcmBlock } from '@proj-aipets/pipelines-audio'
 
 import { toPCM16FromFloat32 } from './wav'
 

@@ -1,7 +1,7 @@
-import type { Conversation, StreamOptions } from '@proj-airi/core-agent'
-import type { GenerationProvider } from '@proj-airi/provider-inference'
+import type { Conversation, StreamOptions } from '@proj-aipets/core-agent'
+import type { GenerationProvider } from '@proj-aipets/provider-inference'
 
-import { streamFrom } from '@proj-airi/core-agent'
+import { streamFrom } from '@proj-aipets/core-agent'
 
 /**
  * Sends one conversation to a chat model and resolves to the complete reply text.

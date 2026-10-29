@@ -1,18 +1,18 @@
 {
-  "name": "@proj-airi/speech-transformer-chem",
+  "name": "@proj-aipets/speech-transformer-chem",
   "type": "module",
   "version": "0.12.0",
   "private": true,
   "description": "Reads mhchem chemistry as words, as an extension of speech-transformer-math",
   "author": {
-    "name": "Moeru AI Project AIRI Team",
-    "email": "airi@moeru.ai",
+    "name": "Moeru AI Project AIPETS Team",
+    "email": "aipets@moeru.ai",
     "url": "https://github.com/moeru-ai"
   },
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/moeru-ai/airi.git",
+    "url": "https://gitee.com/kallen-noelle/AdoptAI.git",
     "directory": "packages/speech-transformer-chem"
   },
   "exports": {
@@ -33,13 +33,13 @@
     "typecheck": "tsc --noEmit"
   },
   "peerDependencies": {
-    "@proj-airi/speech-transformer-math": "workspace:^"
+    "@proj-aipets/speech-transformer-math": "workspace:^"
   },
   "dependencies": {
-    "@proj-airi/mathjson": "workspace:^",
+    "@proj-aipets/mathjson": "workspace:^",
     "mhchemparser": "catalog:"
   },
   "devDependencies": {
-    "@proj-airi/speech-transformer-math": "workspace:^"
+    "@proj-aipets/speech-transformer-math": "workspace:^"
   }
 }

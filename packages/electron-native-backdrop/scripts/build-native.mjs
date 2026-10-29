@@ -25,7 +25,7 @@ if (platform === 'darwin') {
     '-arch',
     arch === 'x64' ? 'x86_64' : 'arm64',
     '-DNAPI_VERSION=8',
-    '-DNODE_GYP_MODULE_NAME=airi_native_backdrop',
+    '-DNODE_GYP_MODULE_NAME=aipets_native_backdrop',
     '-I',
     headers,
     '-framework',

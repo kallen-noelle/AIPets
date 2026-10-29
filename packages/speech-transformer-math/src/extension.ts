@@ -1,4 +1,4 @@
-import type { MathJson, MathJsonFunction } from '@proj-airi/mathjson'
+import type { MathJson, MathJsonFunction } from '@proj-aipets/mathjson'
 
 import type { MathLocale } from './locale'
 

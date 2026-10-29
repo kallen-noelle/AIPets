@@ -1,10 +1,10 @@
-import type { MathJson } from '@proj-airi/mathjson'
-import type { MathLocale, TexNode } from '@proj-airi/speech-transformer-math'
+import type { MathJson } from '@proj-aipets/mathjson'
+import type { MathLocale, TexNode } from '@proj-aipets/speech-transformer-math'
 
 import type { ChemLocale, ChemSpecies } from './locale'
 
-import { argsOf, headOf, isFunction, isNumber, nothing, text, textOf } from '@proj-airi/mathjson'
-import { parseMath } from '@proj-airi/speech-transformer-math'
+import { argsOf, headOf, isFunction, isNumber, nothing, text, textOf } from '@proj-aipets/mathjson'
+import { parseMath } from '@proj-aipets/speech-transformer-math'
 import { mhchemParser } from 'mhchemparser'
 
 /** The mhchem arrows that mhchemParser writes, mapped to the three readings that the lexicons have. */

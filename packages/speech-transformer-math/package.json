@@ -1,18 +1,18 @@
 {
-  "name": "@proj-airi/speech-transformer-math",
+  "name": "@proj-aipets/speech-transformer-math",
   "type": "module",
   "version": "0.12.0",
   "private": true,
   "description": "Reads TeX formulas as words in Chinese, English, Japanese, and Korean, through MathJSON",
   "author": {
-    "name": "Moeru AI Project AIRI Team",
-    "email": "airi@moeru.ai",
+    "name": "Moeru AI Project AIPETS Team",
+    "email": "aipets@moeru.ai",
     "url": "https://github.com/moeru-ai"
   },
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/moeru-ai/airi.git",
+    "url": "https://gitee.com/kallen-noelle/AdoptAI.git",
     "directory": "packages/speech-transformer-math"
   },
   "exports": {
@@ -33,7 +33,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@proj-airi/mathjson": "workspace:^",
+    "@proj-aipets/mathjson": "workspace:^",
     "katex": "catalog:"
   }
 }

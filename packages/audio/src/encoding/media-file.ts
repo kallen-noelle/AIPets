@@ -1,4 +1,4 @@
-import type { AudioSource, PcmBlock } from '@proj-airi/pipelines-audio'
+import type { AudioSource, PcmBlock } from '@proj-aipets/pipelines-audio'
 
 import { ALL_FORMATS, AudioSample, AudioSampleSink, AudioSampleSource, BlobSource, BufferTarget, Input, Output, WavOutputFormat } from 'mediabunny'
 import { nanoid } from 'nanoid/non-secure'
