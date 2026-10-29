@@ -4,7 +4,7 @@ Status: accepted
 
 ## Context
 
-The Auth service issues OIDC access tokens for AIRI clients. These clients also
+The Auth service issues OIDC access tokens for AIPETS clients. These clients also
 call Better Auth profile and account endpoints with the access token.
 
 Better Auth session middleware accepts its session cookie format. It does not
@@ -71,7 +71,7 @@ cannot authorize a sensitive operation.
 
 ```mermaid
 flowchart LR
-  Client[AIRI client] --> Routes[Auth token routes]
+  Client[AIPETS client] --> Routes[Auth token routes]
   Client --> BetterAuth[Better Auth endpoint]
   Routes --> Verifier[OIDC access-token verifier]
   BetterAuth --> Plugin[OIDC JWT plugin]
@@ -102,7 +102,7 @@ server/
 
 ```mermaid
 sequenceDiagram
-  participant C as AIRI client
+  participant C as AIPETS client
   participant A as Auth route or plugin
   participant V as Local verifier
   participant D as Auth database

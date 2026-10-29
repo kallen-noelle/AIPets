@@ -1,4 +1,4 @@
-import type { AuthSession } from '@proj-airi/auth-shared'
+import type { AuthSession } from '@proj-aipets/auth-shared'
 import type { BetterAuthPlugin } from 'better-auth'
 import type { JSONWebKeySet } from 'jose'
 
@@ -6,7 +6,7 @@ import type { AuthEnv } from '../env'
 
 import { createHmac } from 'node:crypto'
 
-import { isUserBannedNow } from '@proj-airi/auth-shared'
+import { isUserBannedNow } from '@proj-aipets/auth-shared'
 import { APIError } from 'better-auth'
 import { createAuthMiddleware } from 'better-auth/api'
 import { array, boolean, date, jwsCompact, looseObject, nonEmpty, nullable, object, optional, parse, pipe, safeParse, string, transform } from 'valibot'

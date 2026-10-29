@@ -1,18 +1,18 @@
 {
-  "name": "@proj-airi/server-sdk-shared",
+  "name": "@proj-aipets/server-sdk-shared",
   "type": "module",
   "version": "0.12.0",
   "private": true,
   "description": "Eventa contracts for the hosted chat WebSocket",
   "author": {
-    "name": "Moeru AI Project AIRI Team",
-    "email": "airi@moeru.ai",
+    "name": "Moeru AI Project AIPETS Team",
+    "email": "aipets@moeru.ai",
     "url": "https://github.com/moeru-ai"
   },
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/moeru-ai/airi.git",
+    "url": "https://gitee.com/kallen-noelle/AdoptAI.git",
     "directory": "server/packages/server-sdk-shared"
   },
   "exports": {

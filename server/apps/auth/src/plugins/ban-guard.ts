@@ -1,6 +1,6 @@
 import type { BetterAuthPlugin } from 'better-auth'
 
-import { isUserBannedNow } from '@proj-airi/auth-shared'
+import { isUserBannedNow } from '@proj-aipets/auth-shared'
 import { APIError } from 'better-auth'
 
 interface BanState {

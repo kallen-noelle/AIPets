@@ -1,18 +1,18 @@
-# @proj-airi/server-sdk-shared
+# @proj-aipets/server-sdk-shared
 
 Eventa contracts for the hosted chat WebSocket.
 
 ## Usage
 
 ```shell
-ni @proj-airi/server-sdk-shared -D
-pnpm i @proj-airi/server-sdk-shared -D
+ni @proj-aipets/server-sdk-shared -D
+pnpm i @proj-aipets/server-sdk-shared -D
 ```
 
 ```typescript
-import type { WireMessage } from '@proj-airi/server-sdk-shared'
+import type { WireMessage } from '@proj-aipets/server-sdk-shared'
 
-import { newMessages, pullMessages, sendMessages } from '@proj-airi/server-sdk-shared'
+import { newMessages, pullMessages, sendMessages } from '@proj-aipets/server-sdk-shared'
 ```
 
 The package uses Eventa `1.0.0-beta.15`. Its WebSocket adapter accepts beta.13

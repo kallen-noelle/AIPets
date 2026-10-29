@@ -2,7 +2,7 @@ import { betterAuth } from 'better-auth'
 import { drizzleAdapter } from 'better-auth/adapters/drizzle'
 import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest'
 
-import * as schema from '@proj-airi/auth-shared'
+import * as schema from '@proj-aipets/auth-shared'
 
 import { steam } from '../plugins/steam'
 import { createTestDatabase } from './mock-db'

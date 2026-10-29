@@ -25,7 +25,7 @@ Content shares diagnostic retention. This increment adds no retention scheduler
 or automatic historical backfill. Content is not settlement evidence.
 
 Only the authenticated Go Admin detail API exposes content. Lists select summary
-columns. The owner-facing AIRI DTO continues to exclude content and credentials.
+columns. The owner-facing AIPETS DTO continues to exclude content and credentials.
 Final diagnostic writes keep the existing best-effort policy. A storage failure
 is logged without including the content, and does not resubmit upstream work.
 
@@ -70,6 +70,6 @@ sequenceDiagram
 
 Test JSON and SSE capture, tool/reasoning preservation, media omission, bounded
 capture, malformed bodies, failed attempts, cancellation, and historical nulls.
-Verify admin-only detail reads and unchanged lightweight lists. Deploy the AIRI
+Verify admin-only detail reads and unchanged lightweight lists. Deploy the AIPETS
 migration and writer before the Go reader, then deploy the dashboard.
 No live migration or deployment is authorized by this implementation task.

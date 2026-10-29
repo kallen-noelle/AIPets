@@ -1,4 +1,4 @@
-# `@proj-airi/auth-shared`
+# `@proj-aipets/auth-shared`
 
 Neutral authentication contracts shared by the resource API and the standalone auth service.
 

@@ -7,7 +7,7 @@ import { errorMessageFrom } from '@moeru/std'
 import { runAuthServer } from './server'
 
 /**
- * Starts only the AIRI Auth dependency graph.
+ * Starts only the AIPETS Auth dependency graph.
  *
  * Call stack:
  *

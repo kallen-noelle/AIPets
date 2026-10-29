@@ -45,7 +45,7 @@ function createSession(userId: string): BanSession {
 }
 
 describe('banGuard', () => {
-  // Review: https://github.com/moeru-ai/airi/pull/2303
+  // Review: https://gitee.com/kallen-noelle/AdoptAI/pull/2303
   // ROOT CAUSE:
   //
   // Better Auth generates the shared schema from registered plugin schemas.
@@ -106,7 +106,7 @@ describe('banGuard', () => {
     expect(updateUser).not.toHaveBeenCalled()
   })
 
-  // Review: https://github.com/moeru-ai/airi/pull/2303
+  // Review: https://gitee.com/kallen-noelle/AdoptAI/pull/2303
   // ROOT CAUSE:
   //
   // The old cleanup read an expired ban, then cleared it in a later write.

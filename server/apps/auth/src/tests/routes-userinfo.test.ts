@@ -1,6 +1,6 @@
 import type { AuthRoutesDeps, HonoEnv } from '../routes'
 
-import { ApiError } from '@proj-airi/http-error-shared'
+import { ApiError } from '@proj-aipets/http-error-shared'
 import { Hono } from 'hono'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
@@ -31,7 +31,7 @@ async function buildRoutes(currentUser: SessionUser) {
     db: {} as any, // userinfo path never queries the DB
     env: {
       PUBLIC_URL: 'http://localhost:3000',
-      AUTH_UI_URL: 'https://accounts.airi.build/ui',
+      AUTH_UI_URL: 'https://accounts.aipets.build/ui',
       ADDITIONAL_TRUSTED_ORIGINS: [],
     } as any,
     rateLimitMetrics: null,
@@ -86,67 +86,67 @@ describe('auth UI routes', () => {
     const { routes, handler } = await buildRoutes({ id: 'uid_ok', email: 'ok@example.com', banned: false, banExpires: null })
     handler.mockResolvedValueOnce(new Response(null, {
       status: 302,
-      headers: { location: '/auth/sign-in?client_id=airi-stage-pocket&response_type=code' },
+      headers: { location: '/auth/sign-in?client_id=aipets-stage-pocket&response_type=code' },
     }))
 
-    const res = await routes.request('/api/auth/oauth2/authorize?client_id=airi-stage-pocket&response_type=code&provider=google')
+    const res = await routes.request('/api/auth/oauth2/authorize?client_id=aipets-stage-pocket&response_type=code&provider=google')
 
     // ROOT CAUSE:
     //
     // The OIDC plugin signs only its known query fields before it redirects.
     // It removed the mobile provider hint, so Google opened the generic sign-in page.
     //
-    // Before: /auth/sign-in?client_id=airi-stage-pocket&response_type=code
-    // After:  /auth/sign-in?client_id=airi-stage-pocket&response_type=code&provider=google
-    expect(res.headers.get('location')).toBe('/auth/sign-in?client_id=airi-stage-pocket&response_type=code&provider=google')
+    // Before: /auth/sign-in?client_id=aipets-stage-pocket&response_type=code
+    // After:  /auth/sign-in?client_id=aipets-stage-pocket&response_type=code&provider=google
+    expect(res.headers.get('location')).toBe('/auth/sign-in?client_id=aipets-stage-pocket&response_type=code&provider=google')
   })
 
   it('keeps the GitHub provider hint on the OIDC sign-in redirect', async () => {
     const { routes, handler } = await buildRoutes({ id: 'uid_ok', email: 'ok@example.com', banned: false, banExpires: null })
     handler.mockResolvedValueOnce(new Response(null, {
       status: 302,
-      headers: { location: '/auth/sign-in?client_id=airi-stage-pocket&response_type=code' },
+      headers: { location: '/auth/sign-in?client_id=aipets-stage-pocket&response_type=code' },
     }))
 
-    const res = await routes.request('/api/auth/oauth2/authorize?client_id=airi-stage-pocket&response_type=code&provider=github')
+    const res = await routes.request('/api/auth/oauth2/authorize?client_id=aipets-stage-pocket&response_type=code&provider=github')
 
-    expect(res.headers.get('location')).toBe('/auth/sign-in?client_id=airi-stage-pocket&response_type=code&provider=github')
+    expect(res.headers.get('location')).toBe('/auth/sign-in?client_id=aipets-stage-pocket&response_type=code&provider=github')
   })
 
   it('keeps the Steam provider hint on the OIDC sign-in redirect', async () => {
     const { routes, handler } = await buildRoutes({ id: 'uid_ok', email: 'ok@example.com', banned: false, banExpires: null })
     handler.mockResolvedValueOnce(new Response(null, {
       status: 302,
-      headers: { location: '/auth/sign-in?client_id=airi-stage-pocket&response_type=code' },
+      headers: { location: '/auth/sign-in?client_id=aipets-stage-pocket&response_type=code' },
     }))
 
-    const res = await routes.request('/api/auth/oauth2/authorize?client_id=airi-stage-pocket&response_type=code&provider=steam')
+    const res = await routes.request('/api/auth/oauth2/authorize?client_id=aipets-stage-pocket&response_type=code&provider=steam')
 
-    expect(res.headers.get('location')).toBe('/auth/sign-in?client_id=airi-stage-pocket&response_type=code&provider=steam')
+    expect(res.headers.get('location')).toBe('/auth/sign-in?client_id=aipets-stage-pocket&response_type=code&provider=steam')
   })
 
   it('does not forward an unknown provider to the auth UI', async () => {
     const { routes, handler } = await buildRoutes({ id: 'uid_ok', email: 'ok@example.com', banned: false, banExpires: null })
     handler.mockResolvedValueOnce(new Response(null, {
       status: 302,
-      headers: { location: '/auth/sign-in?client_id=airi-stage-pocket&response_type=code' },
+      headers: { location: '/auth/sign-in?client_id=aipets-stage-pocket&response_type=code' },
     }))
 
-    const res = await routes.request('/api/auth/oauth2/authorize?client_id=airi-stage-pocket&response_type=code&provider=unknown')
+    const res = await routes.request('/api/auth/oauth2/authorize?client_id=aipets-stage-pocket&response_type=code&provider=unknown')
 
-    expect(res.headers.get('location')).toBe('/auth/sign-in?client_id=airi-stage-pocket&response_type=code')
+    expect(res.headers.get('location')).toBe('/auth/sign-in?client_id=aipets-stage-pocket&response_type=code')
   })
 
   it('keeps the generic sign-in redirect when the request has no provider', async () => {
     const { routes, handler } = await buildRoutes({ id: 'uid_ok', email: 'ok@example.com', banned: false, banExpires: null })
     handler.mockResolvedValueOnce(new Response(null, {
       status: 302,
-      headers: { location: '/auth/sign-in?client_id=airi-stage-pocket&response_type=code' },
+      headers: { location: '/auth/sign-in?client_id=aipets-stage-pocket&response_type=code' },
     }))
 
-    const res = await routes.request('/api/auth/oauth2/authorize?client_id=airi-stage-pocket&response_type=code')
+    const res = await routes.request('/api/auth/oauth2/authorize?client_id=aipets-stage-pocket&response_type=code')
 
-    expect(res.headers.get('location')).toBe('/auth/sign-in?client_id=airi-stage-pocket&response_type=code')
+    expect(res.headers.get('location')).toBe('/auth/sign-in?client_id=aipets-stage-pocket&response_type=code')
   })
 
   it('redirects sign-in provider shortcut to the standalone auth UI', async () => {
@@ -157,7 +157,7 @@ describe('auth UI routes', () => {
     expect(res.status).toBe(302)
 
     const location = res.headers.get('location')
-    expect(location).toBe('https://accounts.airi.build/ui/sign-in?provider=github&client_id=stage-web&prompt=login&redirect_uri=http%3A%2F%2Flocalhost%3A5173%2Fauth%2Fcallback&api_server_url=http%3A%2F%2Flocalhost%3A3000')
+    expect(location).toBe('https://accounts.aipets.build/ui/sign-in?provider=github&client_id=stage-web&prompt=login&redirect_uri=http%3A%2F%2Flocalhost%3A5173%2Fauth%2Fcallback&api_server_url=http%3A%2F%2Flocalhost%3A3000')
   })
 
   it('redirects Electron OIDC callback queries to the standalone auth UI relay', async () => {
@@ -166,6 +166,6 @@ describe('auth UI routes', () => {
     const res = await routes.request('/api/auth/oidc/electron-callback?code=sample-code&state=43123%3Aopaque-state')
 
     expect(res.status).toBe(302)
-    expect(res.headers.get('location')).toBe('https://accounts.airi.build/ui/api/auth/oidc/electron-callback?code=sample-code&state=43123%3Aopaque-state')
+    expect(res.headers.get('location')).toBe('https://accounts.aipets.build/ui/api/auth/oidc/electron-callback?code=sample-code&state=43123%3Aopaque-state')
   })
 })

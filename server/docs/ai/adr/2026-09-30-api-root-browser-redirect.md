@@ -23,7 +23,7 @@ The redirect does not establish or confirm a login session or email verification
 ```mermaid
 graph LR
   Browser --> API[API app root route]
-  API --> Product[AIRI homepage]
+  API --> Product[AIPETS homepage]
   Client[JSON client] --> API
 ```
 

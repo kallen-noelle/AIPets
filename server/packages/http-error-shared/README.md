@@ -1,4 +1,4 @@
-# `@proj-airi/http-error-shared`
+# `@proj-aipets/http-error-shared`
 
 The HTTP error model that the resource API and the auth service share.
 

@@ -26,7 +26,7 @@ vi.mock('jose', async (importOriginal) => {
 
 const testUser = {
   id: 'user-1',
-  name: 'AIRI User',
+  name: 'AIPETS User',
   email: 'user@example.com',
   emailVerified: true,
   image: null,
@@ -56,8 +56,8 @@ async function buildRoutes() {
       query: { user: { findFirst } },
     } as never,
     env: {
-      PUBLIC_URL: 'https://api.airi.test',
-      AUTH_UI_URL: 'https://accounts.airi.test/ui',
+      PUBLIC_URL: 'https://api.aipets.test',
+      AUTH_UI_URL: 'https://accounts.aipets.test/ui',
       ADDITIONAL_TRUSTED_ORIGINS: [],
     } as never,
     rateLimitMetrics: null,

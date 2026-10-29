@@ -9,15 +9,15 @@ describe('auth origin policy', () => {
     })
 
     expect(getAuthTrustedOrigins({
-      PUBLIC_URL: 'https://api.airi.moeru.ai',
+      PUBLIC_URL: 'https://api.aipets.moeru.ai',
       ADDITIONAL_TRUSTED_ORIGINS: [],
     }, request)).toEqual([
-      'https://api.airi.moeru.ai',
-      'https://airi.moeru.ai',
-      'https://accounts.airi.build',
-      'https://server-dev.airi-server-auth.pages.dev',
-      'https://admin.airi.build',
-      'https://server-dev.airi-server-admin.pages.dev',
+      'https://api.aipets.moeru.ai',
+      'https://aipets.moeru.ai',
+      'https://accounts.aipets.build',
+      'https://server-dev.aipets-server-auth.pages.dev',
+      'https://admin.aipets.build',
+      'https://server-dev.aipets-server-admin.pages.dev',
       'https://appleid.apple.com',
       'http://localhost:*',
       'http://127.0.0.1:*',
@@ -27,20 +27,20 @@ describe('auth origin policy', () => {
 
   it('includes explicit development origins without trusting native callback schemes', () => {
     const origins = getAuthTrustedOrigins({
-      PUBLIC_URL: 'https://api.airi.build',
+      PUBLIC_URL: 'https://api.aipets.build',
       ADDITIONAL_TRUSTED_ORIGINS: ['https://10.0.0.129:5273'],
     })
 
     expect(origins).toContain('https://10.0.0.129:5273')
     expect(getTrustedOrigin('capacitor://localhost')).toBe('capacitor://localhost')
     expect(origins).not.toContain('capacitor://localhost')
-    expect(origins).not.toContain('ai.moeru.airi-pocket://links')
+    expect(origins).not.toContain('ai.moeru.aipets-pocket://links')
   })
 
   it('always trusts the first-party auth UI for email callbacks', () => {
     expect(getAuthTrustedOrigins({
-      PUBLIC_URL: 'https://api.airi.build',
+      PUBLIC_URL: 'https://api.aipets.build',
       ADDITIONAL_TRUSTED_ORIGINS: [],
-    })).toContain('https://accounts.airi.build')
+    })).toContain('https://accounts.aipets.build')
   })
 })

@@ -3,12 +3,12 @@ import type { AuthEnv } from './env'
 
 import { Buffer } from 'node:buffer'
 
-import { createBadGatewayError, createServiceUnavailableError } from '@proj-airi/http-error-shared'
+import { createBadGatewayError, createServiceUnavailableError } from '@proj-aipets/http-error-shared'
 import { eq } from 'drizzle-orm'
 import { importPKCS8, SignJWT } from 'jose'
 import { literal, object, safeParse } from 'valibot'
 
-import * as authSchema from '@proj-airi/auth-shared'
+import * as authSchema from '@proj-aipets/auth-shared'
 
 type AppleCredentials = Pick<AuthEnv, 'AUTH_APPLE_CLIENT_ID' | 'AUTH_APPLE_TEAM_ID' | 'AUTH_APPLE_KEY_ID' | 'AUTH_APPLE_PRIVATE_KEY_PEM'>
 
@@ -115,7 +115,7 @@ async function revokeGoogleToken(token: string, fetchRequest: typeof fetch): Pro
   })
 
   // Google reports expired and previously revoked tokens as invalid_token.
-  // Either state means the saved credential can no longer authorize AIRI, so
+  // Either state means the saved credential can no longer authorize AIPETS, so
   // accepting it makes a partially completed deletion safe to retry.
   if (response.ok)
     return 'revoked'
@@ -132,7 +132,7 @@ async function revokeGoogleToken(token: string, fetchRequest: typeof fetch): Pro
 async function revokeGoogleAuthorization(account: SocialAccount, fetchRequest: typeof fetch): Promise<void> {
   // Native Google sign-in can retain only an identity, without OAuth API tokens.
   // There is no saved credential to revoke in that case. This does not imply
-  // that Google consent was revoked, and must not block AIRI account deletion.
+  // that Google consent was revoked, and must not block AIPETS account deletion.
   if (!account.accessToken && !account.refreshToken)
     return
 
@@ -214,7 +214,7 @@ async function revokeGitHubAuthorization(
  *
  * Every configured social provider must have an explicit revocation policy.
  * Unknown providers abort deletion so a future login integration cannot
- * silently regress to deleting only AIRI's local account records.
+ * silently regress to deleting only AIPETS's local account records.
  *
  * @see https://developer.apple.com/documentation/signinwithapplerestapi/revoke-tokens
  * @see https://developers.google.com/identity/protocols/oauth2/web-server#tokenrevoke

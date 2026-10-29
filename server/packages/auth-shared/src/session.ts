@@ -1,4 +1,4 @@
-/** Authenticated principal exposed to AIRI resource handlers. */
+/** Authenticated principal exposed to AIPETS resource handlers. */
 export interface AuthSession {
   user: {
     id: string

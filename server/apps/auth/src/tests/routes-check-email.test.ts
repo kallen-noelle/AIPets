@@ -1,7 +1,7 @@
 import type { AuthRoutesDeps } from '../routes'
 
-import { user } from '@proj-airi/auth-shared'
-import { ApiError } from '@proj-airi/http-error-shared'
+import { user } from '@proj-aipets/auth-shared'
+import { ApiError } from '@proj-aipets/http-error-shared'
 import { Hono } from 'hono'
 import { describe, expect, it, vi } from 'vitest'
 
@@ -16,7 +16,7 @@ async function buildRoute(rows: Array<Array<{ id: string, emailVerified?: unknow
   const deps = {
     auth: { handler: vi.fn(), api: { getSession: vi.fn() } },
     db: { select },
-    env: { PUBLIC_URL: 'https://api.airi.test', AUTH_UI_URL: 'https://accounts.airi.test/ui', ADDITIONAL_TRUSTED_ORIGINS: [] },
+    env: { PUBLIC_URL: 'https://api.aipets.test', AUTH_UI_URL: 'https://accounts.aipets.test/ui', ADDITIONAL_TRUSTED_ORIGINS: [] },
     rateLimitMetrics: null,
   } as unknown as AuthRoutesDeps
   const app = new Hono().route('/', await createAuthRoutes(deps)).onError((error, c) => {
@@ -28,7 +28,7 @@ async function buildRoute(rows: Array<Array<{ id: string, emailVerified?: unknow
 }
 
 describe('email verification discovery', () => {
-  // Source: user report in a private development conversation, tracked in https://github.com/moeru-ai/airi/pull/2893.
+  // Source: user report in a private development conversation, tracked in https://gitee.com/kallen-noelle/AdoptAI/pull/2893.
   // ROOT CAUSE:
   // Before: discovery omitted verification status, so unverified users reached password entry.
   // Fix: return the stored flag so clients can route directly to verification.
@@ -49,7 +49,7 @@ describe('email verification discovery', () => {
     expect(select).toHaveBeenNthCalledWith(1, { id: user.id, emailVerified: user.emailVerified })
   })
 
-  // Report: https://github.com/moeru-ai/airi/pull/2893#discussion_r4236517844
+  // Report: https://gitee.com/kallen-noelle/AdoptAI/pull/2893#discussion_r4236517844
   // ROOT CAUSE:
   // Before: the route serialized adapter output without validating its response contract.
   // Fix: reject malformed verification flags before sending a successful response.

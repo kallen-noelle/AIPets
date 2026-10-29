@@ -4,7 +4,7 @@ Status: accepted
 
 ## Decision
 
-The API service and the Auth service use one error model from `@proj-airi/http-error-shared`.
+The API service and the Auth service use one error model from `@proj-aipets/http-error-shared`.
 Each error response has the JSON body `{ error, message, details? }` and the HTTP status of the error.
 Routes, middleware, and services throw an `ApiError`. Only the `onError` handler of the service writes the body.
 A success response has no envelope. A route returns its resource directly.

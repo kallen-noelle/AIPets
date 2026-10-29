@@ -2,7 +2,7 @@ import type { HonoEnv } from '../routes'
 
 import { useLogger } from '@guiiai/logg'
 import { serve } from '@hono/node-server'
-import { createErrorHandler } from '@proj-airi/http-error-shared'
+import { createErrorHandler } from '@proj-aipets/http-error-shared'
 import { Hono } from 'hono'
 import { describe, expect, it, vi } from 'vitest'
 
@@ -16,8 +16,8 @@ async function createApp(trustedProxy?: 'railway') {
     } as unknown as Parameters<typeof createAuthRoutes>[0]['auth'],
     db: {} as unknown as Parameters<typeof createAuthRoutes>[0]['db'],
     env: {
-      PUBLIC_URL: 'https://api.airi.build',
-      AUTH_UI_URL: 'https://accounts.airi.build/ui',
+      PUBLIC_URL: 'https://api.aipets.build',
+      AUTH_UI_URL: 'https://accounts.aipets.build/ui',
       ADDITIONAL_TRUSTED_ORIGINS: [],
       RATE_LIMIT_TRUSTED_PROXY: trustedProxy,
     } as unknown as Parameters<typeof createAuthRoutes>[0]['env'],

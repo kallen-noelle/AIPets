@@ -16,7 +16,7 @@ describe('native Google audiences', () => {
     expect(googleClientIds('existing-browser-client', clients)).toEqual(['existing-browser-client', nativeId])
   })
 
-  // https://github.com/moeru-ai/airi/pull/2518#discussion_r3986076852
+  // https://gitee.com/kallen-noelle/AdoptAI/pull/2518#discussion_r3986076852
   // ROOT CAUSE:
   // The required dash rejected legacy Google client IDs during environment parsing.
   // An optional suffix accepts both forms without changing the audience hostname.

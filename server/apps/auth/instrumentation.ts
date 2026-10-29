@@ -53,7 +53,7 @@ else {
     [ATTR_SERVICE_VERSION]: env.npm_package_version || '0.0.0',
     'deployment.environment': env.NODE_ENV || 'development',
     'service.instance.id': instanceId,
-    'service.namespace': env.OTEL_SERVICE_NAMESPACE || 'airi',
+    'service.namespace': env.OTEL_SERVICE_NAMESPACE || 'aipets',
   })
 
   const sdk = new NodeSDK({

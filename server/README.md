@@ -1,8 +1,8 @@
-# AIRI Backend
+# AIPETS Backend
 
-Project AIRI's hosted backend source lives under this folder. Workspace package
+Project AIPETS's hosted backend source lives under this folder. Workspace package
 names stay stable; the directory groups service source and database ownership
-while production deployment configuration remains in `proj-airi/airi-railway`.
+while production deployment configuration remains in `proj-aipets/aipets-railway`.
 
 ## Layout
 
@@ -30,7 +30,7 @@ API and Auth are separate long-running Railway services built from the same
 repository. Keep each service's **Root Directory** at the repository root.
 Both Dockerfiles copy workspace manifests and shared packages from that build
 context. The project-level Railway configuration lives in
-`proj-airi/airi-railway/.railway/railway.ts`.
+`proj-aipets/aipets-railway/.railway/railway.ts`.
 
 | Service | Public role | Private dependency |
 | --- | --- | --- |
@@ -127,5 +127,5 @@ Cross-runtime server SDK and protocol packages remain under `packages/`
 because Web, Electron, plugins, and independent services consume them.
 
 Production Caddy routing, OpenTelemetry Collector configuration, observability
-storage, and Grafana dashboards live in `proj-airi/airi-railway` so deployment
+storage, and Grafana dashboards live in `proj-aipets/aipets-railway` so deployment
 topology is not duplicated in the application repository.

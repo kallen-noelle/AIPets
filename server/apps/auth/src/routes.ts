@@ -1,4 +1,4 @@
-import type { AuthSession } from '@proj-airi/auth-shared'
+import type { AuthSession } from '@proj-aipets/auth-shared'
 
 import type { AuthInstance } from './auth'
 import type { AuthDatabase } from './db'
@@ -7,8 +7,8 @@ import type { RateLimitMetrics } from './otel'
 
 import { createHash } from 'node:crypto'
 
-import { account, isUserBannedNow, user } from '@proj-airi/auth-shared'
-import { createBadRequestError, createForbiddenError, createInternalError } from '@proj-airi/http-error-shared'
+import { account, isUserBannedNow, user } from '@proj-aipets/auth-shared'
+import { createBadRequestError, createForbiddenError, createInternalError } from '@proj-aipets/http-error-shared'
 import { and, eq } from 'drizzle-orm'
 import { Hono } from 'hono'
 import { boolean, email, jwsCompact, nonEmpty, object, pipe, safeParse, string, transform } from 'valibot'
@@ -26,9 +26,9 @@ export interface HonoEnv {
 
 export const SERVER_AUTH_UI_BASE_PATH = '/auth'
 export const AUTH_UI_PUBLIC_URL_QUERY_PARAM = 'api_server_url'
-export const DEFAULT_AUTH_UI_URL = 'https://accounts.airi.build/ui'
-export const SERVER_DEV_PUBLIC_URL = 'https://api-dev.airi.build'
-export const SERVER_DEV_AUTH_UI_URL = 'https://server-dev.airi-server-auth.pages.dev/ui'
+export const DEFAULT_AUTH_UI_URL = 'https://accounts.aipets.build/ui'
+export const SERVER_DEV_PUBLIC_URL = 'https://api-dev.aipets.build'
+export const SERVER_DEV_AUTH_UI_URL = 'https://server-dev.aipets-server-auth.pages.dev/ui'
 
 const FORWARDED_AUTH_UI_PROVIDERS = new Set(['google', 'github', 'steam'])
 const JwtBearerTokenSchema = pipe(
@@ -315,7 +315,7 @@ export async function createAuthRoutes(deps: AuthRoutesDeps) {
     // subject ignoring the ban, then 403 if banned, so an invalid/expired token
     // still falls through to better-auth's own 401 rather than being masked.
     // (/oauth2/introspect needs confidential client credentials, which no
-    // first-party AIRI client has, so it has no reachable banned-caller path.)
+    // first-party AIPETS client has, so it has no reachable banned-caller path.)
     .use('/api/auth/oauth2/userinfo', async (c, next) => {
       const resolved = await resolveSessionIgnoringBan(deps.auth, deps.db, verifyAccessToken, c.req.raw.headers)
       if (resolved && isUserBannedNow(resolved.user))

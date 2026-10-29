@@ -3,7 +3,7 @@ import type { EmailService } from '../email'
 import type { AuthEnv } from '../env'
 import type { ResourceApi } from '../resource-api'
 
-import { user as userTable } from '@proj-airi/auth-shared'
+import { user as userTable } from '@proj-aipets/auth-shared'
 import { APIError } from 'better-auth/api'
 import { eq } from 'drizzle-orm'
 import { beforeAll, beforeEach, describe, expect, it } from 'vitest'
@@ -82,7 +82,7 @@ describe('account deletion with a subscription that can still charge', () => {
     deletionUrl = null
   })
 
-  // https://github.com/moeru-ai/airi/pull/2910#discussion_r4239058368
+  // https://gitee.com/kallen-noelle/AdoptAI/pull/2910#discussion_r4239058368
   // ROOT CAUSE:
   //
   // The subscription check ran in the resource cleanup, after Auth revoked the external authorizations.

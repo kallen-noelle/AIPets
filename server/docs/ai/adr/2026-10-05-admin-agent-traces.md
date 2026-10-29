@@ -73,12 +73,12 @@ server/apps/api/
 server/docs/ai/adr/2026-10-05-admin-agent-traces.md
 pnpm-lock.yaml
 
-proj-airi/backend/
+proj-aipets/backend/
   api/graphql/admin/schema/llm.graphqls
   internal/models/llmlog/
   internal/graphql/admin/resolver/
 
-proj-airi/admin-dashboard/
+proj-aipets/admin-dashboard/
   src/graphql/llm.graphql
   src/pages/observability/
   src/components/observability/
@@ -110,10 +110,10 @@ sequenceDiagram
 
 Deploy the admin API before the dashboard.
 The old dashboard does not call the new fields.
-Deploy the AIRI API after the Trace page is available.
+Deploy the AIPETS API after the Trace page is available.
 Removing Langfuse stops new external observations but does not delete existing Langfuse data.
 
-Rollback the AIRI API to restore Langfuse export.
+Rollback the AIPETS API to restore Langfuse export.
 Rollback the dashboard independently if the new read model has a problem.
 No database rollback is necessary.
 

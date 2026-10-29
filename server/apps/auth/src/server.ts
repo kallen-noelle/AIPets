@@ -13,7 +13,7 @@ import Redis from 'ioredis'
 import { initLogger, LoggerFormat, LoggerLevel, setGlobalHookPostLog, useLogger } from '@guiiai/logg'
 import { serve } from '@hono/node-server'
 import { withRetry } from '@moeru/std'
-import { createErrorHandler } from '@proj-airi/http-error-shared'
+import { createErrorHandler } from '@proj-aipets/http-error-shared'
 import { Hono } from 'hono'
 import { bodyLimit } from 'hono/body-limit'
 import { cors } from 'hono/cors'
@@ -104,7 +104,7 @@ export async function buildAuthApp(deps: AuthAppDeps) {
       }, ready ? 200 : 503)
     })
     .get('/', c => c.json({
-      service: 'airi-auth',
+      service: 'aipets-auth',
       issuer: `${deps.env.PUBLIC_URL}/api/auth`,
       accounts: deps.env.AUTH_UI_URL,
     }))

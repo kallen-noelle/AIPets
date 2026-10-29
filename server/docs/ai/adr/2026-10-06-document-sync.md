@@ -61,12 +61,12 @@ For a required value, the feature uses a field, or another table with the key `(
 The tables are `character_cards` and `character_cards_fields`. The route is `/api/v1/character-cards`.
 A field key is an RFC 6901 JSON Pointer into the card. The service rejects a key that does not start with `/`.
 The client makes one field for each first-level key of the card.
-It also makes one field for each key of `extensions`, `extensions.airi`, and `extensions.airi.modules`.
+It also makes one field for each key of `extensions`, `extensions.aipets`, and `extensions.aipets.modules`.
 The settings of one module stay in one field, so a provider and its voice change together.
 A card stores provider ids and no credentials.
 The selected card is not synchronized. Each device keeps its own selection.
 The `default` card is built in. Each device creates it in its own language, so a part that equals the built-in card never leaves the device. The device lays the received parts over its own built-in card.
-The service accepts a field when its key is a JSON Pointer. For the keys that the client reads without a further check, such as `/name`, `/tags`, and `/extensions/airi/wakeWords`, the value must also have the expected type. A value of another type would make the card fail on every device. Other keys accept any JSON, because cards from other applications carry their own extensions.
+The service accepts a field when its key is a JSON Pointer. For the keys that the client reads without a further check, such as `/name`, `/tags`, and `/extensions/aipets/wakeWords`, the value must also have the expected type. A value of another type would make the card fail on every device. Other keys accept any JSON, because cards from other applications carry their own extensions.
 A device that cannot read a card keeps the cards that it can read and does not delete the server copy of the unreadable card.
 An account can store 200 cards and 16 MiB of field values. A deleted card does not count. The limits come from the size of a card, which is a few kilobytes. A card with a large lorebook can reach a few hundred kilobytes.
 The card list shows the cloud state of each card: synced, waiting to upload, or refused by the server. A signed-in user also sees one line that tells that the cards sync to the account. A user without an account sees neither.
@@ -99,7 +99,7 @@ A deleted field never takes part in a conflict check. Its stored revision in a h
 - The character card tables, service, and routes.
 - Account deletion removes the card content and keeps the deletion markers.
 - A client module that compares, merges, and sends documents for any route of this shape.
-- The client runs after sign-in, after a card change, and when a window becomes visible. The `airi-card` store owns the runs, as the provider and chat stores own theirs. The synchronization leader executes one run at a time.
+- The client runs after sign-in, after a card change, and when a window becomes visible. The `aipets-card` store owns the runs, as the provider and chat stores own theirs. The synchronization leader executes one run at a time.
 - Before each request, a run checks that the account has not changed. A request reads the token when it starts, so an account change would otherwise send the documents of the old account to the new account.
 
 ## Known limits
@@ -149,7 +149,7 @@ A value must not be `null`. A missing field row represents an absent value.
 
 ```mermaid
 flowchart LR
-  Cards[airi-card store] --> Sync[document-sync: synchronize]
+  Cards[aipets-card store] --> Sync[document-sync: synchronize]
   Cards --> Fields[splitCard and joinCard]
   Cards --> Repo[sync state in IndexedDB]
   Sync --> Reconcile[document-sync: reconcile]
@@ -177,7 +177,7 @@ packages/stage-ui/src
 ├── libs/document-sync/{client,reconcile,synchronize}.ts
 ├── libs/character-card-sync/card-fields.ts
 ├── database/repos/document-sync.repo.ts
-└── stores/modules/airi-card.ts         # starts the runs and applies the result
+└── stores/modules/aipets-card.ts         # starts the runs and applies the result
 ```
 
 ## Sequence

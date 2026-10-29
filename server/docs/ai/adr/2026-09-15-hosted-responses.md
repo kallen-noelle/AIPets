@@ -67,7 +67,7 @@ The user requested alignment with xsai's existing package boundaries.
 Its generation packages export TypeScript contracts, not complete wire-request validators.
 `xsschema` validates caller-supplied schemas; it does not own provider request contracts.
 The server therefore owns reusable Valibot schemas in `services/adapters/llm/schemas`.
-Generated OpenResponses definitions and OpenAI extensions stay separate from AIRI's shared-account restrictions.
+Generated OpenResponses definitions and OpenAI extensions stay separate from AIPETS's shared-account restrictions.
 No schema export or Valibot peer is added to xsai. The pre-existing client patch remains unchanged.
 
 ## Module dependencies
@@ -81,7 +81,7 @@ flowchart LR
   HTTP --> Protocols[Server protocol registry]
   Router --> Protocols
   Observe --> Protocols
-  HTTP --> Schema[Server protocol schemas and AIRI policy]
+  HTTP --> Schema[Server protocol schemas and AIPETS policy]
   Router --> Catalog[model-bank OpenAI catalog]
   Router --> Upstream[Responses-capable upstream]
   Operation --> Billing[Existing Flux settlement]
@@ -146,6 +146,6 @@ Run focused gateway, router, schema, and billing tests. CI checks the complete r
 
 ## References
 
-- [Server scope, Issue #2479](https://github.com/moeru-ai/airi/issues/2479)
+- [Server scope, Issue #2479](https://gitee.com/kallen-noelle/AdoptAI/issues/2479)
 - [OpenAI Responses streaming events](https://platform.openai.com/docs/api-reference/responses-streaming)
-- [Merged client adapter, PR #2477](https://github.com/moeru-ai/airi/pull/2477)
+- [Merged client adapter, PR #2477](https://gitee.com/kallen-noelle/AdoptAI/pull/2477)

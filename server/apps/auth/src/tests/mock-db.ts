@@ -5,7 +5,7 @@ import { createRequire } from 'node:module'
 import { PGlite } from '@electric-sql/pglite'
 import { drizzle } from 'drizzle-orm/pglite'
 
-import * as authSchema from '@proj-airi/auth-shared'
+import * as authSchema from '@proj-aipets/auth-shared'
 
 /** Creates an in-memory database with the standalone Auth service schema. */
 export async function createTestDatabase() {

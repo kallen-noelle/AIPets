@@ -1,4 +1,4 @@
-import type { AuthSession } from '@proj-airi/auth-shared'
+import type { AuthSession } from '@proj-aipets/auth-shared'
 import type { BetterAuthOptions } from 'better-auth'
 import type { AppleProfile } from 'better-auth/social-providers'
 import type { JSONWebKeySet } from 'jose'
@@ -14,7 +14,7 @@ import { Buffer } from 'node:buffer'
 
 import { oauthProvider } from '@better-auth/oauth-provider'
 import { useLogger } from '@guiiai/logg'
-import { ApiError } from '@proj-airi/http-error-shared'
+import { ApiError } from '@proj-aipets/http-error-shared'
 import { betterAuth } from 'better-auth'
 import { drizzleAdapter } from 'better-auth/adapters/drizzle'
 import { createAuthMiddleware, getSessionFromCtx } from 'better-auth/api'
@@ -22,7 +22,7 @@ import { deleteSessionCookie } from 'better-auth/cookies'
 import { bearer, jwt, magicLink } from 'better-auth/plugins'
 import { eq } from 'drizzle-orm'
 
-import * as authSchema from '@proj-airi/auth-shared'
+import * as authSchema from '@proj-aipets/auth-shared'
 
 import { googleClientIds } from './google-client-ids'
 import { getAuthTrustedOrigins, getTrustedOrigin } from './origin'
@@ -70,12 +70,12 @@ export interface TrustedClientSeedSummary {
 const OIDC_SCOPES = ['openid', 'profile', 'email', 'offline_access'] as const
 const OIDC_GRANT_TYPES = ['authorization_code', 'refresh_token'] as const
 const OIDC_RESPONSE_TYPES = ['code'] as const
-export const OIDC_CLIENT_ID_WEB = 'airi-stage-web'
-export const OIDC_CLIENT_ID_ELECTRON = 'airi-stage-electron'
-export const OIDC_CLIENT_ID_POCKET = 'airi-stage-pocket'
+export const OIDC_CLIENT_ID_WEB = 'aipets-stage-web'
+export const OIDC_CLIENT_ID_ELECTRON = 'aipets-stage-electron'
+export const OIDC_CLIENT_ID_POCKET = 'aipets-stage-pocket'
 
 const DEFAULT_WEB_REDIRECT_URIS = [
-  'https://airi.moeru.ai/auth/callback',
+  'https://aipets.moeru.ai/auth/callback',
   'http://localhost:5173/auth/callback',
   'http://localhost:4173/auth/callback',
 ]
@@ -196,7 +196,7 @@ function buildTrustedClientSeeds(env: AuthEnv): TrustedClientSeed[] {
   const clients: TrustedClientSeed[] = []
   clients.push({
     clientId: OIDC_CLIENT_ID_WEB,
-    name: 'AIRI Stage Web',
+    name: 'AIPETS Stage Web',
     type: 'web',
     public: true,
     redirectUris: buildWebRedirectUris(env),
@@ -214,7 +214,7 @@ function buildTrustedClientSeeds(env: AuthEnv): TrustedClientSeed[] {
   // obfuscation, not a meaningful confidentiality boundary.
   clients.push({
     clientId: OIDC_CLIENT_ID_ELECTRON,
-    name: 'AIRI Stage Desktop',
+    name: 'AIPETS Stage Desktop',
     type: 'native',
     public: true,
     redirectUris: [
@@ -233,12 +233,12 @@ function buildTrustedClientSeeds(env: AuthEnv): TrustedClientSeed[] {
   // Same reasoning as Web: native WebView cannot safely store secrets.
   clients.push({
     clientId: OIDC_CLIENT_ID_POCKET,
-    name: 'AIRI Stage Mobile',
+    name: 'AIPETS Stage Mobile',
     type: 'native',
     public: true,
     redirectUris: [
       'capacitor://localhost/auth/callback',
-      'ai.moeru.airi-pocket://links/auth/callback',
+      'ai.moeru.aipets-pocket://links/auth/callback',
     ],
     scopes: [...OIDC_SCOPES],
     grantTypes: [...OIDC_GRANT_TYPES],
@@ -640,7 +640,7 @@ export function createAuth(
       // entire cookieCache TTL window after each logout.
       //
       // Trade-off: every getSession / authorize now hits the DB once. With the
-      // current AIRI flow the cost is negligible: cookie-based /get-session is
+      // current AIPETS flow the cost is negligible: cookie-based /get-session is
       // only used by ui-server-auth pages, and /oauth2/authorize is rare.
       // Bearer-token sessions (the hot path for stage-web/electron/pocket) bypass
       // this entirely in the HTTP route boundary.
@@ -673,7 +673,7 @@ export function createAuth(
       skipStateCookieCheck: true,
       accountLinking: {
         // Product requirement: signed-in users may attach OAuth identities
-        // whose provider email differs from their AIRI account email.
+        // whose provider email differs from their AIPETS account email.
         allowDifferentEmails: true,
       },
     },

@@ -7,8 +7,8 @@ function createTestDeps() {
     auth: {
       api: {
         getSession: vi.fn(async () => null),
-        getOAuthServerConfig: vi.fn(async () => ({ issuer: 'https://api.airi.build/api/auth' })),
-        getOpenIdConfig: vi.fn(async () => ({ issuer: 'https://api.airi.build/api/auth' })),
+        getOAuthServerConfig: vi.fn(async () => ({ issuer: 'https://api.aipets.build/api/auth' })),
+        getOpenIdConfig: vi.fn(async () => ({ issuer: 'https://api.aipets.build/api/auth' })),
       },
       handler: vi.fn(async () => new Response('auth-handler')),
     } as any,
@@ -19,8 +19,8 @@ function createTestDeps() {
       ping: vi.fn(async () => 'PONG'),
     } as any,
     env: {
-      PUBLIC_URL: 'https://api.airi.build',
-      AUTH_UI_URL: 'https://accounts.airi.build/ui',
+      PUBLIC_URL: 'https://api.aipets.build',
+      AUTH_UI_URL: 'https://accounts.aipets.build/ui',
       ADDITIONAL_TRUSTED_ORIGINS: [],
     } as any,
     rateLimitMetrics: null,
@@ -45,9 +45,9 @@ describe('standalone auth app', () => {
 
     expect(response.status).toBe(200)
     expect(await response.json()).toEqual({
-      service: 'airi-auth',
-      issuer: 'https://api.airi.build/api/auth',
-      accounts: 'https://accounts.airi.build/ui',
+      service: 'aipets-auth',
+      issuer: 'https://api.aipets.build/api/auth',
+      accounts: 'https://accounts.aipets.build/ui',
     })
   })
 

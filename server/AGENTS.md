@@ -18,7 +18,7 @@ These rules apply to new routes. `server/docs/ai/adr/2026-10-19-http-response-co
 - Return `201` and the resource after a create. Return `204` with no body after a delete.
 - Return a list as `{ records }`. Do not return a bare array.
 - For a paginated list, read `limit` and `offset` with `LimitOffsetPaginationQuerySchema`. Return `{ records, hasMore }`.
-- Throw an `ApiError` from `@proj-airi/http-error-shared`. Do not write an error body in a route or middleware.
+- Throw an `ApiError` from `@proj-aipets/http-error-shared`. Do not write an error body in a route or middleware.
 - Name each error code in `UPPER_SNAKE`, for example `SUBSCRIPTION_ACTIVE`.
 - Before you change a deployed response shape, find each client that reads it. Do not return two shapes.
 

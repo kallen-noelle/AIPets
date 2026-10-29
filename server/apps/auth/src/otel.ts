@@ -44,12 +44,12 @@ export function initAuthOtel(env: { OTEL_EXPORTER_OTLP_ENDPOINT?: string, OTEL_S
     userLogin: meter.createCounter('user.login', { description: 'Number of user sign-ins' }),
   }
   const email: EmailMetrics = {
-    send: meter.createCounter('airi.email.send', { description: 'Transactional emails accepted by Resend' }),
-    failures: meter.createCounter('airi.email.failures', { description: 'Transactional email send failures' }),
-    duration: meter.createHistogram('airi.email.duration', { description: 'Email provider call duration', unit: 's' }),
+    send: meter.createCounter('aipets.email.send', { description: 'Transactional emails accepted by Resend' }),
+    failures: meter.createCounter('aipets.email.failures', { description: 'Transactional email send failures' }),
+    duration: meter.createHistogram('aipets.email.duration', { description: 'Email provider call duration', unit: 's' }),
   }
   const rateLimit: RateLimitMetrics = {
-    blocked: meter.createCounter('airi.rate_limit.blocked', { description: 'Requests blocked by the auth rate limiter' }),
+    blocked: meter.createCounter('aipets.rate_limit.blocked', { description: 'Requests blocked by the auth rate limiter' }),
   }
   for (const counter of [
     auth.attempts,

@@ -6,7 +6,7 @@ Status: proposed
 
 Imported display models use localforage in `packages/stage-ui/src/stores/display-models.ts`.
 Built-in models use stable preset IDs and bundled URLs.
-The AIRI card module references a model through `displayModelId`.
+The AIPETS card module references a model through `displayModelId`.
 That reference does not transfer the model bytes to another device.
 The stage model store replaces missing selections with the default model.
 Cloud models need separate states for missing bytes and missing records.

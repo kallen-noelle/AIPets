@@ -1,6 +1,6 @@
-# AIRI Auth Server
+# AIPETS Auth Server
 
-Standalone authentication and identity application for Project AIRI.
+Standalone authentication and identity application for Project AIPETS.
 
 ## Responsibilities
 
@@ -34,7 +34,7 @@ The existing `/api/auth/delete-user` email flow is unchanged. See [deletion poli
 ## Run locally
 
 ```bash
-pnpm -F @proj-airi/auth-server dev
+pnpm -F @proj-aipets/auth-server dev
 ```
 
 The service reads `.env.local` from this directory. `PUBLIC_URL` is the public issuer origin presented through Caddy; `RESOURCE_SERVER_URL` is the private resource API used for internal calls.
@@ -71,16 +71,16 @@ Native ID tokens can use any configured audience. Better Auth checks the token s
 Omit the new variable to keep the existing configuration. No database migration is required.
 
 Google ID token sign-in can create an account without a Google access or refresh token.
-Account deletion continues when neither token is stored, because AIRI has no Google API credential to revoke.
+Account deletion continues when neither token is stored, because AIPETS has no Google API credential to revoke.
 This does not revoke consent in the user's Google Account.
-If either token is stored, Auth must complete its existing revocation policy before it deletes AIRI data.
+If either token is stored, Auth must complete its existing revocation policy before it deletes AIPETS data.
 
 ## Railway
 
 Deploy this as the Auth Railway service. Keep the service Root Directory at
 the repository root because the Dockerfile copies workspace manifests and
 `server/packages/auth-shared`. The project-level Infrastructure as Code file
-is `proj-airi/airi-railway/.railway/railway.ts`. It owns the Dockerfile, start
+is `proj-aipets/aipets-railway/.railway/railway.ts`. It owns the Dockerfile, start
 command, `/readyz` healthcheck, and watch patterns.
 
 Set `PUBLIC_URL` to this service's canonical public issuer URL, and make the
@@ -96,4 +96,4 @@ service contract.
 - Importing modules from `server/apps/api`.
 - Running the shared database migration history during normal process startup.
 
-Auth tables and principal contracts live in `@proj-airi/auth-shared`. Drizzle reads shared migration files during API startup. The API remains the migration owner.
+Auth tables and principal contracts live in `@proj-aipets/auth-shared`. Drizzle reads shared migration files during API startup. The API remains the migration owner.

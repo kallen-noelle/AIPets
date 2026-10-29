@@ -1,4 +1,4 @@
-import { matchesTrustedOriginRule } from '@proj-airi/auth-shared'
+import { matchesTrustedOriginRule } from '@proj-aipets/auth-shared'
 
 function getOriginFromUrl(url: string): string | undefined {
   try {
@@ -10,13 +10,13 @@ function getOriginFromUrl(url: string): string | undefined {
 }
 
 const TRUSTED_EXACT_ORIGINS = [
-  'https://airi.moeru.ai', // Production web app
+  'https://aipets.moeru.ai', // Production web app
   'capacitor://localhost', // Capacitor mobile (iOS)
-  'ai.moeru.airi-pocket://links', // Android deep link
-  'https://accounts.airi.build', // Standalone auth UI
-  'https://server-dev.airi-server-auth.pages.dev', // Server-dev standalone auth UI
-  'https://admin.airi.build', // Standalone admin UI
-  'https://server-dev.airi-server-admin.pages.dev', // Server-dev standalone admin UI
+  'ai.moeru.aipets-pocket://links', // Android deep link
+  'https://accounts.aipets.build', // Standalone auth UI
+  'https://server-dev.aipets-server-auth.pages.dev', // Server-dev standalone auth UI
+  'https://admin.aipets.build', // Standalone admin UI
+  'https://server-dev.aipets-server-admin.pages.dev', // Server-dev standalone admin UI
 ]
 
 // NOTICE:

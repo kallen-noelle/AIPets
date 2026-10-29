@@ -1,4 +1,4 @@
-name: proj-airi-backend
+name: proj-aipets-backend
 
 services:
   db:
@@ -36,7 +36,7 @@ services:
     image: rustfs/rustfs:latest
     command: ['/data']
     environment:
-      RUSTFS_ACCESS_KEY: airi-local
+      RUSTFS_ACCESS_KEY: aipets-local
       RUSTFS_ADDRESS: ':6113'
       RUSTFS_SECRET_KEY: example-PAssw0rd-xHjDYR.b7N
     networks:
@@ -53,7 +53,7 @@ services:
     depends_on:
       - rustfs
     environment:
-      AWS_ACCESS_KEY_ID: airi-local
+      AWS_ACCESS_KEY_ID: aipets-local
       AWS_SECRET_ACCESS_KEY: example-PAssw0rd-xHjDYR.b7N
       AWS_DEFAULT_REGION: us-east-1
     volumes:
@@ -62,15 +62,15 @@ services:
     command:
       - |
         until aws --endpoint-url http://s3.localhost:6113 s3api list-buckets >/dev/null 2>&1; do sleep 1; done
-        aws --endpoint-url http://s3.localhost:6113 s3api head-bucket --bucket airi-private 2>/dev/null \
-          || aws --endpoint-url http://s3.localhost:6113 s3api create-bucket --bucket airi-private
-        aws --endpoint-url http://s3.localhost:6113 s3api put-bucket-cors --bucket airi-private --cors-configuration file:///cors.json
+        aws --endpoint-url http://s3.localhost:6113 s3api head-bucket --bucket aipets-private 2>/dev/null \
+          || aws --endpoint-url http://s3.localhost:6113 s3api create-bucket --bucket aipets-private
+        aws --endpoint-url http://s3.localhost:6113 s3api put-bucket-cors --bucket aipets-private --cors-configuration file:///cors.json
 
   api:
     build:
       context: ..
       dockerfile: server/apps/api/Dockerfile
-    command: ['pnpm', '-F', '@proj-airi/api-server', 'start']
+    command: ['pnpm', '-F', '@proj-aipets/api-server', 'start']
     depends_on:
       db:
         condition: service_healthy
@@ -87,11 +87,11 @@ services:
       API_SERVER_URL: http://localhost:6112
       AUTH_SERVER_INTERNAL_URL: http://auth:3000
       AUTH_SERVER_URL: http://localhost:6112
-      AWS_ACCESS_KEY_ID: airi-local
+      AWS_ACCESS_KEY_ID: aipets-local
       AWS_SECRET_ACCESS_KEY: example-PAssw0rd-xHjDYR.b7N
       DATABASE_URL: postgres://postgres:example-PAssw0rd-xHjDYR.b7N@db:5432/postgres
       REDIS_URL: redis://redis:6379
-      S3_BUCKET: airi-private
+      S3_BUCKET: aipets-private
       S3_ENDPOINT: http://s3.localhost:6113
       S3_FORCE_PATH_STYLE: 'true'
       S3_REGION: us-east-1
@@ -105,7 +105,7 @@ services:
     build:
       context: ..
       dockerfile: server/apps/auth/Dockerfile
-    command: ['pnpm', '-F', '@proj-airi/auth-server', 'start']
+    command: ['pnpm', '-F', '@proj-aipets/auth-server', 'start']
     depends_on:
       api:
         condition: service_healthy

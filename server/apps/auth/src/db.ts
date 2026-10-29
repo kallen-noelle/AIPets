@@ -5,7 +5,7 @@ import pg from 'pg'
 import { useLogger } from '@guiiai/logg'
 import { drizzle } from 'drizzle-orm/node-postgres'
 
-import * as authSchema from '@proj-airi/auth-shared'
+import * as authSchema from '@proj-aipets/auth-shared'
 
 const logger = useLogger('db')
 

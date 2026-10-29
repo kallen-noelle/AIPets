@@ -222,7 +222,7 @@ describe('social authorization revocation', () => {
     })
   })
 
-  // https://github.com/moeru-ai/airi/pull/2895#discussion_r4237016671
+  // https://gitee.com/kallen-noelle/AdoptAI/pull/2895#discussion_r4237016671
   // ROOT CAUSE: Steam was treated as unknown despite having no external grant to revoke.
   it.each(['credential', 'steam'])('ignores %s accounts because they have no external grant', async (providerId) => {
     const fetchRequest = vi.fn<typeof fetch>()

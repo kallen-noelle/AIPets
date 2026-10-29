@@ -1,4 +1,4 @@
-import type { AuthSession } from '@proj-airi/auth-shared'
+import type { AuthSession } from '@proj-aipets/auth-shared'
 
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
@@ -25,7 +25,7 @@ vi.mock('jose', async (importOriginal) => {
 
 const user: AuthSession['user'] = {
   id: 'user-1',
-  name: 'AIRI User',
+  name: 'AIPETS User',
   email: 'user@example.com',
   emailVerified: true,
   image: null,
@@ -59,7 +59,7 @@ function createContext(session: AuthSession['session'] | null) {
     findOne,
     findUserById,
     context: {
-      request: new Request('https://api.airi.test/api/auth/update-user', { headers }),
+      request: new Request('https://api.aipets.test/api/auth/update-user', { headers }),
       headers,
       context: {
         adapter: {
@@ -91,7 +91,7 @@ interface BeforeHookResult {
 
 async function runBeforeHook(context: ReturnType<typeof createContext>['context']) {
   const hook = oidcJwtBearer({
-    PUBLIC_URL: 'https://api.airi.test',
+    PUBLIC_URL: 'https://api.aipets.test',
   } as never).hooks?.before?.[0]
   if (!hook)
     throw new TypeError('Expected the OIDC JWT plugin to register a before hook')

@@ -6,7 +6,7 @@ function baseAuthEnv(): Record<string, string> {
   return {
     DATABASE_URL: 'postgres://identity',
     REDIS_URL: 'redis://identity',
-    PUBLIC_URL: 'https://api.airi.build',
+    PUBLIC_URL: 'https://api.aipets.build',
     RESOURCE_SERVER_URL: 'https://resource.internal',
     BETTER_AUTH_SECRET: 'identity-secret-at-least-32-characters',
     AUTH_GOOGLE_CLIENT_ID: 'google-client',
@@ -20,7 +20,7 @@ describe('parseAuthEnv', () => {
   it('parses auth configuration without business-only LLM or Stripe secrets', () => {
     const env = parseAuthEnv(baseAuthEnv())
 
-    expect(env.PUBLIC_URL).toBe('https://api.airi.build')
+    expect(env.PUBLIC_URL).toBe('https://api.aipets.build')
     expect(env.RESOURCE_SERVER_URL).toBe('https://resource.internal')
     expect(env.BETTER_AUTH_SECRET).toBe('identity-secret-at-least-32-characters')
     expect(env.STEAM_PUBLISHER_KEY).toBe('')
@@ -33,15 +33,15 @@ describe('parseAuthEnv', () => {
     const env = parseAuthEnv({
       ...baseAuthEnv(),
       AUTH_APPLE_CLIENT_ID: 'apple-service-id',
-      AUTH_APPLE_APP_BUNDLE_IDENTIFIERS: 'ai.moeru.airi-pocket, ai.moeru.airi-pro, ai.moeru.airi-pocket',
+      AUTH_APPLE_APP_BUNDLE_IDENTIFIERS: 'ai.moeru.aipets-pocket, ai.moeru.aipets-pro, ai.moeru.aipets-pocket',
       AUTH_APPLE_TEAM_ID: 'apple-team-id',
       AUTH_APPLE_KEY_ID: 'apple-key-id',
       AUTH_APPLE_PRIVATE_KEY_PEM: 'line-one\\nline-two',
     })
 
     expect(env.AUTH_APPLE_APP_BUNDLE_IDENTIFIERS).toEqual([
-      'ai.moeru.airi-pocket',
-      'ai.moeru.airi-pro',
+      'ai.moeru.aipets-pocket',
+      'ai.moeru.aipets-pro',
     ])
     expect(env.AUTH_APPLE_PRIVATE_KEY_PEM).toBe('line-one\nline-two')
   })

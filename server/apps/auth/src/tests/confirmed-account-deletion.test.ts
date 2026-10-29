@@ -9,7 +9,7 @@ import { eq } from 'drizzle-orm'
 import { SignJWT } from 'jose'
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest'
 
-import * as schema from '@proj-airi/auth-shared'
+import * as schema from '@proj-aipets/auth-shared'
 
 import { createAuth } from '../auth'
 import { parseAuthEnv } from '../env'

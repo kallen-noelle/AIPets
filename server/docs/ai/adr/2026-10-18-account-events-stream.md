@@ -4,18 +4,18 @@ Status: accepted. The cross-repository account notifications contract (revision 
 
 ## Context
 
-Cloud (`proj-airi/backend`) owns the user inbox that the client shows as "Notifications".
+Cloud (`proj-aipets/backend`) owns the user inbox that the client shows as "Notifications".
 Some notifications start from facts that only this API knows: a subscription renewal, a failed subscription payment, and a user deletion.
 Cloud and this API share one Redis instance through `REDIS_URL`.
 
-moeru-ai/airi #1792 removed an earlier Redis Streams pipeline. Its `debitFlux` caller ignored `XADD` failures, so a lost event did not fail a request and nothing retried it.
+kallen-noelle/AdoptAI #1792 removed an earlier Redis Streams pipeline. Its `debitFlux` caller ignored `XADD` failures, so a lost event did not fail a request and nothing retried it.
 
 ## Decision
 
 Redis Streams are shared API infrastructure in `server/apps/api/src/libs/redis/`, next to `cache.ts`. It has two halves on the same definitions and envelope:
 
 - `stream.ts`: stream definitions and the producer.
-- `stream-consumer.ts`: the consumer group loop. It matches the Go `internal/streams` consumer in `proj-airi/backend`.
+- `stream-consumer.ts`: the consumer group loop. It matches the Go `internal/streams` consumer in `proj-aipets/backend`.
 
 Account events are the first stream. This API only produces them. No TypeScript consumer runs now.
 
@@ -137,7 +137,7 @@ flowchart LR
   Publisher --> Stream[libs/redis/stream.ts]
   Stream -->|XADD| Redis[(Redis account-events)]
   Consumer[libs/redis/stream-consumer.ts, not wired] -.->|XREADGROUP| Redis
-  Redis -->|XREADGROUP cloud-inbox| Cloud[proj-airi/backend Cloud]
+  Redis -->|XREADGROUP cloud-inbox| Cloud[proj-aipets/backend Cloud]
 ```
 
 ## Affected files

@@ -45,16 +45,16 @@ describe('createAuth', () => {
   // ROOT CAUSE:
   // The email hook forwarded the library default unchanged. It now assigns the service result page.
   it.each([
-    [undefined, 'https://api.airi.test/auth/delete-account'],
-    ['', 'https://api.airi.test/auth/delete-account'],
-    ['/', 'https://api.airi.test/auth/delete-account'],
+    [undefined, 'https://api.aipets.test/auth/delete-account'],
+    ['', 'https://api.aipets.test/auth/delete-account'],
+    ['/', 'https://api.aipets.test/auth/delete-account'],
     ['/auth/delete-account', '/auth/delete-account'],
-    ['https://accounts.airi.test/ui/delete-account?source=desktop', 'https://accounts.airi.test/ui/delete-account?source=desktop'],
-    ['ai.moeru.airi-pocket://auth/result', 'ai.moeru.airi-pocket://auth/result'],
+    ['https://accounts.aipets.test/ui/delete-account?source=desktop', 'https://accounts.aipets.test/ui/delete-account?source=desktop'],
+    ['ai.moeru.aipets-pocket://auth/result', 'ai.moeru.aipets-pocket://auth/result'],
   ])('delivers deletion result callbacks without replacing explicit destinations: %s', async (callbackURL, expected) => {
     const sendDeletion = vi.fn<(params: { to: string, url: string }) => Promise<void>>()
     const auth = createAuth({} as unknown as AuthDatabase, {
-      PUBLIC_URL: 'https://api.airi.test',
+      PUBLIC_URL: 'https://api.aipets.test',
       BETTER_AUTH_SECRET: 'test-secret-test-secret-test-secret',
       ADDITIONAL_TRUSTED_ORIGINS: [],
     } as unknown as AuthEnv, {
@@ -65,7 +65,7 @@ describe('createAuth', () => {
       sendChangeEmailConfirmation: vi.fn(),
       sendDeleteAccountVerification: sendDeletion,
     })
-    const url = new URL('https://api.airi.test/api/auth/delete-user/callback?token=test-token&extra=keep')
+    const url = new URL('https://api.aipets.test/api/auth/delete-user/callback?token=test-token&extra=keep')
     if (callbackURL !== undefined)
       url.searchParams.set('callbackURL', callbackURL)
 
@@ -76,7 +76,7 @@ describe('createAuth', () => {
       user: { id: 'user-1', name: 'Test', email: 'test@example.com', emailVerified: true, createdAt: new Date(), updatedAt: new Date() },
       url: url.toString(),
       token: 'test-token',
-    }, new Request('https://api.airi.test/api/auth/delete-user'))
+    }, new Request('https://api.aipets.test/api/auth/delete-user'))
 
     expect(sendDeletion).toHaveBeenCalledOnce()
     const delivered = new URL(sendDeletion.mock.calls[0][0].url)
@@ -91,16 +91,16 @@ describe('createAuth', () => {
   // ROOT CAUSE:
   // The email hook forwarded the library default unchanged. It now assigns the service result page.
   it.each([
-    [undefined, 'https://api.airi.test/auth/verify-email?verified=true'],
-    ['', 'https://api.airi.test/auth/verify-email?verified=true'],
-    ['/', 'https://api.airi.test/auth/verify-email?verified=true'],
+    [undefined, 'https://api.aipets.test/auth/verify-email?verified=true'],
+    ['', 'https://api.aipets.test/auth/verify-email?verified=true'],
+    ['/', 'https://api.aipets.test/auth/verify-email?verified=true'],
     ['/auth/verify-email?verified=true', '/auth/verify-email?verified=true'],
-    ['https://accounts.airi.test/ui/verify-email?source=desktop', 'https://accounts.airi.test/ui/verify-email?source=desktop'],
-    ['ai.moeru.airi-pocket://auth/result', 'ai.moeru.airi-pocket://auth/result'],
+    ['https://accounts.aipets.test/ui/verify-email?source=desktop', 'https://accounts.aipets.test/ui/verify-email?source=desktop'],
+    ['ai.moeru.aipets-pocket://auth/result', 'ai.moeru.aipets-pocket://auth/result'],
   ])('delivers verification result callbacks without replacing explicit destinations: %s', async (callbackURL, expected) => {
     const sendVerification = vi.fn<(params: { to: string, url: string }) => Promise<void>>()
     const auth = createAuth({} as unknown as AuthDatabase, {
-      PUBLIC_URL: 'https://api.airi.test',
+      PUBLIC_URL: 'https://api.aipets.test',
       BETTER_AUTH_SECRET: 'test-secret-test-secret-test-secret',
       ADDITIONAL_TRUSTED_ORIGINS: [],
     } as unknown as AuthEnv, {
@@ -111,7 +111,7 @@ describe('createAuth', () => {
       sendChangeEmailConfirmation: vi.fn(),
       sendDeleteAccountVerification: vi.fn(),
     })
-    const url = new URL('https://api.airi.test/api/auth/verify-email?token=test-token&extra=keep')
+    const url = new URL('https://api.aipets.test/api/auth/verify-email?token=test-token&extra=keep')
     if (callbackURL !== undefined)
       url.searchParams.set('callbackURL', callbackURL)
 
@@ -122,7 +122,7 @@ describe('createAuth', () => {
       user: { id: 'user-1', name: 'Test', email: 'test@example.com', emailVerified: true, createdAt: new Date(), updatedAt: new Date() },
       url: url.toString(),
       token: 'test-token',
-    }, new Request('https://api.airi.test/api/auth/send-verification-email'))
+    }, new Request('https://api.aipets.test/api/auth/send-verification-email'))
 
     expect(sendVerification).toHaveBeenCalledOnce()
     const delivered = new URL(sendVerification.mock.calls[0][0].url)
@@ -141,7 +141,7 @@ describe('createAuth', () => {
       AUTH_GITHUB_CLIENT_ID: 'github-client',
       AUTH_GITHUB_CLIENT_SECRET: 'github-secret',
       AUTH_APPLE_CLIENT_ID: 'apple-service-id',
-      AUTH_APPLE_APP_BUNDLE_IDENTIFIERS: ['ai.moeru.airi-pocket', 'ai.moeru.airi-pro'],
+      AUTH_APPLE_APP_BUNDLE_IDENTIFIERS: ['ai.moeru.aipets-pocket', 'ai.moeru.aipets-pro'],
       AUTH_APPLE_TEAM_ID: 'apple-team-id',
       AUTH_APPLE_KEY_ID: 'apple-key-id',
       AUTH_APPLE_PRIVATE_KEY_PEM: applePrivateKey,
@@ -185,7 +185,7 @@ describe('createAuth', () => {
       AUTH_GITHUB_CLIENT_ID: 'github-client',
       AUTH_GITHUB_CLIENT_SECRET: 'github-secret',
       AUTH_APPLE_CLIENT_ID: 'apple-service-id',
-      AUTH_APPLE_APP_BUNDLE_IDENTIFIERS: ['ai.moeru.airi-pocket', 'ai.moeru.airi-pro'],
+      AUTH_APPLE_APP_BUNDLE_IDENTIFIERS: ['ai.moeru.aipets-pocket', 'ai.moeru.aipets-pro'],
       AUTH_APPLE_TEAM_ID: 'apple-team-id',
       AUTH_APPLE_KEY_ID: 'apple-key-id',
       AUTH_APPLE_PRIVATE_KEY_PEM: applePrivateKey,
@@ -228,7 +228,7 @@ describe('createAuth', () => {
       AUTH_GITHUB_CLIENT_ID: 'github-client',
       AUTH_GITHUB_CLIENT_SECRET: 'github-secret',
       AUTH_APPLE_CLIENT_ID: 'apple-service-id',
-      AUTH_APPLE_APP_BUNDLE_IDENTIFIERS: ['ai.moeru.airi-pocket', 'ai.moeru.airi-pro'],
+      AUTH_APPLE_APP_BUNDLE_IDENTIFIERS: ['ai.moeru.aipets-pocket', 'ai.moeru.aipets-pro'],
       AUTH_APPLE_TEAM_ID: 'apple-team-id',
       AUTH_APPLE_KEY_ID: 'apple-key-id',
       AUTH_APPLE_PRIVATE_KEY_PEM: '',
@@ -247,7 +247,7 @@ describe('createAuth', () => {
       AUTH_GITHUB_CLIENT_ID: 'github-client',
       AUTH_GITHUB_CLIENT_SECRET: 'github-secret',
       AUTH_APPLE_CLIENT_ID: 'apple-service-id',
-      AUTH_APPLE_APP_BUNDLE_IDENTIFIERS: ['ai.moeru.airi-pocket', 'ai.moeru.airi-pro'],
+      AUTH_APPLE_APP_BUNDLE_IDENTIFIERS: ['ai.moeru.aipets-pocket', 'ai.moeru.aipets-pro'],
       AUTH_APPLE_TEAM_ID: 'apple-team-id',
       AUTH_APPLE_KEY_ID: 'apple-key-id',
       AUTH_APPLE_PRIVATE_KEY_PEM: applePrivateKey,
@@ -276,8 +276,8 @@ describe('createAuth', () => {
     expect(config.clientId).toBe('apple-service-id')
     expect(config.audience).toEqual([
       'apple-service-id',
-      'ai.moeru.airi-pocket',
-      'ai.moeru.airi-pro',
+      'ai.moeru.aipets-pocket',
+      'ai.moeru.aipets-pro',
     ])
     expect(header).toMatchObject({ alg: 'ES256', kid: 'apple-key-id' })
     expect(claims.exp! - claims.iat!).toBe(180 * 24 * 60 * 60)
@@ -361,7 +361,7 @@ describe('createAuth', () => {
 
   it('uses the Caddy public API origin as the Better Auth base URL', () => {
     const auth = createAuth({} as unknown as AuthDatabase, {
-      PUBLIC_URL: 'https://api.airi.build',
+      PUBLIC_URL: 'https://api.aipets.build',
       AUTH_GOOGLE_CLIENT_ID: 'google-client',
       AUTH_GOOGLE_CLIENT_SECRET: 'google-secret',
       AUTH_GITHUB_CLIENT_ID: 'github-client',
@@ -370,7 +370,7 @@ describe('createAuth', () => {
       ADDITIONAL_TRUSTED_ORIGINS: [],
     } as unknown as AuthEnv)
 
-    expect(auth.options.baseURL).toBe('https://api.airi.build')
+    expect(auth.options.baseURL).toBe('https://api.aipets.build')
   })
 })
 
@@ -389,12 +389,12 @@ describe('seedTrustedClients', () => {
     if (!webClient)
       throw new Error('Expected web client seed insert')
 
-    expect(webClient.clientId).toBe('airi-stage-web')
+    expect(webClient.clientId).toBe('aipets-stage-web')
     expect(webClient.clientSecret).toBeNull()
     expect(webClient.public).toBe(true)
     // Includes default URIs + derived from PUBLIC_URL (localhost:3000)
     expect(webClient.redirectUris).toEqual([
-      'https://airi.moeru.ai/auth/callback',
+      'https://aipets.moeru.ai/auth/callback',
       'http://localhost:5173/auth/callback',
       'http://localhost:4173/auth/callback',
       'http://localhost:3000/auth/callback',
@@ -411,7 +411,7 @@ describe('seedTrustedClients', () => {
     if (!electronClient)
       throw new Error('Expected electron client seed insert')
 
-    expect(electronClient.clientId).toBe('airi-stage-electron')
+    expect(electronClient.clientId).toBe('aipets-stage-electron')
     expect(electronClient.clientSecret).toBeNull()
     expect(electronClient.public).toBe(true)
     expect(electronClient.tokenEndpointAuthMethod).toBe('none')
@@ -424,13 +424,13 @@ describe('seedTrustedClients', () => {
     if (!pocketClient)
       throw new Error('Expected pocket client seed insert')
 
-    expect(pocketClient.clientId).toBe('airi-stage-pocket')
+    expect(pocketClient.clientId).toBe('aipets-stage-pocket')
     expect(pocketClient.clientSecret).toBeNull()
     expect(pocketClient.public).toBe(true)
     expect(pocketClient.tokenEndpointAuthMethod).toBe('none')
     expect(pocketClient.redirectUris).toEqual([
       'capacitor://localhost/auth/callback',
-      'ai.moeru.airi-pocket://links/auth/callback',
+      'ai.moeru.aipets-pocket://links/auth/callback',
     ])
   })
 
@@ -442,7 +442,7 @@ describe('seedTrustedClients', () => {
     })
 
     const { db, values } = createMockDb([
-      [{ clientId: 'airi-stage-web' }],
+      [{ clientId: 'aipets-stage-web' }],
       [],
       [],
     ]);
@@ -463,11 +463,11 @@ describe('seedTrustedClients', () => {
     const { db, capturedValues } = createMockDb([[], [], []])
 
     await seedTrustedClients(db as any, {
-      PUBLIC_URL: 'https://api.airi.build',
+      PUBLIC_URL: 'https://api.aipets.build',
     } as any)
 
     expect(capturedValues[1].redirectUris).toEqual([
-      'https://api.airi.build/api/auth/oidc/electron-callback',
+      'https://api.aipets.build/api/auth/oidc/electron-callback',
     ])
   })
 })
@@ -481,7 +481,7 @@ describe('ensureDynamicFirstPartyRedirectUri', () => {
         from: vi.fn(() => ({
           where: vi.fn(() => ({
             limit: vi.fn().mockResolvedValue([
-              { redirectUris: ['https://airi.moeru.ai/auth/callback'] },
+              { redirectUris: ['https://aipets.moeru.ai/auth/callback'] },
             ]),
           })),
         })),
@@ -496,13 +496,13 @@ describe('ensureDynamicFirstPartyRedirectUri', () => {
 
     await ensureDynamicFirstPartyRedirectUri(
       db as any,
-      new Request('https://api.airi.build/api/auth/oauth2/authorize?client_id=airi-stage-web&redirect_uri=https%3A%2F%2Fpreview.moeru-ai.workers.dev%2Fauth%2Fcallback'),
+      new Request('https://api.aipets.build/api/auth/oauth2/authorize?client_id=aipets-stage-web&redirect_uri=https%3A%2F%2Fpreview.moeru-ai.workers.dev%2Fauth%2Fcallback'),
       [],
     )
 
     expect(setCalls).toHaveLength(1)
     expect(setCalls[0].redirectUris).toEqual([
-      'https://airi.moeru.ai/auth/callback',
+      'https://aipets.moeru.ai/auth/callback',
       'https://preview.moeru-ai.workers.dev/auth/callback',
     ])
     expect(updateWhere).toHaveBeenCalledTimes(1)
@@ -516,7 +516,7 @@ describe('ensureDynamicFirstPartyRedirectUri', () => {
         from: vi.fn(() => ({
           where: vi.fn(() => ({
             limit: vi.fn().mockResolvedValue([
-              { redirectUris: ['https://api.airi.build/api/auth/oidc/electron-callback'] },
+              { redirectUris: ['https://api.aipets.build/api/auth/oidc/electron-callback'] },
             ]),
           })),
         })),
@@ -531,14 +531,14 @@ describe('ensureDynamicFirstPartyRedirectUri', () => {
 
     await ensureDynamicFirstPartyRedirectUri(
       db as any,
-      new Request('https://api-dev.airi.build/api/auth/oauth2/authorize?client_id=airi-stage-electron&redirect_uri=https%3A%2F%2Fapi-dev.airi.build%2Fapi%2Fauth%2Foidc%2Felectron-callback'),
+      new Request('https://api-dev.aipets.build/api/auth/oauth2/authorize?client_id=aipets-stage-electron&redirect_uri=https%3A%2F%2Fapi-dev.aipets.build%2Fapi%2Fauth%2Foidc%2Felectron-callback'),
       [],
     )
 
     expect(setCalls).toHaveLength(1)
     expect(setCalls[0].redirectUris).toEqual([
-      'https://api.airi.build/api/auth/oidc/electron-callback',
-      'https://api-dev.airi.build/api/auth/oidc/electron-callback',
+      'https://api.aipets.build/api/auth/oidc/electron-callback',
+      'https://api-dev.aipets.build/api/auth/oidc/electron-callback',
     ])
     expect(updateWhere).toHaveBeenCalledTimes(1)
   })
@@ -551,19 +551,19 @@ describe('ensureDynamicFirstPartyRedirectUri', () => {
 
     await ensureDynamicFirstPartyRedirectUri(
       db as any,
-      new Request('https://api.airi.build/api/auth/oauth2/authorize?client_id=airi-stage-web&redirect_uri=https%3A%2F%2Fevil.example%2Fauth%2Fcallback'),
+      new Request('https://api.aipets.build/api/auth/oauth2/authorize?client_id=aipets-stage-web&redirect_uri=https%3A%2F%2Fevil.example%2Fauth%2Fcallback'),
       [],
     )
 
     await ensureDynamicFirstPartyRedirectUri(
       db as any,
-      new Request('https://api.airi.build/api/auth/oauth2/authorize?client_id=airi-stage-web&redirect_uri=https%3A%2F%2Fairi.moeru.ai%2Fother-path'),
+      new Request('https://api.aipets.build/api/auth/oauth2/authorize?client_id=aipets-stage-web&redirect_uri=https%3A%2F%2Faipets.moeru.ai%2Fother-path'),
       [],
     )
 
     await ensureDynamicFirstPartyRedirectUri(
       db as any,
-      new Request('https://api.airi.build/api/auth/oauth2/authorize?client_id=airi-stage-electron&redirect_uri=https%3A%2F%2Fother.example%2Fapi%2Fauth%2Foidc%2Felectron-callback'),
+      new Request('https://api.aipets.build/api/auth/oauth2/authorize?client_id=aipets-stage-electron&redirect_uri=https%3A%2F%2Fother.example%2Fapi%2Fauth%2Foidc%2Felectron-callback'),
       [],
     )
 
