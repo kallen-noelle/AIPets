@@ -96,7 +96,7 @@ describe('message types', () => {
     const structuredMessage: ProjectionEntry = {
       id: 'msg-1',
       role: 'event',
-      source: 'plugin:airi-plugin-game-chess',
+      source: 'plugin:aipets-plugin-game-chess',
       segments,
       metadata: {
         domain: 'chess',

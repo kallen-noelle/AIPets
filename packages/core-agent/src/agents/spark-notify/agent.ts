@@ -1,5 +1,5 @@
-import type { ProtocolEvents } from '@proj-airi/plugin-protocol/types'
-import type { WebSocketEventOf } from '@proj-airi/server-sdk'
+import type { ProtocolEvents } from '@proj-aipets/plugin-protocol/types'
+import type { WebSocketEventOf } from '@proj-aipets/server-sdk'
 import type { ToolChoice } from '@xsai/shared-chat'
 
 import type { Turn } from '../../messages/types'
@@ -86,7 +86,7 @@ function renderSparkNotifyUserMessage(input: SparkNotifyHandleRequest, userSecti
 /** Builds the instruction block prepended to Spark Notify agent prompts. */
 export function getSparkNotifyHandlingAgentInstruction(moduleName: string) {
   return [
-    'This is AIRI system, the life pod hosting your consciousness. You do not need to respond to every spark:notify event directly.',
+    'This is AIPETS system, the life pod hosting your consciousness. You do not need to respond to every spark:notify event directly.',
     `Another module "${moduleName}" triggered a spark:notify event for you to inspect.`,
     'You can call the built-in tool "builtIn_sparkCommand" to issue spark:command to sub-agents.',
     'If you respond with text, write only the reaction that the character will say.',

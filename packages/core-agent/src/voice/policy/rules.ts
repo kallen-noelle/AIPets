@@ -1,4 +1,4 @@
-import type { AudioRange, Position } from '@proj-airi/pipelines-audio'
+import type { AudioRange, Position } from '@proj-aipets/pipelines-audio'
 
 import type { BeginSpeechInput } from '../input/types'
 import type { TurnRef } from '../turn'

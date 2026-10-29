@@ -15,7 +15,7 @@ describe('renderProviderChatMessages', () => {
       {
         id: 'event-1',
         role: 'event',
-        source: 'plugin:airi-plugin-game-chess',
+        source: 'plugin:aipets-plugin-game-chess',
         segments: [
           {
             type: 'instruction',

@@ -1,4 +1,4 @@
-import type { ResponsesConfig } from '@proj-airi/provider-inference'
+import type { ResponsesConfig } from '@proj-aipets/provider-inference'
 import type { ItemParam, ResponsesOptions } from '@xsai-ext/responses'
 import type { CompletionStep, Tool } from '@xsai/shared-chat'
 
@@ -15,7 +15,7 @@ import { projectInput, projectRound } from '../messages/turns'
 import { createGeneration } from './generation'
 import { createContinuationScope, mergeRequestHeaders, replaceProviderConfig, supportsTools } from './request-context'
 import { RequestSwitch } from './request-switch'
-import { toAiriStreamEvent } from './xsai-events'
+import { toAipetsStreamEvent } from './xsai-events'
 
 type InputContent = Exclude<Extract<ItemParam, { role: 'user' }>['content'], string>
 
@@ -249,7 +249,7 @@ export function streamResponses(input: {
     toolChoice: input.options?.resolveStep ? undefined : toolChoice(input.options?.toolChoice),
     stopWhen: stepCountAtLeast(10),
     onEvent: async (event) => {
-      const mapped = toAiriStreamEvent(event)
+      const mapped = toAipetsStreamEvent(event)
       if (mapped)
         await input.onEvent(mapped)
     },

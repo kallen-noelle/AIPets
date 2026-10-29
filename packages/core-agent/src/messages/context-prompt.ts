@@ -32,7 +32,7 @@ export type ContextSnapshot = Record<string, ContextMessage[]>
  *   wrappers (`<context>...</context>`) back into their replies, treating
  *   them as data to be quoted. A flat bullet list looks like ordinary
  *   narrative, which suppresses that mirroring tendency.
- * - See: https://github.com/moeru-ai/airi/issues/1539
+ * - See: https://gitee.com/kallen-noelle/AdoptAI/issues/1539
  */
 export function formatContextPromptText(contextsSnapshot: ContextSnapshot) {
   const entries = Object.entries(contextsSnapshot)

@@ -1,4 +1,4 @@
-import type { ContextUpdate, MetadataEventSource, WebSocketEventInputs } from '@proj-airi/server-shared/types'
+import type { ContextUpdate, MetadataEventSource, WebSocketEventInputs } from '@proj-aipets/server-shared/types'
 import type { AssistantMessage, CommonContentPart, CompletionToolCall, Message, SystemMessage, ToolMessage, UserMessage } from '@xsai/shared-chat'
 
 import type { AssistantTurn } from '../messages/types'

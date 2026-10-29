@@ -1,4 +1,4 @@
-import type { WebSocketEventOf } from '@proj-airi/server-sdk'
+import type { WebSocketEventOf } from '@proj-aipets/server-sdk'
 
 import type { SparkNotifyRunRequest } from './types'
 
@@ -10,7 +10,7 @@ import { createSparkNotifyObserverPlugin, createSparkNotifyReactionPlugin } from
 function createEvent(): WebSocketEventOf<'spark:notify'> {
   return {
     type: 'spark:notify',
-    source: 'plugin:airi-plugin-game-chess',
+    source: 'plugin:aipets-plugin-game-chess',
     data: {
       id: 'spark-1',
       eventId: 'evt-1',
@@ -81,7 +81,7 @@ describe('createSparkNotifyAgent', () => {
     expect(run).toHaveBeenCalledTimes(1)
   })
 
-  // https://github.com/moeru-ai/airi/pull/2464#discussion_r3933609456
+  // https://gitee.com/kallen-noelle/AdoptAI/pull/2464#discussion_r3933609456
   it('keeps appended sections when the host replaces the user payload', async () => {
     const run = vi.fn(async (request: SparkNotifyRunRequest) => {
       expect(request.conversation.turns[1].type === 'user' ? request.conversation.turns[1].content : undefined).toEqual([{ type: 'text', text: 'Rendered board snapshot\n\nCaller context\n\nRuntime prompt' }])

@@ -1,10 +1,10 @@
-import type { GenerationProvider } from '@proj-airi/provider-inference'
+import type { GenerationProvider } from '@proj-aipets/provider-inference'
 import type { ItemParam } from '@xsai-ext/responses'
 import type { Tool } from '@xsai/shared-chat'
 
 import type { AssistantTurn, Conversation } from '../messages/types'
 
-import { getDefinedProvider } from '@proj-airi/provider-inference'
+import { getDefinedProvider } from '@proj-aipets/provider-inference'
 import { describe, expect, it, vi } from 'vitest'
 
 import { readTurns } from '../messages/turns'
@@ -298,8 +298,8 @@ it('projects stored audio again for the model that a tool step selects', async (
   expect(conversation.turns[0]).toMatchObject({ content: [{ type: 'audio', data: 'AA==' }] })
 })
 
-// https://github.com/moeru-ai/airi/pull/2477#discussion_r4005498788
-// https://github.com/moeru-ai/airi/pull/2477#discussion_r4005940671
+// https://gitee.com/kallen-noelle/AdoptAI/pull/2477#discussion_r4005498788
+// https://gitee.com/kallen-noelle/AdoptAI/pull/2477#discussion_r4005940671
 it.each([
   { name: 'void', result: undefined, output: '' },
   { name: 'empty array', result: [], output: '[]' },
@@ -323,7 +323,7 @@ it.each([
   expect(requests[1].input.at(-1)).toEqual({ type: 'function_call_output', call_id: 'read', output, status: 'completed' })
 })
 
-// https://github.com/moeru-ai/airi/pull/2477#discussion_r4005498799
+// https://gitee.com/kallen-noelle/AdoptAI/pull/2477#discussion_r4005498799
 it.each(['explicit', 'compatibility'] as const)('disables hosted search under the %s tool policy (PR #2477)', async (policy) => {
   // ROOT CAUSE:
   // The runtime removed local tools but forwarded hosted search unchanged.
@@ -386,7 +386,7 @@ describe('responses generation', () => {
     expect(onStreamEvent).toHaveBeenLastCalledWith({ type: 'finish' })
   })
 
-  // https://github.com/moeru-ai/airi/pull/2477#discussion_r3950632651
+  // https://gitee.com/kallen-noelle/AdoptAI/pull/2477#discussion_r3950632651
   it('issue #2477 serializes JSON tool results for the next Responses step', async () => {
     const requests: unknown[] = []
     const call: ItemParam = { type: 'function_call', call_id: 'json-call', name: 'lookup', arguments: '{}' }
@@ -567,7 +567,7 @@ it('replays native state only for the same provider, endpoint, model and convers
   }
 })
 
-// https://github.com/moeru-ai/airi/pull/2477
+// https://gitee.com/kallen-noelle/AdoptAI/pull/2477
 it('replays unknown provider items without filtering their fields through a partial schema', async () => {
   // ROOT CAUSE:
   // A local union rejected new native tools before the provider could receive its own state.
@@ -597,7 +597,7 @@ it('replays unknown provider items without filtering their fields through a part
   expect(requests).toHaveLength(2)
 })
 
-it.each(['openai', 'openai-compatible'] as const)('sends %s BYOK requests directly without the AIRI backend', async (id) => {
+it.each(['openai', 'openai-compatible'] as const)('sends %s BYOK requests directly without the AIPETS backend', async (id) => {
   const definition = getDefinedProvider(id)!
   const instance = await definition.createProvider({
     api: 'responses',
@@ -676,7 +676,7 @@ it('does not send hosted search when disabled', async () => {
   await streamFrom({ model: 'test', chatProvider: provider(fetch), conversation: { turns: [] } })
 })
 
-// https://github.com/moeru-ai/airi/pull/2200
+// https://gitee.com/kallen-noelle/AdoptAI/pull/2200
 it('preserves sampling controls when routing through either protocol adapter', async () => {
   // ROOT CAUSE:
   // Main added sampling options to the old streamText call. Keeping only the
@@ -697,7 +697,7 @@ it('preserves sampling controls when routing through either protocol adapter', a
   expect(requests[1]).toMatchObject({ temperature: 0, top_p: 0.8 })
 })
 
-// https://github.com/moeru-ai/airi/pull/2477
+// https://gitee.com/kallen-noelle/AdoptAI/pull/2477
 it('groups parallel tool calls in one round and keeps repeated calls in later rounds distinct', async () => {
   const gate = Promise.withResolvers<void>()
   const started: string[] = []
@@ -738,7 +738,7 @@ it('groups parallel tool calls in one round and keeps repeated calls in later ro
   expect(execute).toHaveBeenCalledTimes(3)
 })
 
-// https://github.com/moeru-ai/airi/pull/2477
+// https://gitee.com/kallen-noelle/AdoptAI/pull/2477
 it('preserves readable content and raw items when another item cannot be projected', async () => {
   const unknown = { type: 'message', role: 'assistant', content: [{ type: 'future_content', payload: 'opaque' }] }
   const answer = { type: 'message', role: 'assistant', content: [{ type: 'output_text', text: 'Visible answer' }] }
@@ -767,7 +767,7 @@ it('preserves readable content and raw items when another item cannot be project
   expect(requests).toHaveLength(2)
 })
 
-// https://github.com/moeru-ai/airi/pull/2477
+// https://gitee.com/kallen-noelle/AdoptAI/pull/2477
 it.each(['chat-completions', 'responses'] as const)('overrides headers without duplicate credentials for %s', async (protocol) => {
   // ROOT CAUSE:
   // Object spread treats header casing as distinct, and the SDK also adds Authorization.
@@ -786,7 +786,7 @@ it.each(['chat-completions', 'responses'] as const)('overrides headers without d
   await streamFrom({ model: 'test', chatProvider, conversation: { turns: [] }, options: { headers: { 'Authorization': 'Bearer override', 'x-custom': 'new' } } })
 })
 
-// https://github.com/moeru-ai/airi/pull/2477
+// https://gitee.com/kallen-noelle/AdoptAI/pull/2477
 it('keeps native history when only request credentials change (PR #2477)', async () => {
   // ROOT CAUSE:
   // Credential hashing required Web Crypto even for ordinary HTTP-origin chats.
@@ -804,7 +804,7 @@ it('keeps native history when only request credentials change (PR #2477)', async
   await streamFrom({ model: 'test', chatProvider, conversation, options: { onGeneratedTurn: (turn) => {
     conversation.turns.push(turn)
   } } })
-  await streamFrom({ model: 'test', chatProvider, conversation, options: { headers: { 'x-airi-round-id': 'next-round' } } })
+  await streamFrom({ model: 'test', chatProvider, conversation, options: { headers: { 'x-aipets-round-id': 'next-round' } } })
   expect(requests[1].input).toEqual([reasoning, answer])
   apiKey = 'second-account-key'
   await streamFrom({ model: 'test', chatProvider, conversation })
@@ -812,7 +812,7 @@ it('keeps native history when only request credentials change (PR #2477)', async
   expect(JSON.stringify(conversation)).not.toContain('first-account-key')
 })
 
-// https://github.com/moeru-ai/airi/pull/2477#discussion_r3964857174
+// https://gitee.com/kallen-noelle/AdoptAI/pull/2477#discussion_r3964857174
 // ROOT CAUSE:
 //
 // Shared Chat tool results used to become JSON text on the Responses wire.
@@ -837,7 +837,7 @@ it('translates Chat tool content arrays without changing tool events (PR #2477)'
   expect(events).toContainEqual(expect.objectContaining({ type: 'tool-result', result: output }))
 })
 
-// https://github.com/moeru-ai/airi/pull/2477#discussion_r3959733235
+// https://gitee.com/kallen-noelle/AdoptAI/pull/2477#discussion_r3959733235
 it('groups parallel Responses tool calls in one assistant message after a protocol change (PR #2477)', async () => {
   const calls: ItemParam[] = ['first', 'second'].map(call_id => ({ type: 'function_call', call_id, name: 'read', arguments: '{}' }))
   let requests = 0
@@ -857,7 +857,7 @@ it('groups parallel Responses tool calls in one assistant message after a protoc
   expect(chatFetch).toHaveBeenCalledTimes(1)
 })
 
-// https://github.com/moeru-ai/airi/pull/2477#discussion_r3964857174
+// https://gitee.com/kallen-noelle/AdoptAI/pull/2477#discussion_r3964857174
 it('preserves native tool parts and serializes ordinary JSON arrays (PR #2477)', async () => {
   for (const output of [[{ type: 'input_image', image_url: 'https://example.test/image.png' }], [{ name: 'first' }]]) {
     const requests: { input: ItemParam[] }[] = []
@@ -872,7 +872,7 @@ it('preserves native tool parts and serializes ordinary JSON arrays (PR #2477)',
   }
 })
 
-// https://github.com/moeru-ai/airi/pull/2477#discussion_r3964857174
+// https://gitee.com/kallen-noelle/AdoptAI/pull/2477#discussion_r3964857174
 it('rejects unsupported audio tool content before sending another request (PR #2477)', async () => {
   const fetch = vi.fn<typeof globalThis.fetch>(async () => sse(completed([
     { type: 'function_call', call_id: 'read', name: 'read', arguments: '{}' },

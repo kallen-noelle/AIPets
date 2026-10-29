@@ -1,9 +1,9 @@
-import type { PcmBlock } from '@proj-airi/pipelines-audio'
+import type { PcmBlock } from '@proj-aipets/pipelines-audio'
 
 import type { AudioPluginTask, SpeechInputControl, TranscriptionEvent, WriteResult } from '../index'
 
-import { AudioInput, capture, observe } from '@proj-airi/pipelines-audio'
-import { createPushStream } from '@proj-airi/stream-kit'
+import { AudioInput, capture, observe } from '@proj-aipets/pipelines-audio'
+import { createPushStream } from '@proj-aipets/stream-kit'
 import { describe, expect, it, vi } from 'vitest'
 
 import { VoiceController } from '../index'
@@ -32,15 +32,15 @@ describe('voiceController input', () => {
     const segment = { id: 'words', revision: 1, text: 'air', tokens: [{ text: 'air', start: 0, end: 3 }], final: false }
     output.write({ type: 'update', revision: 1, segments: [segment] })
     await expect.poll(() => attempt.input?.transcript.raw.text).toBe('air')
-    expect(controller.correctInput(attempt.id, [{ segmentId: 'words', range: { kind: 'tokens', start: 0, end: 1 }, expectedText: 'air', replacement: 'AIRI' }])).toEqual({ status: 'applied' })
+    expect(controller.correctInput(attempt.id, [{ segmentId: 'words', range: { kind: 'tokens', start: 0, end: 1 }, expectedText: 'air', replacement: 'AIPETS' }])).toEqual({ status: 'applied' })
     output.write({ type: 'update', revision: 2, segments: [{ ...segment, revision: 2, text: 'air listens', final: true }] })
     await expect.poll(() => attempt.input?.transcript.raw.text).toBe('air listens')
-    expect(attempt.input?.transcript.corrected.text).toBe('AIRI listens')
+    expect(attempt.input?.transcript.corrected.text).toBe('AIPETS listens')
     void attempt.end()
     output.write({ type: 'complete', revision: 2 })
     output.close()
     expect((await attempt.done).status).toBe('drafted')
-    expect(submit).toHaveBeenCalledWith(expect.objectContaining({ text: 'AIRI listens' }), expect.any(AbortSignal))
+    expect(submit).toHaveBeenCalledWith(expect.objectContaining({ text: 'AIPETS listens' }), expect.any(AbortSignal))
     await controller.close()
   })
 
@@ -239,7 +239,7 @@ describe('voiceController input', () => {
       throw new Error('Diagnostic sink failed')
     })
     const controller = new VoiceController({ audio, onError: diagnostics, transcriber: vi.fn(), submit: vi.fn() })
-    let observation: import('@proj-airi/pipelines-audio').Observer | undefined
+    let observation: import('@proj-aipets/pipelines-audio').Observer | undefined
     const observing = Promise.withResolvers<void>()
     controller.use({ name: 'speaker', setup(plugin) {
       observation = plugin.observeAudio({ windowMs: 4, hopMs: 4 }, async () => {
@@ -322,7 +322,7 @@ describe('voiceController input', () => {
         await Promise.resolve()
         input.finalize((ctx) => {
           seen.push(`rewrite:${ctx.document.corrected.text}`)
-          ctx.patch([{ segmentId: 'one', range: { kind: 'tokens', start: 0, end: 1 }, expectedText: 'air', replacement: 'AIRI' }])
+          ctx.patch([{ segmentId: 'one', range: { kind: 'tokens', start: 0, end: 1 }, expectedText: 'air', replacement: 'AIPETS' }])
         })
       })
     } })
@@ -330,7 +330,7 @@ describe('voiceController input', () => {
       plugin.onSpeechInput((input) => {
         input.finalize((ctx) => {
           seen.push(`memory:${ctx.document.corrected.text}`)
-          ctx.attach('matches', ['AIRI'])
+          ctx.attach('matches', ['AIPETS'])
         })
       })
     } })
@@ -343,11 +343,11 @@ describe('voiceController input', () => {
     output.close()
 
     expect((await attempt.done).status).toBe('drafted')
-    expect(seen).toEqual(['rewrite:air listens', 'memory:AIRI listens'])
+    expect(seen).toEqual(['rewrite:air listens', 'memory:AIPETS listens'])
     expect(submit).toHaveBeenCalledWith(expect.objectContaining({
-      text: 'AIRI listens',
+      text: 'AIPETS listens',
       transcript: expect.objectContaining({ raw: expect.objectContaining({ text: 'air listens' }) }),
-      context: [{ plugin: 'memory', key: 'matches', value: ['AIRI'] }],
+      context: [{ plugin: 'memory', key: 'matches', value: ['AIPETS'] }],
     }), expect.any(AbortSignal))
     await controller.close()
   })
@@ -363,7 +363,7 @@ describe('voiceController input', () => {
     output.write({ type: 'update', revision: 1, segments: [{ id: 'one', revision: 1, text: 'air', tokens: [], final: true }] })
     await expect.poll(() => attempt.input?.transcript.raw.text).toBe('air')
 
-    expect(attempt.input!.patch('rewrite', { edits: [{ segmentId: 'one', range: { kind: 'segment' }, expectedText: 'air', replacement: 'AIRI' }], evidenceIds: [] })).toEqual({ status: 'rejected', reason: 'denied' })
+    expect(attempt.input!.patch('rewrite', { edits: [{ segmentId: 'one', range: { kind: 'segment' }, expectedText: 'air', replacement: 'AIPETS' }], evidenceIds: [] })).toEqual({ status: 'rejected', reason: 'denied' })
     expect(attempt.input!.transcript.corrected.text).toBe('air')
     attempt.cancel('done')
     await controller.close()

@@ -1,4 +1,4 @@
-import type { AudioInput, AudioRange, PlaybackReceipt } from '@proj-airi/pipelines-audio'
+import type { AudioInput, AudioRange, PlaybackReceipt } from '@proj-aipets/pipelines-audio'
 
 import type { SpeechInputAttemptOwner } from './input/attempt'
 import type { SpeechInputPorts } from './input/ports'

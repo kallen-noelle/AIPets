@@ -1,4 +1,4 @@
-import type { Position } from '@proj-airi/pipelines-audio'
+import type { Position } from '@proj-aipets/pipelines-audio'
 
 import type { TurnRef } from '../turn'
 import type { TranscriptPatch, TranscriptSnapshot } from './transcript'

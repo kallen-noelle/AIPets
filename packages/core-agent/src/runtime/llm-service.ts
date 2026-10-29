@@ -149,7 +149,7 @@ async function streamOnce({
       // NOTICE:
       // `steps` settles after all tool rounds, while provider finish events can arrive earlier.
       // Await it and consume other SDK promises to prevent stalled evals and unhandled rejections.
-      // Source: @xsai/stream-text 0.5 steps and AIRI eval runners.
+      // Source: @xsai/stream-text 0.5 steps and AIPETS eval runners.
       // Remove this path when xsAI emits one terminal event after all tool rounds.
       void streamResult.steps.then(async () => {
         if (settled)
@@ -360,7 +360,7 @@ export function isToolRelatedError(error: unknown): boolean {
 //   "messages.0.content: Input should be a valid string"
 // and other variants that surface the same root cause.
 //
-// See: https://github.com/moeru-ai/airi/issues/1500
+// See: https://gitee.com/kallen-noelle/AdoptAI/issues/1500
 const CONTENT_ARRAY_RELATED_ERROR_PATTERNS: RegExp[] = [
   /messages\[\d+\][^"]*invalid type:\s*sequence,\s*expected\s+a\s+string/i,
   /messages\.\d+\.content[^"]*(?:expected|should be).*string/i,

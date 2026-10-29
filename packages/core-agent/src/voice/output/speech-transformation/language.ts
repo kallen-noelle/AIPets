@@ -1,6 +1,6 @@
-import { primaryLanguage } from '@proj-airi/speech-transformer-math'
+import { primaryLanguage } from '@proj-aipets/speech-transformer-math'
 
-/** The primary language subtag of a BCP 47 code, see `primaryLanguage` of `@proj-airi/speech-transformer-math`. */
+/** The primary language subtag of a BCP 47 code, see `primaryLanguage` of `@proj-aipets/speech-transformer-math`. */
 export function toSpeechLanguage(code: string | undefined): string | undefined {
   return code === undefined ? undefined : primaryLanguage(code) || undefined
 }

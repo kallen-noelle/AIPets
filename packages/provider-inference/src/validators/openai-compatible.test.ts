@@ -127,7 +127,7 @@ describe('createOpenAICompatibleValidators', () => {
     expect(ids).not.toContain('openai-compatible:check-chat-completions')
   })
 
-  // https://github.com/moeru-ai/airi/pull/2477#discussion_r4000309839
+  // https://gitee.com/kallen-noelle/AdoptAI/pull/2477#discussion_r4000309839
   // ROOT CAUSE:
   //
   // Responses validation omitted the output limit used by Chat validation.
@@ -146,7 +146,7 @@ describe('createOpenAICompatibleValidators', () => {
     expect(requestFetch).toHaveBeenCalledTimes(1)
   })
 
-  // https://github.com/moeru-ai/airi/pull/2477#discussion_r4002606333
+  // https://gitee.com/kallen-noelle/AdoptAI/pull/2477#discussion_r4002606333
   it('probes the configured Responses model before a mixed catalog (PR #2477)', async () => {
     // ROOT CAUSE:
     //

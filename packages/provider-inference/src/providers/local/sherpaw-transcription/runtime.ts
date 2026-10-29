@@ -5,7 +5,7 @@ import type { StreamTranscriptionSnapshot } from '../../../types'
 import type { SherpawTranscriptionHost } from './index'
 import type { SherpawModelId } from './models'
 
-import { toFloat32FromPCM16 } from '@proj-airi/audio/encoding'
+import { toFloat32FromPCM16 } from '@proj-aipets/audio/encoding'
 import { OnlineRecognizerTypes } from '@sherpaw/asr'
 import { asRemoteUrl, createSherpawProvider, streamTranscription } from '@sherpaw/xsai-transcription'
 
@@ -55,7 +55,7 @@ export function createProvider(config: { model: SherpawModelId }, host: SherpawT
       throw new Error('Sherpaw did not provide transcription events.')
 
     active.add(transport)
-    // Sherpaw's text streams append deltas. AIRI needs indexed partials to replace corrections.
+    // Sherpaw's text streams append deltas. AIPETS needs indexed partials to replace corrections.
     const [executionEvents, snapshotEvents] = transport.events.tee()
     const live = streamTranscription({ ...transport, events: executionEvents })
     void live.fullStream.cancel()

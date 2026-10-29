@@ -1,4 +1,4 @@
-import type { PlaybackReceipt } from '@proj-airi/pipelines-audio'
+import type { PlaybackReceipt } from '@proj-aipets/pipelines-audio'
 
 import type { TurnRef } from './turn'
 

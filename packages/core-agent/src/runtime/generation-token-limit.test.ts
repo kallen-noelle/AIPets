@@ -1,4 +1,4 @@
-import type { GenerationProvider } from '@proj-airi/provider-inference'
+import type { GenerationProvider } from '@proj-aipets/provider-inference'
 
 import { describe, expect, it } from 'vitest'
 

@@ -58,8 +58,8 @@ function createHarness(rules: VoiceRule<unknown>[], options: { contextRevision?:
 
 describe('voicePolicy', () => {
   it('delivers events that a rule emits after the current event reaches every rule', async () => {
-    const ping = defineEventa<{ inputId: string }>('proj-airi:voice:test:ping')
-    const pong = defineEventa<{ inputId: string }>('proj-airi:voice:test:pong')
+    const ping = defineEventa<{ inputId: string }>('proj-aipets:voice:test:ping')
+    const pong = defineEventa<{ inputId: string }>('proj-aipets:voice:test:pong')
     const order: string[] = []
     const first: VoiceRule<null> = {
       name: 'first',
@@ -276,7 +276,7 @@ describe('pause and end judgement rules', () => {
   it('keeps a judgement while the provider republishes the same text (trace 06e9aacc)', async () => {
     const harness = createHarness([createPauseRule({ pauseMs: 1200 }), createEndJudgementRule()] as VoiceRule<unknown>[])
     open(harness)
-    harness.emit(inputTranscriptEvent, { inputId: 'one', text: 'hey airi what is the weather' })
+    harness.emit(inputTranscriptEvent, { inputId: 'one', text: 'hey aipets what is the weather' })
     activity(harness, 0, 2048, false)
     activity(harness, 2048, 2240, true)
     activity(harness, 2240, 2688, false)
@@ -286,15 +286,15 @@ describe('pause and end judgement rules', () => {
     const judged = pauses(harness).at(-1)!
 
     // The provider marks the text final twice during the judgement. The text does not change.
-    harness.emit(inputTranscriptEvent, { inputId: 'one', text: 'hey airi what is the weather' })
+    harness.emit(inputTranscriptEvent, { inputId: 'one', text: 'hey aipets what is the weather' })
     activity(harness, 4160, 4704, false)
-    harness.emit(inputTranscriptEvent, { inputId: 'one', text: 'hey airi what is the weather' })
+    harness.emit(inputTranscriptEvent, { inputId: 'one', text: 'hey aipets what is the weather' })
     harness.emit(endJudgedSignal, { inputId: 'one', result: 'complete', readAt: judged.body.readAt })
     await flush()
 
     expect(harness.commands).toEqual([{ type: 'seal', inputId: 'one' }])
     // The judgement started 1.2 s after the last speech, about 3 s before the silence limit.
-    expect(judged.body.text).toBe('hey airi what is the weather')
+    expect(judged.body.text).toBe('hey aipets what is the weather')
   })
 
   it('forgets an input after it settles', async () => {

@@ -5,7 +5,7 @@ interface GenerationProtocolDefinition {
   label: string
 }
 
-/** Metadata for every wire protocol that AIRI can use for text generation. */
+/** Metadata for every wire protocol that AIPETS can use for text generation. */
 export const generationProtocolDefinitions = {
   'chat-completions': { label: 'Chat Completions' },
   'responses': { label: 'Responses API' },

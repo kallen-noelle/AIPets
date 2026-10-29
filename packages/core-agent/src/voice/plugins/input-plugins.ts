@@ -1,11 +1,11 @@
-import type { Latest, Task } from '@proj-airi/stream-kit'
+import type { Latest, Task } from '@proj-aipets/stream-kit'
 
 import type { SpeechInput } from '../input/speech-input'
 import type { WriteResult } from '../input/transcript'
 import type { SpeechContextEntry, TranscriptDocument } from '../input/types'
 import type { FinalizeContext, FinalizeOptions, SpeechInputControl, SpeechInputScope, VoicePlugin, VoicePluginError, VoicePluginScope } from './types'
 
-import { createLatest, createTask, runTask } from '@proj-airi/stream-kit'
+import { createLatest, createTask, runTask } from '@proj-aipets/stream-kit'
 
 import { errorFromCause } from '../../utils/error'
 

@@ -1,4 +1,4 @@
-import type { WebSocketEvents } from '@proj-airi/server-sdk'
+import type { WebSocketEvents } from '@proj-aipets/server-sdk'
 import type z from 'zod/v4'
 
 import { rawTool } from '@xsai/tool'

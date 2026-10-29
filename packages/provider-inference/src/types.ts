@@ -46,7 +46,7 @@ export type GenerationCapabilities = {
  */
 export const DEFAULT_CONCURRENT_VISION_READS = 4
 
-/** Narrows instances that already expose AIRI's protocol-neutral inference capability. */
+/** Narrows instances that already expose AIPETS's protocol-neutral inference capability. */
 export function isGenerationProvider(provider: ProviderInstance): provider is GenerationProvider {
   return 'generation' in provider && typeof provider.generation === 'function'
 }
@@ -226,7 +226,7 @@ export interface ProviderRuntimeValidator<TConfig> {
 
 /**
  * Advisory route metadata. Model-bank contracts retain their original pricing and search semantics.
- * Reported search abilities do not select an AIRI native tool implementation.
+ * Reported search abilities do not select an AIPETS native tool implementation.
  */
 export type ModelMetadata = Pick<AIChatModelCard, 'abilities' | 'maxOutput' | 'pricing' | 'settings'>
 
@@ -398,7 +398,7 @@ export interface ProviderDefinition<TConfig = Record<string, unknown>, TId exten
   }
 }
 
-/** Reasoning modes that AIRI can request from a chat provider. */
+/** Reasoning modes that AIPETS can request from a chat provider. */
 export type ChatReasoningMode = 'disabled' | 'enabled'
 
 /** User-selected options that a provider applies to one chat request. */
@@ -407,8 +407,8 @@ export interface ChatRequestOptions {
   reasoning: ChatReasoningMode
 }
 
-/** Describes the reasoning controls that AIRI implements for a provider. */
+/** Describes the reasoning controls that AIPETS implements for a provider. */
 export interface ChatReasoningCapability {
-  /** Modes that AIRI can pass to the provider. */
+  /** Modes that AIPETS can pass to the provider. */
   modes: readonly ChatReasoningMode[]
 }

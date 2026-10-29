@@ -1,4 +1,4 @@
-import type { AudioInput, AudioRange, Capture, Position } from '@proj-airi/pipelines-audio'
+import type { AudioInput, AudioRange, Capture, Position } from '@proj-aipets/pipelines-audio'
 
 import type { Interruption } from '../interruption'
 import type { TurnRef } from '../turn'
@@ -6,7 +6,7 @@ import type { SpeechInputPorts, StreamingTranscriber } from './ports'
 import type { TranscriptionEvent } from './transcript'
 import type { BeginSpeechInput, SpeechContextEntry, SpeechInputAttemptOutcome, SpeechInputAttemptState, SpeechSubmission } from './types'
 
-import { capture } from '@proj-airi/pipelines-audio'
+import { capture } from '@proj-aipets/pipelines-audio'
 import { nanoid } from 'nanoid/non-secure'
 
 import { errorFromCause } from '../../utils/error'

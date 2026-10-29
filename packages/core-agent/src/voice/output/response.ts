@@ -1,10 +1,10 @@
-import type { AudioPlayback, IntentHandle, PcmBlock, PlaybackGroup, PlaybackItem, PlaybackReceipt, SpeechPipelineEvents, SpeechPipelineOptions } from '@proj-airi/pipelines-audio'
-import type { Outcome } from '@proj-airi/stream-kit'
+import type { AudioPlayback, IntentHandle, PcmBlock, PlaybackGroup, PlaybackItem, PlaybackReceipt, SpeechPipelineEvents, SpeechPipelineOptions } from '@proj-aipets/pipelines-audio'
+import type { Outcome } from '@proj-aipets/stream-kit'
 
 import type { TurnRef } from '../turn'
 
-import { createSpeechPipeline } from '@proj-airi/pipelines-audio'
-import { createPushStream } from '@proj-airi/stream-kit'
+import { createSpeechPipeline } from '@proj-aipets/pipelines-audio'
+import { createPushStream } from '@proj-aipets/stream-kit'
 import { nanoid } from 'nanoid/non-secure'
 
 import { errorFromCause, errorMessageFromValue } from '../../utils/error'

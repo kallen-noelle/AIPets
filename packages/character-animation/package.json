@@ -1,17 +1,17 @@
 {
-  "name": "@proj-airi/character-animation",
+  "name": "@proj-aipets/character-animation",
   "type": "module",
   "private": true,
   "description": "Runtime-agnostic character animation core: manifest schema, weighted picker, playback state machine",
   "author": {
-    "name": "Moeru AI Project AIRI Team",
-    "email": "airi@moeru.ai",
+    "name": "Moeru AI Project AIPETS Team",
+    "email": "aipets@moeru.ai",
     "url": "https://github.com/moeru-ai"
   },
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/moeru-ai/airi.git",
+    "url": "https://gitee.com/kallen-noelle/AdoptAI.git",
     "directory": "packages/character-animation"
   },
   "exports": {

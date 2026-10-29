@@ -1,5 +1,5 @@
 import type { Eventa } from '@moeru/eventa'
-import type { Position } from '@proj-airi/pipelines-audio'
+import type { Position } from '@proj-aipets/pipelines-audio'
 
 import type { BeginSpeechInput } from '../input/types'
 import type { TurnRef } from '../turn'
@@ -7,7 +7,7 @@ import type { TurnRef } from '../turn'
 /**
  * For each evidence kind of one input, the count of its content changes.
  *
- * For example: `{ transcriptText: 7, 'proj-airi:voice:signal:input-activity': 3, context: 12 }`. A count grows only
+ * For example: `{ transcriptText: 7, 'proj-aipets:voice:signal:input-activity': 3, context: 12 }`. A count grows only
  * when the content changes, so a provider revision with the same text does not change `transcriptText`. A slow signal
  * result carries the entries that it read in `readAt`. A rule ignores the result when one of these entries changed.
  */

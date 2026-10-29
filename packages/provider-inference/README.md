@@ -1,15 +1,15 @@
 # Provider Inference
 
-`@proj-airi/provider-inference` owns runtime-neutral AIRI provider definitions.
+`@proj-aipets/provider-inference` owns runtime-neutral AIPETS provider definitions.
 
 Use this package to list built-in providers, create provider configuration schemas, and create provider instances. The package runs in Node.js and Browser runtimes.
 
-Do not use this package for provider configuration persistence, Vue views, Pinia state, authentication, or Electron-native providers. Those concerns remain in `@proj-airi/stage-ui`.
+Do not use this package for provider configuration persistence, Vue views, Pinia state, authentication, or Electron-native providers. Those concerns remain in `@proj-aipets/stage-ui`.
 
 ## Use
 
 ```ts
-import { getDefinedProvider, listProviders } from '@proj-airi/provider-inference'
+import { getDefinedProvider, listProviders } from '@proj-aipets/provider-inference'
 
 const provider = getDefinedProvider('openai')
 const providers = listProviders()
@@ -17,24 +17,24 @@ const providers = listProviders()
 
 Browser-only definitions, such as Web Speech API, load in Node.js. Their availability hook returns `false` when the required Browser capability is absent.
 
-The root entry exports Sherpaw model presets and a definition factory. Vite plugins can use `@proj-airi/provider-inference/sherpaw-transcription/models` to load only model metadata. The presets include stable IDs, languages, recognizer types, pinned revisions, and artifact URLs. Neither entry downloads or loads model files.
+The root entry exports Sherpaw model presets and a definition factory. Vite plugins can use `@proj-aipets/provider-inference/sherpaw-transcription/models` to load only model metadata. The presets include stable IDs, languages, recognizer types, pinned revisions, and artifact URLs. Neither entry downloads or loads model files.
 
 `createSherpawTranscriptionDefinition` owns recognition, Worker cleanup, and the first model choice.
 The host supplies exposed models, a Worker URL, a fetch function, and the current interface language.
 The host also reports whether it runs on mobile. Chinese and English default to X-ASR on desktop and Paraformer on mobile.
 `stage-ui` supplies these resources and adds the Hearing settings view.
 
-Use `@proj-airi/stage-ui` for saved provider configuration, Vue settings views, Pinia state, authentication, and Electron-native providers. Do not use this package to manage those application concerns.
+Use `@proj-aipets/stage-ui` for saved provider configuration, Vue settings views, Pinia state, authentication, and Electron-native providers. Do not use this package to manage those application concerns.
 
 ## Verify
 
 Run the package checks from the workspace root:
 
 ```text
-pnpm -F @proj-airi/provider-inference typecheck
-pnpm -F @proj-airi/provider-inference test:node
-pnpm -F @proj-airi/provider-inference test:browser
-pnpm -F @proj-airi/provider-inference build
+pnpm -F @proj-aipets/provider-inference typecheck
+pnpm -F @proj-aipets/provider-inference test:node
+pnpm -F @proj-aipets/provider-inference test:browser
+pnpm -F @proj-aipets/provider-inference build
 ```
 
 ## Generation protocols
@@ -57,13 +57,13 @@ const provider = await definition.createProvider({
 })
 ```
 
-User-configured providers send Responses requests directly to their configured endpoint with their own API key. They do not require AIRI backend changes or Flux billing.
+User-configured providers send Responses requests directly to their configured endpoint with their own API key. They do not require AIPETS backend changes or Flux billing.
 The official provider defaults to Responses and lets the user select Chat Completions.
 
 OpenAI has a `webSearch` switch, disabled by default. The selected protocol must be Responses.
 Explicitly enabling search sends the hosted tool on the official OpenAI endpoint. The provider validates model support.
 Custom endpoints do not inherit this tool declaration. Model names never determine search support.
-Search uses the configured OpenAI key and does not require an AIRI login or Tavily key.
+Search uses the configured OpenAI key and does not require an AIPETS login or Tavily key.
 
 ## Model metadata
 

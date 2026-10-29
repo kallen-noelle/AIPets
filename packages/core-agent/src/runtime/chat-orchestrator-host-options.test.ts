@@ -1,4 +1,4 @@
-import type { GenerationProvider } from '@proj-airi/provider-inference'
+import type { GenerationProvider } from '@proj-aipets/provider-inference'
 
 import type { AssistantTurn, Conversation } from '../messages/types'
 import type { ChatHistoryItem, ChatStreamEventContext } from '../types/chat'
@@ -111,7 +111,7 @@ describe('chat orchestrator host options', () => {
     expect(harness.messages['session-1']?.map(message => message.role)).toEqual(['user', 'user', 'assistant'])
   })
 
-  // https://github.com/moeru-ai/airi/issues/2988
+  // https://gitee.com/kallen-noelle/AdoptAI/issues/2988
   // ROOT CAUSE:
   //
   // Raw provider text can contain ACT markers that parsing removes.

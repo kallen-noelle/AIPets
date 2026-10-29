@@ -169,7 +169,7 @@ function createLlmMarkerStream(input: ReadableStream<string | MarkerFlush>, opti
 }
 
 /**
- * Creates a streaming parser for LLM responses with AIRI special markers.
+ * Creates a streaming parser for LLM responses with AIPETS special markers.
  *
  * Use when:
  * - Handling streamed model output that may contain `<|...|>` markers.

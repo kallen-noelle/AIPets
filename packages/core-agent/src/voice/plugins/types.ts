@@ -1,5 +1,5 @@
 import type { Eventa } from '@moeru/eventa'
-import type { AudioRange, AudioWindow, Observer, WindowOptions } from '@proj-airi/pipelines-audio'
+import type { AudioRange, AudioWindow, Observer, WindowOptions } from '@proj-aipets/pipelines-audio'
 
 import type { ConversationContext } from '../input/ports'
 import type { TranscriptEdit, WriteResult } from '../input/transcript'

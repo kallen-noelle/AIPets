@@ -1,4 +1,4 @@
-import type { GenerationProvider } from '@proj-airi/provider-inference'
+import type { GenerationProvider } from '@proj-aipets/provider-inference'
 
 import type { AssistantTurn } from '../messages/types'
 
@@ -6,7 +6,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest'
 
 import { streamFrom } from './llm-service'
 
-// https://github.com/moeru-ai/airi/pull/2477
+// https://gitee.com/kallen-noelle/AdoptAI/pull/2477
 it('records real Chat SDK rounds and keeps failed tool results on their invocation', async () => {
   const requests: { messages: unknown[] }[] = []
   const fetch: typeof globalThis.fetch = async (_url, init) => {
@@ -46,7 +46,7 @@ it('records real Chat SDK rounds and keeps failed tool results on their invocati
   expect(backup).toHaveBeenCalledTimes(1)
 })
 
-// https://github.com/moeru-ai/airi/pull/2477
+// https://gitee.com/kallen-noelle/AdoptAI/pull/2477
 it('uses one request snapshot while tools load (PR #2477)', async () => {
   // ROOT CAUSE:
   //
@@ -123,7 +123,7 @@ it('applies the new Chat model tool and content compatibility after a tool chang
   expect(requests[1].messages.some(message => message.reasoning_content != null)).toBe(false)
 })
 
-// https://github.com/moeru-ai/airi/pull/2709
+// https://gitee.com/kallen-noelle/AdoptAI/pull/2709
 // ROOT CAUSE:
 // The adapter projected the conversation before it resolved the first live step.
 // An old model's string-only setting removed an image from the new model's request.
@@ -233,7 +233,7 @@ it('removes provider options omitted by a later request in the same scope', asyn
   expect(requests[1].reasoning_effort).toBeUndefined()
 })
 
-// https://github.com/moeru-ai/airi/issues/2660
+// https://gitee.com/kallen-noelle/AdoptAI/issues/2660
 // ROOT CAUSE:
 //
 // A provider 429/503 rejected `streamFrom` on the first attempt, so each

@@ -1,12 +1,12 @@
 # Core Agent
 
-`@proj-airi/core-agent` owns scheduling, context composition, tool rounds, and generation events. Stage applications provide persistence and UI through its ports. Provider registration and configuration belong to `provider-inference`. Authentication and Flux billing belong to the gateway.
+`@proj-aipets/core-agent` owns scheduling, context composition, tool rounds, and generation events. Stage applications provide persistence and UI through its ports. Provider registration and configuration belong to `provider-inference`. Authentication and Flux billing belong to the gateway.
 
 ## Conversation and protocol projection
 
 `Conversation` contains ordered `Turn` values. `UserTurn` owns user content. `SystemTurn` owns instructions or application context. Its authority distinguishes system instructions, developer instructions, and context data. Application context does not gain instruction authority merely because the application supplied it.
 
-`AssistantTurn` owns an ordered `rounds` array. One round represents one model invocation and all tool executions it requested, including parallel calls. Its content references tool invocations; each invocation owns its call and result once. The provider call id correlates results within that round. Tool reruns use the AIRI invocation id to distinguish repeated provider call ids. A run id refers to a real scheduler execution, not the number of rounds. Imported history has no model-call metadata when that information is unavailable.
+`AssistantTurn` owns an ordered `rounds` array. One round represents one model invocation and all tool executions it requested, including parallel calls. Its content references tool invocations; each invocation owns its call and result once. The provider call id correlates results within that round. Tool reruns use the AIPETS invocation id to distinguish repeated provider call ids. A run id refers to a real scheduler execution, not the number of rounds. Imported history has no model-call metadata when that information is unavailable.
 
 `ProviderContinuation` stores each protocol's own SDK message type: Chat `Message[]` or Responses `ItemParam[]`.
 
@@ -97,8 +97,8 @@ Each trigger keeps its own time, so one trigger that fires never spends the even
 ## Verify
 
 ```sh
-pnpm -F @proj-airi/core-agent typecheck
-pnpm -F @proj-airi/core-agent exec vitest run src/runtime src/messages src/agents/spark-notify
+pnpm -F @proj-aipets/core-agent typecheck
+pnpm -F @proj-aipets/core-agent exec vitest run src/runtime src/messages src/agents/spark-notify
 ```
 
 ## Type boundaries
@@ -266,8 +266,8 @@ A producer streams its text to TTS by segments. `MarkdownSegmenter` ends a segme
 So an answer starts to speak after its first sentence, and a formula that later writes complete is still read as one formula.
 Symbols that markdown keeps as text, for example `2 * 3` and `x ~= 3`, stay in the speech text.
 TeX formulas, `\ce{}` chemistry, units, and dollar prices are read as words of the sentence language: Chinese, English, Japanese, or Korean.
-The rules are in [`@proj-airi/speech-transformer-math`](../speech-transformer-math) and [`@proj-airi/speech-transformer-chem`](../speech-transformer-chem).
-`mathSpeech` is the instance that AIRI uses: the built-in locale packs, with chemistry.
+The rules are in [`@proj-aipets/speech-transformer-math`](../speech-transformer-math) and [`@proj-aipets/speech-transformer-chem`](../speech-transformer-chem).
+`mathSpeech` is the instance that AIPETS uses: the built-in locale packs, with chemistry.
 
 `toMathJson(tex)` returns the MathJSON of a formula without reading it, for tools that inspect formulas.
 `options.language` is the BCP 47 code of the voice. The words around a formula or a price select its language first.
@@ -279,13 +279,13 @@ To add a reading, pass `preprocessors: [myPlugin, ...defaultSpeechPreprocessors(
 ```ts
 const spoken = toSpeechText(markdown, {
   preprocessors: [
-    { name: 'brand', prose: text => text.replaceAll('AIRI', 'ai ree') },
+    { name: 'brand', prose: text => text.replaceAll('AIPETS', 'ai ree') },
     ...defaultSpeechPreprocessors(),
   ],
 })
 ```
 
-The words of each language are in a locale pack of `@proj-airi/speech-transformer-math`.
+The words of each language are in a locale pack of `@proj-aipets/speech-transformer-math`.
 To add a language or change one, call `mathSpeech.register(pack)`. A language without a pack reads in English.
 Special tokens and flushes keep their position relative to the text.
 Cancelling an acknowledgment releases its place without reporting a user interruption.

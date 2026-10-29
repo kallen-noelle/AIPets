@@ -1,4 +1,4 @@
-import type { GenerationRequest } from '@proj-airi/provider-inference'
+import type { GenerationRequest } from '@proj-aipets/provider-inference'
 
 import type { StreamOptions } from '../types/llm'
 

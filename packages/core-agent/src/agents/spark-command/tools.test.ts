@@ -1,6 +1,6 @@
 import type { JsonSchema } from 'xsschema'
 
-import { ContextUpdateStrategy } from '@proj-airi/server-sdk'
+import { ContextUpdateStrategy } from '@proj-aipets/server-sdk'
 import { describe, expect, it, vi } from 'vitest'
 
 import { createSparkCommandTool } from './tools'
@@ -49,7 +49,7 @@ function findObjectSchema(schema: JsonSchema | undefined, predicate: (schema: Js
 }
 
 describe('agents/spark-command/tools', () => {
-  // https://github.com/moeru-ai/airi/issues/2705
+  // https://gitee.com/kallen-noelle/AdoptAI/issues/2705
   it('emits explicit destination variants without a nested union wrapper (Issue #2705)', async () => {
     // ROOT CAUSE:
     //

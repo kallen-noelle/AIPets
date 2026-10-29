@@ -22,7 +22,7 @@ it('keeps application context below trusted system and developer instructions', 
   expectTypeOf<UserTurn>().not.toHaveProperty('rounds')
 })
 
-// https://github.com/moeru-ai/airi/pull/2477
+// https://gitee.com/kallen-noelle/AdoptAI/pull/2477
 it('scopes imported rounds and tool invocations by the stored turn identity', () => {
   const history = [
     { role: 'assistant' as const, content: '', tool_calls: [{ type: 'function' as const, id: 'call', function: { name: 'lookup', arguments: '{}' } }] },

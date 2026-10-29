@@ -1,4 +1,4 @@
-import type { PcmBlock } from '@proj-airi/pipelines-audio'
+import type { PcmBlock } from '@proj-aipets/pipelines-audio'
 
 import type { TranscriptionEvent } from './transcript'
 import type { SpeechSubmission } from './types'

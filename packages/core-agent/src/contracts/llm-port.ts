@@ -1,4 +1,4 @@
-import type { GenerationProvider } from '@proj-airi/provider-inference'
+import type { GenerationProvider } from '@proj-aipets/provider-inference'
 
 import type { Conversation } from '../messages/types'
 import type { StreamOptions } from '../types/llm'

@@ -1,6 +1,6 @@
 import type { ContextMessage } from '../types/chat'
 
-import { ContextUpdateStrategy } from '@proj-airi/server-shared/types'
+import { ContextUpdateStrategy } from '@proj-aipets/server-shared/types'
 import { describe, expect, it } from 'vitest'
 
 import { createContextRegistry } from './context-registry'

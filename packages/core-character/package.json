@@ -1,18 +1,18 @@
 {
-  "name": "@proj-airi/core-character",
+  "name": "@proj-aipets/core-character",
   "type": "module",
   "version": "0.12.0",
   "private": true,
-  "description": "Core character contracts and runtime orchestration for AIRI",
+  "description": "Core character contracts and runtime orchestration for AIPETS",
   "author": {
-    "name": "Moeru AI Project AIRI Team",
-    "email": "airi@moeru.ai",
+    "name": "Moeru AI Project AIPETS Team",
+    "email": "aipets@moeru.ai",
     "url": "https://github.com/moeru-ai"
   },
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/moeru-ai/airi.git",
+    "url": "https://gitee.com/kallen-noelle/AdoptAI.git",
     "directory": "packages/core-character"
   },
   "exports": {
@@ -34,7 +34,7 @@
   },
   "dependencies": {
     "@moeru/std": "catalog:",
-    "@proj-airi/stream-kit": "workspace:^",
+    "@proj-aipets/stream-kit": "workspace:^",
     "clustr": "catalog:"
   },
   "devDependencies": {}

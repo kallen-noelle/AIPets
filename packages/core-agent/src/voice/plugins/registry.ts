@@ -1,5 +1,5 @@
-import type { AudioInput, Observer } from '@proj-airi/pipelines-audio'
-import type { Scope } from '@proj-airi/stream-kit'
+import type { AudioInput, Observer } from '@proj-aipets/pipelines-audio'
+import type { Scope } from '@proj-aipets/stream-kit'
 
 import type { SpeechInputAttempt } from '../input/attempt'
 import type { ConversationContext } from '../input/ports'
@@ -20,8 +20,8 @@ import type {
   VoicePluginSettings,
 } from './types'
 
-import { observe } from '@proj-airi/pipelines-audio'
-import { createScope, runTask } from '@proj-airi/stream-kit'
+import { observe } from '@proj-aipets/pipelines-audio'
+import { createScope, runTask } from '@proj-aipets/stream-kit'
 
 import { errorFromCause } from '../../utils/error'
 import { InputPlugins } from './input-plugins'

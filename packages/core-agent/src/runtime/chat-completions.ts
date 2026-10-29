@@ -12,7 +12,7 @@ import { chatContentToString, chatMessagesToProjectionEntries, conversationToCha
 import { createGeneration } from './generation'
 import { createContinuationScope, mergeRequestHeaders, replaceProviderConfig, supportsContentArray, supportsTools } from './request-context'
 import { RequestSwitch } from './request-switch'
-import { toAiriStreamEvent } from './xsai-events'
+import { toAipetsStreamEvent } from './xsai-events'
 
 /** Projects one context snapshot and returns only the newly generated turn. */
 export function streamChatCompletions(input: {
@@ -108,7 +108,7 @@ export function streamChatCompletions(input: {
     tools: input.tools,
     toolChoice: input.options?.resolveStep ? undefined : input.options?.toolChoice,
     onEvent: async (event) => {
-      const mapped = toAiriStreamEvent(event)
+      const mapped = toAipetsStreamEvent(event)
       if (mapped)
         await input.onEvent(mapped)
     },

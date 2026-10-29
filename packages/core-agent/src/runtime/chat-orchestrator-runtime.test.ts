@@ -1,4 +1,4 @@
-import type { GenerationProvider } from '@proj-airi/provider-inference'
+import type { GenerationProvider } from '@proj-aipets/provider-inference'
 import type { Message } from '@xsai/shared-chat'
 
 import type { Conversation } from '../messages/types'
@@ -6,7 +6,7 @@ import type { ChatHistoryItem, ContextMessage, StreamingAssistantMessage } from 
 import type { StreamEvent, StreamOptions } from '../types/llm'
 import type { ChatOrchestratorSessionPort } from './chat-orchestrator-runtime'
 
-import { ContextUpdateStrategy } from '@proj-airi/server-shared/types'
+import { ContextUpdateStrategy } from '@proj-aipets/server-shared/types'
 import { describe, expect, it, vi } from 'vitest'
 
 import { chatMessagesToTurns, conversationToChatMessages } from '../messages/chat-completions'
@@ -170,7 +170,7 @@ function createHarness(getActiveProvider = () => 'mock-provider') {
 }
 
 describe('createChatOrchestratorRuntime', () => {
-  // https://github.com/moeru-ai/airi/issues/2899
+  // https://gitee.com/kallen-noelle/AdoptAI/issues/2899
   // ROOT CAUSE:
   //
   // The marker parser can emit whitespace as a separate literal.
@@ -238,7 +238,7 @@ describe('createChatOrchestratorRuntime', () => {
     expect(specials).toEqual(expectedSpecials)
   })
 
-  // https://github.com/moeru-ai/airi/pull/2911#discussion_r4238926356
+  // https://gitee.com/kallen-noelle/AdoptAI/pull/2911#discussion_r4238926356
   // ROOT CAUSE:
   //
   // A whitespace-only literal created a text slice before any visible speech arrived.
@@ -360,7 +360,7 @@ describe('createChatOrchestratorRuntime', () => {
     ])
   })
 
-  // https://github.com/moeru-ai/airi/pull/3008#discussion_r4302605324
+  // https://gitee.com/kallen-noelle/AdoptAI/pull/3008#discussion_r4302605324
   // ROOT CAUSE:
   // Calls wait for preceding text hooks before they join the reply.
   // An error or cancellation can save the reply before those hooks finish.
@@ -529,7 +529,7 @@ describe('createChatOrchestratorRuntime', () => {
     expect(harness.stream).toHaveBeenCalledOnce()
   })
 
-  // https://github.com/moeru-ai/airi/issues/2738
+  // https://gitee.com/kallen-noelle/AdoptAI/issues/2738
   it('runs separate sessions concurrently while preserving each session order', async () => {
     const harness = createHarness()
     const held = Promise.withResolvers<void>()
@@ -741,7 +741,7 @@ describe('createChatOrchestratorRuntime', () => {
   // ROOT CAUSE:
   //
   // xsAI kept the assistant tool call and tool result in its private message copy.
-  // AIRI stored only UI slices, then removed those slices from the next provider request.
+  // AIPETS stored only UI slices, then removed those slices from the next provider request.
   //
   // We fixed this by storing the provider generated turn on the finalized UI message.
   // The next request expands that generated turn back into chronological provider messages.
@@ -1138,7 +1138,7 @@ describe('createChatOrchestratorRuntime', () => {
     expect(harness.telemetry.chatActivationFailed).toEqual([])
   })
 
-  // Review: https://github.com/moeru-ai/airi/pull/2325
+  // Review: https://gitee.com/kallen-noelle/AdoptAI/pull/2325
   it('pr #2325 treats input:text metadata as text telemetry', async () => {
     const harness = createHarness()
 
@@ -1284,7 +1284,7 @@ describe('createChatOrchestratorRuntime', () => {
     ])
   })
 
-  // https://github.com/moeru-ai/airi/pull/2477#discussion_r4000149090
+  // https://gitee.com/kallen-noelle/AdoptAI/pull/2477#discussion_r4000149090
   // ROOT CAUSE:
   //
   // The queue retained the provider client but read the active provider ID at execution time.
@@ -1336,7 +1336,7 @@ describe('createChatOrchestratorRuntime', () => {
     await firstSend
   })
 
-  // https://github.com/moeru-ai/airi/pull/2489#discussion_r3967818108
+  // https://gitee.com/kallen-noelle/AdoptAI/pull/2489#discussion_r3967818108
   // ROOT CAUSE:
   //
   // A queued send kept the reply target captured by the composer. Deleting that
@@ -1422,7 +1422,7 @@ describe('createChatOrchestratorRuntime', () => {
     expect(queuedSendContext).not.toHaveProperty('replyToMessageId')
   })
 
-  // https://github.com/moeru-ai/airi/pull/2086#discussion_r3714754876
+  // https://gitee.com/kallen-noelle/AdoptAI/pull/2086#discussion_r3714754876
   it('suppresses completion hooks when an active send session is deleted for Issue #2085', async () => {
     // ROOT CAUSE:
     //
@@ -1529,7 +1529,7 @@ describe('createChatOrchestratorRuntime', () => {
     })
   })
 
-  // https://github.com/moeru-ai/airi/issues/2085
+  // https://gitee.com/kallen-noelle/AdoptAI/issues/2085
   it('reports the queued send target while a background session is sending for Issue #2085', async () => {
     // ROOT CAUSE:
     //
@@ -1828,7 +1828,7 @@ it('runs consecutive orchestrator turns through the real Responses adapter', asy
   // ROOT CAUSE:
   // Lifecycle snapshots retained native history after each composition.
   // Keep opaque state on the provider boundary, outside diagnostic copies.
-  // https://github.com/moeru-ai/airi/pull/2477#discussion_r4015043327
+  // https://gitee.com/kallen-noelle/AdoptAI/pull/2477#discussion_r4015043327
   expect(JSON.stringify(harness.lifecycleRecords)).not.toContain('encrypted_content')
   expect(JSON.stringify(harness.lifecycleRecords)).toContain('answer')
 })
@@ -1927,7 +1927,7 @@ it('keeps escaped sticker markers out of the saved speech categorization', async
   })
 })
 
-// https://github.com/moeru-ai/airi/pull/2714#issuecomment-5976485328
+// https://gitee.com/kallen-noelle/AdoptAI/pull/2714#issuecomment-5976485328
 // ROOT CAUSE:
 // Reading a shared catalog at execution time ignored request-owned eligibility and changed queued sends.
 // Copying catalogs at enqueue preserves each request's provider, prompt, and sticker selection.

@@ -1,4 +1,4 @@
-import type { ContextUpdate } from '@proj-airi/server-sdk'
+import type { ContextUpdate } from '@proj-aipets/server-sdk'
 import type { Tool } from '@xsai/shared-chat'
 
 import type { SparkNotifyRuntimeEvent } from './types'
@@ -143,7 +143,7 @@ export async function createSparkNotifyTools(options: CreateSparkNotifyToolsOpti
         options.onNoResponse()
         options.onEvent?.({ type: 'tool-execution', payload: { toolName: name, toolCallId: context?.toolCallId, responseMode: 'no-response' } })
 
-        return 'AIRI System: Acknowledged, no response or action will be processed.'
+        return 'AIPETS System: Acknowledged, no response or action will be processed.'
       },
     }))
   }
@@ -167,10 +167,10 @@ export async function createSparkNotifyTools(options: CreateSparkNotifyToolsOpti
         }
         catch (error) {
           options.onEvent?.({ type: 'tool-execution', payload: { toolName: name, toolCallId: context?.toolCallId, ok: false, error: errorMessageFrom(error) } })
-          return `AIRI System: Error - invalid spark_command parameters: ${errorMessageFrom(error)}`
+          return `AIPETS System: Error - invalid spark_command parameters: ${errorMessageFrom(error)}`
         }
 
-        return 'AIRI System: Acknowledged, command fired.'
+        return 'AIPETS System: Acknowledged, command fired.'
       },
     }))
   }

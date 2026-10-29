@@ -1,4 +1,4 @@
-# `@proj-airi/core-character`
+# `@proj-aipets/core-character`
 
 This package owns the shared contracts for characters and avatar models. It
 also provides character-runtime modules when those modules do not depend on a

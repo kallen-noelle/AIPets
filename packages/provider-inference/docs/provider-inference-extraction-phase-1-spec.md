@@ -4,11 +4,11 @@ Status: Proposed for architecture review
 
 Phase: 1 of the provider extraction
 
-Target package: `@proj-airi/provider-inference`
+Target package: `@proj-aipets/provider-inference`
 
 ## 1. Purpose
 
-This specification defines the first provider extraction from `@proj-airi/stage-ui`.
+This specification defines the first provider extraction from `@proj-aipets/stage-ui`.
 
 Phase 1 extracts provider definitions from `packages/stage-ui/src/libs/providers/providers`.
 
@@ -76,7 +76,7 @@ Phase 1 excludes:
 - Stage-ui stores, authentication, server configuration, and analytics.
 - `packages/stage-ui/src/services/inference-service-providers.ts`.
 - The runtime implementation under `packages/stage-ui/src/libs/inference`.
-- The full `@proj-airi/testing-audio` package as a dependency of the core package.
+- The full `@proj-aipets/testing-audio` package as a dependency of the core package.
 
 Phase 1 does not add a compatibility layer for the old provider import path.
 
@@ -90,7 +90,7 @@ The new package must not import or use:
 - `vue-i18n`
 - `pinia`
 - `pinia-plugin-synced`
-- `@proj-airi/stage-ui`
+- `@proj-aipets/stage-ui`
 - Stage-ui stores or persistence modules
 - `localStorage`
 - `indexedDB`
@@ -592,7 +592,7 @@ They do not belong in the provider core.
 
 ## 11. ASR Acceptance Feasibility
 
-Using `@proj-airi/vitest-plugin-fakemic` for ASR acceptance is feasible.
+Using `@proj-aipets/vitest-plugin-fakemic` for ASR acceptance is feasible.
 
 The plugin starts a Playwright Web or Electron runtime.
 
@@ -606,15 +606,15 @@ It does not directly test an isolated provider function.
 
 ### 11.1 Test ownership
 
-Keep full audio pipeline acceptance in `@proj-airi/testing-audio`.
+Keep full audio pipeline acceptance in `@proj-aipets/testing-audio`.
 
 That package already owns runtime startup, routes, selectors, application preparation, and audio observations.
 
-Update its provider setup to import definitions from `@proj-airi/provider-inference` after the extraction.
+Update its provider setup to import definitions from `@proj-aipets/provider-inference` after the extraction.
 
-Do not add `@proj-airi/testing-audio` as a dependency of the provider package.
+Do not add `@proj-aipets/testing-audio` as a dependency of the provider package.
 
-The provider package can use `@proj-airi/vitest-plugin-fakemic` as a development dependency only if it later owns a package-specific runtime harness.
+The provider package can use `@proj-aipets/vitest-plugin-fakemic` as a development dependency only if it later owns a package-specific runtime harness.
 
 ### 11.2 Audio fixtures
 
@@ -646,7 +646,7 @@ Use `*.audio.web.test.ts` for Browser-only cases.
 
 Use `*.audio.electron.test.ts` only for Electron native cases.
 
-Do not use `@proj-airi/testing-audio` persistence setup in Node.js provider tests.
+Do not use `@proj-aipets/testing-audio` persistence setup in Node.js provider tests.
 
 ## 12. Test Plan
 
@@ -710,7 +710,7 @@ The audit must reject:
 - `indexedDB`
 - `caches`
 - `document.cookie`
-- `@proj-airi/stage-ui`
+- `@proj-aipets/stage-ui`
 - Stage-ui stores and persistence modules
 
 The audit must allow approved Browser APIs.
@@ -725,7 +725,7 @@ Run the provider package Node.js tests.
 
 Run the provider package Browser tests.
 
-Run the ASR acceptance project with `@proj-airi/vitest-plugin-fakemic`.
+Run the ASR acceptance project with `@proj-aipets/vitest-plugin-fakemic`.
 
 Run the stage-ui typecheck.
 

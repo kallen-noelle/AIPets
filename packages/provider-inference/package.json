@@ -1,18 +1,18 @@
 {
-  "name": "@proj-airi/provider-inference",
+  "name": "@proj-aipets/provider-inference",
   "type": "module",
   "version": "0.12.0",
   "private": true,
-  "description": "Runtime-neutral provider definitions for AIRI inference",
+  "description": "Runtime-neutral provider definitions for AIPETS inference",
   "author": {
-    "name": "Moeru AI Project AIRI Team",
-    "email": "airi@moeru.ai",
+    "name": "Moeru AI Project AIPETS Team",
+    "email": "aipets@moeru.ai",
     "url": "https://github.com/moeru-ai"
   },
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/moeru-ai/airi.git",
+    "url": "https://gitee.com/kallen-noelle/AdoptAI.git",
     "directory": "packages/provider-inference"
   },
   "exports": {
@@ -42,7 +42,7 @@
   },
   "dependencies": {
     "@moeru/std": "catalog:",
-    "@proj-airi/audio": "workspace:^",
+    "@proj-aipets/audio": "workspace:^",
     "@sherpaw/asr": "catalog:",
     "@sherpaw/xsai-transcription": "catalog:",
     "@xsai-ext/providers": "catalog:",
@@ -58,6 +58,7 @@
     "model-bank": "catalog:",
     "unspeech": "catalog:xsai",
     "valibot": "catalog:",
+    "xsschema": "catalog:",
     "zod": "catalog:"
   },
   "devDependencies": {

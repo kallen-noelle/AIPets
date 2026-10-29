@@ -202,7 +202,7 @@ export interface SegmentStateSnapshot {
 }
 
 /**
- * History block segment that keeps turn/reaction pairing intact.
+ * History block segment that keeps turn/reaction paipetsng intact.
  */
 export interface SegmentHistoryBlock {
   type: 'history-block'

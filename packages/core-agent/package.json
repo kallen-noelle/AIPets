@@ -1,18 +1,18 @@
 {
-  "name": "@proj-airi/core-agent",
+  "name": "@proj-aipets/core-agent",
   "type": "module",
   "version": "0.12.0",
   "private": true,
-  "description": "Core agent runtime orchestration for AIRI",
+  "description": "Core agent runtime orchestration for AIPETS",
   "author": {
-    "name": "Moeru AI Project AIRI Team",
-    "email": "airi@moeru.ai",
+    "name": "Moeru AI Project AIPETS Team",
+    "email": "aipets@moeru.ai",
     "url": "https://github.com/moeru-ai"
   },
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/moeru-ai/airi.git",
+    "url": "https://gitee.com/kallen-noelle/AdoptAI.git",
     "directory": "packages/core-agent"
   },
   "exports": {
@@ -45,15 +45,15 @@
   "dependencies": {
     "@moeru/eventa": "catalog:",
     "@moeru/std": "catalog:",
-    "@proj-airi/mathjson": "workspace:^",
-    "@proj-airi/pipelines-audio": "workspace:^",
-    "@proj-airi/plugin-protocol": "workspace:^",
-    "@proj-airi/provider-inference": "workspace:^",
-    "@proj-airi/server-sdk": "workspace:^",
-    "@proj-airi/server-shared": "workspace:^",
-    "@proj-airi/speech-transformer-chem": "workspace:^",
-    "@proj-airi/speech-transformer-math": "workspace:^",
-    "@proj-airi/stream-kit": "workspace:^",
+    "@proj-aipets/mathjson": "workspace:^",
+    "@proj-aipets/pipelines-audio": "workspace:^",
+    "@proj-aipets/plugin-protocol": "workspace:^",
+    "@proj-aipets/provider-inference": "workspace:^",
+    "@proj-aipets/server-sdk": "workspace:^",
+    "@proj-aipets/server-shared": "workspace:^",
+    "@proj-aipets/speech-transformer-chem": "workspace:^",
+    "@proj-aipets/speech-transformer-math": "workspace:^",
+    "@proj-aipets/stream-kit": "workspace:^",
     "@xsai-ext/providers": "catalog:",
     "@xsai-ext/responses": "catalog:",
     "@xsai/generate-speech": "catalog:",

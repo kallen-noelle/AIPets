@@ -2,7 +2,7 @@ import { expect, it } from 'vitest'
 
 import { chatMessagesToTurns, conversationToChatMessages } from './chat-completions'
 
-// https://github.com/moeru-ai/airi/pull/2477
+// https://gitee.com/kallen-noelle/AdoptAI/pull/2477
 it('preserves nested provider extensions on native Chat replay', () => {
   // ROOT CAUSE:
   // Partial object schemas stripped fields inside tool calls and refusal parts.
@@ -17,7 +17,7 @@ it('preserves nested provider extensions on native Chat replay', () => {
   expect(native[0].tool_calls[0].function.provider_state).toBe('keep')
 })
 
-// https://github.com/moeru-ai/airi/pull/2477#discussion_r4002541732
+// https://gitee.com/kallen-noelle/AdoptAI/pull/2477#discussion_r4002541732
 it('serializes portable assistant refusals in string-only mode (PR #2477)', () => {
   // ROOT CAUSE:
   //
@@ -31,7 +31,7 @@ it('serializes portable assistant refusals in string-only mode (PR #2477)', () =
   expect(conversation).toEqual(before)
 })
 
-// https://github.com/moeru-ai/airi/pull/2477#discussion_r4002541732
+// https://gitee.com/kallen-noelle/AdoptAI/pull/2477#discussion_r4002541732
 it('serializes native assistant refusals in string-only mode (PR #2477)', () => {
   // ROOT CAUSE:
   //

@@ -97,7 +97,7 @@ it('declares protocol and search settings without rendering a settings page', as
   expect(custom.shape.webSearch.meta()).toMatchObject({ disabled: true })
 })
 
-// https://github.com/moeru-ai/airi/pull/2477#discussion_r4002606330
+// https://gitee.com/kallen-noelle/AdoptAI/pull/2477#discussion_r4002606330
 it('omits unsupported reasoning controls for OpenAI models (PR #2477)', async () => {
   // ROOT CAUSE:
   //

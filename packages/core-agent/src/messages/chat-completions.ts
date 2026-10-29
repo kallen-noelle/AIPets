@@ -169,7 +169,7 @@ export function conversationToChatMessages(conversation: Conversation, supportsC
   // NOTICE:
   // Some compatible servers reject content arrays with "invalid type: sequence, expected a string".
   // They implement only the string variant of Chat Completions content.
-  // Source/context: https://github.com/moeru-ai/airi/issues/1500
+  // Source/context: https://gitee.com/kallen-noelle/AdoptAI/issues/1500
   // Removal condition: All supported endpoints accept content arrays.
   return conversation.turns.flatMap((turn) => {
     if (turn.type !== 'assistant')

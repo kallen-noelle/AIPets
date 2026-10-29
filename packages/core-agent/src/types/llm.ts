@@ -1,4 +1,4 @@
-import type { GenerationProvider, GenerationRequest } from '@proj-airi/provider-inference'
+import type { GenerationProvider, GenerationRequest } from '@proj-aipets/provider-inference'
 import type { CommonContentPart, CompletionToolCall, Tool, ToolChoice } from '@xsai/shared-chat'
 
 import type { AssistantTurn, Conversation } from '../messages/types'
@@ -124,7 +124,7 @@ export interface StreamOptions {
    *
    * Mirrors {@link toolsCompatibility} for the tool-calling capability.
    *
-   * See: https://github.com/moeru-ai/airi/issues/1500
+   * See: https://gitee.com/kallen-noelle/AdoptAI/issues/1500
    */
   contentArrayCompatibility?: Map<string, boolean>
   supportsContentArray?: boolean

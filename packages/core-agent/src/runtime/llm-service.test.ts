@@ -1,4 +1,4 @@
-import type { GenerationProvider } from '@proj-airi/provider-inference'
+import type { GenerationProvider } from '@proj-aipets/provider-inference'
 import type { CompletionStep, Message, Tool } from '@xsai/shared-chat'
 
 import type { Conversation } from '../messages/types'
@@ -115,7 +115,7 @@ it('reads edited model, prompt, provider and tools before a tool continuation re
   ])
 })
 
-// https://github.com/moeru-ai/airi/pull/2708
+// https://gitee.com/kallen-noelle/AdoptAI/pull/2708
 // ROOT CAUSE:
 // The tool loop kept fields that the next provider omitted.
 // Clear provider-owned fields before xsAI sends the next request.
@@ -458,7 +458,7 @@ describe('streamFrom tool errors', () => {
     })).resolves.toBeUndefined()
   })
 
-  it('maps xsai tool-error results to AIRI tool-error events without wrapping tools', async () => {
+  it('maps xsai tool-error results to AIPETS tool-error events without wrapping tools', async () => {
     let resolveSteps: ((steps: unknown[]) => void) | undefined
     const events: unknown[] = []
     const failingTool = {
@@ -608,7 +608,7 @@ describe('chat protocol compatibility', () => {
   // text-only string and drop non-text parts so the request shape matches
   // what a string-only provider can deserialize.
   //
-  // See: https://github.com/moeru-ai/airi/issues/1500
+  // See: https://gitee.com/kallen-noelle/AdoptAI/issues/1500
   it('issue #1500: drops image_url parts and flattens to string when supportsContentArray=false', () => {
     /**
      * @example

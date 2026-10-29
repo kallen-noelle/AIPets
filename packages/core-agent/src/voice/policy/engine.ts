@@ -3,7 +3,7 @@ import type { Eventa, EventContext } from '@moeru/eventa'
 import type { Emission, InputRevisions, RevisionMetadata, RuleContext, VoiceCommand, VoiceRule } from './types'
 
 import { matchBy } from '@moeru/eventa'
-import { createQueue } from '@proj-airi/stream-kit'
+import { createQueue } from '@proj-aipets/stream-kit'
 
 import { errorFromCause } from '../../utils/error'
 import { inputBegunEvent, inputSettledEvent, inputTranscriptEvent } from './events'
@@ -32,7 +32,7 @@ interface RuleEntry {
 export type VoiceEventContext = EventContext<undefined, { raw?: unknown }>
 
 /** Every voice event id starts with this prefix. The engine reads only these events from a shared context. */
-const VOICE_EVENT_PREFIX = 'proj-airi:voice:'
+const VOICE_EVENT_PREFIX = 'proj-aipets:voice:'
 
 /**
  * Narrows an event that a rule receives to one definition.

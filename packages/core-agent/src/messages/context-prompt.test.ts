@@ -1,6 +1,6 @@
 import type { ContextSnapshot } from './context-prompt'
 
-import { ContextUpdateStrategy } from '@proj-airi/server-shared/types'
+import { ContextUpdateStrategy } from '@proj-aipets/server-shared/types'
 import { describe, expect, it } from 'vitest'
 
 import { buildContextPromptMessage, formatContextPromptText } from './context-prompt'
@@ -18,7 +18,7 @@ function makeContext(overrides: Record<string, unknown> = {}): ContextSnapshot {
           source: {
             id: 'system:minecraft-integration',
             kind: 'plugin' as const,
-            plugin: { id: 'airi:minecraft' },
+            plugin: { id: 'aipets:minecraft' },
           },
         },
         ...overrides,
@@ -49,7 +49,7 @@ describe('formatContextPromptText', () => {
 
     expect(text).not.toContain('volatile-random-id')
     expect(text).not.toContain('1743940440000')
-    expect(text).not.toContain('airi:minecraft')
+    expect(text).not.toContain('aipets:minecraft')
   })
 
   /**

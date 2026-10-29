@@ -1,4 +1,4 @@
-import { spellNumber } from '@proj-airi/speech-transformer-math'
+import { spellNumber } from '@proj-aipets/speech-transformer-math'
 
 /** The words of money in one language. */
 export interface MoneyLocale {

@@ -1,10 +1,10 @@
-import type { MathJson } from '@proj-airi/mathjson'
+import type { MathJson } from '@proj-aipets/mathjson'
 
-import { chemistry } from '@proj-airi/speech-transformer-chem'
-import { MathSpeech } from '@proj-airi/speech-transformer-math'
+import { chemistry } from '@proj-aipets/speech-transformer-chem'
+import { MathSpeech } from '@proj-aipets/speech-transformer-math'
 
 /**
- * The formula reader of AIRI: the built-in locale packs of `@proj-airi/speech-transformer-math`, with chemistry.
+ * The formula reader of AIPETS: the built-in locale packs of `@proj-aipets/speech-transformer-math`, with chemistry.
  * A contributor adds or changes a language with `mathSpeech.register`.
  */
 export const mathSpeech = new MathSpeech({ extensions: [chemistry()] })

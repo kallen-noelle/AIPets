@@ -1,4 +1,4 @@
-import type { GenerationProvider } from '@proj-airi/provider-inference'
+import type { GenerationProvider } from '@proj-aipets/provider-inference'
 import type { CommonContentPart, Message, ToolMessage } from '@xsai/shared-chat'
 
 import type { AgentContextPort } from '../contracts/context-port'
@@ -8,7 +8,7 @@ import type { AssistantTurn, Conversation, Turn } from '../messages/types'
 import type { ChatHistoryItem, ChatInvokedSkill, ChatSlices, ChatSlicesToolCall, ChatSlicesToolContent, ChatStreamEventContext, ChatToolReference, ContextMessage, StreamingAssistantMessage } from '../types/chat'
 import type { LlmUsage, StreamEvent, StreamOptions } from '../types/llm'
 
-import { createQueue } from '@proj-airi/stream-kit'
+import { createQueue } from '@proj-aipets/stream-kit'
 
 import { chatMessagesToTurns } from '../messages/chat-completions'
 import { formatTimePrefix } from '../messages/datetime-prefix'
@@ -500,7 +500,7 @@ async function waitForProvider(work: Promise<unknown>, signal: AbortSignal) {
  * Creates the core chat orchestrator runtime used behind UI facades.
  *
  * Use when:
- * - A platform wants AIRI chat send orchestration without Vue/Pinia coupling.
+ * - A platform wants AIPETS chat send orchestration without Vue/Pinia coupling.
  * - Session, context, foreground stream, and LLM integrations are provided as adapters.
  *
  * Expects:

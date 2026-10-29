@@ -28,7 +28,7 @@ describe('xsAI Responses terminal lifecycle', () => {
   // ROOT CAUSE:
   // xsAI 0.5.0 resolves its result promises at EOF without requiring a terminal
   // event, and maps response.failed to an ordinary step. The pnpm patch makes
-  // both paths fail so AIRI cannot persist an interrupted turn as successful.
+  // both paths fail so AIPETS cannot persist an interrupted turn as successful.
   it('rejects an SSE stream that ends before a terminal event', async () => {
     const results = await settle([{ type: 'response.output_text.delta', delta: 'partial' }])
     expect(results.map(result => result.status)).toEqual(['rejected', 'rejected', 'rejected', 'rejected'])
