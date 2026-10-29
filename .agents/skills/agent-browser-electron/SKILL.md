@@ -52,7 +52,7 @@ If `/json/list` does not contain a window that the user says exists, do not assu
 
 The CDP port is project- and run-command-specific. Do not assume `9222`, `9250`, or any other value is universal. If an Electron process is running but no CDP port responds, tell the user to relaunch the app with the project's remote-debug environment variables or launch flags.
 
-For AIRI stage-tamagotchi on POSIX shells:
+For AIPETS stage-tamagotchi on POSIX shells:
 
 ```bash
 APP_REMOTE_DEBUG=true APP_REMOTE_DEBUG_PORT=9250 pnpm dev:tamagotchi
@@ -151,7 +151,7 @@ Use this order when the Electron app has multiple windows:
 8. `agent-browser --cdp <port> snapshot -i`
 9. If the expected route is missing, trigger the lazy window from the UI and repeat from step 1
 
-## AIRI Example
+## AIPETS Example
 
 In `apps/stage-tamagotchi`, some windows are lazy-created. The main window loads `/#/`; settings loads `/#/settings`; chat loads `/#/chat`; BeatSync loads `/beat-sync.html`.
 
@@ -163,7 +163,7 @@ The `9250` examples below assume the app was started by the person running it wi
 APP_REMOTE_DEBUG=true APP_REMOTE_DEBUG_PORT=9250 pnpm dev:tamagotchi
 ```
 
-That port is not intrinsic to AIRI or Electron. It depends on the current command and environment. Most stage-tamagotchi code lives under `apps/stage-tamagotchi`; inspect that app's Electron startup and window code when the port, routes, or remote-debug behavior differ.
+That port is not intrinsic to AIPETS or Electron. It depends on the current command and environment. Most stage-tamagotchi code lives under `apps/stage-tamagotchi`; inspect that app's Electron startup and window code when the port, routes, or remote-debug behavior differ.
 
 Relevant files:
 - `apps/stage-tamagotchi/src/main/windows/chat/index.ts`
@@ -195,7 +195,7 @@ If settings or chat is missing, start from the main window:
 agent-browser --cdp 9250 tab t2
 agent-browser --cdp 9250 snapshot -i
 # Click the main window control that opens the panel or launcher.
-# In AIRI this is the arrow-up control in the bottom-right controls island.
+# In AIPETS this is the arrow-up control in the bottom-right controls island.
 # Re-snapshot after every click because refs are stale after UI changes.
 agent-browser --cdp 9250 click '[i-solar\:alt-arrow-up-line-duotone]'
 agent-browser --cdp 9250 snapshot -i
@@ -210,7 +210,7 @@ curl -sS http://127.0.0.1:9250/json/list
 agent-browser --cdp 9250 tab
 ```
 
-If the controls island is visible but the accessibility refs or CSS icon click do not expand it, inspect the Vue component as a diagnostic fallback. AIRI currently nests tooltip trigger buttons around icon buttons, so a CDP click can report success while landing on the wrapper instead of the Vue `ControlButton` listener. This fallback is for automation/debugging only; do not use it as evidence that end-user clicking works.
+If the controls island is visible but the accessibility refs or CSS icon click do not expand it, inspect the Vue component as a diagnostic fallback. AIPETS currently nests tooltip trigger buttons around icon buttons, so a CDP click can report success while landing on the wrapper instead of the Vue `ControlButton` listener. This fallback is for automation/debugging only; do not use it as evidence that end-user clicking works.
 
 ```bash
 agent-browser --cdp 9250 eval '(() => {

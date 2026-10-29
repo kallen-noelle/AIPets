@@ -1,11 +1,11 @@
 ---
 name: enforce-rules-for-vitest
-description: Enforce AIRI's testing and Vitest practices in the AIRI monorepo. Use when you create, edit, review, or debug tests. Also use when you reproduce a reported bug or issue, change Vitest configuration, or diagnose test import and runtime-boundary failures. Also use when you mock IPC, services, providers, platform APIs, or imports.
+description: Enforce AIPETS's testing and Vitest practices in the AIPETS monorepo. Use when you create, edit, review, or debug tests. Also use when you reproduce a reported bug or issue, change Vitest configuration, or diagnose test import and runtime-boundary failures. Also use when you mock IPC, services, providers, platform APIs, or imports.
 ---
 
-# Enforce AIRI Vitest Rules
+# Enforce AIPETS Vitest Rules
 
-Apply these rules to every test change in AIRI.
+Apply these rules to every test change in AIPETS.
 
 ## Choose the Test Scope
 

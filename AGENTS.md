@@ -1,18 +1,18 @@
 # aipets Agent Guide
 
-This file gives the core rules for all work in the aipets monorepo. aipets is a second-time development of `moeru-ai/airi`. The fork animation core drives transparent video clips instead of Live2D, VRM, or MMD. Skills and nested `AGENTS.md` files give the rules for specific tasks. Before you start a task, find it in [Task Routing](#task-routing) and read the listed file.
+This file gives the core rules for all work in the aipets monorepo. The animation core drives transparent video clips instead of Live2D, VRM, or MMD. Skills and nested `AGENTS.md` files give the rules for specific tasks. Before you start a task, find it in [Task Routing](#task-routing) and read the listed file.
 
 ## Scope
 
 [README.md](./README.md) holds the full range table. The list below is the short form.
 
-- Retained: the browser app `apps/stage-web-react`, the Electron desktop shell in `apps/stage-web-react/electron`, the animation core `packages/character-animation`, memory, ears, mouth, the plugin system, the Satori chat adapter, the chess game plugin, MCP, the backend, input devices, and desktop native code.
-- Removed: the mobile app, the Telegram and Discord bots, the X integration, and the game integrations. The bot packages, `apps/stage-pocket`, and `packages/cap-vite` are gone. The Godot desktop host `apps/stage-tamagotchi-kirie` and `engines/stage-tamagotchi-godot` are gone. `integrations/satori-bot` stays because Satori is a protocol that reaches many IM platforms.
+- Retained: the browser app `apps/stage-web-react`, the Electron desktop shell in `apps/stage-web-react/electron`, the animation core `packages/character-animation`, memory, ears, mouth, the plugin system, the chess game plugin, MCP, the backend, input devices, and desktop native code.
+- Removed: the mobile app, the Telegram and Discord bots, the X integration, the game integrations, and the Satori chat adapter. The bot packages, `apps/stage-pocket`, `packages/cap-vite`, and `integrations/satori-bot` are gone. The Godot desktop host `apps/stage-tamagotchi-kirie` and `engines/stage-tamagotchi-godot` are gone.
 - Removed: every Vue app and Vue package. `apps/stage-web`, `apps/stage-tamagotchi`, `apps/component-calling`, and `apps/ui-server-auth` are deleted. So are `packages/stage-ui`, `packages/stage-ui-three`, `packages/stage-shared`, `packages/stage-pages`, `packages/stage-layouts`, `packages/ui`, `packages/ui-loading-screens`, `packages/ui-transitions`, `packages/electron-vueuse`, and `packages/input-gamepad-vueuse`.
 - Dropped: the Live2D, VRM, MMD, Spine, and Tachie body renderers.
 - Trimmed: the LLM provider list and the locales. Keep Chinese and English only.
 - Kept but not wired: nothing. Every app in the tree is wired.
-- Package scope stays `@proj-airi/*`. Only the project name changes.
+- Package scope stays `@proj-aipets/*`. Only the project name changes.
 - Removed: accounts and `apps/ui-server-auth`.
 
 An entry that the scope drops stays in the tree until a later change removes it. Do not extend a dropped entry.
@@ -50,7 +50,7 @@ Key files and directories:
 
 ## Commands
 
-Use pnpm workspace filters to limit a command to one workspace. Replace `<package name>` with the `name` field in `package.json`, for example `@proj-airi/stage-web-react`.
+Use pnpm workspace filters to limit a command to one workspace. Replace `<package name>` with the `name` field in `package.json`, for example `@proj-aipets/stage-web-react`.
 
 - Typecheck one workspace: `pnpm -F <package name> typecheck`.
 - Test one file: `pnpm -F <package name> exec vitest run <path>`. Give `<path>` relative to the workspace.
@@ -69,7 +69,7 @@ Use pnpm workspace filters to limit a command to one workspace. Replace `<packag
 
 - Lint: `pnpm lint`. ESLint also does the formatting. To fix lint and format errors, run `pnpm lint:fix`.
 - Build one workspace: `pnpm -F <package name> build`.
-- Build the Windows installer: `pnpm -F @proj-airi/stage-web-react electron:dist`.
+- Build the Windows installer: `pnpm -F @proj-aipets/stage-web-react electron:dist`.
 
 ## Scope and Checks
 
@@ -140,7 +140,7 @@ Use pnpm workspace filters to limit a command to one workspace. Replace `<packag
 - If the agent configuration describes the code of a PR, put its commit in that PR. Do not open a second PR for it.
 - Keep a structured `README.md` in each `packages/` and `apps/` entry. It tells what the entry does, how to use it, when to use it, and when not to use it.
 - Keep only the Chinese and English project README. Do not add another translated README.
-- Put all translations in `packages/i18n`. This fork keeps Chinese and English only.
+- Put all translations in `packages/i18n`. This project keeps Chinese and English only.
 - Do not add a locale. The scope trims the locale list to Chinese and English.
 - Do not use English text as a placeholder in other locales. Add only the locales you implement.
 - When you add a nested `AGENTS.md`, add a `CLAUDE.md` next to it that contains only `@AGENTS.md`. The root `CLAUDE.md` stops Claude Code from reading a nested `AGENTS.md` without this file.
@@ -180,8 +180,8 @@ Skills are in `.agents/skills/<name>/SKILL.md`. Read the listed file before you 
 | Write documentation, code comments, commit messages, or PR and issue text | [`simple-english`](.agents/skills/simple-english/SKILL.md) |
 | Analyze why a chat, speech, or audio turn was slow or failed, using saved IO traces | [`analyze-io-traces`](.agents/skills/analyze-io-traces/SKILL.md) |
 | Create or prepare a pull request | [`create-pr`](.agents/skills/create-pr/SKILL.md) |
-| Upload a local file through a file input or a file chooser in a web or Electron app | [`use-agent-browser-with-input-file`](.agents/skills/use-agent-browser-with-input-file/SKILL.md) and [`agent-browser`](.agents/skills/agent-browser/SKILL.md). For Electron, also read [`agent-browser-electron`](.agents/skills/agent-browser-electron/SKILL.md). |
-| Test the transparent video animation in stage-web-react | [`use-agent-browser-for-airi`](.agents/skills/use-agent-browser-for-airi/SKILL.md) |
+| Upload a local file through a file input or a file chooser in a web or Electron app | [`agent-browser`](.agents/skills/agent-browser/SKILL.md). For Electron, also read [`agent-browser-electron`](.agents/skills/agent-browser-electron/SKILL.md). |
+| Test the transparent video animation in stage-web-react | [`use-agent-browser-for-aipets`](.agents/skills/use-agent-browser-for-aipets/SKILL.md) |
 
 These directories also have their own `AGENTS.md`. Read it before you work in the directory:
 

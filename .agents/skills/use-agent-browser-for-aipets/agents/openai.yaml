@@ -1,0 +1,4 @@
+interface:
+  display_name: "Use Agent Browser for AIPETS"
+  short_description: "Test AIPETS model imports across desktop, web, and mobile"
+  default_prompt: "Use $use-agent-browser-for-aipets to upload and verify a local display model in AIPETS."

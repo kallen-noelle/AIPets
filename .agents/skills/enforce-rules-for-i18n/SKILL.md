@@ -1,17 +1,17 @@
 ---
 name: enforce-rules-for-i18n
-description: Review pending AIRI translations on Crowdin in a batch, then sync them into the repository. Use when Crowdin has translations that wait for approval, when translations have not reached the repository for days, or when the user pastes output of pending-review.mjs.
+description: Review pending AIPETS translations on Crowdin in a batch, then sync them into the repository. Use when Crowdin has translations that wait for approval, when translations have not reached the repository for days, or when the user pastes output of pending-review.mjs.
 ---
 
-# Crowdin batch review for AIRI
+# Crowdin batch review for AIPETS
 
-This skill reviews the translations that wait for approval on the AIRI Crowdin project. An agent judges each translation. A person applies the result with their own token.
+This skill reviews the translations that wait for approval on the AIPETS Crowdin project. An agent judges each translation. A person applies the result with their own token.
 
 ## Requirements
 
 - Node.js 24 or later, and `pnpm install` in this repository. The check script imports the placeholder rule from `.github/scripts/check-locales.ts`.
-- A Crowdin personal access token with proofreader or manager access to the AIRI project. Create it in Crowdin: Account Settings > API > Personal Access Tokens.
-- The project id defaults to `816610`, the id in `crowdin.yml` of `moeru-ai/airi`. To use another project, set `CROWDIN_PROJECT_ID`.
+- A Crowdin personal access token with proofreader or manager access to the AIPETS project. Create it in Crowdin: Account Settings > API > Personal Access Tokens.
+- The project id defaults to `816610`, the id in `crowdin.yml` of `kallen-noelle/AdoptAI`. To use another project, set `CROWDIN_PROJECT_ID`.
 
 ## Token rules
 
@@ -73,7 +73,7 @@ The scripts read and write their files in the current directory. Run them from a
 
 Reject a translation when:
 
-- It is the same as the English text, even when the word is correct in that language, for example `OK`, `Error`, or a brand name. AIRI shows the English text for a string without a translation. Crowdin does not import a translation that is the same as the source.
+- It is the same as the English text, even when the word is correct in that language, for example `OK`, `Error`, or a brand name. AIPETS shows the English text for a string without a translation. Crowdin does not import a translation that is the same as the source.
 - It has the wrong meaning or the wrong part of speech, for example a noun label translated as a verb phrase.
 - Its placeholders differ from the English text: `{name}`, `{0}`, or `@:key`.
 - It contains a literal `\n` where the English text has a line break.

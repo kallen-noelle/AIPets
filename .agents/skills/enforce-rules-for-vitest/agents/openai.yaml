@@ -1,4 +1,4 @@
 interface:
   display_name: "Enforce Vitest Rules"
-  short_description: "Apply AIRI testing and Vitest standards"
-  default_prompt: "Use $enforce-rules-for-vitest to implement or review tests under AIRI's testing standards."
+  short_description: "Apply AIPETS testing and Vitest standards"
+  default_prompt: "Use $enforce-rules-for-vitest to implement or review tests under AIPETS's testing standards."

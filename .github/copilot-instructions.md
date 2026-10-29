@@ -1,6 +1,6 @@
 # Copilot repository instructions
 
-This is the `moeru-ai/airi` pnpm monorepo. Prefer the smallest safe change and keep every task inside its stated scope.
+This is the `kallen-noelle/AdoptAI` pnpm monorepo. Prefer the smallest safe change and keep every task inside its stated scope.
 
 ## General rules
 

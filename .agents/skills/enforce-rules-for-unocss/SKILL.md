@@ -1,11 +1,11 @@
 ---
 name: enforce-rules-for-unocss
-description: Enforce AIRI's UnoCSS, Vue styling, shared UI component, animation, icon, and color-mode practices. Use when creating, editing, refactoring, or reviewing Vue templates, component styles, utility classes, UnoCSS configuration, animations, icons, UI primitives, packages/ui components, or VueUse dark-mode behavior in the AIRI monorepo.
+description: Enforce AIPETS's UnoCSS, Vue styling, shared UI component, animation, icon, and color-mode practices. Use when creating, editing, refactoring, or reviewing Vue templates, component styles, utility classes, UnoCSS configuration, animations, icons, UI primitives, packages/ui components, or VueUse dark-mode behavior in the AIPETS monorepo.
 ---
 
-# Enforce AIRI UnoCSS Rules
+# Enforce AIPETS UnoCSS Rules
 
-Apply these rules to every affected UI file in AIRI.
+Apply these rules to every affected UI file in AIPETS.
 
 ## Compose Utility Classes Readably
 
@@ -33,7 +33,7 @@ Apply these rules to every affected UI file in AIRI.
 
 ## Build on Shared UI Primitives
 
-- Build primitives on `@proj-airi/ui`, which is based on reka-ui, instead of raw DOM controls.
+- Build primitives on `@proj-aipets/ui`, which is based on reka-ui, instead of raw DOM controls.
 - Read `packages/ui/README.md` for the component API and `packages/ui/src/components/Form` for implementation patterns.
 - Use Iconify icon sets instead of bespoke SVGs.
 

@@ -1,6 +1,6 @@
 ---
 name: release-note-writer
-description: Write grouped, user-friendly release notes from git history, changelogithub output, GitHub releases, PR lists, or raw commit logs. Use when Codex needs to turn technical changelogs into English-only release notes for AIRI or similar products, including end-user highlights, developer/API notes, contributor-facing internal tooling notes, upgrade notes, or follow-up style-rule updates after wording feedback.
+description: Write grouped, user-friendly release notes from git history, changelogithub output, GitHub releases, PR lists, or raw commit logs. Use when Codex needs to turn technical changelogs into English-only release notes for AIPETS or similar products, including end-user highlights, developer/API notes, contributor-facing internal tooling notes, upgrade notes, or follow-up style-rule updates after wording feedback.
 ---
 
 # Release Note Writer
@@ -52,7 +52,7 @@ Use `To developers` for external developer impact:
 
 - Plugin SDK, plugin manifest, gamelet, widget, extension, public package API, self-host deployment behavior, server-runtime, Docker image behavior, integration contracts.
 - Include deployment behavior changes that affect external operators.
-- Do not include purely internal `server/apps/api` business logic unless users of AIRI Cloud or external operators need to act on it.
+- Do not include purely internal `server/apps/api` business logic unless users of AIPETS Cloud or external operators need to act on it.
 
 Use `To contributors` for internal project work:
 
@@ -110,10 +110,10 @@ Put account, billing, credits, Flux, Stripe, paid TTS, and commercial usage chan
 
 Prefer:
 
-- "AIRI Cloud now supports server-side TTS with per-character Flux billing."
+- "AIPETS Cloud now supports server-side TTS with per-character Flux billing."
 - "We improved billing reliability for TTS usage, especially when usage needs to be recorded before payment is fully settled."
 
-Avoid assuming `AIRI Cloud` is self-explanatory as a top-level section for every reader. When needed, split it into clearer subtopics such as `Account`, `Billing`, or `Cloud TTS`.
+Avoid assuming `AIPETS Cloud` is self-explanatory as a top-level section for every reader. When needed, split it into clearer subtopics such as `Account`, `Billing`, or `Cloud TTS`.
 
 Do not create a broad self-hoster section for internal server details. Mention self-hosting only when there is a required action or externally visible deployment change.
 
@@ -171,7 +171,7 @@ Format:
 ```markdown
 - User-facing release note sentence.[^1]
 
-[^1]: Commit [`abcdef123`](https://github.com/moeru-ai/airi/commit/abcdef123) by @contributor.
+[^1]: Commit [`abcdef123`](https://gitee.com/kallen-noelle/AdoptAI/commit/abcdef123) by @contributor.
 ```
 
 Use GitHub handles from changelogithub, PR metadata, or commit metadata when available. If the commit author name differs from the GitHub handle and the handle is not known, use the available author name without inventing a handle.
