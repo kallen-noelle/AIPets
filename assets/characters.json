@@ -11,8 +11,6 @@
     "persona": "main/人设.json",
     "appearance": {
       "scale": 1,
-      "offsetX": 0,
-      "offsetY": 0,
       "fadeMs": 180,
       "mirror": false,
       "clickEnabled": true
@@ -31,8 +29,6 @@
     "persona": "character2/人设.json",
     "appearance": {
       "scale": 1,
-      "offsetX": 0,
-      "offsetY": 0,
       "fadeMs": 180,
       "mirror": false,
       "clickEnabled": true
@@ -51,8 +47,6 @@
     "persona": "character3/人设.json",
     "appearance": {
       "scale": 1,
-      "offsetX": 0,
-      "offsetY": 0,
       "fadeMs": 180,
       "mirror": false,
       "clickEnabled": true
@@ -71,8 +65,6 @@
     "persona": "character4/人设.json",
     "appearance": {
       "scale": 1,
-      "offsetX": 0,
-      "offsetY": 0,
       "fadeMs": 180,
       "mirror": false,
       "clickEnabled": true
@@ -91,8 +83,6 @@
     "persona": "character5/人设.json",
     "appearance": {
       "scale": 1,
-      "offsetX": 0,
-      "offsetY": 0,
       "fadeMs": 180,
       "mirror": false,
       "clickEnabled": true

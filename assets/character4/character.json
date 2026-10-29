@@ -8,8 +8,6 @@
   "order": 3,
   "appearance": {
     "scale": 1,
-    "offsetX": 0,
-    "offsetY": 0,
     "fadeMs": 180,
     "mirror": false,
     "clickEnabled": true

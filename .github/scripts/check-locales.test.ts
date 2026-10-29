@@ -16,7 +16,7 @@ const script = fileURLToPath(new URL('check-locales.ts', import.meta.url))
 
 /** Writes `{ 'en/settings.yaml': '...' }` style files into a new locales directory. */
 async function locales(files: Record<string, string>) {
-  const root = await mkdtemp(join(tmpdir(), 'airi-locales-'))
+  const root = await mkdtemp(join(tmpdir(), 'aipets-locales-'))
   roots.push(root)
   for (const [path, content] of Object.entries(files)) {
     await mkdir(dirname(join(root, path)), { recursive: true })
@@ -40,7 +40,7 @@ afterEach(async () => {
 })
 
 describe('checkLocales', () => {
-  // https://github.com/moeru-ai/airi/pull/2121
+  // https://gitee.com/kallen-noelle/AdoptAI/pull/2121
   it('reports translations that a Crowdin batch moved onto unrelated keys', async () => {
     // ROOT CAUSE:
     //
@@ -232,7 +232,7 @@ describe('checkLocales', () => {
     expect(issues).toEqual([expect.objectContaining({ level: 'error', locale: 'ko', file: 'settings.yaml', key: '' })])
   })
 
-  // https://github.com/moeru-ai/airi/pull/2904
+  // https://gitee.com/kallen-noelle/AdoptAI/pull/2904
   it('reports a choice separator that no count can select (PR #2904)', async () => {
     // ROOT CAUSE:
     //
@@ -264,9 +264,9 @@ describe('checkLocales', () => {
     expect(await checkLocales({ root })).toEqual([])
   })
 
-  // https://github.com/moeru-ai/airi/pull/2904#discussion_r4241724158
-  // https://github.com/moeru-ai/airi/pull/2904#discussion_r4241821862
-  // https://github.com/moeru-ai/airi/pull/2904#discussion_r4241866639
+  // https://gitee.com/kallen-noelle/AdoptAI/pull/2904#discussion_r4241724158
+  // https://gitee.com/kallen-noelle/AdoptAI/pull/2904#discussion_r4241821862
+  // https://gitee.com/kallen-noelle/AdoptAI/pull/2904#discussion_r4241866639
   it('reports a separator beside a literal that holds a selector (PR #2904)', async () => {
     // ROOT CAUSE:
     //
@@ -310,7 +310,7 @@ describe('checkLocales', () => {
     expect(issues).toEqual([expect.objectContaining({ level: 'warning', locale: 'ja', key: 'animation.title' })])
   })
 
-  // https://github.com/moeru-ai/airi/pull/2904#discussion_r4241505158
+  // https://gitee.com/kallen-noelle/AdoptAI/pull/2904#discussion_r4241505158
   it('escapes a pipe in the summary so the row keeps its five columns (PR #2904)', async () => {
     // ROOT CAUSE:
     //

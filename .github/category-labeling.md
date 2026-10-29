@@ -20,7 +20,7 @@ The category workflow never adds or removes those labels.
 To classify an existing item, run:
 
 ```sh
-gh workflow run copilot-labels.yml --repo moeru-ai/airi -f item_number=2803
+gh workflow run copilot-labels.yml --repo kallen-noelle/AdoptAI -f item_number=2803
 ```
 
 The workflow becomes available for dispatch after it reaches the default branch.

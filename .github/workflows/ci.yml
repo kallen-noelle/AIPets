@@ -37,7 +37,7 @@ jobs:
       matrix:
         include:
           - app_name: stage-web-react
-            command: pnpm -F @proj-airi/stage-web-react run build
+            command: pnpm -F @proj-aipets/stage-web-react run build
 
     runs-on: ubuntu-latest
     steps:

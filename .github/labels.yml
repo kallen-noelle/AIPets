@@ -128,7 +128,7 @@
   description: 'Scope related to providers we support'
   color: '4468eb'
 - name: 'scope/server-api'
-  description: 'Scope related to the server api we maintained, the public service of AIRI'
+  description: 'Scope related to the server api we maintained, the public service of AIPETS'
   color: '4468eb'
 - name: 'scope/ui'
   description: 'Scope related to UI/UX, or interface improve, perf, and bugs'

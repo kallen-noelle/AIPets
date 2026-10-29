@@ -3,7 +3,7 @@
 set -euo pipefail
 
 GITCODE_API_BASE="${GITCODE_API_BASE:-https://api.gitcode.com/api/v5}"
-GITHUB_REPOSITORY_NAME="${GITHUB_REPOSITORY:-moeru-ai/airi}"
+GITHUB_REPOSITORY_NAME="${GITHUB_REPOSITORY:-kallen-noelle/AdoptAI}"
 RELEASE_TAG="${GITCODE_RELEASE_TAG:-${RELEASE_TAG:-${GITHUB_REF_NAME:-}}}"
 GITCODE_TARGET_COMMITISH="${GITCODE_TARGET_COMMITISH:-main}"
 WORK_DIR="${RUNNER_TEMP:-/tmp}/gitcode-release-${RELEASE_TAG}"
@@ -123,16 +123,16 @@ write_expected_github_asset_metadata() {
   gh api "repos/${GITHUB_REPOSITORY_NAME}/releases/tags/${encoded_tag}" \
     > "${release_assets_json}"
 
-  jq -r '.assets[].name | select(test("^(AIRI-.*|latest-.*\\.yml)$"))' "${release_assets_json}" \
+  jq -r '.assets[].name | select(test("^(AIPETS-.*|latest-.*\\.yml)$"))' "${release_assets_json}" \
     | sort \
     > "${WORK_DIR}/expected-asset-names.txt"
 
-  jq -r '.assets[] | select(.name | test("^(AIRI-.*|latest-.*\\.yml)$")) | [.name, (.digest // "")] | @tsv' "${release_assets_json}" \
+  jq -r '.assets[] | select(.name | test("^(AIPETS-.*|latest-.*\\.yml)$")) | [.name, (.digest // "")] | @tsv' "${release_assets_json}" \
     | sort \
     > "${WORK_DIR}/expected-asset-digests.tsv"
 
   if [[ ! -s "${WORK_DIR}/expected-asset-names.txt" ]]; then
-    echo "::error::No GitHub release assets matched AIRI-* or latest-*.yml."
+    echo "::error::No GitHub release assets matched AIPETS-* or latest-*.yml."
     exit 1
   fi
 

@@ -1,4 +1,4 @@
-# Start contributing to [Project AIRI](https://github.com/moeru-ai/airi)
+# Start contributing to [Project AIPETS](https://gitee.com/kallen-noelle/AdoptAI)
 
 Hello! Thank you for your interest in contributing to this project. This guide will help you get started.
 
@@ -57,10 +57,10 @@ After you clone the repository, install these versions with mise.
 >
 > If you haven't cloned this repository, skip this section.
 
-If the `upstream` remote is not configured, add the Project AIRI repository before you fetch changes:
+If the `upstream` remote is not configured, add the Project AIPETS repository before you fetch changes:
 
 ```shell
-git remote add upstream https://github.com/moeru-ai/airi.git
+git remote add upstream https://gitee.com/kallen-noelle/AdoptAI.git
 ```
 
 Fetch upstream changes and rebase your local `main` branch:
@@ -80,13 +80,13 @@ git rebase main
 
 ## Fork this project
 
-Click on the **Fork** button on the top right corner of the [moeru-ai/airi](https://github.com/moeru-ai/airi) page.
+Click on the **Fork** button on the top right corner of the [kallen-noelle/AdoptAI](https://gitee.com/kallen-noelle/AdoptAI) page.
 
 ## Clone
 
 ```shell
-git clone https://github.com/<your-github-username>/airi.git
-cd airi
+git clone https://github.com/<your-github-username>/aipets.git
+cd aipets
 ```
 
 ## Create your working branch
@@ -166,7 +166,7 @@ pnpm dev:tamagotchi
 >
 > Remove this step after `electron-vite` supports the lazy download.
 
-### Stage Web (Browser version for [airi.moeru.ai](https://airi.moeru.ai))
+### Stage Web (Browser version for [aipets.moeru.ai](https://aipets.moeru.ai))
 
 ```shell
 pnpm dev
@@ -182,11 +182,11 @@ pnpm dev
 
 ### UI Storyboard
 
-Browse the live UI component storyboard at [airi.moeru.ai/ui](https://airi.moeru.ai/ui/).
+Browse the live UI component storyboard at [aipets.moeru.ai/ui](https://aipets.moeru.ai/ui/).
 
 ### Documentation site
 
-The documentation site lives in [moeru-ai/airi-docs](https://github.com/moeru-ai/airi-docs), see its README for development.
+The documentation site lives in [kallen-noelle/AdoptAI-docs](https://gitee.com/kallen-noelle/AdoptAI-docs), see its README for development.
 
 ## Commit
 
@@ -229,7 +229,7 @@ You should be able to browse the branch on your fork repository.
 
 ## Creating Pull Request
 
-Navigate to [moeru-ai/airi](https://github.com/moeru-ai/airi) page, click on the **Pull requests** tab, and click on the **New pull request** button, click on the **Compare across forks** link, and select your fork repository.
+Navigate to [kallen-noelle/AdoptAI](https://gitee.com/kallen-noelle/AdoptAI) page, click on the **Pull requests** tab, and click on the **New pull request** button, click on the **Compare across forks** link, and select your fork repository.
 
 Review the changes, and click on the **Create pull request** button.
 
@@ -237,8 +237,8 @@ Review the changes, and click on the **Create pull request** button.
 
 The `Unit Test` check must pass before a pull request merges into `main`.
 Organization member `luoling8192` described failed unit tests as a CI blocker in
-[PR #2290](https://github.com/moeru-ai/airi/pull/2290#issuecomment-5802515112) and
-[PR #2214](https://github.com/moeru-ai/airi/pull/2214#issuecomment-5802515813).
+[PR #2290](https://gitee.com/kallen-noelle/AdoptAI/pull/2290#issuecomment-5802515112) and
+[PR #2214](https://gitee.com/kallen-noelle/AdoptAI/pull/2214#issuecomment-5802515813).
 
 The proposed [Require Unit Test ruleset](rulesets/require-unit-test.json) adds this requirement alongside the existing `Protect main` ruleset.
 It requires the `Unit Test` check from GitHub Actions and has no bypass actors.

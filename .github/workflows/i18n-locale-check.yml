@@ -30,7 +30,7 @@ jobs:
           runtime: node@26.7.0
           cache: true
           install: false
-      - run: pnpm install --frozen-lockfile --filter @proj-airi/root --ignore-scripts
+      - run: pnpm install --frozen-lockfile --filter @proj-aipets/root --ignore-scripts
       # An English change can make translations outdated. Crowdin owns those locales and the
       # next sync clears them, so here that is a warning, not a reason to edit other locales.
       - run: node .github/scripts/check-locales.ts --root packages/i18n/src/locales --base base/packages/i18n/src/locales --source-changes warning

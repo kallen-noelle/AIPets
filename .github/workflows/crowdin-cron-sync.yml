@@ -55,7 +55,7 @@ jobs:
           runtime: node@26.7.0
           cache: true
           install: false
-      - run: pnpm install --frozen-lockfile --filter @proj-airi/root --ignore-scripts
+      - run: pnpm install --frozen-lockfile --filter @proj-aipets/root --ignore-scripts
       # Crowdin exports can change YAML quotes without changing translated text.
       # Format before validation and publication so autofix does not leave an empty PR.
       - name: Format the exported locales
@@ -106,9 +106,9 @@ jobs:
           if [ -z "$number" ]; then
             gh pr create --base main --head crowdin \
               --title 'chore(i18n): update translations' \
-              --body 'This PR contains updated translations from Crowdin. Created from [GitHub Actions](https://github.com/moeru-ai/airi/blob/main/.github/workflows/crowdin-cron-sync.yml).
+              --body 'This PR contains updated translations from Crowdin. Created from [GitHub Actions](https://gitee.com/kallen-noelle/AdoptAI/blob/main/.github/workflows/crowdin-cron-sync.yml).
 
-          You can review the source of translations [here](https://crowdin.com/project/proj-airi)'
+          You can review the source of translations [here](https://crowdin.com/project/proj-aipets)'
             number=$(gh pr list --head crowdin --state open --json number --jq '.[0].number')
           fi
           gh pr comment "$number" --body-file "$RUNNER_TEMP/locale-check.md" --edit-last --create-if-none

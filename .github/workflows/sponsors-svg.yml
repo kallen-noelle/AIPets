@@ -15,7 +15,7 @@ jobs:
     env:
       SPONSORKIT_PATREON_TOKEN: ${{ secrets.SPONSORKIT_PATREON_TOKEN }}
       SPONSORKIT_OPENCOLLECTIVE_KEY: ${{ secrets.SPONSORKIT_OPENCOLLECTIVE_KEY }}
-      SPONSORKIT_OPENCOLLECTIVE_SLUG: proj-airi
+      SPONSORKIT_OPENCOLLECTIVE_SLUG: proj-aipets
     steps:
       - uses: actions/checkout@v6
         with:

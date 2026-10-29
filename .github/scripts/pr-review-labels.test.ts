@@ -7,7 +7,7 @@ const workflow = parse(readFileSync(new URL('../workflows/pr-review-labels.yml',
 const AsyncFunction = Object.getPrototypeOf(async () => {}).constructor
 const run = new AsyncFunction('github', 'context', workflow.jobs.label.steps[0].with.script)
 const managed = ['pr-review/waiting-maintainer', 'pr-review/waiting-on-author']
-const context = { repo: { owner: 'moeru-ai', repo: 'airi' }, payload: { pull_request: { number: 42 } } }
+const context = { repo: { owner: 'moeru-ai', repo: 'aipets' }, payload: { pull_request: { number: 42 } } }
 const request = { state: 'CHANGES_REQUESTED', submittedAt: '2026-10-05T10:00:00Z', commit: { oid: 'reviewed' } }
 const changedCommit = { oid: 'changed', committedDate: '2026-10-05T11:00:00Z', parents: { totalCount: 1 } }
 
@@ -212,7 +212,7 @@ describe('pR review handoff labels', () => {
     expect(github.rest.issues.createLabel).toHaveBeenCalledTimes(2)
   })
 
-  // https://github.com/moeru-ai/airi/pull/2806#discussion_r4181587747
+  // https://gitee.com/kallen-noelle/AdoptAI/pull/2806#discussion_r4181587747
   // ROOT CAUSE:
   // A review without a commit stopped reconciliation for every later PR.
   // Preserve that PR's labels and continue the batch.

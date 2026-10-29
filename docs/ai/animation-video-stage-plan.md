@@ -1,15 +1,15 @@
-# AIRI 动画方案替换计划（以 dsh-pet 透明视频方案替换现有渲染器）
+# AIPETS 动画方案替换计划（以 dsh-pet 透明视频方案替换现有渲染器）
 
 - 分支：`kallen/feat/animation-video-stage`
 - 状态：方案待确认，确认后进入 Phase 1
-- 最终状态：AIRI 只保留一种角色渲染方式 —— 透明视频动画包
+- 最终状态：AIPETS 只保留一种角色渲染方式 —— 透明视频动画包
 
 ## 0. 决策摘要
 
 | 项目 | 决定 |
 | --- | --- |
 | 角色表现层 | 全部替换为透明视频片段（VP9 Alpha WebM，Safari 回退 HEVC MOV） |
-| 驱动方式 | 保留 AIRI 现有 ACT 事件与情绪队列，改为“选片段”而不是“改骨骼/参数” |
+| 驱动方式 | 保留 AIPETS 现有 ACT 事件与情绪队列，改为“选片段”而不是“改骨骼/参数” |
 | 旧渲染器 | Live2D / VRM / MMD / Spine / Tachie 最终删除 |
 | 对话、语音、记忆、Provider、账号 | 不动 |
 | 动画包格式 | 一个 ZIP + `manifest.json` + 透明视频 + 预览图 |
@@ -24,7 +24,7 @@
 
 ---
 
-## 1. AIRI 动画能力全景（替换前必须掌握）
+## 1. AIPETS 动画能力全景（替换前必须掌握）
 
 ### 1.1 驱动链路
 
@@ -103,7 +103,7 @@ Stage 对外暴露：
 
 ### 2.2 事件到片段的映射
 
-| AIRI 状态 | 动画行为 |
+| AIPETS 状态 | 动画行为 |
 | --- | --- |
 | 空闲 | 播 `idle` 基础链 |
 | `nowSpeaking = true` | 切到 `talk` 基础链，结束后回 `idle` |
@@ -127,7 +127,7 @@ Stage 对外暴露：
 
 ### 2.4 解耦边界（为将来的桌宠宿主预留）
 
-目标：动画能力不只服务 AIRI 舞台，还能被独立桌宠宿主复用。按“核心逻辑 / 宿主适配 / 事件契约”三层拆开。
+目标：动画能力不只服务 AIPETS 舞台，还能被独立桌宠宿主复用。按“核心逻辑 / 宿主适配 / 事件契约”三层拆开。
 
 | 层 | 位置 | 允许依赖 | 禁止依赖 |
 | --- | --- | --- | --- |
@@ -194,9 +194,9 @@ playAnimation / setIntent / getSnapshot / pause / resume
 宿主扩展规则：
 
 - 新增宿主时，只实现 `AnimationPlayerPort`、`AnimationPackStore` 和窗口物理。
-- 不导入 `@proj-airi/stage-ui`，避免把 AIRI 的 Pinia、路由和页面依赖带进宿主。
-- 动画包格式与命名保持中立，不使用 `stage`、`airi`、`live2d` 等业务词。
-- AIRI 的 `act`、情绪枚举在适配层转换，核心包不识别 AIRI 专有事件。
+- 不导入 `@proj-aipets/stage-ui`，避免把 AIPETS 的 Pinia、路由和页面依赖带进宿主。
+- 动画包格式与命名保持中立，不使用 `stage`、`aipets`、`live2d` 等业务词。
+- AIPETS 的 `act`、情绪枚举在适配层转换，核心包不识别 AIPETS 专有事件。
 
 ---
 
@@ -343,7 +343,7 @@ beat/dance-01.webm
 
 ### Phase 1：视频渲染器与动画包
 
-1. 新增 `@proj-airi/character-animation` 核心包：manifest schema、类型、权重选择器、播放状态机、端口定义。
+1. 新增 `@proj-aipets/character-animation` 核心包：manifest schema、类型、权重选择器、播放状态机、端口定义。
 2. 新增 stage-ui 适配层：ZIP 解析、Blob URL、预览图、IndexedDB 存储。
 3. 新增 `animation` 格式与导入流程。
 4. 实现 `VideoAnimationScene.vue`：A/B 切换、基础链、一次性层、暂停、点击、`captureFrame`。
@@ -464,10 +464,10 @@ beat/dance-01.webm
 
 ### 7.1 自动化
 
-- `pnpm -F @proj-airi/character-animation exec vitest run`
-- `pnpm -F @proj-airi/stage-ui typecheck`
-- `pnpm -F @proj-airi/stage-ui exec vitest run src/adapters/animation`
-- `pnpm -F @proj-airi/stage-ui exec vitest run src/stores/animation-settings.test.ts`
+- `pnpm -F @proj-aipets/character-animation exec vitest run`
+- `pnpm -F @proj-aipets/stage-ui typecheck`
+- `pnpm -F @proj-aipets/stage-ui exec vitest run src/adapters/animation`
+- `pnpm -F @proj-aipets/stage-ui exec vitest run src/stores/animation-settings.test.ts`
 - 改共享类型后跑根目录 `pnpm typecheck`
 - 收尾跑 `pnpm lint`
 

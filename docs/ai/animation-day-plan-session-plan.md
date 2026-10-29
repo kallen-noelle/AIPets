@@ -287,7 +287,7 @@ CrossfadeVideoPlayer（A/B 双 video）
 
 ## 10. 持久化与恢复
 
-- 存储键：`airi:react:character/<id>/day-plan`。
+- 存储键：`aipets:react:character/<id>/day-plan`。
 - 存储内容：计划、`planId`、最后交互时间、当前块进度、`updatedAt`。
 - 启动恢复：
   - 计划跨天或过期：重新生成。
@@ -325,7 +325,7 @@ CrossfadeVideoPlayer（A/B 双 video）
 
 验收：
 
-- `pnpm -F @proj-airi/character-animation test:run` 通过。
+- `pnpm -F @proj-aipets/character-animation test:run` 通过。
 - 不改变现有播放行为。
 
 ### Phase 1：会话状态机与 waiting 链

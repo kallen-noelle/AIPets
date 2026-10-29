@@ -14,7 +14,7 @@ const allowed: string[] = JSON.parse(policyMatch[1])
 const AsyncFunction = Object.getPrototypeOf(async () => {}).constructor
 const apply = new AsyncFunction('github', 'context', 'core', 'require', 'process', steps[3].with.script)
 const prepare = new AsyncFunction('github', 'context', 'require', 'process', steps[0].with.script)
-const context = { repo: { owner: 'moeru-ai', repo: 'airi' } }
+const context = { repo: { owner: 'moeru-ai', repo: 'aipets' } }
 
 function run(output: string, labels = ['bug', 'priority/urgent', 'question', 'feature-request/needs-more-info', 'pr-review/waiting-on-author']) {
   const issues = {

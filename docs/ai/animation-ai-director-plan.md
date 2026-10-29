@@ -137,7 +137,7 @@
 | 关系 Affinity | `affinity` | 长期累计，本期不衰减 |
 | 世界事实 WorldFacts | `now`、`isNight`、`userPresent`、`idleMinutes`、`locale` | 外部输入，不持久化计算结果 |
 
-持久化键：`airi:react:character/<id>/state`，带 `version` 与 `updatedAt`。版本不匹配时重置为基线。
+持久化键：`aipets:react:character/<id>/state`，带 `version` 与 `updatedAt`。版本不匹配时重置为基线。
 
 ### 5.4 Mode
 
@@ -440,8 +440,8 @@ L3 不允许越过规则层的模式转换、增量上限与禁用清单。
 
 验收：
 
-- `pnpm -F @proj-airi/character-animation test:run` 通过。
-- `pnpm -F @proj-airi/character-animation typecheck` 通过。
+- `pnpm -F @proj-aipets/character-animation test:run` 通过。
+- `pnpm -F @proj-aipets/character-animation typecheck` 通过。
 - 不改变现有播放行为。
 
 ### Phase 1：语义目录与显式播放
@@ -523,9 +523,9 @@ L3 不允许越过规则层的模式转换、增量上限与禁用清单。
 命令：
 
 ```sh
-pnpm -F @proj-airi/character-animation test:run
-pnpm -F @proj-airi/character-animation typecheck
-pnpm -F @proj-airi/stage-web-react typecheck
+pnpm -F @proj-aipets/character-animation test:run
+pnpm -F @proj-aipets/character-animation typecheck
+pnpm -F @proj-aipets/stage-web-react typecheck
 pnpm lint
 ```
 
@@ -571,8 +571,8 @@ Phase 0 已完成：
 
 - 新增 `catalog.ts`、`affect.ts`、`modes.ts`、`plan.ts` 与 Valibot 校验。
 - 新增对应单元测试，覆盖目录解析、情绪增减与衰减、模式转换、计划校验。
-- `pnpm -F @proj-airi/character-animation test:run` 通过，54 个测试。
-- `pnpm -F @proj-airi/character-animation typecheck` 通过。
+- `pnpm -F @proj-aipets/character-animation test:run` 通过，54 个测试。
+- `pnpm -F @proj-aipets/character-animation typecheck` 通过。
 
 Phase 1 已完成：
 
@@ -581,14 +581,14 @@ Phase 1 已完成：
 - 生成脚本输出 `assets/<id>/catalog.json`，并按语义标签生成 `emotion` 分组，替换原来的单一 `happy` 桶。
 - 五个角色均已生成 catalog；`main` 与 `character2`、`character5` 增加了人工语义覆盖。
 - React 宿主可加载 catalog，舞台提供计划 JSON 调试入口。
-- `pnpm -F @proj-airi/stage-web-react typecheck` 通过。
+- `pnpm -F @proj-aipets/stage-web-react typecheck` 通过。
 - 开发服务器已验证 catalog 与 manifest 可访问。
 - 已用 Playwright 无头浏览器验证实际播放：debug 计划在 replyStart 播放害羞片段，sentence 1 切换开心片段，afterSpeech 切换行礼片段。
 - 执行器对更晚锚点的线索采用替换而不是排队，避免长片段跨过下一个锚点后才播放。
 
 Phase 2 已完成：
 
-- 新增 `apps/stage-web-react/src/character/affect-store.ts`，按角色持久化情绪到 `airi:react:character/<id>/affect`。
+- 新增 `apps/stage-web-react/src/character/affect-store.ts`，按角色持久化情绪到 `aipets:react:character/<id>/affect`。
 - 每个角色有独立基线与特质；支持夸奖、批评、道歉、点击、对话与 5 分钟衰减。
 - 启动时按 `updatedAt` 补算离线衰减。
 - 聊天输入接入本地规则词表；点击舞台也会更新情绪。

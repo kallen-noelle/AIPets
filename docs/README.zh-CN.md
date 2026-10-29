@@ -14,7 +14,7 @@
 
 <h1 align="center">aipets</h1>
 
-<p align="center">用透明视频片段驱动的会说话的数字宠物。Project AIRI 的二次开发。</p>
+<p align="center">用透明视频片段驱动的会说话的数字宠物。</p>
 
 <p align="center">
   [<a href="./README.md">English</a>] [<a href="./README.zh-CN.md">简体中文</a>]
@@ -22,8 +22,7 @@
 
 > [!NOTE]
 >
-> 本仓库是 [Project AIRI](https://github.com/moeru-ai/airi) 的二次开发版本。上游用 Live2D、VRM 或 MMD
-> 渲染虚拟角色的身体，本仓库把身体换成透明视频片段，其余技术栈保留。
+> 本仓库用透明视频片段渲染虚拟角色的身体，不使用 Live2D、VRM 或 MMD。
 >
 > 本仓库保留网页端与 Electron 桌面端，丢弃移动端、游戏集成与大多数翻译语言。完整的取舍见
 > [范围](#范围)。
@@ -45,7 +44,7 @@
 | 网页端 | 保留 | `apps/stage-web-react`。React、Vite、UnoCSS。 |
 | 桌面端 | 接入 | `apps/stage-web-react` 的 `electron/` 外壳，用 electron-builder 打包。 |
 | 移动端 | 已移除 | `apps/stage-pocket` 已删除。 |
-| 大脑：聊天渠道 | 裁剪 | 不做 Telegram、Discord、X，对应包已删除。保留 Satori 适配器 `integrations/satori-bot`。 |
+| 大脑：聊天渠道 | 裁剪 | 不做 Telegram、Discord、X，对应包已删除。Satori 适配器 `integrations/satori-bot` 也已删除。 |
 | 大脑：记忆 | 接入 | 纯浏览器 DuckDB WASM 与 `pglite`，以及 Alaya 记忆层。 |
 | 大脑：本地推理 | 接入 | 浏览器内 WebGPU 推理，施工中。 |
 | 耳朵 | 接入 | 音频输入、语音识别、语音活动检测。 |
@@ -61,7 +60,7 @@
 | 国际化 | 裁剪 | 只保留中文与英文。 |
 | 登录与账号 | 已移除 | `apps/ui-server-auth` 已删除。 |
 | `apps/component-calling` | 已移除 | 实验应用已删除。 |
-| 包作用域 | 保留 | npm 包保持 `@proj-airi/*`，只改项目名。 |
+| 包作用域 | 保留 | npm 包保持 `@proj-aipets/*`，只改项目名。 |
 
 ## 架构
 
@@ -135,14 +134,14 @@ pnpm dev:web
 ### 桌面端
 
 ```shell
-pnpm -F @proj-airi/stage-web-react dev       # 启动 Vite 开发服务器
-pnpm -F @proj-airi/stage-web-react electron  # 在开发服务器上打开 Electron 窗口
+pnpm -F @proj-aipets/stage-web-react dev       # 启动 Vite 开发服务器
+pnpm -F @proj-aipets/stage-web-react electron  # 在开发服务器上打开 Electron 窗口
 ```
 
 构建 Windows 安装包：
 
 ```shell
-pnpm -F @proj-airi/stage-web-react electron:dist
+pnpm -F @proj-aipets/stage-web-react electron:dist
 ```
 
 安装包写入 `apps/stage-web-react/release/`，该目录不入库。
@@ -156,8 +155,8 @@ pnpm dev:backend
 ### 检查
 
 ```shell
-pnpm -F @proj-airi/stage-web-react typecheck
-pnpm -F @proj-airi/character-animation exec vitest run
+pnpm -F @proj-aipets/stage-web-react typecheck
+pnpm -F @proj-aipets/character-animation exec vitest run
 pnpm lint
 ```
 
@@ -196,10 +195,8 @@ MIT，见 [LICENSE](./LICENSE)。
 
 ## 致谢
 
-本项目是 Moeru AI 团队的 [Project AIRI](https://github.com/moeru-ai/airi) 的二次开发。动画内核、stage
-系列包、服务端通道与设计语言都来自该项目。
+动画内核、stage 系列包、服务端通道与设计语言基于以下项目。
 
-- [Project AIRI](https://github.com/moeru-ai/airi)
 - [Reka UI](https://github.com/unovue/reka-ui)：`packages/ui` 所用的无头界面基础
 - [`xsai`](https://github.com/moeru-ai/xsai)：LLM 与模型客户端
 - [pixiv/ChatVRM](https://github.com/pixiv/ChatVRM) 与 [josephrocca/ChatVRM-js](https://github.com/josephrocca/ChatVRM-js)

@@ -30,7 +30,7 @@ jobs:
       # The TBX file is generated, never committed, so it cannot drift from terms.yaml.
       # The schema also rejects a malformed entry here, before anything reaches Crowdin.
       - name: Generate TBX File
-        run: pnpm -F @proj-airi/i18n glossary:build
+        run: pnpm -F @proj-aipets/i18n glossary:build
 
       # NOTICE: Crowdin does not document whether an import merges into the existing
       # concepts or adds duplicates beside them, and a merge cannot be undone. This
