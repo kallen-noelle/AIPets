@@ -12,7 +12,7 @@ import { S3EnvironmentSchema } from './s3-config'
 describe.skipIf(!process.env.TEST_S3_ENDPOINT)('s3-compatible server integration', () => {
   it('uploads, signs, downloads, inspects, and deletes objects in an isolated bucket', async () => {
     const config = parse(S3EnvironmentSchema, {
-      S3_BUCKET: `airi-s3-test-${randomUUID()}`,
+      S3_BUCKET: `aipets-s3-test-${randomUUID()}`,
       S3_REGION: 'us-east-1',
       S3_ENDPOINT: process.env.TEST_S3_ENDPOINT,
       S3_FORCE_PATH_STYLE: 'true',
@@ -65,7 +65,7 @@ describe.skipIf(!process.env.TEST_S3_ENDPOINT)('s3-compatible server integration
   // Direct uploads depend on this contract. A provider that fails here cannot protect ready bytes.
   it('rejects wrong bytes and a second write to the same key', async () => {
     const config = parse(S3EnvironmentSchema, {
-      S3_BUCKET: `airi-s3-test-${randomUUID()}`,
+      S3_BUCKET: `aipets-s3-test-${randomUUID()}`,
       S3_REGION: 'us-east-1',
       S3_ENDPOINT: process.env.TEST_S3_ENDPOINT,
       S3_FORCE_PATH_STYLE: 'true',

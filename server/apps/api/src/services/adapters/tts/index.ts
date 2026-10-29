@@ -1,6 +1,6 @@
 import type { TtsAdapter, TtsAdapterId } from './types'
 
-import { createBadRequestError } from '@proj-airi/http-error-shared'
+import { createBadRequestError } from '@proj-aipets/http-error-shared'
 
 import { azureAdapter } from './azure'
 import { dashscopeCosyvoiceAdapter } from './dashscope-cosyvoice'

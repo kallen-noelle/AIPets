@@ -2,7 +2,7 @@ FROM node:24-alpine
 
 WORKDIR /app
 
-RUN addgroup -S airi && adduser -S airi -G airi
+RUN addgroup -S aipets && adduser -S aipets -G aipets
 
 RUN corepack enable
 
@@ -15,11 +15,11 @@ COPY server/packages/server-sdk-shared server/packages/server-sdk-shared
 
 RUN pnpm install --frozen-lockfile --ignore-scripts
 
-RUN pnpm -F @proj-airi/server-sdk-shared run build
-RUN pnpm -F @proj-airi/api-server run build
+RUN pnpm -F @proj-aipets/server-sdk-shared run build
+RUN pnpm -F @proj-aipets/api-server run build
 
 EXPOSE 3000
 
-USER airi
+USER aipets
 
-CMD ["pnpm", "-F", "@proj-airi/api-server", "start"]
+CMD ["pnpm", "-F", "@proj-aipets/api-server", "start"]

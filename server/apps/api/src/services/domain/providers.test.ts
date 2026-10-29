@@ -28,7 +28,7 @@ describe('providerService', () => {
     testUser = user
   })
 
-  // https://github.com/moeru-ai/airi/pull/2471#discussion_r3997091188
+  // https://gitee.com/kallen-noelle/AdoptAI/pull/2471#discussion_r3997091188
   it('stores the client instance id apart from the server primary key', async () => {
     const result = await service.upsert({
       instanceId: 'prov-1',
@@ -134,7 +134,7 @@ describe('providerService', () => {
     expect(otherRows[0]?.config).toEqual({ apiKey: 'sk-other' })
   })
 
-  // https://github.com/moeru-ai/airi/pull/2471#discussion_r3999470562
+  // https://gitee.com/kallen-noelle/AdoptAI/pull/2471#discussion_r3999470562
   it('accepts concurrent first writes of the same owner and instance id', async () => {
     // ROOT CAUSE:
     //

@@ -3,7 +3,7 @@ import type { Voice } from 'unspeech'
 import type { TtsAdapterContext, TtsResult, TtsVoiceCatalogContext } from './types'
 
 import { errorMessageFrom } from '@moeru/std'
-import { createBadGatewayError, createInternalError } from '@proj-airi/http-error-shared'
+import { createBadGatewayError, createInternalError } from '@proj-aipets/http-error-shared'
 import { generateSpeechResponse, listVoices, UnSpeechAPIError } from 'unspeech'
 
 import { TtsUpstreamResponseError } from './types'
@@ -24,7 +24,7 @@ interface SendSpeechOptions {
  * Sends one OpenAI-shaped speech request through the unspeech SDK.
  *
  * Use when:
- * - A TTS adapter has resolved AIRI's provider policy and needs to delegate the
+ * - A TTS adapter has resolved AIPETS's provider policy and needs to delegate the
  *   actual HTTP request to unspeech.
  *
  * Expects:
@@ -90,7 +90,7 @@ interface ListVoicesOptions {
 }
 
 /**
- * Lists unspeech voices and maps SDK failures into AIRI gateway errors.
+ * Lists unspeech voices and maps SDK failures into AIPETS gateway errors.
  *
  * Use when:
  * - A TTS adapter needs unspeech's normalized `Voice[]` catalog.

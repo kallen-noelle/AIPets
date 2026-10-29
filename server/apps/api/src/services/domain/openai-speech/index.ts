@@ -7,13 +7,13 @@ import type { VoicePackService } from '../voice-packs'
 
 import { useLogger } from '@guiiai/logg'
 import { context, SpanStatusCode, trace } from '@opentelemetry/api'
-import { ApiError, createBadRequestError, createPaymentRequiredError } from '@proj-airi/http-error-shared'
+import { ApiError, createBadRequestError, createPaymentRequiredError } from '@proj-aipets/http-error-shared'
 import { check, pipe, safeParse, string, transform } from 'valibot'
 
 import { nanoid } from '../../../utils/id'
 import {
-  AIRI_ATTR_BILLING_FLUX_CONSUMED,
-  AIRI_ATTR_GEN_AI_OPERATION_KIND,
+  AIPETS_ATTR_BILLING_FLUX_CONSUMED,
+  AIPETS_ATTR_GEN_AI_OPERATION_KIND,
   GEN_AI_ATTR_REQUEST_MODEL,
 } from '../../../utils/observability'
 
@@ -170,7 +170,7 @@ export function createOpenAiSpeechService(deps: OpenAiSpeechServiceDeps) {
     const span = tracer.startSpan('llm.gateway.tts', {
       attributes: {
         [GEN_AI_ATTR_REQUEST_MODEL]: requestModel,
-        [AIRI_ATTR_GEN_AI_OPERATION_KIND]: 'text_to_speech',
+        [AIPETS_ATTR_GEN_AI_OPERATION_KIND]: 'text_to_speech',
       },
     })
 
@@ -225,7 +225,7 @@ export function createOpenAiSpeechService(deps: OpenAiSpeechServiceDeps) {
         provider: routeCtx.provider,
       })
       fluxConsumed = result.feeFlux
-      span.setAttribute(AIRI_ATTR_BILLING_FLUX_CONSUMED, fluxConsumed)
+      span.setAttribute(AIPETS_ATTR_BILLING_FLUX_CONSUMED, fluxConsumed)
     }
     catch (err) {
       throw err
@@ -261,7 +261,7 @@ export function createOpenAiSpeechService(deps: OpenAiSpeechServiceDeps) {
   }): void {
     const attrs = {
       [GEN_AI_ATTR_REQUEST_MODEL]: input.model,
-      [AIRI_ATTR_GEN_AI_OPERATION_KIND]: 'tts',
+      [AIPETS_ATTR_GEN_AI_OPERATION_KIND]: 'tts',
       'http.response.status_code': input.status,
       'provider': input.provider,
     }
@@ -275,7 +275,7 @@ export function createOpenAiSpeechService(deps: OpenAiSpeechServiceDeps) {
 
 function ttsAnalyticsContext(body: Record<string, unknown>): TtsAnalyticsContext {
   const extraBody = asRecord(body.extra_body)
-  const analytics = asRecord(extraBody?.airi_analytics)
+  const analytics = asRecord(extraBody?.aipets_analytics)
   const trigger = analytics?.trigger === 'auto' ? 'auto' : 'manual'
   const rawSource = analytics?.source
   const source = rawSource === 'chat_auto_tts'
@@ -290,7 +290,7 @@ function ttsAnalyticsContext(body: Record<string, unknown>): TtsAnalyticsContext
 /**
  * Reads the language of the speech text from `extra_body.language`.
  *
- * AIRI extensions of the OpenAI speech body live in `extra_body`, as `voice_pack` and `airi_analytics` do.
+ * AIPETS extensions of the OpenAI speech body live in `extra_body`, as `voice_pack` and `aipets_analytics` do.
  * An absent language returns `undefined`, so the provider reads the text as before. A malformed tag fails the request
  * before billing, because the caller sent a value that no adapter can map.
  */

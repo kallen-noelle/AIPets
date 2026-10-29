@@ -1,4 +1,4 @@
-import { ApiError } from '@proj-airi/http-error-shared'
+import { ApiError } from '@proj-aipets/http-error-shared'
 import { describe, expect, it, vi } from 'vitest'
 
 import { createRevenuecatSubscriberClient } from './revenuecat-subscriber'
@@ -14,7 +14,7 @@ const goSubscription = {
   gives_access: true,
   current_period_starts_at: periodStart,
   current_period_ends_at: periodEnd,
-  entitlements: { items: [{ id: 'entl_go', lookup_key: 'airi_go' }] },
+  entitlements: { items: [{ id: 'entl_go', lookup_key: 'aipets_go' }] },
 }
 
 /** What RevenueCat holds for one customer. A missing customer answers 404, as RevenueCat does. */
@@ -72,7 +72,7 @@ describe('revenuecat subscriber client', () => {
       })
 
       expect(await client.fetchEntitlements('user/1')).toEqual([{
-        entitlementId: 'airi_go',
+        entitlementId: 'aipets_go',
         productId: 'rc_go_monthly',
         purchasedAt: new Date(periodStart),
         accessUntil: new Date(periodEnd),
@@ -90,7 +90,7 @@ describe('revenuecat subscriber client', () => {
 
     it('reads every page and skips a subscription that gives no access', async () => {
       const expired = { ...goSubscription, status: 'expired', auto_renewal_status: 'will_not_renew', gives_access: false }
-      const plus = { ...goSubscription, product_id: 'prod_plus', entitlements: { items: [{ id: 'entl_plus', lookup_key: 'airi_plus' }] } }
+      const plus = { ...goSubscription, product_id: 'prod_plus', entitlements: { items: [{ id: 'entl_plus', lookup_key: 'aipets_plus' }] } }
       const { client, paths } = revenuecat({
         subscriptions: [expired, plus],
         activeEntitlements: [{ entitlement_id: 'entl_plus', expires_at: periodEnd }],
@@ -98,11 +98,11 @@ describe('revenuecat subscriber client', () => {
 
       const entitlements = await client.fetchEntitlements('user-1')
 
-      expect(entitlements.map(item => [item.entitlementId, item.productId])).toEqual([['airi_plus', 'rc_plus_monthly']])
+      expect(entitlements.map(item => [item.entitlementId, item.productId])).toEqual([['aipets_plus', 'rc_plus_monthly']])
       expect(paths).not.toContain('/products/prod_go')
     })
 
-    // https://github.com/moeru-ai/airi/pull/2910#discussion_r4240813205
+    // https://gitee.com/kallen-noelle/AdoptAI/pull/2910#discussion_r4240813205
     it('grants nothing for a promotional subscription, which has no product', async () => {
       const promotional = { ...goSubscription, product_id: null }
       const { client, paths } = revenuecat({
@@ -204,7 +204,7 @@ describe('revenuecat subscriber client', () => {
       expect(await renewing({ status: 'in_grace_period' })).toBe(true)
     })
 
-    // https://github.com/moeru-ai/airi/pull/2910#discussion_r4239058361
+    // https://gitee.com/kallen-noelle/AdoptAI/pull/2910#discussion_r4239058361
     // ROOT CAUSE:
     //
     // The v1 rule read "gives access" as "renews". A failed renewal without a grace period ends
@@ -226,13 +226,13 @@ describe('revenuecat subscriber client', () => {
       expect(await revenuecat(null).client.hasRenewingSubscription('user-1')).toBe(false)
     })
 
-    // https://github.com/moeru-ai/airi/pull/2910#discussion_r4240813197
+    // https://gitee.com/kallen-noelle/AdoptAI/pull/2910#discussion_r4240813197
     it('is true for an unknown status while the renewal is on', async () => {
       expect(await renewing({ status: 'unknown', gives_access: false })).toBe(true)
       expect(await renewing({ status: 'unknown', auto_renewal_status: 'will_not_renew' })).toBe(false)
     })
 
-    // https://github.com/moeru-ai/airi/pull/2910#discussion_r4240813200
+    // https://gitee.com/kallen-noelle/AdoptAI/pull/2910#discussion_r4240813200
     it('finds a renewing subscription on a later page, for a path and for an absolute URL', async () => {
       const expired = { ...goSubscription, status: 'expired', auto_renewal_status: 'will_not_renew', gives_access: false }
 
@@ -248,7 +248,7 @@ describe('revenuecat subscriber client', () => {
       expect(fetch).not.toHaveBeenCalled()
     })
 
-    // https://github.com/moeru-ai/airi/pull/2910#discussion_r4239058365
+    // https://gitee.com/kallen-noelle/AdoptAI/pull/2910#discussion_r4239058365
     it('fails without a configuration in a deployment that sells subscriptions', async () => {
       const client = createRevenuecatSubscriberClient({ ...production, apiKey: null, projectId: null, sellsSubscriptions: true, fetch: vi.fn<typeof globalThis.fetch>() })
 

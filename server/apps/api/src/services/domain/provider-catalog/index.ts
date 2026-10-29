@@ -10,7 +10,7 @@ import type {
   ProviderCatalogTtsVoiceLanguage,
 } from '../../../schemas/provider-catalog'
 
-import { createBadRequestError } from '@proj-airi/http-error-shared'
+import { createBadRequestError } from '@proj-aipets/http-error-shared'
 import { and, asc, eq, inArray } from 'drizzle-orm'
 
 import {
@@ -90,7 +90,7 @@ function catalogError(message: string, errorCode: string, details?: unknown) {
 }
 
 /**
- * Owns AIRI's provider catalog curation state.
+ * Owns AIPETS's provider catalog curation state.
  *
  * The router config still owns real provider URLs, keys, and fallback
  * mechanics. Capability aliases and provider model or voice rows decide what

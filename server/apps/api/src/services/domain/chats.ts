@@ -1,10 +1,10 @@
-import type { MessageRole, SendMessagesRequest, WireMessage } from '@proj-airi/server-sdk-shared'
+import type { MessageRole, SendMessagesRequest, WireMessage } from '@proj-aipets/server-sdk-shared'
 
 import type { Database } from '../../libs/db'
 import type { EngagementMetrics } from '../../otel'
 
 import { useLogger } from '@guiiai/logg'
-import { createBadRequestError, createConflictError, createForbiddenError, createNotFoundError } from '@proj-airi/http-error-shared'
+import { createBadRequestError, createConflictError, createForbiddenError, createNotFoundError } from '@proj-aipets/http-error-shared'
 import { and, eq, gt, inArray, isNull, sql } from 'drizzle-orm'
 import { groupBy } from 'es-toolkit'
 

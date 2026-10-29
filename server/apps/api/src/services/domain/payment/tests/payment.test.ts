@@ -306,7 +306,7 @@ describe('payment CORE', () => {
 
   it('credits sandbox replay once without colliding with a production transaction ID', async () => {
     const fields = { transactionId: 'txn_same', productId: 'starter', appAccountToken: 'token-1' }
-    const payload = { bundleId: 'ai.moeru.airi-pocket', environment: Environment.SANDBOX }
+    const payload = { bundleId: 'ai.moeru.aipets-pocket', environment: Environment.SANDBOX }
     const sandbox = evidenceReceiptFromTransaction(payload, fields, 'user-pay-1', { fluxAmount: 500 })
     const production = evidenceReceiptFromTransaction(
       { ...payload, environment: Environment.PRODUCTION },
@@ -329,7 +329,7 @@ describe('payment CORE', () => {
 
   it('credits concurrent deliveries of a new sandbox transaction once', async () => {
     const fields = { transactionId: 'race_txn', productId: 'starter', appAccountToken: 'token-1' }
-    const payload = { bundleId: 'ai.moeru.airi-pocket', environment: Environment.SANDBOX }
+    const payload = { bundleId: 'ai.moeru.aipets-pocket', environment: Environment.SANDBOX }
     const current = evidenceReceiptFromTransaction(payload, fields, 'user-pay-1', { fluxAmount: 500 })
     const results = await Promise.all([
       payment.settle(current),
@@ -344,13 +344,13 @@ describe('payment CORE', () => {
   it('does not deduplicate sandbox transactions across different bundles', async () => {
     const fields = { transactionId: 'shared_txn', productId: 'starter', appAccountToken: 'token-1' }
     const first = evidenceReceiptFromTransaction(
-      { bundleId: 'ai.moeru.airi-pocket', environment: Environment.SANDBOX },
+      { bundleId: 'ai.moeru.aipets-pocket', environment: Environment.SANDBOX },
       fields,
       'user-pay-1',
       { fluxAmount: 500 },
     )
     const second = evidenceReceiptFromTransaction(
-      { bundleId: 'ai.moeru.airi-pocket-lab', environment: Environment.SANDBOX },
+      { bundleId: 'ai.moeru.aipets-pocket-lab', environment: Environment.SANDBOX },
       fields,
       'user-pay-1',
       { fluxAmount: 500 },

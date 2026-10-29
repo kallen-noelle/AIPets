@@ -249,7 +249,7 @@ export const configEntrySchemas = {
   LLM_MINIMUM_BALANCE: optional(pipe(number(), finite(), integer(), minValue(1)), 5),
   INITIAL_USER_FLUX: optional(number(), 0),
   FLUX_PER_1K_CHARS_TTS: number(),
-  // App Store product id → Flux amount to grant. AIRI and AIRI Lite each have
+  // App Store product id → Flux amount to grant. AIPETS and AIPETS Lite each have
   // their own product ids.
   APPLE_FLUX_PACKS: optional(record(
     pipe(string(), nonEmpty('APPLE_FLUX_PACKS product ids must not be empty')),

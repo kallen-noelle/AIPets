@@ -2,7 +2,7 @@ import type { Database } from '../../../libs/db'
 import type { PushedField } from './request'
 import type { FieldSyncHistoryOptions, FieldSyncStore } from './store'
 
-import { createBadRequestError } from '@proj-airi/http-error-shared'
+import { createBadRequestError } from '@proj-aipets/http-error-shared'
 import { eq } from 'drizzle-orm'
 import { foreignKey, index, integer, pgTable, primaryKey, text, timestamp } from 'drizzle-orm/pg-core'
 import { beforeEach, describe, expect, it } from 'vitest'
@@ -365,7 +365,7 @@ describe('fieldSyncStore', () => {
       expect(snapshot!.fields).toEqual(expect.arrayContaining([{ key: '/untouched', value: 'base' }]))
     })
 
-    // Found in the review of https://github.com/moeru-ai/airi/pull/2817
+    // Found in the review of https://gitee.com/kallen-noelle/AdoptAI/pull/2817
     // ROOT CAUSE:
     //
     // The baseline query filtered `value is not null` before `DISTINCT ON`.

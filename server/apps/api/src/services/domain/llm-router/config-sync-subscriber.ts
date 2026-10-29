@@ -61,7 +61,7 @@ export interface ConfigSyncSubscriber {
  * - `subscriber` — the dedicated ioredis subscriber connection, so the
  *   caller can `await subscriber.quit()` during graceful shutdown.
  *
- * Emits the following `airi.gen_ai.gateway.*` metrics:
+ * Emits the following `aipets.gen_ai.gateway.*` metrics:
  * - `config_reload` (source = `pubsub`) once per accepted invalidation msg
  * - `subscriber_state` with `state` = `connected` / `error` / `reconnecting`
  *

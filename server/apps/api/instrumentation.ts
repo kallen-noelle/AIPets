@@ -76,7 +76,7 @@ else {
   }
 
   const serviceName = env.OTEL_SERVICE_NAME || 'server'
-  const serviceNamespace = env.OTEL_SERVICE_NAMESPACE || 'airi'
+  const serviceNamespace = env.OTEL_SERVICE_NAMESPACE || 'aipets'
   const samplingRatioRaw = Number(env.OTEL_TRACES_SAMPLING_RATIO ?? '1')
   // Head-based sampling. Metrics are always 100% accurate regardless.
   const samplingRatio = Number.isFinite(samplingRatioRaw) && samplingRatioRaw >= 0 && samplingRatioRaw <= 1

@@ -27,7 +27,7 @@ const STEPFUN_LANGUAGES = new Set(['zh', 'en', 'ja', 'ko', 'fr', 'es'])
  * - `ctx.adapterParams.model` optionally selects `stepaudio-2.5-tts`,
  *   `step-tts-2`, or `step-tts-mini`.
  * - `ctx.adapterParams.endpointProfile` optionally selects a provider-owned
- *   endpoint profile such as `step-plan`; AIRI never owns the endpoint URL.
+ *   endpoint profile such as `step-plan`; AIPETS never owns the endpoint URL.
  *
  * Returns:
  * - {@link TtsResult} with the upstream audio body and content type.

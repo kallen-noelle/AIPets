@@ -2,7 +2,7 @@ import type { Voice } from 'unspeech'
 
 import type { TtsAdapter, TtsAdapterContext, TtsInput, TtsResult, TtsVoiceCatalogContext } from './types'
 
-import { createBadRequestError, createInternalError, createServiceUnavailableError } from '@proj-airi/http-error-shared'
+import { createBadRequestError, createInternalError, createServiceUnavailableError } from '@proj-aipets/http-error-shared'
 import { inferMicrosoftContentType, isMicrosoftVoiceId, resolveMicrosoftOutputFormat } from 'unspeech'
 
 import { listVoicesViaUnSpeech, sendSpeechViaUnSpeech } from './unspeech'
@@ -87,8 +87,8 @@ export const azureAdapter: TtsAdapter = {
  *
  * NOTICE:
  * `unspeech` owns the canonical Microsoft helpers, but the currently consumed
- * helper surface only lets AIRI pass speed. Voice Pack pitch and volume must be
- * encoded before the request reaches unspeech because AIRI sends pre-built SSML
+ * helper surface only lets AIPETS pass speed. Voice Pack pitch and volume must be
+ * encoded before the request reaches unspeech because AIPETS sends pre-built SSML
  * with `disable_ssml: true`.
  * Source/context: this adapter's `extraOptions.pitch` and `extraOptions.volume`
  * contract, covered by `azureAdapter.send` tests.

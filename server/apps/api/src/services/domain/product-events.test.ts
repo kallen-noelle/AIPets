@@ -5,7 +5,7 @@ import { describe, expect, it, vi } from 'vitest'
 import { createProductEventService } from './product-events'
 
 describe('productEventService', () => {
-  it('routes confirmed product facts to OpenPanel with stable AIRI user ids', async () => {
+  it('routes confirmed product facts to OpenPanel with stable AIPETS user ids', async () => {
     const capture = vi.fn<(input: ProductCaptureInput) => Promise<void>>().mockResolvedValue(undefined)
     const service = createProductEventService({ capture })
     await service.track({ userId: 'user-1', feature: 'auth', action: 'user_signed_up', status: 'succeeded' })
@@ -14,7 +14,7 @@ describe('productEventService', () => {
     expect(capture).toHaveBeenNthCalledWith(1, {
       userId: 'user-1',
       event: 'signup_completed',
-      properties: { app_surface: 'server', airi_user_id: 'user-1', feature: 'auth', status: 'succeeded' },
+      properties: { app_surface: 'server', aipets_user_id: 'user-1', feature: 'auth', status: 'succeeded' },
     })
     expect(capture).toHaveBeenNthCalledWith(2, expect.objectContaining({ userId: 'user-2', event: 'checkout_created' }))
   })
@@ -41,7 +41,7 @@ describe('productEventService', () => {
         currency: 'usd',
         event_id: 'cs_123',
         app_surface: 'server',
-        airi_user_id: 'user-1',
+        aipets_user_id: 'user-1',
         feature: 'billing',
         status: 'succeeded',
       },

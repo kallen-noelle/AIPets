@@ -1,6 +1,6 @@
-# `@proj-airi/api-server`
+# `@proj-aipets/api-server`
 
-Project AIRI's resource API. Authentication is a separate workspace app at
+Project AIPETS's resource API. Authentication is a separate workspace app at
 `server/apps/auth`; this package does not instantiate Better Auth or expose
 auth/OIDC routes.
 
@@ -63,7 +63,7 @@ Each change stays in one domain module, plus wiring in `app.ts`:
 - To add a producer, provide `createStreamPublisher` through `injeca`.
 - To add a consumer, provide `createStreamConsumer` through `injeca`, and register `start()` and `stop()` with `lifecycle.appHooks`.
 
-The account events stream (`src/services/adapters/account-events.ts`) is the first user. Cloud (`proj-airi/backend`) reads it and writes user notifications.
+The account events stream (`src/services/adapters/account-events.ts`) is the first user. Cloud (`proj-aipets/backend`) reads it and writes user notifications.
 
 - The RevenueCat webhook publishes `subscription.renewed` for `RENEWAL` and `subscription.payment_failed` for `BILLING_ISSUE`.
 - The deletion pipeline publishes `user.deleted` after every soft delete.
@@ -157,7 +157,7 @@ to its test credentials. The test creates and deletes a unique bucket.
 It also checks the direct-upload contract: the server rejects wrong bytes and a second write to one key.
 
 ```sh
-pnpm -F @proj-airi/api-server exec vitest run src/services/adapters/object-store.integration.test.ts
+pnpm -F @proj-aipets/api-server exec vitest run src/services/adapters/object-store.integration.test.ts
 ```
 
 ## Payment
@@ -188,7 +188,7 @@ Flux balance stays self-managed. In-App Currency is not used.
 
 ## Subscriptions
 
-Go (`airi_go`) and Plus (`airi_plus`) are sold through RevenueCat on every store. Apple, Google, Stripe, and Test
+Go (`aipets_go`) and Plus (`aipets_plus`) are sold through RevenueCat on every store. Apple, Google, Stripe, and Test
 Store all enter through the single RevenueCat webhook. `store` is only a
 field, so new channels need no server changes.
 
@@ -215,10 +215,10 @@ cancels the subscription first.
 ## Run locally
 
 ```sh
-pnpm -F @proj-airi/api-server dev
-pnpm -F @proj-airi/api-server typecheck
-pnpm -F @proj-airi/api-server exec vitest run
-pnpm -F @proj-airi/api-server build
+pnpm -F @proj-aipets/api-server dev
+pnpm -F @proj-aipets/api-server typecheck
+pnpm -F @proj-aipets/api-server exec vitest run
+pnpm -F @proj-aipets/api-server build
 ```
 
 Run the complete local backend from the repository root:
@@ -227,8 +227,8 @@ Run the complete local backend from the repository root:
 pnpm dev:backend
 ```
 
-For source-level debugging, start `@proj-airi/api-server` and
-`@proj-airi/auth-server` separately instead.
+For source-level debugging, start `@proj-aipets/api-server` and
+`@proj-aipets/auth-server` separately instead.
 
 `server/docker-compose.yaml` exposes the local Caddy gateway at `http://localhost:6112` and keeps
 the API and Auth container ports private.
@@ -242,7 +242,7 @@ the API and Auth container ports private.
   not have its own public ingress.
 - `AUTH_SERVER_INTERNAL_URL` optionally sends JWKS fetches directly to Auth on
   the private network while issuer and audience remain `AUTH_SERVER_URL`.
-- Auth tables and principal types come from `@proj-airi/auth-shared`; no module
+- Auth tables and principal types come from `@proj-aipets/auth-shared`; no module
   under `server/apps/auth` is imported.
 
 ## Railway
@@ -250,7 +250,7 @@ the API and Auth container ports private.
 Deploy this as the Resource API Railway service. Keep the service Root
 Directory at the repository root because the Dockerfile copies shared
 workspace packages. The project-level Infrastructure as Code file is
-`proj-airi/airi-railway/.railway/railway.ts`. It owns the Dockerfile, start
+`proj-aipets/aipets-railway/.railway/railway.ts`. It owns the Dockerfile, start
 command, `/readyz` healthcheck, and watch patterns.
 
 Set `AUTH_SERVER_INTERNAL_URL` from Auth's Railway private domain. It is only
@@ -323,7 +323,7 @@ Zero fees do not create debit ledger rows. Underfunded settlements increment the
 The request log and attempts keep the provider evidence. A request with a log and no `flux_usage` row is unbilled.
 Reconcile unbilled requests by joining the request log with `flux_usage` on the request ID.
 The request log no longer stores a Flux amount. Read the fee from `flux_usage` by request ID.
-The `airi.billing.flux.consumed` metric and the `airi.billing.flux_consumed` span attribute report the fee in Flux, not the integer debit.
+The `aipets.billing.flux.consumed` metric and the `aipets.billing.flux_consumed` span attribute report the fee in Flux, not the integer debit.
 Migration 0030 drops the `llm_request_settlement` archive and `llm_request_log.flux_consumed`.
 Export the historical settlements before this migration runs.
 There is no automatic reconciliation worker in this release.
@@ -383,7 +383,7 @@ Messages API remains unsupported until these pieces exist.
 
 Responses validation reuses `src/services/adapters/llm/schemas/responses.ts`.
 This server-owned protocol layer derives schemas from OpenResponses and adds OpenAI search extensions.
-It permits provider-side references; the AIRI request policy rejects them for shared upstream accounts.
+It permits provider-side references; the AIPETS request policy rejects them for shared upstream accounts.
 The schema directory retains its generation input and instructions. Compiled JavaScript is not stored in source.
 xsai's existing client patch remains unchanged. No schema export or new peer dependency is added to xsai.
 
@@ -418,7 +418,7 @@ Before the first device test:
 2. Add a dedicated account's internal user ID to `APPLE_IAP_SANDBOX_USER_IDS`.
 3. Configure `APPLE_FLUX_PACKS` in ConfigKV, not in environment variables. Use exact App Store product IDs and positive `fluxAmount` values.
 4. Set the App Store Connect Sandbox Notifications V2 URL to the public `/api/v1/apple-iap/notifications` endpoint.
-5. Install a build with the iOS settlement fixes. Sign in to the dedicated AIRI account and complete a sandbox purchase.
+5. Install a build with the iOS settlement fixes. Sign in to the dedicated AIPETS account and complete a sandbox purchase.
 
 Check purchase credit, device retries, and duplicate Apple notifications.
 Each purchase must credit once. Check that a normal account cannot receive

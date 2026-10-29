@@ -1,6 +1,6 @@
 import type { InferOutput } from 'valibot'
 
-import { createBadGatewayError, createServiceUnavailableError } from '@proj-airi/http-error-shared'
+import { createBadGatewayError, createServiceUnavailableError } from '@proj-aipets/http-error-shared'
 import { array, boolean, nullable, number, object, safeParse, string } from 'valibot'
 
 const REQUEST_TIMEOUT_MS = 5_000
@@ -51,7 +51,7 @@ type Subscription = InferOutput<typeof subscriptionSchema>
 
 /** One entitlement that the customer has now. */
 export interface SubscriberEntitlement {
-  /** The entitlement lookup key, for example `airi_go`. */
+  /** The entitlement lookup key, for example `aipets_go`. */
   entitlementId: string
   /** The store product identifier of the subscription that grants it. */
   productId: string

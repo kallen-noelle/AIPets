@@ -47,7 +47,7 @@ describe('capacitor Flux bucket', () => {
   })
 
   describe('syncCapacitor', () => {
-    // https://github.com/moeru-ai/airi/pull/2813#discussion_r4237747699
+    // https://gitee.com/kallen-noelle/AdoptAI/pull/2813#discussion_r4237747699
     // ROOT CAUSE:
     // Webhooks created zero-balance wallets before the initial grant path ran.
     // Both entry points now create the wallet and initial ledger row together.
@@ -232,7 +232,7 @@ describe('capacitor Flux bucket', () => {
       expect(await wallet()).toMatchObject({ capacitorFlux: 70, flux: 9 })
     })
 
-    // https://github.com/moeru-ai/airi/pull/2813#discussion_r4238519379
+    // https://gitee.com/kallen-noelle/AdoptAI/pull/2813#discussion_r4238519379
     // ROOT CAUSE:
     //
     // `getWallet` counted a due refill but did not write it, and a rejected request never settled.

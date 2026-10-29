@@ -121,7 +121,7 @@ describe('fluxService (DB-backed)', () => {
     expect(await redis.ttl(userFluxRedisKey(testUser.id))).toBeGreaterThan(0)
   })
 
-  // https://github.com/moeru-ai/airi/pull/2562
+  // https://gitee.com/kallen-noelle/AdoptAI/pull/2562
   // ROOT CAUSE:
   //
   // Before: GET could read a persistent snapshot, then PTTL could read the

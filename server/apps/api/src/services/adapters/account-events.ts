@@ -11,7 +11,7 @@ const planSchema = pipe(string(), nonEmpty())
 const timestampSchema = pipe(string(), isoTimestamp())
 
 /**
- * Account facts that Cloud (`proj-airi/backend`) turns into user notifications.
+ * Account facts that Cloud (`proj-aipets/backend`) turns into user notifications.
  * Cloud reads the stream with the `cloud-inbox` consumer group. The key, the types, and the payloads
  * are a cross-repository contract. See `server/docs/ai/adr/2026-10-18-account-events-stream.md`.
  *

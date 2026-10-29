@@ -14,16 +14,16 @@ import { Buffer as NodeBuffer } from 'node:buffer'
 
 import { useLogger } from '@guiiai/logg'
 import { trace } from '@opentelemetry/api'
-import { ApiError, createServiceUnavailableError } from '@proj-airi/http-error-shared'
+import { ApiError, createServiceUnavailableError } from '@proj-aipets/http-error-shared'
 import { optional, parse } from 'valibot'
 
 import { generationProtocolSchema } from '../../../schemas/generation-protocol'
 import { errorMessageFromUnknown } from '../../../utils/error-message'
 import {
-  AIRI_ATTR_GEN_AI_GATEWAY_FALLBACK_DEPTH,
-  AIRI_ATTR_GEN_AI_GATEWAY_KEY_ID,
-  AIRI_ATTR_GEN_AI_GATEWAY_UPSTREAM_INDEX,
-  AIRI_ATTR_GEN_AI_GATEWAY_UPSTREAM_URL,
+  AIPETS_ATTR_GEN_AI_GATEWAY_FALLBACK_DEPTH,
+  AIPETS_ATTR_GEN_AI_GATEWAY_KEY_ID,
+  AIPETS_ATTR_GEN_AI_GATEWAY_UPSTREAM_INDEX,
+  AIPETS_ATTR_GEN_AI_GATEWAY_UPSTREAM_URL,
 } from '../../../utils/observability'
 import { generationAdapters } from '../../adapters/llm'
 import { getAdapter } from '../../adapters/tts'
@@ -241,7 +241,7 @@ function selectLlmCandidates(model: LlmModel, request: Pick<LlmRouteRequest, 'mo
  *
  * The router does NOT open its own OTel span — the route handler in U4
  * owns the span. The router only enriches the *active* span with
- * `airi.gen_ai.gateway.*` attrs.
+ * `aipets.gen_ai.gateway.*` attrs.
  */
 export function createLlmRouterService(options: CreateLlmRouterServiceOptions) {
   const logger = useLogger('llm-router').useGlobalConfig()
@@ -371,10 +371,10 @@ export function createLlmRouterService(options: CreateLlmRouterServiceOptions) {
           await Promise.all(failures.map(failure => discardUpstreamResponse(failure.response)))
           // First 2xx wins. Enrich the active span and return.
           trace.getActiveSpan()?.setAttributes({
-            [AIRI_ATTR_GEN_AI_GATEWAY_UPSTREAM_URL]: upstream.baseURL,
-            [AIRI_ATTR_GEN_AI_GATEWAY_UPSTREAM_INDEX]: upstreamIndex,
-            [AIRI_ATTR_GEN_AI_GATEWAY_KEY_ID]: key.id,
-            [AIRI_ATTR_GEN_AI_GATEWAY_FALLBACK_DEPTH]: attemptIndex,
+            [AIPETS_ATTR_GEN_AI_GATEWAY_UPSTREAM_URL]: upstream.baseURL,
+            [AIPETS_ATTR_GEN_AI_GATEWAY_UPSTREAM_INDEX]: upstreamIndex,
+            [AIPETS_ATTR_GEN_AI_GATEWAY_KEY_ID]: key.id,
+            [AIPETS_ATTR_GEN_AI_GATEWAY_FALLBACK_DEPTH]: attemptIndex,
           })
           return { kind: 'ok', response, attemptIndex, upstreamModel: effectiveModel }
         }
@@ -695,10 +695,10 @@ export function createLlmRouterService(options: CreateLlmRouterServiceOptions) {
         }
 
         trace.getActiveSpan()?.setAttributes({
-          [AIRI_ATTR_GEN_AI_GATEWAY_UPSTREAM_URL]: upstream.baseURL,
-          [AIRI_ATTR_GEN_AI_GATEWAY_UPSTREAM_INDEX]: upstreamIndex,
-          [AIRI_ATTR_GEN_AI_GATEWAY_KEY_ID]: key.id,
-          [AIRI_ATTR_GEN_AI_GATEWAY_FALLBACK_DEPTH]: attemptIndex,
+          [AIPETS_ATTR_GEN_AI_GATEWAY_UPSTREAM_URL]: upstream.baseURL,
+          [AIPETS_ATTR_GEN_AI_GATEWAY_UPSTREAM_INDEX]: upstreamIndex,
+          [AIPETS_ATTR_GEN_AI_GATEWAY_KEY_ID]: key.id,
+          [AIPETS_ATTR_GEN_AI_GATEWAY_FALLBACK_DEPTH]: attemptIndex,
         })
         await Promise.all(failures.map(failure => discardUpstreamResponse(failure.response)))
         return { kind: 'ok', contentType: result.contentType, body: result.body, attemptIndex }

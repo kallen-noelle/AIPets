@@ -22,16 +22,16 @@ Hono, Drizzle ORM, PostgreSQL, Redis, Stripe, OpenTelemetry, Valibot, injeca (DI
 ## Commands
 
 ```sh
-pnpm -F @proj-airi/api-server dev                # dev with dotenvx (.env.local)
-pnpm -F @proj-airi/api-server typecheck
-pnpm -F @proj-airi/api-server exec vitest run    # all server tests
+pnpm -F @proj-aipets/api-server dev                # dev with dotenvx (.env.local)
+pnpm -F @proj-aipets/api-server typecheck
+pnpm -F @proj-aipets/api-server exec vitest run    # all server tests
 pnpm exec vitest run server/apps/api/src/...     # single test file
-pnpm -F @proj-airi/api-server db:generate        # drizzle-kit generate
-pnpm -F @proj-airi/api-server db:push            # drizzle-kit push
-pnpm -F @proj-airi/auth-server auth:generate # better-auth → server/packages/auth-shared/src/schema.ts
+pnpm -F @proj-aipets/api-server db:generate        # drizzle-kit generate
+pnpm -F @proj-aipets/api-server db:push            # drizzle-kit push
+pnpm -F @proj-aipets/auth-server auth:generate # better-auth → server/packages/auth-shared/src/schema.ts
 ```
 
-Local observability is maintained in `proj-airi/airi-railway`; run its `otel/docker-compose.yaml` stack.
+Local observability is maintained in `proj-aipets/aipets-railway`; run its `otel/docker-compose.yaml` stack.
 
 ## Architecture Summary
 
@@ -44,7 +44,7 @@ Local observability is maintained in `proj-airi/airi-railway`; run its `otel/doc
 
 **Middleware chain** (`/api/*`): CORS → hono/logger → optional otel → sessionMiddleware → bodyLimit(1MB) → per-route guards. WebSocket `/ws/chat` registered before bodyLimit.
 
-**Error model**: `ApiError(statusCode, errorCode, message, details)` and `createErrorHandler` in `@proj-airi/http-error-shared`. Throw an `ApiError`. Do not write an error body in a route or middleware.
+**Error model**: `ApiError(statusCode, errorCode, message, details)` and `createErrorHandler` in `@proj-aipets/http-error-shared`. Throw an `ApiError`. Do not write an error body in a route or middleware.
 
 ## Key Design Decisions
 

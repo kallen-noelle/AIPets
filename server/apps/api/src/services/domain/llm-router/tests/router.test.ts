@@ -10,7 +10,7 @@ import type { LlmRouteContext, RouterConfig } from '../types'
 
 import { randomBytes } from 'node:crypto'
 
-import { ApiError } from '@proj-airi/http-error-shared'
+import { ApiError } from '@proj-aipets/http-error-shared'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 
 import { createEnvelopeCrypto } from '../../../../utils/envelope-crypto'
@@ -149,7 +149,7 @@ function failResponse(status: number, body: object = { error: 'bad' }) {
 }
 
 describe('createLlmRouterService', () => {
-  // https://github.com/moeru-ai/airi/pull/2644#discussion_r4122406969
+  // https://gitee.com/kallen-noelle/AdoptAI/pull/2644#discussion_r4122406969
   it('validates fallback model pricing without provider traffic (PR #2644)', async () => {
     const { config, crypto } = makeConfig({ upstreams: [{ baseURL: 'https://priced.example/v1', keyIds: ['first'] }] })
     config.llm.models.fallback = {
@@ -359,7 +359,7 @@ describe('createLlmRouterService', () => {
     expect(ctx.upstreamModel).toBe('real/upstream-id')
   })
 
-  // https://github.com/moeru-ai/airi/pull/2333#discussion_r3820516102
+  // https://gitee.com/kallen-noelle/AdoptAI/pull/2333#discussion_r3820516102
   it('pr #2333: multi-key fallback releases the failed chat response before returning success', async () => {
     const { config, crypto } = makeConfig({ upstreams: [{ baseURL: 'https://up-a.example/v1', keyIds: ['k1', 'k2'] }] })
     const failedResponse = failResponse(401)
@@ -391,7 +391,7 @@ describe('createLlmRouterService', () => {
     expect((metrics.keyExhaustedCount.add as ReturnType<typeof vi.fn>).mock.calls.length).toBe(0)
   })
 
-  // https://github.com/moeru-ai/airi/pull/2333#discussion_r3820516102
+  // https://gitee.com/kallen-noelle/AdoptAI/pull/2333#discussion_r3820516102
   it('pr #2333: caller abort releases earlier failed chat responses', async () => {
     const { config, crypto } = makeConfig({ upstreams: [{ baseURL: 'https://up-a.example/v1', keyIds: ['k1', 'k2'] }] })
     const failedResponse = failResponse(401)
@@ -543,7 +543,7 @@ describe('createLlmRouterService', () => {
       expect(first).toMatchObject({ keyId: 'kA1', status: 401 })
       expect(first.bodySnippet).toEqual(expect.stringContaining('key disabled'))
       expect(first.errorMessage).toBeUndefined()
-      // https://github.com/moeru-ai/airi/pull/2333#discussion_r3828016906
+      // https://gitee.com/kallen-noelle/AdoptAI/pull/2333#discussion_r3828016906
       // `Response` owns headers and a body stream. The diagnostic cause must
       // keep only the documented serializable attempt fields.
       expect(first.response).toBeUndefined()
@@ -1057,7 +1057,7 @@ describe('createLlmRouterService', () => {
       expect((metrics.fallbackCount.add as ReturnType<typeof vi.fn>).mock.calls.length).toBe(1)
     })
 
-    // https://github.com/moeru-ai/airi/pull/2333#discussion_r3820516115
+    // https://gitee.com/kallen-noelle/AdoptAI/pull/2333#discussion_r3820516115
     it('pr #2333: apiError 5xx stops key fallback when fallbackHttpCodes excludes the status', async () => {
       const { config, crypto } = makeTtsConfig({
         upstreams: [{ baseURL: 'https://az.example', keyIds: ['kA1', 'kA2'], adapterParams: { region: 'eastasia' } }],
@@ -1956,7 +1956,7 @@ describe('createLlmRouterService', () => {
   })
 })
 
-// https://github.com/moeru-ai/airi/issues/2479
+// https://gitee.com/kallen-noelle/AdoptAI/issues/2479
 it.each([false, true])('issue #2479 filters incompatible upstreams before terminal handling (grouped: %s)', async (grouped) => {
   const { config, crypto } = makeConfig({ upstreams: [
     { baseURL: 'https://responses.example/v1', keyIds: ['r'] },
@@ -1983,7 +1983,7 @@ it.each([false, true])('issue #2479 filters incompatible upstreams before termin
   expect(metrics.keyExhaustedCount.add).toHaveBeenCalledWith(1, expect.objectContaining({ surface: 'responses' }))
 })
 
-// https://github.com/moeru-ai/airi/issues/2479
+// https://gitee.com/kallen-noelle/AdoptAI/issues/2479
 it('issue #2479 rejects Responses when no upstream opts in', async () => {
   const { config, crypto } = makeConfig({})
   const fetchImpl = vi.fn<typeof fetch>()

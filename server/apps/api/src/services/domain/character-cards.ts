@@ -1,7 +1,7 @@
 import type { Database } from '../../libs/db'
 import type { PushedField } from './field-sync'
 
-import { createBadRequestError } from '@proj-airi/http-error-shared'
+import { createBadRequestError } from '@proj-aipets/http-error-shared'
 
 import * as v from 'valibot'
 
@@ -39,16 +39,16 @@ const knownFieldSchemas: Record<string, v.GenericSchema> = {
   '/greetings': textListSchema,
   '/greetingsGroupOnly': textListSchema,
   '/messageExample': v.array(v.array(v.unknown())),
-  '/extensions/airi/agents': objectSchema,
-  '/extensions/airi/wakeWords': v.array(v.unknown()),
-  '/extensions/airi/modules/consciousness': objectSchema,
-  '/extensions/airi/modules/vision': objectSchema,
-  '/extensions/airi/modules/speech': objectSchema,
-  '/extensions/airi/modules/artistry': objectSchema,
-  '/extensions/airi/modules/vrm': objectSchema,
-  '/extensions/airi/modules/live2d': objectSchema,
-  '/extensions/airi/modules/displayModelId': textSchema,
-  '/extensions/airi/modules/activeBackgroundId': textSchema,
+  '/extensions/aipets/agents': objectSchema,
+  '/extensions/aipets/wakeWords': v.array(v.unknown()),
+  '/extensions/aipets/modules/consciousness': objectSchema,
+  '/extensions/aipets/modules/vision': objectSchema,
+  '/extensions/aipets/modules/speech': objectSchema,
+  '/extensions/aipets/modules/artistry': objectSchema,
+  '/extensions/aipets/modules/vrm': objectSchema,
+  '/extensions/aipets/modules/live2d': objectSchema,
+  '/extensions/aipets/modules/displayModelId': textSchema,
+  '/extensions/aipets/modules/activeBackgroundId': textSchema,
 }
 
 function assertCardFields(fields: PushedField[]) {

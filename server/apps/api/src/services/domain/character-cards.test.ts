@@ -38,7 +38,7 @@ describe('characterCardService', () => {
   it.each([
     ['/name', 'Nova'],
     ['/extensions/depth~1prompt', { depth: 4 }],
-    ['/extensions/airi/wakeWords', []],
+    ['/extensions/aipets/wakeWords', []],
     ['/extensions/unknown/anything', 42],
   ])('accepts the key %s with a value of any shape that the client can read', async (key, value) => {
     const service = createCharacterCardService(db)
@@ -51,9 +51,9 @@ describe('characterCardService', () => {
   // The client reads these keys without a further check. A value of another
   // shape fails the card on every device, so the server rejects it.
   it.each([
-    ['/extensions/airi/wakeWords', 'not a list'],
-    ['/extensions/airi/modules/speech', ['not an object']],
-    ['/extensions/airi/modules/displayModelId', 7],
+    ['/extensions/aipets/wakeWords', 'not a list'],
+    ['/extensions/aipets/modules/speech', ['not an object']],
+    ['/extensions/aipets/modules/displayModelId', 7],
     ['/tags', 'not a list'],
     ['/name', { not: 'text' }],
   ])('rejects the value of %s that has the wrong shape', async (key, value) => {

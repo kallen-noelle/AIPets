@@ -8,8 +8,8 @@ import { createConfigKVService } from './config-kv'
 import { createRevenuecatSubscriptionSync } from './revenuecat-subscriptions'
 
 const starterCapacitors: ConfigDefinitions['REVENUECAT_CAPACITORS'] = {
-  rc_go_monthly: { entitlementId: 'airi_go', quota: 2000 },
-  rc_plus_monthly: { entitlementId: 'airi_plus', quota: 5000 },
+  rc_go_monthly: { entitlementId: 'aipets_go', quota: 2000 },
+  rc_plus_monthly: { entitlementId: 'aipets_plus', quota: 5000 },
 }
 
 function createConfigKV(
@@ -32,7 +32,7 @@ const future = new Date(Date.now() + 86_400_000)
 const past = new Date(Date.now() - 86_400_000)
 
 const goEntitlement: SubscriberEntitlement = {
-  entitlementId: 'airi_go',
+  entitlementId: 'aipets_go',
   productId: 'rc_go_monthly',
   purchasedAt: new Date('2026-10-01T00:00:00.000Z'),
   accessUntil: future,
@@ -83,7 +83,7 @@ describe('revenuecat subscription sync', () => {
     const { synced } = await reconcile([
       goEntitlement,
       {
-        entitlementId: 'airi_plus',
+        entitlementId: 'aipets_plus',
         productId: 'rc_plus_monthly',
         purchasedAt: new Date('2026-10-15T00:00:00.000Z'),
         accessUntil: future,

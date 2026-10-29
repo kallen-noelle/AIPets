@@ -39,11 +39,11 @@ describe('configKVService', () => {
   })
 
   it('accepts a whole Capacitor quota and rejects a fraction or an unsafe integer', async () => {
-    store._store.set('REVENUECAT_CAPACITORS', JSON.stringify({ rc_go_monthly: { entitlementId: 'airi_go', quota: 100 } }))
-    expect(await service.getOptional('REVENUECAT_CAPACITORS')).toEqual({ rc_go_monthly: { entitlementId: 'airi_go', quota: 100 } })
+    store._store.set('REVENUECAT_CAPACITORS', JSON.stringify({ rc_go_monthly: { entitlementId: 'aipets_go', quota: 100 } }))
+    expect(await service.getOptional('REVENUECAT_CAPACITORS')).toEqual({ rc_go_monthly: { entitlementId: 'aipets_go', quota: 100 } })
 
     for (const quota of [1.5, 1e20]) {
-      store._store.set('REVENUECAT_CAPACITORS', JSON.stringify({ rc_go_monthly: { entitlementId: 'airi_go', quota } }))
+      store._store.set('REVENUECAT_CAPACITORS', JSON.stringify({ rc_go_monthly: { entitlementId: 'aipets_go', quota } }))
       await expect(service.refresh('REVENUECAT_CAPACITORS')).rejects.toMatchObject({ errorCode: 'CONFIG_INVALID' })
     }
   })
@@ -115,7 +115,7 @@ describe('configKVService', () => {
       })
   })
 
-  // https://github.com/moeru-ai/airi/pull/2445#discussion_r3913931906
+  // https://gitee.com/kallen-noelle/AdoptAI/pull/2445#discussion_r3913931906
   // ROOT CAUSE:
   //
   // The streaming TTS config accepted an empty default model. The catalog
