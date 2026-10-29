@@ -11,7 +11,7 @@ import type { RequestLogService } from '../../../services/domain/request-log'
 import type { VoicePackService } from '../../../services/domain/voice-packs'
 import type { HonoEnv } from '../../../types/hono'
 
-import { ApiError } from '@proj-airi/http-error-shared'
+import { ApiError } from '@proj-aipets/http-error-shared'
 import { Hono } from 'hono'
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest'
 
@@ -29,9 +29,9 @@ import { microFluxToFlux } from '../../../services/domain/billing/flux-posting'
 import { createLlmBillingService } from '../../../services/domain/billing/llm-billing'
 import { createRequestLogService } from '../../../services/domain/request-log'
 import {
-  AIRI_CHAT_APP_SURFACE_HEADER,
-  AIRI_CHAT_ROUND_ID_HEADER,
-  AIRI_CHAT_SESSION_ID_HEADER,
+  AIPETS_CHAT_APP_SURFACE_HEADER,
+  AIPETS_CHAT_ROUND_ID_HEADER,
+  AIPETS_CHAT_SESSION_ID_HEADER,
 } from './analytics'
 import { createOpenAiRouteBilling } from './middlewares/billing'
 import { tracer } from './middlewares/telemetry'
@@ -1042,9 +1042,9 @@ describe('v1CompletionsRoutes', () => {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            [AIRI_CHAT_SESSION_ID_HEADER]: 'conversation-1',
-            [AIRI_CHAT_ROUND_ID_HEADER]: 'round-1',
-            [AIRI_CHAT_APP_SURFACE_HEADER]: 'electron',
+            [AIPETS_CHAT_SESSION_ID_HEADER]: 'conversation-1',
+            [AIPETS_CHAT_ROUND_ID_HEADER]: 'round-1',
+            [AIPETS_CHAT_APP_SURFACE_HEADER]: 'electron',
           },
           body: JSON.stringify({ model: 'chat-auto', messages: [{ role: 'user', content: 'hi' }] }),
         }),
@@ -1510,7 +1510,7 @@ describe('v1CompletionsRoutes', () => {
             input: 'hello',
             voice: 'alloy',
             extra_body: {
-              airi_analytics: {
+              aipets_analytics: {
                 source: 'manual_preview',
                 voice_type: 'official_selected',
               },
@@ -1698,7 +1698,7 @@ describe('v1CompletionsRoutes', () => {
             input: 'hello',
             voice: 'alloy',
             extra_body: {
-              airi_analytics: {
+              aipets_analytics: {
                 trigger: 'auto',
                 source: 'chat_auto_tts',
               },
@@ -2564,7 +2564,7 @@ describe('v1CompletionsRoutes', () => {
   })
 })
 
-// https://github.com/moeru-ai/airi/issues/2479
+// https://gitee.com/kallen-noelle/AdoptAI/issues/2479
 it('issue #2479 exposes an authenticated Responses create route', async () => {
   const app = createTestApp(createMockFluxService(), createMockConfigKV())
   const response = await app.request('/api/v1/openai/responses', {
@@ -2575,7 +2575,7 @@ it('issue #2479 exposes an authenticated Responses create route', async () => {
   expect(response.status).toBe(401)
 })
 
-// https://github.com/moeru-ai/airi/issues/2479
+// https://gitee.com/kallen-noelle/AdoptAI/issues/2479
 it('issue #2479 rejects stateful Responses before routing', async () => {
   const router = createMockLlmRouter()
   const app = createTestApp(createMockFluxService(), createMockConfigKV(), undefined, undefined, undefined, router)
@@ -2659,7 +2659,7 @@ describe('openRouter cost billing through HTTP routes', () => {
     expect(() => policy.authorizeDispatch(authorization, { gateway: 'openrouter.ai', model: 'model' })).toThrow('LLM cost adapter or price is missing')
   })
 
-  // https://github.com/moeru-ai/airi/pull/2644#discussion_r4082125150
+  // https://gitee.com/kallen-noelle/AdoptAI/pull/2644#discussion_r4082125150
   it('quotes a nonzero failure estimate and selects prices by adapter provider ID', async () => {
     const policy = createOpenAiRouteBilling({
       billingService: createMockBillingService(),
@@ -2851,7 +2851,7 @@ describe('openRouter cost billing through HTTP routes', () => {
     }
   })
 
-  // https://github.com/moeru-ai/airi/pull/2644#discussion_r4082125157
+  // https://gitee.com/kallen-noelle/AdoptAI/pull/2644#discussion_r4082125157
   it('forwards a keep-alive before any data frame and preserves raw SSE bytes', async () => {
     const heartbeat = ': keep-alive\r\n\r\n'
     const terminal = 'data: {"id":"gen-heartbeat","usage":{"cost":0.002}}\r\n\r\ndata: [DONE]\r\n\r\n'
@@ -3315,7 +3315,7 @@ describe('issue #2479 hosted Responses', () => {
   })
 })
 
-// https://github.com/moeru-ai/airi/issues/2479
+// https://gitee.com/kallen-noelle/AdoptAI/issues/2479
 it('issue #2479 does not debit a terminal frame cancelled before downstream delivery', async () => {
   const harness = responsesHarness(() => new Response(responsesFrame()))
   const response = await harness.send({ stream: true })
@@ -3323,7 +3323,7 @@ it('issue #2479 does not debit a terminal frame cancelled before downstream deli
   await vi.waitFor(() => expect(harness.logs.logRequest).toHaveBeenCalled())
 })
 
-// https://github.com/moeru-ai/airi/pull/2554#discussion_r4044384471
+// https://gitee.com/kallen-noelle/AdoptAI/pull/2554#discussion_r4044384471
 it('pR #2554 settles a terminal frame that the downstream received before cancellation', async () => {
   const harness = responsesHarness(() => new Response(responsesFrame()))
   const controller = new AbortController()
@@ -3339,7 +3339,7 @@ it('pR #2554 settles a terminal frame that the downstream received before cancel
   expect(harness.logs.logRequest).toHaveBeenCalledWith(expect.objectContaining({ status: 200 }))
 })
 
-// https://github.com/moeru-ai/airi/issues/2479
+// https://gitee.com/kallen-noelle/AdoptAI/issues/2479
 it('issue #2479 cancels an idle JSON response before settlement', async () => {
   const cancel = vi.fn()
   const source = new ReadableStream<Uint8Array>({ cancel })
@@ -3354,7 +3354,7 @@ it('issue #2479 cancels an idle JSON response before settlement', async () => {
   expect(harness.logs.logRequest).toHaveBeenCalledWith(expect.objectContaining({ status: 499 }))
 })
 
-// https://github.com/moeru-ai/airi/issues/2479
+// https://gitee.com/kallen-noelle/AdoptAI/issues/2479
 it('issue #2479 keeps the last upstream error when a later alias candidate lacks Responses support', async () => {
   const catalog = createMockProviderCatalogService()
   const alias = await catalog.resolveEnabledAlias('llm', 'auto')
@@ -3417,7 +3417,7 @@ it.each(['chat/completions', 'responses'])('does not open a generation span or d
   }
 })
 
-// https://github.com/moeru-ai/airi/pull/2554#discussion_r4044384477
+// https://gitee.com/kallen-noelle/AdoptAI/pull/2554#discussion_r4044384477
 it('pR #2554 surfaces a later routing failure instead of an earlier HTTP response', async () => {
   const catalog = createMockProviderCatalogService()
   const alias = await catalog.resolveEnabledAlias('llm', 'auto')
@@ -3443,7 +3443,7 @@ it('pR #2554 surfaces a later routing failure instead of an earlier HTTP respons
   expect(discarded).toHaveBeenCalledTimes(1)
 })
 
-// https://github.com/moeru-ai/airi/pull/2554#discussion_r4044509245
+// https://gitee.com/kallen-noelle/AdoptAI/pull/2554#discussion_r4044509245
 it('pR #2554 prefers a web search capability error after finding Responses support', async () => {
   const catalog = createMockProviderCatalogService()
   const alias = await catalog.resolveEnabledAlias('llm', 'auto')
@@ -3467,7 +3467,7 @@ it('pR #2554 prefers a web search capability error after finding Responses suppo
   expect(await response.json()).toMatchObject({ error: 'LLM_WEB_SEARCH_UNAVAILABLE' })
 })
 
-// https://github.com/moeru-ai/airi/pull/2554#discussion_r4017201502
+// https://gitee.com/kallen-noelle/AdoptAI/pull/2554#discussion_r4017201502
 it('pR #2554 keeps a successful fallback when discarded body cancellation rejects', async () => {
   const catalog = createMockProviderCatalogService()
   const alias = await catalog.resolveEnabledAlias('llm', 'auto')
@@ -3503,7 +3503,7 @@ it('pR #2554 keeps a successful fallback when discarded body cancellation reject
 it('forwards search tools and portable history without forcing tool use', async () => {
   const result = responsesResult()
   const harness = responsesHarness(() => Response.json(result))
-  const body = { tools: [{ type: 'web_search' }], tool_choice: 'none', input: [{ type: 'web_search_call', id: 'ws-1', status: 'completed', action: { type: 'search', query: 'AIRI' } }] }
+  const body = { tools: [{ type: 'web_search' }], tool_choice: 'none', input: [{ type: 'web_search_call', id: 'ws-1', status: 'completed', action: { type: 'search', query: 'AIPETS' } }] }
   const response = await harness.send(body)
   expect(response.status).toBe(200)
   expect(await response.json()).toEqual(result)
@@ -3513,7 +3513,7 @@ it('forwards search tools and portable history without forcing tool use', async 
 it('keeps replayed search history on search-capable routes without a search tool', async () => {
   const result = responsesResult()
   const harness = responsesHarness(() => Response.json(result))
-  const body = { input: [{ type: 'web_search_call', id: 'ws-1', status: 'completed', action: { type: 'search', query: 'AIRI' } }] }
+  const body = { input: [{ type: 'web_search_call', id: 'ws-1', status: 'completed', action: { type: 'search', query: 'AIPETS' } }] }
   const response = await harness.send(body)
 
   expect(response.status).toBe(200)
@@ -3521,8 +3521,8 @@ it('keeps replayed search history on search-capable routes without a search tool
 })
 
 it('preserves native search SSE output and citation annotations', async () => {
-  const search = { type: 'web_search_call', id: 'ws-1', status: 'completed', action: { type: 'search', queries: ['AIRI'], sources: [{ type: 'url', url: 'https://airi.moeru.ai' }] } }
-  const output = [search, { type: 'message', id: 'msg-1', role: 'assistant', content: [{ type: 'output_text', text: 'AIRI', annotations: [{ type: 'url_citation', start_index: 0, end_index: 4, url: 'https://airi.moeru.ai', title: 'AIRI' }] }] }]
+  const search = { type: 'web_search_call', id: 'ws-1', status: 'completed', action: { type: 'search', queries: ['AIPETS'], sources: [{ type: 'url', url: 'https://aipets.moeru.ai' }] } }
+  const output = [search, { type: 'message', id: 'msg-1', role: 'assistant', content: [{ type: 'output_text', text: 'AIPETS', annotations: [{ type: 'url_citation', start_index: 0, end_index: 4, url: 'https://aipets.moeru.ai', title: 'AIPETS' }] }] }]
   const result = { ...responsesResult(), output }
   const frame = `event: response.completed\ndata: ${JSON.stringify({ type: 'response.completed', response: result })}\n\n`
   const harness = responsesHarness(() => new Response(frame))
@@ -3556,7 +3556,7 @@ it('preserves Responses interaction headers in request intake', async () => {
   const harness = responsesHarness(() => Response.json(responsesResult()))
   const response = await harness.app.request('/api/v1/openai/responses', {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json', [AIRI_CHAT_ROUND_ID_HEADER]: 'round-1', [AIRI_CHAT_APP_SURFACE_HEADER]: 'web' },
+    headers: { 'Content-Type': 'application/json', [AIPETS_CHAT_ROUND_ID_HEADER]: 'round-1', [AIPETS_CHAT_APP_SURFACE_HEADER]: 'web' },
     body: JSON.stringify({ input: 'hello' }),
   }, { user: testUser })
   expect(response.status).toBe(200)
@@ -3640,7 +3640,7 @@ it('keeps partial Responses content on unexpected EOF', async () => {
   expect(harness.logs.logRequest).toHaveBeenCalledWith(expect.objectContaining({ completion: { format: 'sse', text: JSON.stringify(event), state: 'partial', omittedMedia: false }, errorBody: expect.objectContaining({ text: expect.stringContaining('terminal event') }) }))
 })
 
-// https://github.com/moeru-ai/airi/pull/2644#discussion_r4122406969
+// https://gitee.com/kallen-noelle/AdoptAI/pull/2644#discussion_r4122406969
 // ROOT CAUSE:
 // Sequential candidate validation allowed primary dispatch before fallback pricing validation.
 // Validate the complete alias capacitor before the first route call.

@@ -6,7 +6,7 @@ import type { HonoEnv } from '../types/hono'
 import { isIP } from 'node:net'
 
 import { getConnInfo } from '@hono/node-server/conninfo'
-import { createTooManyRequestsError } from '@proj-airi/http-error-shared'
+import { createTooManyRequestsError } from '@proj-aipets/http-error-shared'
 import { rateLimiter as createRateLimiter } from 'hono-rate-limiter'
 
 interface RateLimitOptions {
@@ -24,7 +24,7 @@ interface RateLimitOptions {
   trustedProxy?: 'railway'
   /**
    * Optional metrics handle. When provided, blocked requests increment
-   * `airi_rate_limit_blocked_total{route, key_type, limit}`.
+   * `aipets_rate_limit_blocked_total{route, key_type, limit}`.
    * `key_type` reflects whether the limiter keyed off authenticated user id
    * or remote IP — important for distinguishing logged-in abuse from
    * anonymous scraping.

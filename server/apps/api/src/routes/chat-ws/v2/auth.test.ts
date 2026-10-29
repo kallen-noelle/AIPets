@@ -39,8 +39,8 @@ describe('v2 chat WebSocket authentication', () => {
     vi.useRealTimers()
   })
 
-  // https://github.com/moeru-ai/airi/pull/2309#discussion_r3796626514
-  // https://github.com/moeru-ai/airi/pull/2309#discussion_r3796626537
+  // https://gitee.com/kallen-noelle/AdoptAI/pull/2309#discussion_r3796626514
+  // https://gitee.com/kallen-noelle/AdoptAI/pull/2309#discussion_r3796626537
   // ROOT CAUSE:
   //
   // An authentication resolver can finish after the socket closes or after a

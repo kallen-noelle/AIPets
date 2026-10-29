@@ -2,7 +2,7 @@ import type { ConfigKVService } from '../../services/adapters/config-kv'
 import type { PaymentService } from '../../services/domain/payment'
 import type { HonoEnv } from '../../types/hono'
 
-import { ApiError } from '@proj-airi/http-error-shared'
+import { ApiError } from '@proj-aipets/http-error-shared'
 import { Hono } from 'hono'
 import { describe, expect, it, vi } from 'vitest'
 
@@ -40,7 +40,7 @@ const testEnv = {
   STRIPE_SECRET_KEY: 'sk_test_fake',
   STRIPE_WEBHOOK_SECRET: 'whsec_test_fake',
   API_SERVER_URL: 'http://localhost:8787',
-  WEB_APP_URL: 'https://airi.moeru.ai',
+  WEB_APP_URL: 'https://aipets.moeru.ai',
   ADDITIONAL_TRUSTED_ORIGINS: [],
 } as any
 
@@ -266,7 +266,7 @@ describe('stripeRoutes', () => {
       expect(payment.settle).not.toHaveBeenCalled()
     })
 
-    it('acknowledges a checkout session that is not an AIRI order', async () => {
+    it('acknowledges a checkout session that is not an AIPETS order', async () => {
       const payment = createMockPayment()
       const webhook = createWebhookOperation(
         {

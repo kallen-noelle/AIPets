@@ -5,7 +5,7 @@ import type { HonoEnv } from '../../types/hono'
 import type { Verifier } from './verifier'
 
 import { Environment } from '@apple/app-store-server-library'
-import { ApiError } from '@proj-airi/http-error-shared'
+import { ApiError } from '@proj-aipets/http-error-shared'
 import { Hono } from 'hono'
 import { beforeAll, beforeEach, describe, expect, it, vi } from 'vitest'
 
@@ -34,16 +34,16 @@ const storedToken = '11111111-1111-4111-8111-111111111111'
 const verifiedTransaction = {
   transactionId: 'txn_1',
   originalTransactionId: 'orig_1',
-  productId: 'ai.moeru.airi.flux.500',
+  productId: 'ai.moeru.aipets.flux.500',
   appAccountToken: storedToken,
   type: 'Consumable',
-  bundleId: 'ai.moeru.airi-pocket',
+  bundleId: 'ai.moeru.aipets-pocket',
   environment: Environment.PRODUCTION,
 }
 
 const starterApplePacks: ConfigDefinitions['APPLE_FLUX_PACKS'] = {
-  'ai.moeru.airi.flux.500': { fluxAmount: 500 },
-  'ai.moeru.airi.lite.flux.500': { fluxAmount: 500 },
+  'ai.moeru.aipets.flux.500': { fluxAmount: 500 },
+  'ai.moeru.aipets.lite.flux.500': { fluxAmount: 500 },
 }
 
 function createPacksConfigKV(
@@ -207,7 +207,7 @@ describe('apple-iap routes', () => {
       processor: 'apple_iap',
       processorOrderId: 'txn_1',
       userId: 'user-1',
-      packKey: 'ai.moeru.airi.flux.500',
+      packKey: 'ai.moeru.aipets.flux.500',
       fluxAmount: 500,
       customerId: storedToken,
     }))
@@ -219,7 +219,7 @@ describe('apple-iap routes', () => {
       verifyTransaction: vi.fn(async () => ({
         ...verifiedTransaction,
         transactionId: 'txn_lite',
-        productId: 'ai.moeru.airi.lite.flux.500',
+        productId: 'ai.moeru.aipets.lite.flux.500',
       })),
     })
     const app = createTestApp(payment, verifier, db)
@@ -233,7 +233,7 @@ describe('apple-iap routes', () => {
       balanceAfter: 500,
     })
     expect(payment.settle).toHaveBeenCalledWith(expect.objectContaining({
-      packKey: 'ai.moeru.airi.lite.flux.500',
+      packKey: 'ai.moeru.aipets.lite.flux.500',
       fluxAmount: 500,
       processorOrderId: 'txn_lite',
     }))
@@ -307,7 +307,7 @@ describe('apple-iap routes', () => {
       processor: 'apple_iap',
       processorOrderId: 'txn_1',
       userId: 'user-1',
-      packKey: 'ai.moeru.airi.flux.500',
+      packKey: 'ai.moeru.aipets.flux.500',
       fluxAmount: 500,
     }))
   })
@@ -398,7 +398,7 @@ describe('apple-iap routes', () => {
     expect(notification.status).toBe(200)
     expect(payment.settle).toHaveBeenCalledTimes(2)
     expect(payment.settle).toHaveBeenNthCalledWith(1, expect.objectContaining({
-      processorOrderId: 'sandbox:ai.moeru.airi-pocket:txn_1',
+      processorOrderId: 'sandbox:ai.moeru.aipets-pocket:txn_1',
       userId: testUser.id,
       extras: expect.objectContaining({ environment: Environment.SANDBOX }),
     }))
@@ -432,7 +432,7 @@ describe('apple-iap routes', () => {
   it('rejects an inner transaction from a different trusted app', async () => {
     await seedAppleAccount(testUser.id)
     verifier = createMockVerifier({
-      verifyTransaction: vi.fn(async () => ({ ...verifiedTransaction, bundleId: 'ai.moeru.airi-pocket-lab' })),
+      verifyTransaction: vi.fn(async () => ({ ...verifiedTransaction, bundleId: 'ai.moeru.aipets-pocket-lab' })),
     })
     const app = createTestApp(payment, verifier, db)
     const res = await post(app, '/notifications', { signedPayload: 'notify-jws' })

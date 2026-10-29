@@ -131,7 +131,7 @@ const EnvSchema = intersect([S3EnvironmentSchema, object({
 
   OTEL_SERVICE_NAME: optional(string(), 'server'),
   // OpenTelemetry
-  OTEL_SERVICE_NAMESPACE: optional(string(), 'airi'),
+  OTEL_SERVICE_NAMESPACE: optional(string(), 'aipets'),
 
   OTEL_TRACES_SAMPLING_RATIO: optionalNumberFromString(1, 'OTEL_TRACES_SAMPLING_RATIO', 0, 1),
   PORT: optionalIntegerFromString(3000, 'PORT', 1),
@@ -172,7 +172,7 @@ const EnvSchema = intersect([S3EnvironmentSchema, object({
   // browser origin — notably the Electron desktop renderer, which loads from
   // file:// and sends no usable web origin. Web/mobile requests keep returning to
   // their own origin; only origin-less clients fall back to this.
-  WEB_APP_URL: optional(string(), 'https://airi.moeru.ai'),
+  WEB_APP_URL: optional(string(), 'https://aipets.moeru.ai'),
 })])
 
 export type Env = InferOutput<typeof EnvSchema>

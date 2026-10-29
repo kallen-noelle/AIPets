@@ -33,7 +33,7 @@ function routingJwt(payload: object) {
 /** Keeps the real verifier construction and trust policies in the test. */
 async function productionVerifier(allowSandbox = true) {
   return createVerifier({
-    apps: [{ bundleId: 'ai.moeru.airi-pocket', appAppleId: 123 }],
+    apps: [{ bundleId: 'ai.moeru.aipets-pocket', appAppleId: 123 }],
     env: 'production',
     allowSandbox,
   })
@@ -45,7 +45,7 @@ describe('apple-iap verifier routing', () => {
   it('keeps production verification when sandbox is enabled', async () => {
     const transaction = vi.spyOn(SignedDataVerifier.prototype, 'verifyAndDecodeTransaction')
     const verifier = await productionVerifier()
-    const jws = routingJwt({ bundleId: 'ai.moeru.airi-pocket', environment: Environment.PRODUCTION })
+    const jws = routingJwt({ bundleId: 'ai.moeru.aipets-pocket', environment: Environment.PRODUCTION })
     const result = await verifier.verifyTransaction(jws)
 
     expect(result.environment).toBe(Environment.PRODUCTION)
@@ -56,7 +56,7 @@ describe('apple-iap verifier routing', () => {
     const verifier = await productionVerifier()
     const transactionSpy = vi.spyOn(SignedDataVerifier.prototype, 'verifyAndDecodeTransaction')
     const notificationSpy = vi.spyOn(SignedDataVerifier.prototype, 'verifyAndDecodeNotification')
-    const identity = { bundleId: 'ai.moeru.airi-pocket', environment: Environment.SANDBOX }
+    const identity = { bundleId: 'ai.moeru.aipets-pocket', environment: Environment.SANDBOX }
     const transaction = routingJwt(identity)
     const notification = routingJwt({ data: identity })
 
@@ -70,7 +70,7 @@ describe('apple-iap verifier routing', () => {
     const notification = vi.spyOn(SignedDataVerifier.prototype, 'verifyAndDecodeNotification')
     const verifier = await productionVerifier(false)
     await expect(verifier.verifyNotification(routingJwt({
-      data: { bundleId: 'ai.moeru.airi-pocket', environment: Environment.SANDBOX },
+      data: { bundleId: 'ai.moeru.aipets-pocket', environment: Environment.SANDBOX },
     }))).rejects.toMatchObject({ errorCode: 'ENVIRONMENT_MISMATCH' })
     expect(notification).not.toHaveBeenCalled()
   })
@@ -81,7 +81,7 @@ describe('apple-iap verifier routing', () => {
     })
     const verifier = await productionVerifier()
     await expect(verifier.verifyTransaction(routingJwt({
-      bundleId: 'ai.moeru.airi-pocket',
+      bundleId: 'ai.moeru.aipets-pocket',
       environment: Environment.SANDBOX,
     }))).rejects.toMatchObject({ errorCode: 'JWS_VERIFICATION_FAILED' })
     expect(transaction).toHaveBeenCalledTimes(1)
@@ -93,7 +93,7 @@ describe('apple-iap verifier routing', () => {
     })
     const verifier = await productionVerifier()
     await expect(verifier.verifyNotification(routingJwt({
-      data: { bundleId: 'ai.moeru.airi-pocket', environment: Environment.SANDBOX },
+      data: { bundleId: 'ai.moeru.aipets-pocket', environment: Environment.SANDBOX },
     }))).rejects.toMatchObject({ statusCode: 500 })
     expect(notification).toHaveBeenCalledTimes(1)
   })

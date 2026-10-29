@@ -1,4 +1,4 @@
-import { user } from '@proj-airi/auth-shared'
+import { user } from '@proj-aipets/auth-shared'
 import { getTableColumns } from 'drizzle-orm'
 import { describe, expect, it } from 'vitest'
 

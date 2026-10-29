@@ -18,7 +18,7 @@ const mockedCreateRemoteJWKSet = vi.mocked(createRemoteJWKSet)
 const mockedJwtVerify = vi.mocked(jwtVerify)
 
 const mockEnv = {
-  AUTH_SERVER_URL: 'https://api.airi.build',
+  AUTH_SERVER_URL: 'https://api.aipets.build',
   TEST_AUTH_TOKEN: '',
   TEST_AUTH_USER_ID: 'test-user',
   TEST_AUTH_USER_EMAIL: 'test@example.com',
@@ -83,10 +83,10 @@ describe('resolveRequestAuth', () => {
       new Headers({ Authorization: 'Bearer eyJhbGciOiJSUzI1NiJ9.test.sig' }),
     )
 
-    expect(mockedCreateRemoteJWKSet).toHaveBeenCalledWith(new URL('https://api.airi.build/api/auth/jwks'))
+    expect(mockedCreateRemoteJWKSet).toHaveBeenCalledWith(new URL('https://api.aipets.build/api/auth/jwks'))
     expect(mockedJwtVerify).toHaveBeenCalledWith('eyJhbGciOiJSUzI1NiJ9.test.sig', 'mock-jwks', {
-      issuer: 'https://api.airi.build/api/auth',
-      audience: 'https://api.airi.build',
+      issuer: 'https://api.aipets.build/api/auth',
+      audience: 'https://api.aipets.build',
     })
     expect(result).toEqual({
       user,
@@ -117,8 +117,8 @@ describe('resolveRequestAuth', () => {
 
     expect(mockedCreateRemoteJWKSet).toHaveBeenCalledWith(new URL('http://auth:3000/api/auth/jwks'))
     expect(mockedJwtVerify).toHaveBeenCalledWith('jwt', 'mock-jwks', {
-      issuer: 'https://api.airi.build/api/auth',
-      audience: 'https://api.airi.build',
+      issuer: 'https://api.aipets.build/api/auth',
+      audience: 'https://api.aipets.build',
     })
   })
 
@@ -193,7 +193,7 @@ describe('resolveRequestAuth', () => {
     )).rejects.toThrow('fetch failed')
   })
 
-  // https://github.com/moeru-ai/airi/pull/2309#discussion_r3818708556
+  // https://gitee.com/kallen-noelle/AdoptAI/pull/2309#discussion_r3818708556
   it('propagates JWKS timeouts so WebSocket clients can retry', async () => {
     mockedJwtVerify.mockRejectedValueOnce(new errors.JWKSTimeout())
 

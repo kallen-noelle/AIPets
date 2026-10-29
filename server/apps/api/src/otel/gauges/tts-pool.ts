@@ -4,7 +4,7 @@ import type { ConcurrencyLedger } from '../../services/domain/llm-router/concurr
 import { useLogger } from '@guiiai/logg'
 
 /**
- * Wire the `airi.gen_ai.gateway.pool.inflight` ObservableGauge to the Redis-backed
+ * Wire the `aipets.gen_ai.gateway.pool.inflight` ObservableGauge to the Redis-backed
  *pool concurrency ledger, emitting one series per app_id.
  *
  * Use when:
@@ -28,7 +28,7 @@ import { useLogger } from '@guiiai/logg'
  *   same result rather than stampeding Redis.
  *
  * Failure mode:
- * - On Redis error we increment `airi.observability.read_errors{metric}` and
+ * - On Redis error we increment `aipets.observability.read_errors{metric}` and
  *   intentionally DO NOT observe — letting the gauge skip an export cycle lets
  *   Prometheus staleness expose the outage instead of masking it with a stale value.
  */
@@ -52,7 +52,7 @@ export function registerTtsPoolGauge(
     }
     catch (err) {
       log.withError(err).warn('Failed to read tts pool snapshot for gauge')
-      metricReadErrors.add(1, { metric: 'airi.gen_ai.gateway.pool.inflight' })
+      metricReadErrors.add(1, { metric: 'aipets.gen_ai.gateway.pool.inflight' })
       return false
     }
   }

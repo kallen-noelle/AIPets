@@ -5,8 +5,8 @@ import { describe, expect, it } from 'vitest'
 
 import { createVerifier } from './verifier'
 
-const pocketBundleId = 'ai.moeru.airi-pocket'
-const liteBundleId = 'ai.moeru.airi-lite'
+const pocketBundleId = 'ai.moeru.aipets-pocket'
+const liteBundleId = 'ai.moeru.aipets-lite'
 
 /** Builds deliberately unsigned input to exercise rejection by the real Apple library. */
 function unsignedJwt(payload: Record<string, unknown>) {

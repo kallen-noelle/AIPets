@@ -8,7 +8,7 @@
  * Grafana until an event happens — making panels look broken on fresh deploys
  * and absence-based alerts impossible to author.
  *
- * Histograms (gen_ai.client.first_token.duration, airi.email.duration, ...)
+ * Histograms (gen_ai.client.first_token.duration, aipets.email.duration, ...)
  * are intentionally NOT in the output — they only register on first .record().
  *
  * NOTE: Run WITHOUT `--import ./instrumentation.ts`. The preload would start
@@ -16,7 +16,7 @@
  * this smoke installs as the global MeterProvider.
  *
  * Usage:
- *   pnpm -F @proj-airi/api-server exec node --import tsx ./src/scripts/otel/smoke.ts
+ *   pnpm -F @proj-aipets/api-server exec node --import tsx ./src/scripts/otel/smoke.ts
  */
 import { Buffer } from 'node:buffer'
 import { env, exit } from 'node:process'

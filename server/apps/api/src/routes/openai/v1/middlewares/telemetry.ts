@@ -8,10 +8,10 @@ import { useLogger } from '@guiiai/logg'
 import { context, SpanStatusCode, trace } from '@opentelemetry/api'
 
 import {
-  AIRI_ATTR_BILLING_FLUX_CONSUMED,
-  AIRI_ATTR_GEN_AI_OPERATION_KIND,
-  AIRI_ATTR_GEN_AI_STREAM,
-  AIRI_ATTR_GEN_AI_STREAM_INTERRUPTED,
+  AIPETS_ATTR_BILLING_FLUX_CONSUMED,
+  AIPETS_ATTR_GEN_AI_OPERATION_KIND,
+  AIPETS_ATTR_GEN_AI_STREAM,
+  AIPETS_ATTR_GEN_AI_STREAM_INTERRUPTED,
   GEN_AI_ATTR_OPERATION_NAME,
   GEN_AI_ATTR_REQUEST_MODEL,
   GEN_AI_ATTR_USAGE_INPUT_TOKENS,
@@ -39,7 +39,7 @@ export function getLlmMetricAttributes(opts: { model: string, type: string, stat
   // `provider` is the upstream the router actually used (winning upstream on
   // success, last-tried on exhaustion), so per-provider rollups in Grafana
   // line up with each vendor's own console. Same label name as the gateway
-  // error counters (`airi_gen_ai_gateway_upstream_errors{provider}`) so the
+  // error counters (`aipets_gen_ai_gateway_upstream_errors{provider}`) so the
   // two can be compared/joined.
   if (opts.type === 'chat' || opts.type === 'responses') {
     return {
@@ -52,7 +52,7 @@ export function getLlmMetricAttributes(opts: { model: string, type: string, stat
 
   return {
     [GEN_AI_ATTR_REQUEST_MODEL]: opts.model,
-    [AIRI_ATTR_GEN_AI_OPERATION_KIND]: opts.type,
+    [AIPETS_ATTR_GEN_AI_OPERATION_KIND]: opts.type,
     'http.response.status_code': opts.status,
     'provider': opts.provider,
   }
@@ -94,7 +94,7 @@ export function createRouteTelemetry(deps: {
       attributes: {
         [GEN_AI_ATTR_OPERATION_NAME]: input.operation,
         [GEN_AI_ATTR_REQUEST_MODEL]: input.model,
-        [AIRI_ATTR_GEN_AI_STREAM]: input.stream,
+        [AIPETS_ATTR_GEN_AI_STREAM]: input.stream,
       },
     })
   }
@@ -103,7 +103,7 @@ export function createRouteTelemetry(deps: {
     return tracer.startSpan('llm.gateway.tts', {
       attributes: {
         [GEN_AI_ATTR_REQUEST_MODEL]: input.model,
-        [AIRI_ATTR_GEN_AI_OPERATION_KIND]: 'text_to_speech',
+        [AIPETS_ATTR_GEN_AI_OPERATION_KIND]: 'text_to_speech',
       },
     })
   }
@@ -129,12 +129,12 @@ export function createRouteTelemetry(deps: {
     span.setAttributes({
       [GEN_AI_ATTR_USAGE_INPUT_TOKENS]: input.promptTokens ?? 0,
       [GEN_AI_ATTR_USAGE_OUTPUT_TOKENS]: input.completionTokens ?? 0,
-      [AIRI_ATTR_BILLING_FLUX_CONSUMED]: input.fluxConsumed,
+      [AIPETS_ATTR_BILLING_FLUX_CONSUMED]: input.fluxConsumed,
     })
   }
 
   function recordTtsBillingOnSpan(span: GatewaySpan, fluxConsumed: number): void {
-    span.setAttribute(AIRI_ATTR_BILLING_FLUX_CONSUMED, fluxConsumed)
+    span.setAttribute(AIPETS_ATTR_BILLING_FLUX_CONSUMED, fluxConsumed)
   }
 
   function recordFirstToken(input: {
@@ -157,7 +157,7 @@ export function createRouteTelemetry(deps: {
     span: GatewaySpan
   }): void {
     input.span.setStatus({ code: SpanStatusCode.ERROR, message: 'Gateway stream interrupted' })
-    input.span.setAttribute(AIRI_ATTR_GEN_AI_STREAM_INTERRUPTED, true)
+    input.span.setAttribute(AIPETS_ATTR_GEN_AI_STREAM_INTERRUPTED, true)
     // Counter so alerts/dashboards can fire on interrupted streams; the
     // span attribute alone only shows up in trace search, not metrics.
     deps.genAi?.streamInterrupted.add(1, {

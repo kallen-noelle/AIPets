@@ -3,16 +3,16 @@ import type { Context } from 'hono'
 import type { HonoEnv } from '../../../types/hono'
 import type { V1RouteDeps } from './types'
 
-import { createBadRequestError } from '@proj-airi/http-error-shared'
+import { createBadRequestError } from '@proj-aipets/http-error-shared'
 
 import { authGuard } from '../../../middlewares/auth'
 import { configGuard } from '../../../middlewares/config-guard'
 import { rateLimiter } from '../../../middlewares/rate-limit'
 import { generationOperation, generationProtocols } from '../../../schemas/generation-protocol'
 import {
-  AIRI_CHAT_APP_SURFACE_HEADER,
-  AIRI_CHAT_ROUND_ID_HEADER,
-  AIRI_CHAT_SESSION_ID_HEADER,
+  AIPETS_CHAT_APP_SURFACE_HEADER,
+  AIPETS_CHAT_ROUND_ID_HEADER,
+  AIPETS_CHAT_SESSION_ID_HEADER,
   resolveChatAnalyticsSurface,
 } from './analytics'
 import { createV1Gateway } from './gateway'
@@ -61,9 +61,9 @@ export function createV1Routes(input: CreateV1RoutesDeps) {
         return {
           userId: c.get('user')!.id,
           ...request,
-          sessionId: c.req.header(AIRI_CHAT_SESSION_ID_HEADER),
-          roundId: c.req.header(AIRI_CHAT_ROUND_ID_HEADER),
-          appSurface: resolveChatAnalyticsSurface(c.req.header(AIRI_CHAT_APP_SURFACE_HEADER)),
+          sessionId: c.req.header(AIPETS_CHAT_SESSION_ID_HEADER),
+          roundId: c.req.header(AIPETS_CHAT_ROUND_ID_HEADER),
+          appSurface: resolveChatAnalyticsSurface(c.req.header(AIPETS_CHAT_APP_SURFACE_HEADER)),
           abortSignal: c.req.raw.signal,
         }
       },
@@ -78,9 +78,9 @@ export function createV1Routes(input: CreateV1RoutesDeps) {
         return {
           userId: user.id,
           body,
-          sessionId: c.req.header(AIRI_CHAT_SESSION_ID_HEADER),
-          roundId: c.req.header(AIRI_CHAT_ROUND_ID_HEADER),
-          appSurface: resolveChatAnalyticsSurface(c.req.header(AIRI_CHAT_APP_SURFACE_HEADER)),
+          sessionId: c.req.header(AIPETS_CHAT_SESSION_ID_HEADER),
+          roundId: c.req.header(AIPETS_CHAT_ROUND_ID_HEADER),
+          appSurface: resolveChatAnalyticsSurface(c.req.header(AIPETS_CHAT_APP_SURFACE_HEADER)),
           abortSignal: c.req.raw.signal,
         }
       },
@@ -91,7 +91,7 @@ export function createV1Routes(input: CreateV1RoutesDeps) {
   const audio = gateway.route('audio')
   const speechCatalog = createSpeechCatalogOperation(deps)
 
-  // AIRI audio surface (mounted at /api/v1/audio). Lives outside /openai/ so
+  // AIPETS audio surface (mounted at /api/v1/audio). Lives outside /openai/ so
   // the `/voices`, `/voices/streaming`, and `/models` extensions aren't
   // misread as OpenAI-compatible. `/audio/speech/ws` is registered
   // separately in app.ts because it needs the WebSocket upgrade middleware.
@@ -105,7 +105,7 @@ export function createV1Routes(input: CreateV1RoutesDeps) {
         return {
           userId: user.id,
           body,
-          sessionId: c.req.header(AIRI_CHAT_SESSION_ID_HEADER),
+          sessionId: c.req.header(AIPETS_CHAT_SESSION_ID_HEADER),
           abortSignal: c.req.raw.signal,
         }
       },

@@ -1,6 +1,6 @@
 import type { InferInsertModel, InferSelectModel } from 'drizzle-orm'
 
-import { user } from '@proj-airi/auth-shared'
+import { user } from '@proj-aipets/auth-shared'
 import { pgTable, primaryKey, text, timestamp } from 'drizzle-orm/pg-core'
 import { relations } from 'drizzle-orm/relations'
 

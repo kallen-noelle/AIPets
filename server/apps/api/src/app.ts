@@ -34,7 +34,7 @@ import Stripe from 'stripe'
 import { initLogger, LoggerFormat, LoggerLevel, setGlobalHookPostLog, useLogger } from '@guiiai/logg'
 import { createNodeWebSocket } from '@hono/node-ws'
 import { httpInstrumentationMiddleware } from '@hono/otel'
-import { createErrorHandler, createPayloadTooLargeError } from '@proj-airi/http-error-shared'
+import { createErrorHandler, createPayloadTooLargeError } from '@proj-aipets/http-error-shared'
 import { Hono } from 'hono'
 import { bodyLimit } from 'hono/body-limit'
 import { cors } from 'hono/cors'
@@ -377,8 +377,8 @@ export async function buildApp(deps: AppDeps) {
         return context.redirect(webAppUrl, 302)
 
       return context.json({
-        service: 'airi-api',
-        message: `This is the Project AIRI API server. Visit ${webAppUrl} to use the product, or see the docs at ${docsUrl}.`,
+        service: 'aipets-api',
+        message: `This is the Project AIPETS API server. Visit ${webAppUrl} to use the product, or see the docs at ${docsUrl}.`,
         docs: docsUrl,
         ui: webAppUrl,
       })
@@ -479,7 +479,7 @@ export async function buildApp(deps: AppDeps) {
      */
     .notFound(c => c.json({
       error: 'NOT_FOUND',
-      message: `No route matched ${c.req.method} ${new URL(c.req.url).pathname}. This is the airi-api server; the product UI lives at ${webAppUrl}.`,
+      message: `No route matched ${c.req.method} ${new URL(c.req.url).pathname}. This is the aipets-api server; the product UI lives at ${webAppUrl}.`,
       ui: webAppUrl,
     }, 404))
 

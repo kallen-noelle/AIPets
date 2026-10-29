@@ -1,15 +1,15 @@
-import type { AuthSession } from '@proj-airi/auth-shared'
+import type { AuthSession } from '@proj-aipets/auth-shared'
 
 import type { Database } from './db'
 
 import { Buffer } from 'node:buffer'
 import { timingSafeEqual } from 'node:crypto'
 
-import { isUserBannedNow } from '@proj-airi/auth-shared'
+import { isUserBannedNow } from '@proj-aipets/auth-shared'
 import { eq } from 'drizzle-orm'
 import { createRemoteJWKSet, errors, jwtVerify } from 'jose'
 
-import * as authSchema from '@proj-airi/auth-shared'
+import * as authSchema from '@proj-aipets/auth-shared'
 
 interface RequestAuthEnv {
   AUTH_SERVER_URL: string

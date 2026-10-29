@@ -9,16 +9,16 @@ import WebSocket from 'ws'
 
 import { useLogger } from '@guiiai/logg'
 import { context as otelContext, SpanStatusCode, trace } from '@opentelemetry/api'
-import { ApiError } from '@proj-airi/http-error-shared'
+import { ApiError } from '@proj-aipets/http-error-shared'
 import { ofetch } from 'ofetch'
 
 import { nanoid } from '../../utils/id'
 import {
-  AIRI_ATTR_BILLING_FLUX_CONSUMED,
-  AIRI_ATTR_GEN_AI_GATEWAY_KEY_ID,
-  AIRI_ATTR_GEN_AI_GATEWAY_UPSTREAM_URL,
-  AIRI_ATTR_GEN_AI_OPERATION_KIND,
-  AIRI_ATTR_GEN_AI_STREAM,
+  AIPETS_ATTR_BILLING_FLUX_CONSUMED,
+  AIPETS_ATTR_GEN_AI_GATEWAY_KEY_ID,
+  AIPETS_ATTR_GEN_AI_GATEWAY_UPSTREAM_URL,
+  AIPETS_ATTR_GEN_AI_OPERATION_KIND,
+  AIPETS_ATTR_GEN_AI_STREAM,
   GEN_AI_ATTR_REQUEST_MODEL,
 } from '../../utils/observability'
 import { bufferToString, readUsageChars, toBufferLike } from './protocol'
@@ -86,7 +86,7 @@ export function createSessionState(
   let firstAudioAt: number | null = null
   const span = tracer.startSpan('llm.gateway.tts.stream', {
     attributes: {
-      [AIRI_ATTR_GEN_AI_OPERATION_KIND]: 'text_to_speech_stream',
+      [AIPETS_ATTR_GEN_AI_OPERATION_KIND]: 'text_to_speech_stream',
     },
   })
 
@@ -168,8 +168,8 @@ export function createSessionState(
     }
 
     const upstreamURL = upstreamConfig.baseURL
-    span.setAttribute(AIRI_ATTR_GEN_AI_GATEWAY_UPSTREAM_URL, upstreamURL)
-    span.setAttribute(AIRI_ATTR_GEN_AI_GATEWAY_KEY_ID, entry.id)
+    span.setAttribute(AIPETS_ATTR_GEN_AI_GATEWAY_UPSTREAM_URL, upstreamURL)
+    span.setAttribute(AIPETS_ATTR_GEN_AI_GATEWAY_KEY_ID, entry.id)
 
     let upstream: WebSocket
     try {
@@ -453,7 +453,7 @@ export function createSessionState(
           turnId: analyticsInput.turnId,
         }))
       fluxConsumed = result.feeFlux
-      span.setAttribute(AIRI_ATTR_BILLING_FLUX_CONSUMED, fluxConsumed)
+      span.setAttribute(AIPETS_ATTR_BILLING_FLUX_CONSUMED, fluxConsumed)
     }
     catch (err) {
       // Billing failure is surfaced but does not retroactively reject the already-delivered audio.
@@ -469,8 +469,8 @@ export function createSessionState(
   function recordMetrics() {
     const attrs = {
       [GEN_AI_ATTR_REQUEST_MODEL]: modelLabel,
-      [AIRI_ATTR_GEN_AI_OPERATION_KIND]: 'tts',
-      [AIRI_ATTR_GEN_AI_STREAM]: true,
+      [AIPETS_ATTR_GEN_AI_OPERATION_KIND]: 'tts',
+      [AIPETS_ATTR_GEN_AI_STREAM]: true,
       'http.response.status_code': 200,
     }
     opts.genAi?.operationCount.add(1, attrs)

@@ -7,7 +7,7 @@ import { errorMessageFrom } from '@moeru/std'
 import { runApiServer } from './server'
 
 /**
- * Starts only the AIRI resource API dependency graph.
+ * Starts only the AIPETS resource API dependency graph.
  *
  * Call stack:
  *

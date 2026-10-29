@@ -173,7 +173,7 @@ async function writeAudioToUpstream(
  * Streams client microphone PCM through Aliyun NLS and returns xsai-compatible SSE transcript deltas.
  *
  * Use when:
- * - AIRI owns the Aliyun NLS credentials server-side.
+ * - AIPETS owns the Aliyun NLS credentials server-side.
  * - The browser uploads a realtime audio `ReadableStream` and expects transcript deltas.
  *
  * Expects:

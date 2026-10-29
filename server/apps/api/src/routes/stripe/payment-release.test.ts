@@ -13,7 +13,7 @@ import { createWebhookOperation } from './operations/webhook'
 
 import * as schema from '../../schemas'
 
-// https://github.com/moeru-ai/airi/pull/2335
+// https://gitee.com/kallen-noelle/AdoptAI/pull/2335
 // ROOT CAUSE:
 // Checkout completion can precede payment. Migration snapshots also miss
 // sessions created by old replicas. Exercise signed events against the ledger.

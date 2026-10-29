@@ -7,7 +7,7 @@ import type { ChatConnectionRegistry } from './connection-registry'
 
 import { useLogger } from '@guiiai/logg'
 import { defineInvokeHandler } from '@moeru/eventa'
-import { parsePullMessagesRequest, parseSendMessagesRequest, pullMessages, sendMessages } from '@proj-airi/server-sdk-shared'
+import { parsePullMessagesRequest, parseSendMessagesRequest, pullMessages, sendMessages } from '@proj-aipets/server-sdk-shared'
 
 const log = useLogger('chat-ws').useGlobalConfig()
 

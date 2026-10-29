@@ -5,7 +5,7 @@ import type { GatewayCallback } from '../../gateway'
 import type { V1RouteDeps } from '../../types'
 
 import { useLogger } from '@guiiai/logg'
-import { ApiError, createBadGatewayError } from '@proj-airi/http-error-shared'
+import { ApiError, createBadGatewayError } from '@proj-aipets/http-error-shared'
 import { EventSourceParserStream } from '@xsai/shared-stream'
 import { array, nullish, object, safeParse, string, unknown } from 'valibot'
 
@@ -73,7 +73,7 @@ export function chatCompletions(deps: V1RouteDeps): GatewayCallback<'chat-comple
 
     // Server-connection attrs come from the router (which knows the actual
     // upstream baseURL it dispatched to) — it enriches the active span with
-    // its own `airi.gen_ai.gateway.*` attrs on success.
+    // its own `aipets.gen_ai.gateway.*` attrs on success.
     const span = telemetry.startGenerationSpan({ model: requestModel, stream, operation: 'chat' })
 
     // Router throws ApiError (502/503/504/400) on full exhaustion or unknown

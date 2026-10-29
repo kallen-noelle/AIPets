@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest'
 import { createChatWsPayloadLimit } from './payload-limit'
 
 describe('v2 chat WebSocket payload limit', () => {
-  // https://github.com/moeru-ai/airi/pull/2309#discussion_r3818708552
+  // https://gitee.com/kallen-noelle/AdoptAI/pull/2309#discussion_r3818708552
   // ROOT CAUSE:
   //
   // The pre-authentication frame limit stayed on a socket after successful

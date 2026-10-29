@@ -14,29 +14,29 @@ import { metrics, trace } from '@opentelemetry/api'
 import { logs, SeverityNumber } from '@opentelemetry/api-logs'
 
 import {
-  METRIC_AIRI_DB_POOL_CONNECTIONS,
-  METRIC_AIRI_EMAIL_DURATION,
-  METRIC_AIRI_EMAIL_FAILURES,
-  METRIC_AIRI_EMAIL_SEND,
-  METRIC_AIRI_FLUX_CREDITED,
-  METRIC_AIRI_FLUX_UNBILLED,
-  METRIC_AIRI_GEN_AI_GATEWAY_CONFIG_INVALID_HMAC,
-  METRIC_AIRI_GEN_AI_GATEWAY_CONFIG_RELOAD,
-  METRIC_AIRI_GEN_AI_GATEWAY_DECRYPT_FAILURES,
-  METRIC_AIRI_GEN_AI_GATEWAY_FALLBACK_COUNT,
-  METRIC_AIRI_GEN_AI_GATEWAY_KEY_EXHAUSTED_COUNT,
-  METRIC_AIRI_GEN_AI_GATEWAY_POOL_INFLIGHT,
-  METRIC_AIRI_GEN_AI_GATEWAY_POOL_SATURATION_MARKED,
-  METRIC_AIRI_GEN_AI_GATEWAY_POOL_SLOT_REJECTED,
-  METRIC_AIRI_GEN_AI_GATEWAY_SAME_STATUS_EXHAUSTION,
-  METRIC_AIRI_GEN_AI_GATEWAY_SUBSCRIBER_STATE,
-  METRIC_AIRI_GEN_AI_GATEWAY_UPSTREAM_ERRORS,
-  METRIC_AIRI_GEN_AI_STREAM_INTERRUPTED,
-  METRIC_AIRI_OBSERVABILITY_READ_ERRORS,
-  METRIC_AIRI_RATE_LIMIT_BLOCKED,
-  METRIC_AIRI_STRIPE_REVENUE,
-  METRIC_AIRI_TTS_CHARS,
-  METRIC_AIRI_TTS_PREFLIGHT_REJECTIONS,
+  METRIC_AIPETS_DB_POOL_CONNECTIONS,
+  METRIC_AIPETS_EMAIL_DURATION,
+  METRIC_AIPETS_EMAIL_FAILURES,
+  METRIC_AIPETS_EMAIL_SEND,
+  METRIC_AIPETS_FLUX_CREDITED,
+  METRIC_AIPETS_FLUX_UNBILLED,
+  METRIC_AIPETS_GEN_AI_GATEWAY_CONFIG_INVALID_HMAC,
+  METRIC_AIPETS_GEN_AI_GATEWAY_CONFIG_RELOAD,
+  METRIC_AIPETS_GEN_AI_GATEWAY_DECRYPT_FAILURES,
+  METRIC_AIPETS_GEN_AI_GATEWAY_FALLBACK_COUNT,
+  METRIC_AIPETS_GEN_AI_GATEWAY_KEY_EXHAUSTED_COUNT,
+  METRIC_AIPETS_GEN_AI_GATEWAY_POOL_INFLIGHT,
+  METRIC_AIPETS_GEN_AI_GATEWAY_POOL_SATURATION_MARKED,
+  METRIC_AIPETS_GEN_AI_GATEWAY_POOL_SLOT_REJECTED,
+  METRIC_AIPETS_GEN_AI_GATEWAY_SAME_STATUS_EXHAUSTION,
+  METRIC_AIPETS_GEN_AI_GATEWAY_SUBSCRIBER_STATE,
+  METRIC_AIPETS_GEN_AI_GATEWAY_UPSTREAM_ERRORS,
+  METRIC_AIPETS_GEN_AI_STREAM_INTERRUPTED,
+  METRIC_AIPETS_OBSERVABILITY_READ_ERRORS,
+  METRIC_AIPETS_RATE_LIMIT_BLOCKED,
+  METRIC_AIPETS_STRIPE_REVENUE,
+  METRIC_AIPETS_TTS_CHARS,
+  METRIC_AIPETS_TTS_PREFLIGHT_REJECTIONS,
   METRIC_AUTH_ATTEMPTS,
   METRIC_AUTH_FAILURES,
   METRIC_CHARACTER_CREATED,
@@ -134,7 +134,7 @@ export interface RevenueMetrics {
    *   alerts do NOT fire on this path — the failure is silent at the
    *   transport layer. This counter is the only signal that ties Flux value
    *   owed to a missed debit.
-   * - Recommended alert: `increase(airi_billing_flux_unbilled_total[5m]) > 0`
+   * - Recommended alert: `increase(aipets_billing_flux_unbilled_total[5m]) > 0`
    *   pages on-call immediately on any sustained leak.
    */
   fluxUnbilled: Counter
@@ -181,7 +181,7 @@ export interface GatewayMetrics {
    * Recommended labels: `provider`, `status_code`.
    *
    * Recommended alert:
-   *   `rate(airi_gen_ai_gateway_same_status_exhaustion_total[15m]) / rate(...request_count[15m]) > 0.05`
+   *   `rate(aipets_gen_ai_gateway_same_status_exhaustion_total[15m]) / rate(...request_count[15m]) > 0.05`
    */
   sameStatusExhaustion: Counter
   /**
@@ -353,23 +353,23 @@ export function initOtel(env: Env): OtelInstance | null {
     stripeEvents: meter.createCounter(METRIC_STRIPE_EVENTS, {
       description: 'Number of Stripe webhook events processed',
     }),
-    stripeRevenue: meter.createCounter(METRIC_AIRI_STRIPE_REVENUE, {
+    stripeRevenue: meter.createCounter(METRIC_AIPETS_STRIPE_REVENUE, {
       description: 'Stripe revenue in smallest currency unit (e.g. cents)',
       unit: 'minor_unit',
     }),
     fluxInsufficientBalance: meter.createCounter(METRIC_FLUX_INSUFFICIENT_BALANCE, {
       description: 'Number of insufficient flux balance errors',
     }),
-    fluxCredited: meter.createCounter(METRIC_AIRI_FLUX_CREDITED, {
+    fluxCredited: meter.createCounter(METRIC_AIPETS_FLUX_CREDITED, {
       description: 'Total flux credited to user balances, by source',
     }),
-    fluxUnbilled: meter.createCounter(METRIC_AIRI_FLUX_UNBILLED, {
+    fluxUnbilled: meter.createCounter(METRIC_AIPETS_FLUX_UNBILLED, {
       description: 'Flux owed but unbilled (post-stream debit failed). Real revenue leak.',
     }),
-    ttsChars: meter.createCounter(METRIC_AIRI_TTS_CHARS, {
+    ttsChars: meter.createCounter(METRIC_AIPETS_TTS_CHARS, {
       description: 'TTS input characters processed (billing base unit)',
     }),
-    ttsPreflightRejections: meter.createCounter(METRIC_AIRI_TTS_PREFLIGHT_REJECTIONS, {
+    ttsPreflightRejections: meter.createCounter(METRIC_AIPETS_TTS_PREFLIGHT_REJECTIONS, {
       description: 'Speech admission rejections against confirmed outstanding fees',
     }),
   }
@@ -396,7 +396,7 @@ export function initOtel(env: Env): OtelInstance | null {
       description: 'Time from request start to first streamed token (TTFB for streaming)',
       unit: 's',
     }),
-    streamInterrupted: meter.createCounter(METRIC_AIRI_GEN_AI_STREAM_INTERRUPTED, {
+    streamInterrupted: meter.createCounter(METRIC_AIPETS_GEN_AI_STREAM_INTERRUPTED, {
       description: 'Streaming responses interrupted before completion',
     }),
   }
@@ -405,68 +405,68 @@ export function initOtel(env: Env): OtelInstance | null {
   // Every counter alerts on a different failure shape; see metric-handle JSDoc
   // on GatewayMetrics for the recommended PromQL.
   const gateway: GatewayMetrics = {
-    fallbackCount: meter.createCounter(METRIC_AIRI_GEN_AI_GATEWAY_FALLBACK_COUNT, {
+    fallbackCount: meter.createCounter(METRIC_AIPETS_GEN_AI_GATEWAY_FALLBACK_COUNT, {
       description: 'Per-attempt fallback events in the in-process LLM/TTS router',
     }),
-    upstreamErrors: meter.createCounter(METRIC_AIRI_GEN_AI_GATEWAY_UPSTREAM_ERRORS, {
+    upstreamErrors: meter.createCounter(METRIC_AIPETS_GEN_AI_GATEWAY_UPSTREAM_ERRORS, {
       description: 'Upstream error responses received during fallback iteration',
     }),
-    keyExhaustedCount: meter.createCounter(METRIC_AIRI_GEN_AI_GATEWAY_KEY_EXHAUSTED_COUNT, {
+    keyExhaustedCount: meter.createCounter(METRIC_AIPETS_GEN_AI_GATEWAY_KEY_EXHAUSTED_COUNT, {
       description: 'All keys (across all upstreams) failed in a single request — primary user-facing alert',
     }),
-    sameStatusExhaustion: meter.createCounter(METRIC_AIRI_GEN_AI_GATEWAY_SAME_STATUS_EXHAUSTION, {
+    sameStatusExhaustion: meter.createCounter(METRIC_AIPETS_GEN_AI_GATEWAY_SAME_STATUS_EXHAUSTION, {
       description: 'All keys in one request failed with the same upstream status (account-level rate-limit signal)',
     }),
-    configReload: meter.createCounter(METRIC_AIRI_GEN_AI_GATEWAY_CONFIG_RELOAD, {
+    configReload: meter.createCounter(METRIC_AIPETS_GEN_AI_GATEWAY_CONFIG_RELOAD, {
       description: 'Local in-memory router config cache reloaded (by source: pubsub / ttl / manual)',
     }),
-    decryptFailures: meter.createCounter(METRIC_AIRI_GEN_AI_GATEWAY_DECRYPT_FAILURES, {
+    decryptFailures: meter.createCounter(METRIC_AIPETS_GEN_AI_GATEWAY_DECRYPT_FAILURES, {
       description: 'Envelope-crypto decryption auth-tag failures (config corruption or rotation misstep)',
     }),
-    subscriberState: meter.createCounter(METRIC_AIRI_GEN_AI_GATEWAY_SUBSCRIBER_STATE, {
+    subscriberState: meter.createCounter(METRIC_AIPETS_GEN_AI_GATEWAY_SUBSCRIBER_STATE, {
       description: 'Pub/Sub subscriber lifecycle state transitions',
     }),
-    configInvalidHmac: meter.createCounter(METRIC_AIRI_GEN_AI_GATEWAY_CONFIG_INVALID_HMAC, {
+    configInvalidHmac: meter.createCounter(METRIC_AIPETS_GEN_AI_GATEWAY_CONFIG_INVALID_HMAC, {
       description: 'Pub/Sub invalidation messages dropped due to HMAC mismatch (forged or replayed)',
     }),
-    poolSlotRejected: meter.createCounter(METRIC_AIRI_GEN_AI_GATEWAY_POOL_SLOT_REJECTED, {
+    poolSlotRejected: meter.createCounter(METRIC_AIPETS_GEN_AI_GATEWAY_POOL_SLOT_REJECTED, {
       description: 'Capacity-aware TTS routing skipped a pool already at its app_id concurrency cap',
     }),
-    poolSaturationMarked: meter.createCounter(METRIC_AIRI_GEN_AI_GATEWAY_POOL_SATURATION_MARKED, {
+    poolSaturationMarked: meter.createCounter(METRIC_AIPETS_GEN_AI_GATEWAY_POOL_SATURATION_MARKED, {
       description: 'TTSpool circuit-broken after exhausting with a 429 (app_id concurrency exceeded)',
     }),
-    poolInflight: meter.createObservableGauge(METRIC_AIRI_GEN_AI_GATEWAY_POOL_INFLIGHT, {
+    poolInflight: meter.createObservableGauge(METRIC_AIPETS_GEN_AI_GATEWAY_POOL_INFLIGHT, {
       description: 'In-flight TTS requests per pool sourced from Redis (cluster-wide; dashboard must use avg(), not sum())',
     }),
   }
 
   const email: EmailMetrics = {
-    send: meter.createCounter(METRIC_AIRI_EMAIL_SEND, {
+    send: meter.createCounter(METRIC_AIPETS_EMAIL_SEND, {
       description: 'Transactional emails accepted by Resend',
     }),
-    failures: meter.createCounter(METRIC_AIRI_EMAIL_FAILURES, {
+    failures: meter.createCounter(METRIC_AIPETS_EMAIL_FAILURES, {
       description: 'Transactional email send failures',
     }),
-    duration: meter.createHistogram(METRIC_AIRI_EMAIL_DURATION, {
+    duration: meter.createHistogram(METRIC_AIPETS_EMAIL_DURATION, {
       description: 'Email provider call duration',
       unit: 's',
     }),
   }
 
   const rateLimit: RateLimitMetrics = {
-    blocked: meter.createCounter(METRIC_AIRI_RATE_LIMIT_BLOCKED, {
+    blocked: meter.createCounter(METRIC_AIPETS_RATE_LIMIT_BLOCKED, {
       description: 'Requests blocked by rate limiter',
     }),
   }
 
   const observability: ObservabilityMetrics = {
-    metricReadErrors: meter.createCounter(METRIC_AIRI_OBSERVABILITY_READ_ERRORS, {
+    metricReadErrors: meter.createCounter(METRIC_AIPETS_OBSERVABILITY_READ_ERRORS, {
       description: 'Failures reading metric values inside gauge callbacks',
     }),
   }
 
   const database: DatabaseMetrics = {
-    poolConnections: meter.createObservableGauge(METRIC_AIRI_DB_POOL_CONNECTIONS, {
+    poolConnections: meter.createObservableGauge(METRIC_AIPETS_DB_POOL_CONNECTIONS, {
       description: 'Local pg pool connections by capacity, use, idle, and waiting state',
     }),
   }

@@ -155,7 +155,7 @@ export type EnvelopeCrypto = ReturnType<typeof createEnvelopeCrypto>
 
 /**
  * Returns the first 8 hex characters of `SHA-256(plaintext)`. Used as
- * `airi.gen_ai.gateway.key.id` for OTel traces and metrics.
+ * `aipets.gen_ai.gateway.key.id` for OTel traces and metrics.
  *
  * Expects:
  * - `plaintext` is the raw secret. Never pass the encrypted ciphertext.

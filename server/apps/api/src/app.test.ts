@@ -2,7 +2,7 @@ import { describe, expect, it, vi } from 'vitest'
 
 import { buildApp } from './app'
 
-function createTestDeps(webAppUrl = 'https://airi.moeru.ai') {
+function createTestDeps(webAppUrl = 'https://aipets.moeru.ai') {
   const redisSubscriber = {
     on: vi.fn(),
     subscribe: vi.fn(async () => 1),
@@ -40,8 +40,8 @@ function createTestDeps(webAppUrl = 'https://airi.moeru.ai') {
     configKV: { getOrThrow: vi.fn(), getOptional: vi.fn(async () => 1) } as never,
     redis: redis as never,
     env: {
-      API_SERVER_URL: 'https://api.airi.build',
-      AUTH_SERVER_URL: 'https://api.airi.build',
+      API_SERVER_URL: 'https://api.aipets.build',
+      AUTH_SERVER_URL: 'https://api.aipets.build',
       WEB_APP_URL: webAppUrl,
       TEST_AUTH_TOKEN: 'test-token',
       TEST_AUTH_USER_ID: 'user-1',
@@ -84,7 +84,7 @@ describe('business API app', () => {
     const response = await app.request('/')
 
     expect(response.status).toBe(200)
-    expect(await response.json()).toMatchObject({ service: 'airi-api' })
+    expect(await response.json()).toMatchObject({ service: 'aipets-api' })
   })
 
   it.each(['GET', 'HEAD'])('redirects email verification root landings to the product with %s', async (method) => {
@@ -117,7 +117,7 @@ describe('business API app', () => {
 
     expect(response.status).toBe(200)
     expect(response.headers.get('location')).toBeNull()
-    expect(await response.json()).toMatchObject({ service: 'airi-api' })
+    expect(await response.json()).toMatchObject({ service: 'aipets-api' })
   })
 
   it('does not redirect browser requests outside the root GET route', async () => {

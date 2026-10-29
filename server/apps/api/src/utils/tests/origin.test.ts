@@ -13,13 +13,13 @@ describe('origin utils', () => {
   })
 
   it('allows the standalone auth UI origins', () => {
-    expect(getTrustedOrigin('https://accounts.airi.build')).toBe('https://accounts.airi.build')
-    expect(getTrustedOrigin('https://server-dev.airi-server-auth.pages.dev')).toBe('https://server-dev.airi-server-auth.pages.dev')
+    expect(getTrustedOrigin('https://accounts.aipets.build')).toBe('https://accounts.aipets.build')
+    expect(getTrustedOrigin('https://server-dev.aipets-server-auth.pages.dev')).toBe('https://server-dev.aipets-server-auth.pages.dev')
   })
 
   it('rejects retired management UI origins', () => {
-    expect(getTrustedOrigin('https://admin.airi.build')).toBe('')
-    expect(getTrustedOrigin('https://server-dev.airi-server-admin.pages.dev')).toBe('')
+    expect(getTrustedOrigin('https://admin.aipets.build')).toBe('')
+    expect(getTrustedOrigin('https://server-dev.aipets-server-admin.pages.dev')).toBe('')
   })
 
   it('rejects private LAN Vite dev origins unless listed in ADDITIONAL_TRUSTED_ORIGINS', () => {
@@ -40,12 +40,12 @@ describe('origin utils', () => {
   it('prefers a trusted referer origin', () => {
     const request = new Request('http://localhost/api/v1/stripe/checkout', {
       headers: {
-        referer: 'https://airi.moeru.ai/settings/flux',
+        referer: 'https://aipets.moeru.ai/settings/flux',
         origin: 'https://example.com',
       },
     })
 
-    expect(resolveTrustedRequestOrigin(request)).toBe('https://airi.moeru.ai')
+    expect(resolveTrustedRequestOrigin(request)).toBe('https://aipets.moeru.ai')
   })
 
   it('falls back to a trusted origin header when referer is missing', () => {
@@ -59,7 +59,7 @@ describe('origin utils', () => {
   })
 
   describe('resolveCheckoutRedirectBase', () => {
-    const fallback = 'https://airi.moeru.ai'
+    const fallback = 'https://aipets.moeru.ai'
 
     it('prefers the trusted request origin over the fallback', () => {
       const request = new Request('http://localhost/api/v1/stripe/checkout', {

@@ -29,7 +29,7 @@ const testEnv = {
   STRIPE_SECRET_KEY: 'sk_test_fake',
   STRIPE_WEBHOOK_SECRET: 'whsec_test_fake',
   API_SERVER_URL: 'http://localhost:8787',
-  WEB_APP_URL: 'https://airi.moeru.ai',
+  WEB_APP_URL: 'https://aipets.moeru.ai',
   ADDITIONAL_TRUSTED_ORIGINS: [],
 } as never
 

@@ -41,7 +41,7 @@ async function startMockAliyunUpstream(): Promise<MockAliyunUpstream> {
       if (parsed.header?.name === 'StopTranscription') {
         ws.send(JSON.stringify({
           header: { name: 'SentenceEnd' },
-          payload: { result: 'hello airi' },
+          payload: { result: 'hello aipets' },
         }))
         ws.send(JSON.stringify({
           header: { name: 'TranscriptionCompleted' },
@@ -121,7 +121,7 @@ describe('createAliyunNlsStreamResponse', () => {
 
     const body = await readText(response.body!)
 
-    expect(body).toContain('data: {"delta":"hello airi\\n","type":"transcript.text.delta"}')
+    expect(body).toContain('data: {"delta":"hello aipets\\n","type":"transcript.text.delta"}')
     expect(body).toContain('data: {"delta":"","type":"transcript.text.done"}')
     expect(upstream.receivedBinaryFrames).toEqual([
       Buffer.from([1, 2]),

@@ -8,7 +8,7 @@ import type { HonoEnv } from '../../types/hono'
 
 import { createHmac } from 'node:crypto'
 
-import { ApiError } from '@proj-airi/http-error-shared'
+import { ApiError } from '@proj-aipets/http-error-shared'
 import { eq } from 'drizzle-orm'
 import { Hono } from 'hono'
 import { beforeAll, describe, expect, it, vi } from 'vitest'
@@ -29,8 +29,8 @@ const signingSecret = 'test-signing-secret'
 const authorization = 'test-authorization-value'
 
 const starterCapacitors: ConfigDefinitions['REVENUECAT_CAPACITORS'] = {
-  rc_go_monthly: { entitlementId: 'airi_go', quota: 2000 },
-  rc_plus_monthly: { entitlementId: 'airi_plus', quota: 5000 },
+  rc_go_monthly: { entitlementId: 'aipets_go', quota: 2000 },
+  rc_plus_monthly: { entitlementId: 'aipets_plus', quota: 5000 },
 }
 
 function createCapacitorsConfigKV(resetInterval: ConfigDefinitions['CAPACITOR_RESET_INTERVAL'] | null = null): ConfigKVService {
@@ -143,7 +143,7 @@ describe('revenuecat routes', () => {
   }
 
   const goEntitlement: SubscriberEntitlement = {
-    entitlementId: 'airi_go',
+    entitlementId: 'aipets_go',
     productId: 'rc_go_monthly',
     purchasedAt: new Date('2026-10-01T00:00:00.000Z'),
     accessUntil: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
@@ -203,7 +203,7 @@ describe('revenuecat routes', () => {
     expect(await readWallet('user-1')).toMatchObject({ capacitorFlux: 1500, capacitorQuota: 2000 })
   })
 
-  // https://github.com/moeru-ai/airi/issues/2981
+  // https://gitee.com/kallen-noelle/AdoptAI/issues/2981
   // A refill needs a last refill earlier than the new period start, so the clock moves from the first event to the upgrade.
   it('grants the new capacitor on PRODUCT_CHANGE and not the old product in the event', async () => {
     const upgradedAt = new Date('2026-10-15T00:00:00.000Z')
@@ -215,7 +215,7 @@ describe('revenuecat routes', () => {
 
       vi.setSystemTime(upgradedAt)
       entitlements['user-1'] = [{
-        entitlementId: 'airi_plus',
+        entitlementId: 'aipets_plus',
         productId: 'rc_plus_monthly',
         purchasedAt: upgradedAt,
         accessUntil: goEntitlement.accessUntil,
@@ -421,7 +421,7 @@ describe('revenuecat routes', () => {
     expect(fetchEntitlements).not.toHaveBeenCalled()
   })
 
-  // https://github.com/moeru-ai/airi/pull/3004#discussion_r4302304373
+  // https://gitee.com/kallen-noelle/AdoptAI/pull/3004#discussion_r4302304373
   // ROOT CAUSE:
   // The quota response replaced productIds, which existing clients read.
   // A separate catalog route keeps both read contracts available during release.

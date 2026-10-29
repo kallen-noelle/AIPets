@@ -7,7 +7,7 @@ describe('stateless Responses request boundary', () => {
     expect(() => parseResponsesRequest(body)).toThrow('Invalid stateless Responses request')
   })
 
-  // https://github.com/moeru-ai/airi/issues/2479
+  // https://gitee.com/kallen-noelle/AdoptAI/issues/2479
   it.each([
     { store: true },
     { background: true },
@@ -122,7 +122,7 @@ describe('stateless Responses request boundary', () => {
     expect(parseResponsesRequest({ input: 'hello', ...sampling }).body).toMatchObject(sampling)
   })
 
-  // https://github.com/moeru-ai/airi/pull/2554#discussion_r4044384483
+  // https://gitee.com/kallen-noelle/AdoptAI/pull/2554#discussion_r4044384483
   it.each([
     {},
     { type: 'array', items: { type: 'string' } },
@@ -150,8 +150,8 @@ describe('stateless Responses request boundary', () => {
 })
 
 it('preserves search options, tool choice, sources and client-owned search history', () => {
-  const input = [{ type: 'web_search_call', id: 'ws-1', status: 'completed', action: { type: 'search', queries: ['AIRI'], sources: [{ type: 'url', url: 'https://airi.moeru.ai' }] } }]
-  const tools = [{ type: 'web_search', external_web_access: false, filters: { allowed_domains: ['airi.moeru.ai'] }, user_location: { type: 'approximate', country: 'JP' } }]
+  const input = [{ type: 'web_search_call', id: 'ws-1', status: 'completed', action: { type: 'search', queries: ['AIPETS'], sources: [{ type: 'url', url: 'https://aipets.moeru.ai' }] } }]
+  const tools = [{ type: 'web_search', external_web_access: false, filters: { allowed_domains: ['aipets.moeru.ai'] }, user_location: { type: 'approximate', country: 'JP' } }]
   const request = parseResponsesRequest({ input, tools, tool_choice: 'none', include: ['web_search_call.action.sources'] })
   expect(request.policy.input).toEqual(input)
   expect(request.policy.tools).toEqual(tools)
@@ -161,7 +161,7 @@ it('preserves search options, tool choice, sources and client-owned search histo
 })
 
 it('preserves a live find-in-page search item without a URL', () => {
-  const input = [{ type: 'web_search_call', id: 'ws-1', status: 'completed', action: { type: 'find_in_page', pattern: 'AIRI' } }]
+  const input = [{ type: 'web_search_call', id: 'ws-1', status: 'completed', action: { type: 'find_in_page', pattern: 'AIPETS' } }]
 
   const request = parseResponsesRequest({ input })
 

@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest'
 import { createChatWsUnauthenticatedPeerLimit } from './unauthenticated-peers'
 
 describe('v2 chat unauthenticated peer limit', () => {
-  // https://github.com/moeru-ai/airi/pull/2309#discussion_r3811138375
+  // https://gitee.com/kallen-noelle/AdoptAI/pull/2309#discussion_r3811138375
   // ROOT CAUSE:
   //
   // v2 upgrades before the client proves identity. Without a cap, unauthenticated

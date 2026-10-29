@@ -86,7 +86,7 @@ describe('registerTtsPoolGauge', () => {
     await run()
 
     expect(observe).not.toHaveBeenCalled()
-    expect(add).toHaveBeenCalledWith(1, { metric: 'airi.gen_ai.gateway.pool.inflight' })
+    expect(add).toHaveBeenCalledWith(1, { metric: 'aipets.gen_ai.gateway.pool.inflight' })
   })
 
   it('serves the cached snapshot within the 10s TTL without re-reading Redis', async () => {

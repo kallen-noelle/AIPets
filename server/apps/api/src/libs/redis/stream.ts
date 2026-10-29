@@ -70,7 +70,7 @@ export function defineStream<const TEvents extends Record<string, StreamEventDef
  *
  * Producer rule: `publish` rejects when validation or XADD fails, and it never swallows the error.
  * The caller must let the error fail its request, so the caller's client retries the request.
- * moeru-ai/airi #1792 removed an earlier stream because a caller ignored XADD failures.
+ * kallen-noelle/AdoptAI #1792 removed an earlier stream because a caller ignored XADD failures.
  * A retry can append the same `id` again. Consumers deduplicate on `id`.
  */
 export function createStreamPublisher<TEvents extends Record<string, StreamEventDefinition>>(

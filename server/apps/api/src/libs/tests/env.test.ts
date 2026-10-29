@@ -115,12 +115,12 @@ describe('parseEnv', () => {
   it('parses APPLE_IAP_APPS as a list of Apple apps', () => {
     const env = parseEnv({
       ...baseEnv(),
-      APPLE_IAP_APPS: ' ai.moeru.airi-pocket , ai.moeru.airi-lite:123456 ',
+      APPLE_IAP_APPS: ' ai.moeru.aipets-pocket , ai.moeru.aipets-lite:123456 ',
     })
 
     expect(env.APPLE_IAP_APPS).toEqual([
-      { bundleId: 'ai.moeru.airi-pocket' },
-      { bundleId: 'ai.moeru.airi-lite', appAppleId: 123456 },
+      { bundleId: 'ai.moeru.aipets-pocket' },
+      { bundleId: 'ai.moeru.aipets-lite', appAppleId: 123456 },
     ])
   })
 

@@ -19,7 +19,7 @@ function createPeer(sent: string[]): WSContext {
 }
 
 describe('v1 chat WebSocket protocol', () => {
-  // https://github.com/moeru-ai/airi/pull/2308
+  // https://gitee.com/kallen-noelle/AdoptAI/pull/2308
   // ROOT CAUSE:
   //
   // Eventa beta.14 changed the adapter envelope. The chat server then added a

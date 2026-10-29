@@ -2,7 +2,7 @@ import { index, integer, jsonb, pgTable, text, timestamp, uniqueIndex } from 'dr
 
 import { nanoid } from '../utils/id'
 
-/** One dispatch observed by AIRI, not retries hidden inside a gateway. */
+/** One dispatch observed by AIPETS, not retries hidden inside a gateway. */
 export const llmRequestAttempt = pgTable('llm_request_attempt', {
   id: text('id').primaryKey().$defaultFn(() => nanoid()),
   userId: text('user_id').notNull(),

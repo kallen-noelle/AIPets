@@ -1,5 +1,5 @@
 // ---------------------------------------------------------------------------
-// Span attribute constants (OTel semantic conventions + AIRI custom)
+// Span attribute constants (OTel semantic conventions + AIPETS custom)
 // ---------------------------------------------------------------------------
 
 // GenAI semconv attributes — https://opentelemetry.io/docs/specs/semconv/gen-ai/
@@ -10,25 +10,25 @@ export const GEN_AI_ATTR_SYSTEM = 'gen_ai.system'
 export const GEN_AI_ATTR_USAGE_INPUT_TOKENS = 'gen_ai.usage.input_tokens'
 export const GEN_AI_ATTR_USAGE_OUTPUT_TOKENS = 'gen_ai.usage.output_tokens'
 
-// AIRI custom span attributes
-export const AIRI_ATTR_BILLING_FLUX_CONSUMED = 'airi.billing.flux_consumed'
-export const AIRI_ATTR_GEN_AI_INPUT_MESSAGES = 'airi.gen_ai.input.messages'
-export const AIRI_ATTR_GEN_AI_INPUT_TEXT = 'airi.gen_ai.input.text'
-export const AIRI_ATTR_GEN_AI_OPERATION_KIND = 'airi.gen_ai.operation.kind'
-export const AIRI_ATTR_GEN_AI_OLLAMA_THINK = 'airi.gen_ai.ollama.think'
-export const AIRI_ATTR_GEN_AI_OUTPUT_FULL_TEXT = 'airi.gen_ai.output.full_text'
-export const AIRI_ATTR_GEN_AI_OUTPUT_TEXT = 'airi.gen_ai.output.text'
-export const AIRI_ATTR_GEN_AI_STREAM = 'airi.gen_ai.stream'
-export const AIRI_ATTR_GEN_AI_STREAM_INTERRUPTED = 'airi.gen_ai.stream_interrupted'
+// AIPETS custom span attributes
+export const AIPETS_ATTR_BILLING_FLUX_CONSUMED = 'aipets.billing.flux_consumed'
+export const AIPETS_ATTR_GEN_AI_INPUT_MESSAGES = 'aipets.gen_ai.input.messages'
+export const AIPETS_ATTR_GEN_AI_INPUT_TEXT = 'aipets.gen_ai.input.text'
+export const AIPETS_ATTR_GEN_AI_OPERATION_KIND = 'aipets.gen_ai.operation.kind'
+export const AIPETS_ATTR_GEN_AI_OLLAMA_THINK = 'aipets.gen_ai.ollama.think'
+export const AIPETS_ATTR_GEN_AI_OUTPUT_FULL_TEXT = 'aipets.gen_ai.output.full_text'
+export const AIPETS_ATTR_GEN_AI_OUTPUT_TEXT = 'aipets.gen_ai.output.text'
+export const AIPETS_ATTR_GEN_AI_STREAM = 'aipets.gen_ai.stream'
+export const AIPETS_ATTR_GEN_AI_STREAM_INTERRUPTED = 'aipets.gen_ai.stream_interrupted'
 
-// AIRI router gateway span attributes (in-process LLM/TTS routing — KTD-3).
-// All prefixed `airi.gen_ai.gateway.*` to stay under the existing `airi.gen_ai.*`
-// namespace already used by `airi.gen_ai.stream_interrupted`.
-export const AIRI_ATTR_GEN_AI_GATEWAY_UPSTREAM_URL = 'airi.gen_ai.gateway.upstream.url'
-export const AIRI_ATTR_GEN_AI_GATEWAY_UPSTREAM_INDEX = 'airi.gen_ai.gateway.upstream.index'
-export const AIRI_ATTR_GEN_AI_GATEWAY_KEY_ID = 'airi.gen_ai.gateway.key.id'
-export const AIRI_ATTR_GEN_AI_GATEWAY_FALLBACK_DEPTH = 'airi.gen_ai.gateway.fallback.depth'
-export const AIRI_ATTR_GEN_AI_GATEWAY_FALLBACK_REASON = 'airi.gen_ai.gateway.fallback.reason'
+// AIPETS router gateway span attributes (in-process LLM/TTS routing — KTD-3).
+// All prefixed `aipets.gen_ai.gateway.*` to stay under the existing `aipets.gen_ai.*`
+// namespace already used by `aipets.gen_ai.stream_interrupted`.
+export const AIPETS_ATTR_GEN_AI_GATEWAY_UPSTREAM_URL = 'aipets.gen_ai.gateway.upstream.url'
+export const AIPETS_ATTR_GEN_AI_GATEWAY_UPSTREAM_INDEX = 'aipets.gen_ai.gateway.upstream.index'
+export const AIPETS_ATTR_GEN_AI_GATEWAY_KEY_ID = 'aipets.gen_ai.gateway.key.id'
+export const AIPETS_ATTR_GEN_AI_GATEWAY_FALLBACK_DEPTH = 'aipets.gen_ai.gateway.fallback.depth'
+export const AIPETS_ATTR_GEN_AI_GATEWAY_FALLBACK_REASON = 'aipets.gen_ai.gateway.fallback.reason'
 
 // Server attributes
 export const SERVER_ATTR_ADDRESS = 'server.address'
@@ -42,13 +42,13 @@ export const SERVER_ATTR_PORT = 'server.port'
 export const METRIC_HTTP_SERVER_REQUEST_DURATION = 'http.server.request.duration'
 export const METRIC_HTTP_SERVER_ACTIVE_REQUESTS = 'http.server.active_requests'
 
-// Auth & user (AIRI custom)
+// Auth & user (AIPETS custom)
 export const METRIC_AUTH_ATTEMPTS = 'auth.attempts'
 export const METRIC_AUTH_FAILURES = 'auth.failures'
 export const METRIC_USER_REGISTERED = 'user.registered'
 export const METRIC_USER_LOGIN = 'user.login'
 
-// Engagement (AIRI custom)
+// Engagement (AIPETS custom)
 export const METRIC_CHAT_MESSAGES = 'chat.messages'
 export const METRIC_CHARACTER_CREATED = 'character.created'
 export const METRIC_CHARACTER_DELETED = 'character.deleted'
@@ -58,7 +58,7 @@ export const METRIC_WS_USERS_ONLINE = 'ws.users.online'
 export const METRIC_WS_MESSAGES_SENT = 'ws.messages.sent'
 export const METRIC_WS_MESSAGES_RECEIVED = 'ws.messages.received'
 
-// Revenue (AIRI custom)
+// Revenue (AIPETS custom)
 export const METRIC_STRIPE_CHECKOUT_CREATED = 'stripe.checkout.created'
 export const METRIC_STRIPE_CHECKOUT_COMPLETED = 'stripe.checkout.completed'
 export const METRIC_STRIPE_EVENTS = 'stripe.events'
@@ -69,39 +69,39 @@ export const METRIC_GEN_AI_CLIENT_OPERATION_DURATION = 'gen_ai.client.operation.
 export const METRIC_GEN_AI_CLIENT_OPERATION_COUNT = 'gen_ai.client.operation.count'
 export const METRIC_GEN_AI_CLIENT_TOKEN_USAGE_INPUT = 'gen_ai.client.token.usage.input'
 export const METRIC_GEN_AI_CLIENT_TOKEN_USAGE_OUTPUT = 'gen_ai.client.token.usage.output'
-export const METRIC_FLUX_CONSUMED = 'airi.billing.flux.consumed'
+export const METRIC_FLUX_CONSUMED = 'aipets.billing.flux.consumed'
 
-// AIRI billing — credit/debit visibility beyond raw consumption
-export const METRIC_AIRI_FLUX_CREDITED = 'airi.billing.flux.credited'
+// AIPETS billing — credit/debit visibility beyond raw consumption
+export const METRIC_AIPETS_FLUX_CREDITED = 'aipets.billing.flux.credited'
 // Streaming-only: token already streamed to user but post-stream debit failed.
 // Real revenue leak — every >0 sample should page. NOT covered by DB latency /
 // HTTP 5xx alerts because the response was 2xx and the catch path is silent.
-export const METRIC_AIRI_FLUX_UNBILLED = 'airi.billing.flux.unbilled'
-export const METRIC_AIRI_TTS_CHARS = 'airi.billing.tts.chars'
-export const METRIC_AIRI_TTS_PREFLIGHT_REJECTIONS = 'airi.billing.tts.preflight_rejections'
+export const METRIC_AIPETS_FLUX_UNBILLED = 'aipets.billing.flux.unbilled'
+export const METRIC_AIPETS_TTS_CHARS = 'aipets.billing.tts.chars'
+export const METRIC_AIPETS_TTS_PREFLIGHT_REJECTIONS = 'aipets.billing.tts.preflight_rejections'
 
-// AIRI observability — self-monitoring for the metric pipeline
-export const METRIC_AIRI_OBSERVABILITY_READ_ERRORS = 'airi.observability.read_errors'
+// AIPETS observability — self-monitoring for the metric pipeline
+export const METRIC_AIPETS_OBSERVABILITY_READ_ERRORS = 'aipets.observability.read_errors'
 
-// AIRI database — local pg pool capacity and queue state
-export const METRIC_AIRI_DB_POOL_CONNECTIONS = 'airi.db.pool.connections'
+// AIPETS database — local pg pool capacity and queue state
+export const METRIC_AIPETS_DB_POOL_CONNECTIONS = 'aipets.db.pool.connections'
 
-// AIRI revenue — actual money in (smallest currency unit, e.g. cents)
-export const METRIC_AIRI_STRIPE_REVENUE = 'airi.stripe.revenue'
+// AIPETS revenue — actual money in (smallest currency unit, e.g. cents)
+export const METRIC_AIPETS_STRIPE_REVENUE = 'aipets.stripe.revenue'
 
-// AIRI email — transactional delivery health
-export const METRIC_AIRI_EMAIL_SEND = 'airi.email.send'
-export const METRIC_AIRI_EMAIL_FAILURES = 'airi.email.failures'
-export const METRIC_AIRI_EMAIL_DURATION = 'airi.email.duration'
+// AIPETS email — transactional delivery health
+export const METRIC_AIPETS_EMAIL_SEND = 'aipets.email.send'
+export const METRIC_AIPETS_EMAIL_FAILURES = 'aipets.email.failures'
+export const METRIC_AIPETS_EMAIL_DURATION = 'aipets.email.duration'
 
-// AIRI rate limiting — abuse / attack visibility
-export const METRIC_AIRI_RATE_LIMIT_BLOCKED = 'airi.rate_limit.blocked'
+// AIPETS rate limiting — abuse / attack visibility
+export const METRIC_AIPETS_RATE_LIMIT_BLOCKED = 'aipets.rate_limit.blocked'
 
-// AIRI GenAI — stream quality
-export const METRIC_AIRI_GEN_AI_STREAM_INTERRUPTED = 'airi.gen_ai.stream.interrupted'
+// AIPETS GenAI — stream quality
+export const METRIC_AIPETS_GEN_AI_STREAM_INTERRUPTED = 'aipets.gen_ai.stream.interrupted'
 export const METRIC_GEN_AI_CLIENT_FIRST_TOKEN_DURATION = 'gen_ai.client.first_token.duration'
 
-// AIRI router gateway — in-process LLM/TTS routing fallback / health signals.
+// AIPETS router gateway — in-process LLM/TTS routing fallback / health signals.
 //
 // fallback_count    — each retry attempt (per failing key). Labels: provider,
 //                     from_key, reason. Dashboard sum gives 24h fallback volume.
@@ -123,14 +123,14 @@ export const METRIC_GEN_AI_CLIENT_FIRST_TOKEN_DURATION = 'gen_ai.client.first_to
 // config_invalid_hmac
 //                  — Pub/Sub invalidation messages dropped due to HMAC mismatch
 //                     (forged or replayed). >0 = investigate Redis access.
-export const METRIC_AIRI_GEN_AI_GATEWAY_FALLBACK_COUNT = 'airi.gen_ai.gateway.fallback.count'
-export const METRIC_AIRI_GEN_AI_GATEWAY_UPSTREAM_ERRORS = 'airi.gen_ai.gateway.upstream.errors'
-export const METRIC_AIRI_GEN_AI_GATEWAY_KEY_EXHAUSTED_COUNT = 'airi.gen_ai.gateway.key.exhausted'
-export const METRIC_AIRI_GEN_AI_GATEWAY_SAME_STATUS_EXHAUSTION = 'airi.gen_ai.gateway.same_status_exhaustion'
-export const METRIC_AIRI_GEN_AI_GATEWAY_CONFIG_RELOAD = 'airi.gen_ai.gateway.config.reload'
-export const METRIC_AIRI_GEN_AI_GATEWAY_DECRYPT_FAILURES = 'airi.gen_ai.gateway.decrypt.failures'
-export const METRIC_AIRI_GEN_AI_GATEWAY_SUBSCRIBER_STATE = 'airi.gen_ai.gateway.subscriber_state'
-export const METRIC_AIRI_GEN_AI_GATEWAY_CONFIG_INVALID_HMAC = 'airi.gen_ai.gateway.config.invalid_hmac'
+export const METRIC_AIPETS_GEN_AI_GATEWAY_FALLBACK_COUNT = 'aipets.gen_ai.gateway.fallback.count'
+export const METRIC_AIPETS_GEN_AI_GATEWAY_UPSTREAM_ERRORS = 'aipets.gen_ai.gateway.upstream.errors'
+export const METRIC_AIPETS_GEN_AI_GATEWAY_KEY_EXHAUSTED_COUNT = 'aipets.gen_ai.gateway.key.exhausted'
+export const METRIC_AIPETS_GEN_AI_GATEWAY_SAME_STATUS_EXHAUSTION = 'aipets.gen_ai.gateway.same_status_exhaustion'
+export const METRIC_AIPETS_GEN_AI_GATEWAY_CONFIG_RELOAD = 'aipets.gen_ai.gateway.config.reload'
+export const METRIC_AIPETS_GEN_AI_GATEWAY_DECRYPT_FAILURES = 'aipets.gen_ai.gateway.decrypt.failures'
+export const METRIC_AIPETS_GEN_AI_GATEWAY_SUBSCRIBER_STATE = 'aipets.gen_ai.gateway.subscriber_state'
+export const METRIC_AIPETS_GEN_AI_GATEWAY_CONFIG_INVALID_HMAC = 'aipets.gen_ai.gateway.config.invalid_hmac'
 // TTSpool (per app_id concurrency pool) load-balancer signals.
 // pool_slot_rejected — capacity-aware routing skipped a pool because its app_id
 //                      was already at the concurrency cap (labels: provider, app_id).
@@ -140,9 +140,9 @@ export const METRIC_AIRI_GEN_AI_GATEWAY_CONFIG_INVALID_HMAC = 'airi.gen_ai.gatew
 // pool_inflight      — cluster-wide gauge of current in-flight requests per pool,
 //                      sourced from Redis (label: app_id). Dashboard must avg(),
 //                      not sum() — every replica reports the same value.
-export const METRIC_AIRI_GEN_AI_GATEWAY_POOL_SLOT_REJECTED = 'airi.gen_ai.gateway.pool.slot_rejected'
-export const METRIC_AIRI_GEN_AI_GATEWAY_POOL_SATURATION_MARKED = 'airi.gen_ai.gateway.pool.saturation_marked'
-export const METRIC_AIRI_GEN_AI_GATEWAY_POOL_INFLIGHT = 'airi.gen_ai.gateway.pool.inflight'
+export const METRIC_AIPETS_GEN_AI_GATEWAY_POOL_SLOT_REJECTED = 'aipets.gen_ai.gateway.pool.slot_rejected'
+export const METRIC_AIPETS_GEN_AI_GATEWAY_POOL_SATURATION_MARKED = 'aipets.gen_ai.gateway.pool.saturation_marked'
+export const METRIC_AIPETS_GEN_AI_GATEWAY_POOL_INFLIGHT = 'aipets.gen_ai.gateway.pool.inflight'
 
 // ---------------------------------------------------------------------------
 // Canonical gen_ai.system values
