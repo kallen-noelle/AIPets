@@ -1,0 +1,33 @@
+{
+  "manifestVersion": 2,
+  "kind": "manifest.extension.aipets.app",
+  "id": "aipets-plugin-game-chess",
+  "version": "0.12.0",
+  "engines": {
+    "aipets": "*",
+    "runtimes": [
+      "electron"
+    ]
+  },
+  "entrypoints": {
+    "electron": "./aipets-plugin-game-chess.mjs"
+  },
+  "permissions": {
+    "apis": [
+      {
+        "key": "kit.gamelet",
+        "actions": [
+          "invoke"
+        ]
+      }
+    ],
+    "resources": [
+      {
+        "key": "proj-aipets:plugin-sdk:resources:kits:kit.gamelet:bindings",
+        "actions": [
+          "write"
+        ]
+      }
+    ]
+  }
+}
