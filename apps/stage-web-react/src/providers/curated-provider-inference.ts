@@ -1,5 +1,5 @@
 /**
- * Curated re-exports from @proj-airi/provider-inference.
+ * Curated re-exports from @proj-aipets/provider-inference.
  *
  * The barrel index.ts of provider-inference also re-exports Sherpaw local
  * transcription which pulls a 13.8 MB WASM into web builds. This local

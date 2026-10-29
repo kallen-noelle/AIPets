@@ -1,4 +1,4 @@
-import type { AffectState } from '@proj-airi/character-animation'
+import type { AffectState } from '@proj-aipets/character-animation'
 
 /** One factual line in a state section. */
 export interface StateEntry {

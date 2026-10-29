@@ -3,9 +3,9 @@ import type {
   SessionInteractionType,
   SessionPhase,
   SessionTransition,
-} from '@proj-airi/character-animation'
+} from '@proj-aipets/character-animation'
 
-import { SessionStateMachine } from '@proj-airi/character-animation'
+import { SessionStateMachine } from '@proj-aipets/character-animation'
 import { useSyncExternalStore } from 'react'
 
 import { animationLog } from './animation-log'

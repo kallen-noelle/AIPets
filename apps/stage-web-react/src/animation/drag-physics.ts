@@ -17,8 +17,20 @@ interface DragState {
   pointerId: number | null
   lastX: number
   lastY: number
+  lastScreenX: number
+  lastScreenY: number
   lastTime: number
   frame: number
+}
+
+export interface DragPhysicsOptions {
+  /**
+   * Moves the browser window with the pointer instead of the element. The
+   * desktop pet uses this, so the character never leaves its frame.
+   */
+  moveWindow?: boolean
+  onDragStart?: () => void
+  onDragEnd?: () => void
 }
 
 const friction = 0.94
@@ -32,7 +44,12 @@ const flingThreshold = 380
  * window edges. The element stops where it lands and never returns to its
  * start position.
  */
-export function useDragPhysics(targetRef: RefObject<HTMLElement | null>) {
+export function useDragPhysics(targetRef: RefObject<HTMLElement | null>, options: DragPhysicsOptions = {}) {
+  const { moveWindow = false, onDragStart, onDragEnd } = options
+  const callbacks = useRef({ onDragStart, onDragEnd })
+  useEffect(() => {
+    callbacks.current = { onDragStart, onDragEnd }
+  }, [onDragStart, onDragEnd])
   const [offset, setOffset] = useState<DragOffset>({ x: 0, y: 0 })
   const [dragging, setDragging] = useState(false)
   const state = useRef<DragState>({
@@ -45,6 +62,8 @@ export function useDragPhysics(targetRef: RefObject<HTMLElement | null>) {
     pointerId: null,
     lastX: 0,
     lastY: 0,
+    lastScreenX: 0,
+    lastScreenY: 0,
     lastTime: 0,
     frame: 0,
   })
@@ -135,16 +154,31 @@ export function useDragPhysics(targetRef: RefObject<HTMLElement | null>) {
     current.pointerId = event.pointerId
     current.lastX = event.clientX
     current.lastY = event.clientY
+    current.lastScreenX = event.screenX
+    current.lastScreenY = event.screenY
     current.lastTime = performance.now()
     current.vx = 0
     current.vy = 0
     setDragging(true)
-  }, [stop])
+
+    if (moveWindow)
+      callbacks.current.onDragStart?.()
+  }, [moveWindow, stop])
 
   const onPointerMove = useCallback((event: ReactPointerEvent<HTMLElement>) => {
     const current = state.current
     if (!current.dragging)
       return
+
+    if (moveWindow) {
+      // The window follows the cursor, so only the screen position shows how
+      // far the gesture moved. That distance separates a click from a drag.
+      current.moved += Math.abs(event.screenX - current.lastScreenX)
+        + Math.abs(event.screenY - current.lastScreenY)
+      current.lastScreenX = event.screenX
+      current.lastScreenY = event.screenY
+      return
+    }
 
     const now = performance.now()
     const dx = event.clientX - current.lastX
@@ -173,13 +207,18 @@ export function useDragPhysics(targetRef: RefObject<HTMLElement | null>) {
     setDragging(false)
     event.currentTarget.releasePointerCapture(event.pointerId)
 
+    if (moveWindow) {
+      callbacks.current.onDragEnd?.()
+      return
+    }
+
     if (Math.hypot(current.vx, current.vy) < flingThreshold) {
       current.vx = 0
       current.vy = 0
     }
 
     run()
-  }, [run])
+  }, [moveWindow, run])
 
   /** True when the last pointer gesture moved past the click threshold. */
   const didDrag = useCallback(() => state.current.moved > 6, [])

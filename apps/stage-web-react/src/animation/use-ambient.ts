@@ -1,4 +1,4 @@
-import type { AmbientProgram, AmbientStep, AnimationEvent, CharacterCatalog } from '@proj-airi/character-animation'
+import type { AmbientProgram, AmbientStep, AnimationEvent, CharacterCatalog } from '@proj-aipets/character-animation'
 
 import type { DirectorLongAction } from './director'
 
@@ -6,7 +6,7 @@ import {
   ambientPhaseSteps,
   parseAmbientProgram,
   resolveAmbientPhase,
-} from '@proj-airi/character-animation'
+} from '@proj-aipets/character-animation'
 import { useCallback, useEffect, useRef, useState } from 'react'
 
 import { requestAmbientProgram, resolveDirectorConnection } from './ambient-director'

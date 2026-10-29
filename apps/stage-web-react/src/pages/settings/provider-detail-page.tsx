@@ -1,7 +1,7 @@
-import type { ProviderDefinition } from '@proj-airi/provider-inference'
+import type { ProviderDefinition } from '@proj-aipets/provider-inference'
 
 import { errorMessageFrom } from '@moeru/std'
-import { portableProviderDefinitions } from '@proj-airi/provider-inference'
+import { portableProviderDefinitions } from '@proj-aipets/provider-inference'
 import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link, useNavigate, useParams } from 'react-router'
@@ -71,6 +71,25 @@ function readActiveProviders(): Record<string, string> {
   return result
 }
 
+/**
+ * The endpoint of each provider is built in. The user never types it, so the
+ * form hides these fields and the schema default fills them.
+ */
+const hiddenFields = new Set(['baseUrl', 'baseURL'])
+
+/** The default value of one schema field, when the field declares one. */
+function readDefault(field: unknown): string | null {
+  if (!field || typeof field !== 'object')
+    return null
+
+  const candidate = field as { safeParse?: unknown }
+  if (typeof candidate.safeParse !== 'function')
+    return null
+
+  const result = (candidate.safeParse as (input: unknown) => SchemaResult)(undefined)
+  return result.success && typeof result.data === 'string' ? result.data : null
+}
+
 const inputClass = [
   'w-full rounded-xl border border-[var(--aipets-border)] bg-transparent px-3 py-2 text-sm',
   'outline-none focus:border-[var(--aipets-fg)]',
@@ -125,11 +144,28 @@ export function ProviderDetailPage() {
     if (!schema?.shape)
       return []
 
-    return Object.entries(schema.shape).map(([key, field]) => ({
-      key,
-      meta: readMeta(field),
-    }))
+    return Object.entries(schema.shape)
+      .filter(([key]) => !hiddenFields.has(key))
+      .map(([key, field]) => ({
+        key,
+        meta: readMeta(field),
+      }))
   }, [schema])
+
+  // A saved config can lack the endpoint. The schema default fills it, so the
+  // chat and the voice preview never fall back to another provider's URL.
+  const resolveConfig = () => {
+    const next = { ...config }
+    for (const key of hiddenFields) {
+      if (typeof next[key] === 'string' && next[key])
+        continue
+
+      const value = readDefault(schema?.shape?.[key])
+      if (value !== null)
+        next[key] = value
+    }
+    return next
+  }
 
   if (!provider || !definition) {
     return (
@@ -152,7 +188,7 @@ export function ProviderDetailPage() {
       return
     }
 
-    const result = schema.safeParse(config)
+    const result = schema.safeParse(resolveConfig())
     if (!result.success) {
       setIssues((result.error?.issues ?? []).map(issue => issue.message))
       return
@@ -170,10 +206,11 @@ export function ProviderDetailPage() {
   }
 
   const previewVoice = async () => {
-    const baseUrl = typeof config.baseUrl === 'string' ? config.baseUrl.replace(/\/+$/, '') : ''
-    const apiKey = typeof config.apiKey === 'string' ? config.apiKey : ''
-    const model = typeof config.model === 'string' ? config.model : ''
-    const voice = typeof config.voice === 'string' ? config.voice : ''
+    const resolved = resolveConfig()
+    const baseUrl = typeof resolved.baseUrl === 'string' ? resolved.baseUrl.replace(/\/+$/, '') : ''
+    const apiKey = typeof resolved.apiKey === 'string' ? resolved.apiKey : ''
+    const model = typeof resolved.model === 'string' ? resolved.model : ''
+    const voice = typeof resolved.voice === 'string' ? resolved.voice : ''
 
     setPreviewing(true)
     setIssues([])

@@ -1,4 +1,4 @@
-import { portableProviderDefinitions } from '@proj-airi/provider-inference'
+import { portableProviderDefinitions } from '@proj-aipets/provider-inference'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router'

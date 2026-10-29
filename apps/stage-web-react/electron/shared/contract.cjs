@@ -31,6 +31,18 @@ const CHANNELS = {
   windowAlwaysOnTop: 'desktop:window-always-on-top',
   windowsChanged: 'desktop:windows-changed',
 
+  petEvent: 'desktop:pet-event',
+  // The pet window reports the character rectangle, so clicks outside it fall
+  // through to the desktop.
+  petHitbox: 'desktop:pet-hitbox',
+  // Dragging the character moves the window, so the pet never leaves its frame.
+  petDrag: 'desktop:pet-drag',
+  // The scale resizes the pet window, so a larger character is not clipped.
+  petScale: 'desktop:pet-scale',
+  // The settings page sends the instance list, so the host opens one pet
+  // window per instance and closes the windows of removed instances.
+  petSync: 'desktop:pet-sync',
+
   pluginsList: 'plugins:list',
   pluginsInstall: 'plugins:install',
   pluginsSetEnabled: 'plugins:set-enabled',
@@ -40,7 +52,7 @@ const CHANNELS = {
 }
 
 /** Window kinds the window manager can create or reach. */
-const WINDOW_KINDS = ['main', 'settings', 'widget']
+const WINDOW_KINDS = ['main', 'settings', 'widget', 'chat']
 
 const PREFERENCES_DEFAULTS = {
   closeToTray: true,

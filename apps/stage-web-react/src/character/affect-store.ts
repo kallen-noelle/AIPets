@@ -3,7 +3,7 @@ import type {
   AffectEventKind,
   AffectState,
   CharacterTraits,
-} from '@proj-airi/character-animation'
+} from '@proj-aipets/character-animation'
 
 import {
   affectLimits,
@@ -13,7 +13,7 @@ import {
   decayAffect,
   defaultCharacterTraits,
   parseAffectState,
-} from '@proj-airi/character-animation'
+} from '@proj-aipets/character-animation'
 import { useEffect, useState } from 'react'
 
 import { readStored, writeStored } from '../settings/persisted'

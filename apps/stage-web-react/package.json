@@ -1,5 +1,5 @@
 {
-  "name": "@proj-airi/stage-web-react",
+  "name": "@proj-aipets/stage-web-react",
   "productName": "aipets",
   "type": "module",
   "version": "0.12.0",
@@ -24,9 +24,9 @@
   },
   "dependencies": {
     "@moeru/std": "catalog:",
-    "@proj-airi/character-animation": "workspace:^",
-    "@proj-airi/i18n": "workspace:^",
-    "@proj-airi/provider-inference": "workspace:^",
+    "@proj-aipets/character-animation": "workspace:^",
+    "@proj-aipets/i18n": "workspace:^",
+    "@proj-aipets/provider-inference": "workspace:^",
     "@unocss/reset": "catalog:",
     "i18next": "catalog:",
     "idb-keyval": "catalog:",

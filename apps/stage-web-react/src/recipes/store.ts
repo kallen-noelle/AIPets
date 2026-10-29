@@ -21,7 +21,7 @@ export interface RecipeDecision {
 /**
  * One recipe, shaped like the Vue `recipes/custom` entry.
  *
- * Mirrors `Recipe` in `@proj-airi/core-agent`. The React app keeps its own
+ * Mirrors `Recipe` in `@proj-aipets/core-agent`. The React app keeps its own
  * type so it does not add the agent runtime as a dependency.
  */
 export interface Recipe {

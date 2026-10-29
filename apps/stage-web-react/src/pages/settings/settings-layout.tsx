@@ -1,7 +1,10 @@
+import type { ThemePreference } from '../../settings/preferences'
+
 import { useTranslation } from 'react-i18next'
 import { Link, NavLink, Outlet } from 'react-router'
 
 import { getDesktopBridge } from '../../desktop/bridge'
+import { usePreferences } from '../../settings/preferences'
 import { settingsEntries } from '../../settings/registry'
 
 const navItemClass = [
@@ -12,18 +15,30 @@ const navItemClass = [
 const navItemActiveClass = 'bg-[var(--aipets-card)] text-[var(--aipets-fg)]'
 
 /**
- * The desktop window draws a native backplate. A translucent page background
- * lets the material show through. A browser tab keeps the solid background.
+ * The desktop window draws a native backplate. The dark theme lets that
+ * material show through. The light theme needs a white page, because a
+ * translucent dark layer over the backplate reads as grey. A browser tab keeps
+ * the solid background.
  */
-const desktopShellClass = 'bg-[rgba(14,14,18,0.72)] backdrop-blur-xl'
+const desktopDarkShellClass = 'bg-[rgba(14,14,18,0.72)] backdrop-blur-xl'
+const desktopLightShellClass = 'bg-white'
 const browserShellClass = 'bg-[var(--aipets-bg)]'
+
+function resolveShellClass(desktop: boolean, theme: ThemePreference) {
+  if (!desktop)
+    return browserShellClass
+
+  return theme === 'light' ? desktopLightShellClass : desktopDarkShellClass
+}
 
 export function SettingsLayout() {
   const { t } = useTranslation()
+  const { theme } = usePreferences()
   const desktop = Boolean(getDesktopBridge())
+  const shell = resolveShellClass(desktop, theme)
 
   return (
-    <div className={['min-h-screen text-[var(--aipets-fg)]', desktop ? desktopShellClass : browserShellClass].join(' ')}>
+    <div className={['min-h-screen text-[var(--aipets-fg)]', shell].join(' ')}>
       <div className="mx-auto max-w-6xl w-full flex flex-col gap-6 px-4 py-6 lg:flex-row lg:px-8">
         <aside className="lg:w-60 lg:shrink-0">
           <div className="mb-4 flex items-center gap-2">

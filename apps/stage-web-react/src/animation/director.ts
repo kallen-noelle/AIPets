@@ -6,14 +6,14 @@ import type {
   LongActionClips,
   PerformancePlan,
   SequenceStep,
-} from '@proj-airi/character-animation'
+} from '@proj-aipets/character-animation'
 
 import {
   sequenceStepDurationMs,
   truncateSequenceToBudget,
   validateActionSequence,
   validatePerformancePlan,
-} from '@proj-airi/character-animation'
+} from '@proj-aipets/character-animation'
 
 import { requestChatCompletion } from '../chat/client'
 import { animationLog } from './animation-log'

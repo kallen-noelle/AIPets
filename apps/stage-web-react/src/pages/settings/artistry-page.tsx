@@ -41,17 +41,6 @@ export function ArtistryPage() {
           {t('settings.reactShell.manageProviders', { defaultValue: 'Manage providers' })}
         </Link>
       </SectionCard>
-
-      <SectionCard
-        title={t('settings.reactShell.sceneDescription', { defaultValue: 'Background shown behind the character.' })}
-      >
-        <Link
-          to="/settings/scene"
-          className="border border-[var(--aipets-border)] rounded-full px-4 py-1.5 text-xs hover:bg-[var(--aipets-hover)]"
-        >
-          {t('settings.pages.scene.title', { defaultValue: 'Scenes' })}
-        </Link>
-      </SectionCard>
     </section>
   )
 }

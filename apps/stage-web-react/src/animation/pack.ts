@@ -1,6 +1,6 @@
-import type { CharacterCatalog, LoadedPack, PackSummary } from '@proj-airi/character-animation'
+import type { CharacterCatalog, LoadedPack, PackSummary } from '@proj-aipets/character-animation'
 
-import { parseAnimationManifest, parseCharacterCatalog } from '@proj-airi/character-animation'
+import { parseAnimationManifest, parseCharacterCatalog } from '@proj-aipets/character-animation'
 
 import { prefetchAssets, readCachedAsset } from './asset-cache'
 

@@ -1,4 +1,4 @@
-import type { AffectLabel, AffectState, CharacterCatalog, ClipDescriptor } from '@proj-airi/character-animation'
+import type { AffectLabel, AffectState, CharacterCatalog, ClipDescriptor } from '@proj-aipets/character-animation'
 
 const labelTags: Record<AffectLabel, string[]> = {
   excited: ['excited', 'happy', 'play'],

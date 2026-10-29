@@ -1,4 +1,4 @@
-import type { ActionSequence, AnimationEvent, CharacterCatalog, PerformancePlan } from '@proj-airi/character-animation'
+import type { ActionSequence, AnimationEvent, CharacterCatalog, PerformancePlan } from '@proj-aipets/character-animation'
 
 import type { DirectorLongAction } from './director'
 

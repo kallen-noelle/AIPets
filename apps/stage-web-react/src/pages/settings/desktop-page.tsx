@@ -29,6 +29,7 @@ const windowLabels: Record<DesktopWindowKind, string> = {
   main: 'Pet',
   settings: 'Settings',
   widget: 'Widget',
+  chat: 'Chat',
 }
 
 interface MicrophoneMonitor {

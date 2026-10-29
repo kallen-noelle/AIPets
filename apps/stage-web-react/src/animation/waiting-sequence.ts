@@ -1,6 +1,6 @@
-import type { ActionSequence, AnimationClockPort, AnimationEvent, SequenceStep } from '@proj-airi/character-animation'
+import type { ActionSequence, AnimationClockPort, AnimationEvent, SequenceStep } from '@proj-aipets/character-animation'
 
-import { SequenceRunner, sequenceStepDurationMs, truncateSequenceToBudget } from '@proj-airi/character-animation'
+import { SequenceRunner, sequenceStepDurationMs, truncateSequenceToBudget } from '@proj-aipets/character-animation'
 
 export interface WaitingSequenceOptions {
   dispatch: (event: AnimationEvent) => void

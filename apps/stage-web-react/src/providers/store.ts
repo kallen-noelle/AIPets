@@ -1,4 +1,4 @@
-import type { InferenceServiceProvider } from '@proj-airi/provider-inference'
+import type { InferenceServiceProvider } from '@proj-aipets/provider-inference'
 
 import { useSyncExternalStore } from 'react'
 

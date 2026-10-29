@@ -1,10 +1,10 @@
-import type { CharacterCatalog, LoadedPack } from '@proj-airi/character-animation'
+import type { CharacterCatalog, LoadedPack } from '@proj-aipets/character-animation'
 
 import type { CharacterProfile } from '../character/characters'
 
 import JSZip from 'jszip'
 
-import { parseAnimationManifest, parseCharacterCatalog } from '@proj-airi/character-animation'
+import { parseAnimationManifest, parseCharacterCatalog } from '@proj-aipets/character-animation'
 import { del, get, set } from 'idb-keyval'
 
 import { normalizeCharacterProfile } from '../character/characters'

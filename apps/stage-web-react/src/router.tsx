@@ -2,11 +2,11 @@ import { createHashRouter } from 'react-router'
 
 import { ChatPage } from './pages/chat-page'
 import { PendingPage } from './pages/pending-page'
+import { PetPage } from './pages/pet-page'
 import { AnimationPage } from './pages/settings/animation-page'
 import { ArtistryPage } from './pages/settings/artistry-page'
 import { BeatSyncPage } from './pages/settings/beat-sync-page'
 import { CardPage } from './pages/settings/card-page'
-import { CharactersPage } from './pages/settings/characters-page'
 import { ConnectionPage } from './pages/settings/connection-page'
 import { ConsciousnessPage } from './pages/settings/consciousness-page'
 import { DataPage } from './pages/settings/data-page'
@@ -25,7 +25,6 @@ import { PluginsPage } from './pages/settings/plugins-page'
 import { ProviderDetailPage } from './pages/settings/provider-detail-page'
 import { ProvidersPage } from './pages/settings/providers-page'
 import { RecipesPage } from './pages/settings/recipes-page'
-import { ScenePage } from './pages/settings/scene-page'
 import { SettingsIndex } from './pages/settings/settings-index'
 import { SettingsLayout } from './pages/settings/settings-layout'
 import { SpeechPage } from './pages/settings/speech-page'
@@ -49,6 +48,11 @@ export const router = createHashRouter([
     path: '/chat',
     element: <ChatPage />,
   },
+  // The desktop pet window. It renders the character without the page chrome.
+  {
+    path: '/pet',
+    element: <PetPage />,
+  },
   // The small always-on-top window of the desktop app.
   {
     path: '/widget',
@@ -66,10 +70,8 @@ export const router = createHashRouter([
       { path: 'system/developer', element: <PendingPage title="developer" /> },
       { path: 'desktop', element: <DesktopPage /> },
       { path: 'plugins', element: <PluginsPage /> },
-      { path: 'characters', element: <CharactersPage /> },
       { path: 'card', element: <CardPage /> },
       { path: 'memory', element: <MemoryPage /> },
-      { path: 'scene', element: <ScenePage /> },
       { path: 'animation', element: <AnimationPage /> },
       { path: 'data', element: <DataPage /> },
       { path: 'connection', element: <ConnectionPage /> },
@@ -94,7 +96,6 @@ export const router = createHashRouter([
       { path: 'modules/beat-sync', element: <BeatSyncPage /> },
       { path: 'modules/:moduleId', element: <MigratingPage /> },
       { path: 'models', element: <ModelsPage /> },
-      { path: 'animation', element: <AnimationPage /> },
       { path: 'providers', element: <ProvidersPage /> },
       { path: 'providers/:providerId', element: <ProviderDetailPage /> },
       { path: '*', element: <MigratingPage /> },

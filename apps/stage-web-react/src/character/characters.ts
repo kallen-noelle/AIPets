@@ -1,13 +1,8 @@
-import { characterNameKey, characterPersonaKey } from '../chat/types'
 import { readStored, writeStored } from '../settings/persisted'
 
 /** Presentation settings shared by every host that renders a character. */
 export interface CharacterAppearance {
   scale: number
-  /** Horizontal offset in percent of the stage width. */
-  offsetX: number
-  /** Vertical offset in percent of the stage height. */
-  offsetY: number
   fadeMs: number
   mirror: boolean
   clickEnabled: boolean
@@ -60,17 +55,20 @@ interface CharacterInput {
 }
 
 export const activeCharacterKey = 'aipets:react:character/active'
-/** Appearance fields the card page overrides on top of the character folder. */
-export const characterAppearanceOverrideKey = 'aipets:react:character/appearance-override'
-/** Whether the stage shows the character. */
-export const characterEnabledKey = 'aipets:react:character/enabled'
 
-export type CharacterAppearanceOverride = Partial<CharacterAppearance>
+/** Fields the user sets for one character. Every instance of it shares them. */
+export type CharacterSettingField = 'name' | 'persona'
+
+export function characterSettingKey(characterId: string, field: CharacterSettingField): string {
+  return `aipets:react:character/${characterId}/${field}`
+}
+
+export function readCharacterSetting<T>(characterId: string, field: CharacterSettingField, fallback: T): T {
+  return readStored(characterSettingKey(characterId, field), fallback)
+}
 
 export const defaultCharacterAppearance: CharacterAppearance = {
   scale: 1,
-  offsetX: 0,
-  offsetY: 0,
   fadeMs: 180,
   mirror: false,
   clickEnabled: true,
@@ -107,42 +105,10 @@ export function normalizeAppearance(value: unknown): CharacterAppearance {
 
   return {
     scale: Math.max(0.1, numberOr(appearance.scale, defaultCharacterAppearance.scale)),
-    offsetX: numberOr(appearance.offsetX, defaultCharacterAppearance.offsetX),
-    offsetY: numberOr(appearance.offsetY, defaultCharacterAppearance.offsetY),
     fadeMs: Math.max(0, numberOr(appearance.fadeMs, defaultCharacterAppearance.fadeMs)),
     mirror: booleanOr(appearance.mirror, defaultCharacterAppearance.mirror),
     clickEnabled: booleanOr(appearance.clickEnabled, defaultCharacterAppearance.clickEnabled),
   }
-}
-
-/**
- * Reads the appearance fields the user changed in the card page.
- *
- * Only fields present in the stored object are returned. The stage merges the
- * result over the appearance a character folder ships, so an empty override
- * keeps the original look.
- */
-export function readAppearanceOverride(): CharacterAppearanceOverride {
-  const stored = readStored<unknown>(characterAppearanceOverrideKey, null)
-  if (typeof stored !== 'object' || stored === null)
-    return {}
-
-  const entry = stored as Record<string, unknown>
-  const override: CharacterAppearanceOverride = {}
-  if (typeof entry.scale === 'number' && Number.isFinite(entry.scale))
-    override.scale = Math.max(0.1, entry.scale)
-  if (typeof entry.offsetX === 'number' && Number.isFinite(entry.offsetX))
-    override.offsetX = entry.offsetX
-  if (typeof entry.offsetY === 'number' && Number.isFinite(entry.offsetY))
-    override.offsetY = entry.offsetY
-  if (typeof entry.fadeMs === 'number' && Number.isFinite(entry.fadeMs))
-    override.fadeMs = Math.max(0, entry.fadeMs)
-  if (typeof entry.mirror === 'boolean')
-    override.mirror = entry.mirror
-  if (typeof entry.clickEnabled === 'boolean')
-    override.clickEnabled = entry.clickEnabled
-
-  return override
 }
 
 /**
@@ -268,8 +234,10 @@ export async function loadCharacterPersona(character: BuiltinCharacter): Promise
   }
 }
 
-/** Writes the persona into the keys the chat panel reads. */
-export function applyCharacterPersona(persona: CharacterPersona) {
-  writeStored(characterNameKey, persona.characterName)
-  writeStored(characterPersonaKey, persona.whisperPrompt)
+/** Writes a persona into the keys every instance of that character reads. */
+export function applyCharacterPersona(characterId: string, persona: CharacterPersona) {
+  writeStored(characterSettingKey(characterId, 'name'), persona.characterName)
+  // A persona the user typed wins over the file the pack ships.
+  if (!readStored(characterSettingKey(characterId, 'persona'), ''))
+    writeStored(characterSettingKey(characterId, 'persona'), persona.whisperPrompt)
 }

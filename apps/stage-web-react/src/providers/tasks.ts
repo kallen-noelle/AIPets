@@ -1,4 +1,4 @@
-import { portableProviderDefinitions } from '@proj-airi/provider-inference'
+import { portableProviderDefinitions } from '@proj-aipets/provider-inference'
 
 /** The task groups the React settings show, and the provider task names each group covers. */
 export const providerTaskAliases = {

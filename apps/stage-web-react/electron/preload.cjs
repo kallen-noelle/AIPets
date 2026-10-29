@@ -46,6 +46,14 @@ contextBridge.exposeInMainWorld('aipetdexDesktop', {
   setWindowAlwaysOnTop: (kind, value) => ipcRenderer.invoke(CHANNELS.windowAlwaysOnTop, kind, Boolean(value)),
   onWindowsChanged: listener => subscribe(CHANNELS.windowsChanged, listener),
 
+  sendPetEvent: message => ipcRenderer.send(CHANNELS.petEvent, message),
+  onPetEvent: listener => subscribe(CHANNELS.petEvent, listener),
+  reportPetHitbox: rect => ipcRenderer.send(CHANNELS.petHitbox, rect),
+  beginPetDrag: () => ipcRenderer.send(CHANNELS.petDrag, 'start'),
+  endPetDrag: () => ipcRenderer.send(CHANNELS.petDrag, 'end'),
+  setPetScale: scale => ipcRenderer.send(CHANNELS.petScale, Number(scale)),
+  syncPetInstances: instances => ipcRenderer.invoke(CHANNELS.petSync, instances),
+
   listPlugins: () => ipcRenderer.invoke(CHANNELS.pluginsList),
   installPlugin: () => ipcRenderer.invoke(CHANNELS.pluginsInstall),
   setPluginEnabled: (id, enabled) => ipcRenderer.invoke(CHANNELS.pluginsSetEnabled, id, Boolean(enabled)),

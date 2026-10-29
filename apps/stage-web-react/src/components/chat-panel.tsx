@@ -1,5 +1,7 @@
 import type { DirectorRequest, DirectorResult } from '../animation/director'
 import type { MicErrorCode, Recorder } from '../audio/recorder'
+import type { BuiltinCharacter } from '../character/characters'
+import type { CharacterInstance } from '../character/instances'
 import type { ChatTurn } from '../chat/client'
 import type { ChatSession } from '../chat/sessions'
 import type { ChatToolTrace } from '../chat/tools'
@@ -7,8 +9,8 @@ import type { ChatMessage } from '../chat/types'
 import type { LocalRecognitionHandle } from '../speech/local-recognition'
 
 import { errorMessageFrom } from '@moeru/std'
-import { portableProviderDefinitions } from '@proj-airi/provider-inference'
-import { useEffect, useRef, useState } from 'react'
+import { portableProviderDefinitions } from '@proj-aipets/provider-inference'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router'
 
@@ -25,13 +27,28 @@ import { sessionController } from '../animation/session-controller'
 import { buildStatePrompt } from '../animation/state-context'
 import { classifyMicError, startRecording } from '../audio/recorder'
 import { affectStore, applyUserMessageAffect } from '../character/affect-store'
-import { getActiveCharacterId, loadCharacterChatConfig } from '../character/characters'
+import {
+  characterSettingKey,
+  defaultCharacterAppearance,
+  getActiveCharacterId,
+  loadBuiltinCharacters,
+  loadCharacterChatConfig,
+  loadCharacterPersona,
+  readCharacterSetting,
+} from '../character/characters'
+import {
+  chatInstanceKey,
+  ensureDefaultInstance,
+  instanceNumber,
+  instancePersonaId,
+  instanceScopedKey,
+  resolveChatInstance,
+  useCharacterInstances,
+} from '../character/instances'
 import { streamChatTurn } from '../chat/client'
 import { chatActiveSessionKey, chatSessionsKey, createSession, migrateLegacyMessages, sessionTitle } from '../chat/sessions'
 import { resolveChatTools, runChatTool, toChatToolSchema } from '../chat/tools'
 import {
-  characterNameKey,
-  characterPersonaKey,
   chatModelKey,
   chatProviderKey,
   memoryEnabledKey,
@@ -178,26 +195,61 @@ function micErrorText(code: MicErrorCode, t: (key: string, opts?: { defaultValue
   }
 }
 
+const ttsKey = 'aipets:react:chat/tts'
+
 export interface ChatPanelProps {
   /** `page` adds the session sidebar. `panel` fits beside the stage. */
   variant?: 'page' | 'panel'
 }
 
-export function ChatPanel({ variant = 'page' }: ChatPanelProps) {
+/** One instance choice of the chat header. */
+interface ChatInstanceOption {
+  instance: CharacterInstance
+  number: number
+  name: string
+}
+
+interface ChatPanelBodyProps extends ChatPanelProps {
+  instance: CharacterInstance
+  /** Ordinal of the instance among the instances of its character. */
+  number: number
+  character: BuiltinCharacter | null
+  options: ChatInstanceOption[]
+  onSelectInstance: (id: string) => void
+}
+
+function ChatPanelBody({
+  variant = 'page',
+  instance,
+  number,
+  character,
+  options,
+  onSelectInstance,
+}: ChatPanelBodyProps) {
   const { t } = useTranslation()
   const providers = useProviders()
   const compact = variant === 'panel'
+  const instanceId = instance.id
 
-  const [sessions, setSessions] = useStoredValue<ChatSession[]>(chatSessionsKey, [])
-  const [activeId, setActiveId] = useStoredValue(chatActiveSessionKey, '')
-  const [model, setModel] = useStoredValue(chatModelKey, '')
-  const [providerId, setProviderId] = useStoredValue(chatProviderKey, '')
-  const [ttsEnabled, setTtsEnabled] = useStoredValue('aipets:react:chat/tts', false)
+  const [sessions, setSessions] = useStoredValue<ChatSession[]>(instanceScopedKey(chatSessionsKey, instanceId), [])
+  const [activeId, setActiveId] = useStoredValue(instanceScopedKey(chatActiveSessionKey, instanceId), '')
+  const [scopedModel, setModel] = useStoredValue(instanceScopedKey(chatModelKey, instanceId), '')
+  const [scopedProviderId, setProviderId] = useStoredValue(instanceScopedKey(chatProviderKey, instanceId), '')
+  // The consciousness page writes the global keys. An instance without its own
+  // choice uses that default.
+  const model = scopedModel || readStored(chatModelKey, '')
+  const providerId = scopedProviderId || readStored(chatProviderKey, '')
+  const [ttsEnabled, setTtsEnabled] = useStoredValue(instanceScopedKey(ttsKey, instanceId), false)
   const [speechProviderId] = useStoredValue('aipets:react:speech/provider', '')
-  const [characterName] = useStoredValue(characterNameKey, 'aipetdex')
-  const [persona] = useStoredValue(characterPersonaKey, '')
+  // The name and the persona belong to the character, so its instances share them.
+  const [storedName] = useStoredValue(characterSettingKey(instance.characterId, 'name'), '')
+  const characterName = storedName || character?.name || instance.characterId
+  const [storedPersona] = useStoredValue(characterSettingKey(instance.characterId, 'persona'), '')
   const [memoryEnabled] = useStoredValue(memoryEnabledKey, true)
-  const [memoryWindow] = useStoredValue(memoryWindowKey, 10)
+  const [scopedMemoryWindow] = useStoredValue(instanceScopedKey(memoryWindowKey, instanceId), 0)
+  // The memory page writes the global limit. It applies until an instance picks
+  // its own limit.
+  const memoryWindow = scopedMemoryWindow || readStored(memoryWindowKey, 10)
   // The consciousness page owns these values. The chat request reads them.
   const [temperature] = useStoredValue('settings/consciousness/active-temperature', 0.7)
   const [temperatureEnabled] = useStoredValue('settings/consciousness/temperature-enabled', false)
@@ -212,6 +264,7 @@ export function ChatPanel({ variant = 'page' }: ChatPanelProps) {
   const stickers = useStickers()
   const [stickerPickerOpen, setStickerPickerOpen] = useState(false)
   const [packHistoryTurns, setPackHistoryTurns] = useState<number | null>(null)
+  const [packPersona, setPackPersona] = useState('')
   const [input, setInput] = useState('')
   const [sending, setSending] = useState(false)
   const [streamText, setStreamText] = useState('')
@@ -227,6 +280,30 @@ export function ChatPanel({ variant = 'page' }: ChatPanelProps) {
   const localRecognitionRef = useRef<LocalRecognitionHandle | null>(null)
   const recordingKindRef = useRef<'browser' | 'omni' | 'provider' | null>(null)
   const imageInputRef = useRef<HTMLInputElement>(null)
+
+  // The persona file of the pack fills an empty persona, so a fresh instance
+  // still speaks in the voice of its character.
+  useEffect(() => {
+    if (storedPersona || !character?.persona)
+      return
+
+    let cancelled = false
+    void loadCharacterPersona(character)
+      .then((loaded) => {
+        if (!cancelled && loaded)
+          setPackPersona(loaded.whisperPrompt)
+      })
+      .catch(() => undefined)
+
+    return () => {
+      cancelled = true
+    }
+  }, [character, storedPersona])
+
+  const persona = storedPersona || packPersona
+  // The chat, the memory index, and the memory tools share this label, so two
+  // instances of one character keep separate memories.
+  const personaId = instancePersonaId(instance.characterId, number)
 
   useEffect(() => {
     const migrated = migrateLegacyMessages(sessions)
@@ -246,9 +323,7 @@ export function ChatPanel({ variant = 'page' }: ChatPanelProps) {
 
   // A character pack can ship its own history limit in `config.json`.
   useEffect(() => {
-    const characterId = getActiveCharacterId()
-    if (!characterId)
-      return
+    const characterId = instance.characterId
 
     let cancelled = false
     void loadCharacterChatConfig(characterId).then((config) => {
@@ -259,7 +334,7 @@ export function ChatPanel({ variant = 'page' }: ChatPanelProps) {
     return () => {
       cancelled = true
     }
-  }, [])
+  }, [instance.characterId])
 
   const chatProviders = Object.values(providers).filter((provider) => {
     const definition = portableProviderDefinitions.find(item => item.id === provider.definitionId)
@@ -318,7 +393,7 @@ export function ChatPanel({ variant = 'page' }: ChatPanelProps) {
     const turns = history.flatMap(message => message.role === 'user' || message.role === 'assistant'
       ? [{ role: message.role, content: message.content }]
       : [])
-    const memoryIndex = getMemoryEnabled() ? indexFor(context.characterName || characterName) : ''
+    const memoryIndex = getMemoryEnabled() ? indexFor(personaId) : ''
 
     return {
       baseUrl: connection.baseUrl,
@@ -391,7 +466,7 @@ export function ChatPanel({ variant = 'page' }: ChatPanelProps) {
     // The settings slider wins once the user moves it. Otherwise the pack
     // `config.json` value applies, and 10 is the last fallback. Both values
     // count rounds, so every kept round carries the character reply.
-    const historyTurns = localStorage.getItem(memoryWindowKey) === null && packHistoryTurns !== null
+    const historyTurns = localStorage.getItem(instanceScopedKey(memoryWindowKey, instanceId)) === null && packHistoryTurns !== null
       ? packHistoryTurns
       : memoryWindow
     const visible = memoryEnabled ? takeRecentRounds(conversation, Math.max(2, historyTurns)) : conversation.slice(-1)
@@ -414,7 +489,7 @@ export function ChatPanel({ variant = 'page' }: ChatPanelProps) {
     const basePrompt = persona.trim()
       ? `You are ${characterName}.\n${persona.trim()}`
       : `You are ${characterName}.`
-    const memoryIndex = getMemoryEnabled() ? indexFor(characterName) : ''
+    const memoryIndex = getMemoryEnabled() ? indexFor(personaId) : ''
     // With the director on, the reply and the plan share one call. The plan
     // section only adds state, candidates, rules, and the output format.
     const inlineRequest = buildDirectorRequest('', history, { baseUrl: chatBaseUrl, apiKey: chatApiKey })
@@ -442,7 +517,7 @@ export function ChatPanel({ variant = 'page' }: ChatPanelProps) {
       // A missing or failing MCP server must not break the turn.
     }
 
-    const tools = resolveChatTools(characterName)
+    const tools = resolveChatTools(personaId)
     const toolSchemas = tools.map(toChatToolSchema)
 
     const turns: ChatTurn[] = [
@@ -1028,6 +1103,21 @@ export function ChatPanel({ variant = 'page' }: ChatPanelProps) {
           </div>
 
           <div className="flex flex-wrap items-center gap-2">
+            {options.length > 1 && (
+              <select
+                className={fieldClass}
+                aria-label={t('settings.reactShell.chatInstance', { defaultValue: 'Pet instance' })}
+                value={instance.id}
+                onChange={event => onSelectInstance(event.target.value)}
+              >
+                {options.map(option => (
+                  <option key={option.instance.id} value={option.instance.id}>
+                    {`${option.number}. ${option.name}`}
+                  </option>
+                ))}
+              </select>
+            )}
+
             <select
               className={fieldClass}
               value={selected?.id ?? ''}
@@ -1313,5 +1403,75 @@ export function ChatPanel({ variant = 'page' }: ChatPanelProps) {
         </footer>
       </div>
     </div>
+  )
+}
+
+/**
+ * The chat panel of one pet instance.
+ *
+ * The header picks the instance. Every instance keeps its own sessions,
+ * messages, model, and history limit. The name and the persona belong to the
+ * character, so its instances share them.
+ */
+export function ChatPanel({ variant = 'page' }: ChatPanelProps) {
+  const [instances] = useCharacterInstances()
+  const [chatInstanceId, setChatInstanceId] = useStoredValue(chatInstanceKey, '')
+  const [characters, setCharacters] = useState<BuiltinCharacter[]>([])
+
+  useEffect(() => {
+    void ensureDefaultInstance()
+  }, [])
+
+  useEffect(() => {
+    let disposed = false
+
+    void loadBuiltinCharacters()
+      .then((next) => {
+        if (!disposed)
+          setCharacters(next)
+      })
+      .catch(() => undefined)
+
+    return () => {
+      disposed = true
+    }
+  }, [])
+
+  // The chat talks to an enabled pet. Without an enabled pet it keeps the
+  // first instance, so a disabled instance still answers.
+  const enabledInstances = useMemo(() => {
+    const shown = instances.filter(entry => entry.enabled)
+    return shown.length ? shown : instances
+  }, [instances])
+
+  const current = resolveChatInstance(enabledInstances, chatInstanceId)
+  // The chat can start before the first pet instance exists.
+  const instance: CharacterInstance = current ?? {
+    id: 'default',
+    characterId: getActiveCharacterId() ?? 'demo',
+    appearance: defaultCharacterAppearance,
+    enabled: true,
+  }
+  const character = characters.find(entry => entry.id === instance.characterId) ?? null
+  const options = enabledInstances.map(entry => ({
+    instance: entry,
+    number: instanceNumber(instances, entry),
+    name: readCharacterSetting(
+      entry.characterId,
+      'name',
+      characters.find(item => item.id === entry.characterId)?.name ?? entry.characterId,
+    ),
+  }))
+
+  return (
+    <ChatPanelBody
+      key={instance.id}
+      variant={variant}
+      instance={instance}
+      number={current ? instanceNumber(instances, current) : 1}
+      character={character}
+      options={options}
+      onSelectInstance={setChatInstanceId}
+    />
   )
 }

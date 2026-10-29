@@ -70,11 +70,11 @@ export default defineConfig({
     alias: {
       // The package exports TypeScript sources so the React app type-checks
       // against the same module the Vue apps use.
-      '@proj-airi/character-animation': fileURLToPath(new URL('../../packages/character-animation/src/index.ts', import.meta.url)),
+      '@proj-aipets/character-animation': fileURLToPath(new URL('../../packages/character-animation/src/index.ts', import.meta.url)),
       // The provider-inference barrel also re-exports Sherpaw local
       // transcription which pulls a 13.8 MB WASM into web builds. Route
       // imports through a local curated barrel instead.
-      '@proj-airi/provider-inference': fileURLToPath(new URL('./src/providers/curated-provider-inference.ts', import.meta.url)),
+      '@proj-aipets/provider-inference': fileURLToPath(new URL('./src/providers/curated-provider-inference.ts', import.meta.url)),
     },
   },
   server: {

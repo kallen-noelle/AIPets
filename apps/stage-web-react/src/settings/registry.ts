@@ -17,25 +17,10 @@ export interface SettingsEntry {
  */
 export const settingsEntries: SettingsEntry[] = [
   {
-    id: 'characters',
-    path: '/settings/characters',
-    titleKey: 'settings.pages.characters.title',
-    icon: 'i-solar:users-group-rounded-bold-duotone',
-    status: 'ready',
-  },
-  {
     id: 'card',
     path: '/settings/card',
     titleKey: 'settings.pages.card.title',
     icon: 'i-solar:emoji-funny-square-bold-duotone',
-    status: 'ready',
-  },
-  {
-    id: 'memory',
-    path: '/settings/memory',
-    titleKey: 'settings.pages.memory.title',
-    descriptionKey: 'settings.pages.memory.description',
-    icon: 'i-solar:notebook-bookmark-bold-duotone',
     status: 'ready',
   },
   {
@@ -53,14 +38,6 @@ export const settingsEntries: SettingsEntry[] = [
     // The shared locale still describes Live2D and VRM, which this app dropped.
     descriptionKey: 'settings.reactShell.modelsDescription',
     icon: 'i-solar:box-bold-duotone',
-    status: 'ready',
-  },
-  {
-    id: 'animation',
-    path: '/settings/animation',
-    titleKey: 'settings.pages.animation.title',
-    descriptionKey: 'settings.pages.animation.description',
-    icon: 'i-solar:magic-stick-3-bold-duotone',
     status: 'ready',
   },
   {
@@ -82,13 +59,6 @@ export const settingsEntries: SettingsEntry[] = [
     path: '/settings/connection',
     titleKey: 'settings.pages.connection.title',
     icon: 'i-solar:server-bold-duotone',
-    status: 'ready',
-  },
-  {
-    id: 'scene',
-    path: '/settings/scene',
-    titleKey: 'settings.pages.scene.title',
-    icon: 'i-solar:gallery-wide-bold-duotone',
     status: 'ready',
   },
   {

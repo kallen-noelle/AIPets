@@ -7,18 +7,18 @@ import type {
   LoadedPack,
   PerformanceCue,
   PerformancePlan,
-  PlanAnchor,
   PlanTimelineMark,
-} from '@proj-airi/character-animation'
+} from '@proj-aipets/character-animation'
 
 import type { DirectorLongAction } from '../animation/director'
 import type { LoadedZipPack } from '../animation/zip-pack'
-import type { BuiltinCharacter, CharacterAppearance, CharacterAppearanceOverride } from '../character/characters'
-import type { StageSnapshot } from '../components/character-stage'
+import type { BuiltinCharacter, CharacterAppearance } from '../character/characters'
+import type { CharacterInstance } from '../character/instances'
+import type { CharacterStageProps, StageSnapshot } from '../components/character-stage'
 
 import { errorMessageFrom } from '@moeru/std'
-import { resolvePlanArrival, validatePerformancePlan } from '@proj-airi/character-animation'
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { resolvePlanArrival, validatePerformancePlan } from '@proj-aipets/character-animation'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router'
 
@@ -29,7 +29,7 @@ import { recordClipPlayed } from '../animation/playback-history'
 import { sessionController, useSessionPhase } from '../animation/session-controller'
 import { useAmbient } from '../animation/use-ambient'
 import { WaitingSequenceRunner } from '../animation/waiting-sequence'
-import { getActivePackId, loadStoredPack, setActivePackId } from '../animation/zip-pack'
+import { getActivePackId, loadStoredPack } from '../animation/zip-pack'
 import {
   beatSyncParametersKey,
   BeatSyncRunner,
@@ -38,55 +38,32 @@ import {
 } from '../audio/beat-sync'
 import { affectStore, useAffect } from '../character/affect-store'
 import {
-  applyCharacterPersona,
-  characterAppearanceOverrideKey,
-  characterEnabledKey,
   characterManifestUrl,
   defaultCharacterAppearance,
   getActiveCharacterId,
   loadBuiltinCharacters,
-  loadCharacterPersona,
   setActiveCharacterId as persistActiveCharacterId,
+  readCharacterSetting,
 } from '../character/characters'
-import { characterPersonaKey } from '../chat/types'
-import { AnimationLogPanel } from '../components/animation-log-panel'
+import {
+  chatInstanceKey,
+  resolveChatInstance,
+  useCharacterInstances,
+} from '../character/instances'
 import { CharacterStage } from '../components/character-stage'
 import { ChatPanel } from '../components/chat-panel'
 import { ConfigurationHint } from '../components/configuration-hint'
-import { DirectorMonitorPanel } from '../components/director-monitor-panel'
-import { isDesktop } from '../desktop/bridge'
+import { getDesktopBridge, isDesktop } from '../desktop/bridge'
+import { publishDirectorContext } from '../desktop/pet-relay'
 import { readStored, useStoredValue } from '../settings/persisted'
-import { sceneBackgroundKey } from '../settings/scene'
 import { getSpeaking, useSpeaking } from '../speech/playback'
 
 const demoManifestUrl = './animations/demo/manifest.json'
-
-/** Stable fallback for the appearance override store. */
-const emptyAppearanceOverride: CharacterAppearanceOverride = {}
-
-/** Applies the card page overrides on top of the look a character ships. */
-function withAppearanceOverride(
-  appearance: CharacterAppearance,
-  override: CharacterAppearanceOverride,
-): CharacterAppearance {
-  return { ...appearance, ...override }
-}
 
 const buttonClass = [
   'rounded-full px-4 py-2 text-sm font-medium transition',
   'bg-[var(--aipets-card)] text-[var(--aipets-fg)] hover:bg-[var(--aipets-hover)] active:scale-95',
 ].join(' ')
-
-const debugButtonClass = [
-  buttonClass,
-  'disabled:cursor-not-allowed disabled:opacity-50',
-].join(' ')
-
-const debugAnchors: PlanAnchor[] = [
-  { type: 'replyStart' },
-  { type: 'sentence', index: 1 },
-  { type: 'afterSpeech' },
-]
 
 const ambientTags: Record<AffectLabel, string[]> = {
   excited: ['excited', 'happy', 'play'],
@@ -110,49 +87,6 @@ const ambientIntervals: Record<AffectLabel, number> = {
   sleepy: 60_000,
 }
 
-function createDebugPlan(catalog: CharacterCatalog): PerformancePlan {
-  const used = new Set<string>()
-  const cues: PerformanceCue[] = []
-  const preferredTags = [['shy'], ['happy'], ['polite']]
-
-  for (const tags of preferredTags) {
-    if (cues.length >= debugAnchors.length)
-      break
-
-    const clip = catalog.clips.find(candidate =>
-      !used.has(candidate.id) && tags.some(tag => candidate.tags.includes(tag)),
-    )
-    if (!clip)
-      continue
-
-    used.add(clip.id)
-    cues.push({
-      anchor: debugAnchors[cues.length] ?? { type: 'afterSpeech' },
-      clipId: clip.id,
-      intensity: 0.7,
-    })
-  }
-
-  for (const clip of catalog.clips) {
-    if (cues.length >= debugAnchors.length)
-      break
-    if (used.has(clip.id) || clip.role === 'loop')
-      continue
-
-    used.add(clip.id)
-    cues.push({
-      anchor: debugAnchors[cues.length] ?? { type: 'afterSpeech' },
-      clipId: clip.id,
-      intensity: 0.7,
-    })
-  }
-
-  return {
-    affect: { valence: 0.05, arousal: 0.03 },
-    cues,
-  }
-}
-
 function createBrowserClock(): AnimationClockPort {
   return {
     now: () => performance.now(),
@@ -163,7 +97,14 @@ function createBrowserClock(): AnimationClockPort {
   }
 }
 
-export function StagePage() {
+export interface StagePageProps {
+  /** `pet` renders the character alone, for the desktop pet window. */
+  layout?: 'page' | 'pet'
+  /** The pet instance of this window. The page layout has none. */
+  instance?: CharacterInstance | null
+}
+
+export function StagePage({ layout = 'page', instance = null }: StagePageProps) {
   const { t } = useTranslation()
   const dispatchRef = useRef<((event: AnimationEvent) => void) | null>(null)
   const planTimersRef = useRef<number[]>([])
@@ -181,23 +122,8 @@ export function StagePage() {
   const pendingCuesRef = useRef<PerformanceCue[]>([])
 
   const sessionPhase = useSessionPhase()
-  const [snapshot, setSnapshot] = useState<StageSnapshot>({
-    base: 'idle',
-    clipId: null,
-    longActionName: null,
-    longActionPhase: null,
-    waiting: false,
-  })
-  const [packLabel, setPackLabel] = useState('Loading...')
   const [catalog, setCatalog] = useState<CharacterCatalog | null>(null)
-  const [planText, setPlanText] = useState('')
-  const [planIssues, setPlanIssues] = useState<string[]>([])
-  const [longActionName, setLongActionName] = useState('放风筝')
-  const [longActionDurationMs, setLongActionDurationMs] = useState('30000')
   const [error, setError] = useState<string | null>(null)
-  const [speaking, setSpeaking] = useState(false)
-  const [thinking, setThinking] = useState(false)
-  const [paused, setPaused] = useState(false)
   const [beatRunning, setBeatRunning] = useState(false)
   const [beats, setBeats] = useState(0)
   const [bpm, setBpm] = useState(0)
@@ -208,15 +134,20 @@ export function StagePage() {
   const [activePack, setActivePack] = useState<LoadedZipPack | null>(null)
   const [packLongActions, setPackLongActions] = useState<DirectorLongAction[]>([])
   const [characters, setCharacters] = useState<BuiltinCharacter[]>([])
-  const [activeCharacterId, setActiveCharacterId] = useState<string | null>(() => getActiveCharacterId())
   const [speechBubble, setSpeechBubble] = useState<string | null>(null)
   const speechBubbleTimerRef = useRef<number | null>(null)
-  const [background] = useStoredValue(sceneBackgroundKey, '')
-  const [characterEnabled] = useStoredValue(characterEnabledKey, true)
-  const [appearanceOverride] = useStoredValue<CharacterAppearanceOverride>(
-    characterAppearanceOverrideKey,
-    emptyAppearanceOverride,
+
+  const [instances] = useCharacterInstances()
+  const [chatInstanceId] = useStoredValue(chatInstanceKey, '')
+
+  // The stage shows every enabled instance at once. The instance the chat
+  // talks to is the one that follows the director.
+  const enabledInstances = useMemo(
+    () => instances.filter(entry => entry.enabled),
+    [instances],
   )
+  const primaryInstance = instance ?? resolveChatInstance(enabledInstances, chatInstanceId)
+  const activeCharacterId = primaryInstance?.characterId ?? null
 
   const characterId = activeCharacterId ?? activePack?.pack.manifest.id ?? 'demo'
   const affect = useAffect(characterId)
@@ -232,10 +163,11 @@ export function StagePage() {
     speechBubbleTimerRef.current = window.setTimeout(setSpeechBubble, 5000, null as string | null)
   }, [])
   const affectLabel = affect.state?.label ?? null
-  const activeCharacterName = characters.find(character => character.id === activeCharacterId)?.name
-    ?? activePack?.profile.name
-    ?? 'aipetdex'
-  const persona = readStored(characterPersonaKey, '')
+  const activeCharacter = characters.find(character => character.id === activeCharacterId) ?? null
+  const activeCharacterName = activeCharacterId
+    ? readCharacterSetting(activeCharacterId, 'name', activeCharacter?.name ?? activeCharacterId)
+    : activePack?.profile.name ?? 'aipetdex'
+  const persona = activeCharacterId ? readCharacterSetting(activeCharacterId, 'persona', '') : ''
 
   useEffect(() => {
     let disposed = false
@@ -248,10 +180,8 @@ export function StagePage() {
         setCharacters(next)
 
         const stored = getActiveCharacterId()
-        if (stored && !next.some(character => character.id === stored)) {
+        if (stored && !next.some(character => character.id === stored))
           persistActiveCharacterId(null)
-          setActiveCharacterId(null)
-        }
       })
       .catch((error: unknown) => {
         if (!disposed)
@@ -298,6 +228,7 @@ export function StagePage() {
 
   useEffect(() => {
     directorBus.setContext({ active: true })
+    publishDirectorContext()
     const unsubscribe = directorBus.subscribeEvents((event) => {
       dispatchRef.current?.(event)
     })
@@ -305,6 +236,7 @@ export function StagePage() {
     return () => {
       unsubscribe()
       directorBus.setContext({ active: false })
+      publishDirectorContext()
     }
   }, [])
 
@@ -316,6 +248,7 @@ export function StagePage() {
       persona,
       longActions: packLongActions,
     })
+    publishDirectorContext()
   }, [catalog, characterId, activeCharacterName, persona, packLongActions])
 
   const playClip = useCallback((clipId: string) => {
@@ -464,7 +397,7 @@ export function StagePage() {
   useEffect(() => {
     // The ambient program owns ambient behavior. The random fallback only runs
     // when no program is available, so it cannot cut a scheduled action.
-    if (ambient.program || sessionPhase !== 'ambient' || !catalog || !affectLabel || speaking || thinking || paused || voiceSpeaking)
+    if (ambient.program || sessionPhase !== 'ambient' || !catalog || !affectLabel || voiceSpeaking)
       return
 
     const tags = ambientTags[affectLabel]
@@ -484,7 +417,7 @@ export function StagePage() {
     }, ambientIntervals[affectLabel])
 
     return () => window.clearInterval(timer)
-  }, [ambient.program, sessionPhase, catalog, affectLabel, speaking, thinking, paused, voiceSpeaking, playClip])
+  }, [ambient.program, sessionPhase, catalog, affectLabel, voiceSpeaking, playClip])
 
   const handleController = useCallback((dispatch: (event: AnimationEvent) => void) => {
     dispatchRef.current = dispatch
@@ -493,7 +426,6 @@ export function StagePage() {
 
   const handleSnapshot = useCallback((next: StageSnapshot) => {
     snapshotRef.current = next
-    setSnapshot(next)
 
     // The end clip of a long action delays the waiting chain. Entering is done
     // once no long action is running.
@@ -507,13 +439,11 @@ export function StagePage() {
   }, [])
 
   const handleReady = useCallback((pack: LoadedPack, nextCatalog?: CharacterCatalog) => {
-    setPackLabel(`${pack.manifest.name} · ${pack.allClips.length} clips`)
     setCatalog(nextCatalog ?? null)
     // Built-in characters arrive through this callback, not through
     // `activePack`. Reading long actions from the pack keeps the director prompt
     // complete for them too.
     setPackLongActions(describeLongActions(pack.longActions))
-    setPlanText(nextCatalog ? JSON.stringify(createDebugPlan(nextCatalog), null, 2) : '')
   }, [])
 
   useEffect(() => {
@@ -529,42 +459,11 @@ export function StagePage() {
     setError(nextMessage)
   }, [])
 
-  const send = (event: AnimationEvent) => dispatchRef.current?.(event)
-
-  const toggleSpeaking = () => {
-    const next = !speaking
-    setSpeaking(next)
-    setThinking(false)
-    send({ type: 'speaking', value: next })
-  }
-
-  const toggleThinking = () => {
-    const next = !thinking
-    setThinking(next)
-    setSpeaking(false)
-    send({ type: 'thinking', value: next })
-  }
-
-  const togglePaused = () => {
-    const next = !paused
-    setPaused(next)
-    send({ type: 'paused', value: next })
-  }
-
-  const backToIdle = () => {
-    setSpeaking(false)
-    setThinking(false)
-    setPaused(false)
-    send({ type: 'paused', value: false })
-    send({ type: 'idle' })
-  }
-
   const stopPlan = useCallback(() => {
     for (const id of planTimersRef.current)
       window.clearTimeout(id)
     planTimersRef.current = []
     pendingCuesRef.current = []
-    setPlanIssues([])
     planCooldownUntilRef.current = 0
   }, [])
 
@@ -587,8 +486,8 @@ export function StagePage() {
           clipDurations: clipDurations(),
         })
       : {
-          // The debug panel and cold starts have no reply marks yet. Play in
-          // plan order instead of parking every cue as a future anchor.
+          // A cold start has no reply marks yet. Play in plan order instead of
+          // parking every cue as a future anchor.
           playNow: [...plan.cues],
           timed: [],
           scheduled: [],
@@ -603,7 +502,6 @@ export function StagePage() {
       scheduled: decision.scheduled.length,
       dropped: decision.dropped,
     })
-    setPlanIssues(decision.dropped.map(item => `${item.clipId}: ${item.reason}`))
 
     for (const cue of decision.playNow)
       playClip(cue.clipId)
@@ -639,79 +537,6 @@ export function StagePage() {
     const trimmed = text?.trim()
     showSpeechBubble(trimmed || null)
   }), [showSpeechBubble])
-
-  const runLongAction = () => {
-    const name = longActionName.trim()
-    if (!name)
-      return
-
-    const duration = Number(longActionDurationMs)
-    send({
-      type: 'action',
-      name,
-      durationMs: Number.isFinite(duration) && duration > 0 ? duration : undefined,
-    })
-  }
-
-  const runPlan = () => {
-    if (!catalog)
-      return
-
-    let input: unknown
-    try {
-      input = JSON.parse(planText)
-    }
-    catch {
-      setPlanIssues(['Plan is not valid JSON'])
-      return
-    }
-
-    const validation = validatePerformancePlan(input, { catalog })
-    if (!validation.ok || !validation.plan) {
-      setPlanIssues(validation.issues)
-      return
-    }
-
-    executePlan(validation.plan)
-    setPlanIssues(validation.issues)
-  }
-
-  const activeCharacter = characters.find(character => character.id === activeCharacterId) ?? null
-
-  const selectCharacter = (character: BuiltinCharacter) => {
-    // Re-selecting the active character must not clear the catalog.
-    // `CharacterStage` keeps the same manifestUrl, so it does not reload and
-    // `onReady` never fires again. A cleared catalog would stay null.
-    if (character.id === activeCharacterId && catalog) {
-      animationLog.write('stage', `character already active: ${character.id}`)
-      return
-    }
-
-    animationLog.write('stage', `switch character: ${character.id}`)
-    stopPlan()
-    setCatalog(null)
-    setPackLongActions([])
-    setPlanText('')
-    setPlanIssues([])
-    persistActiveCharacterId(character.id)
-    setActiveCharacterId(character.id)
-    activePack?.dispose()
-    setActivePack(null)
-    setActivePackId(null)
-    setError(null)
-    setSpeaking(false)
-    setThinking(false)
-    setPaused(false)
-
-    void loadCharacterPersona(character)
-      .then((persona) => {
-        if (persona)
-          applyCharacterPersona(persona)
-      })
-      .catch((personaError: unknown) => {
-        setError(errorMessageFrom(personaError) ?? 'Cannot load the character persona')
-      })
-  }
 
   const startBeats = async (kind: 'microphone' | 'file', file?: File) => {
     setBeatError(null)
@@ -756,6 +581,141 @@ export function StagePage() {
     beatRunnerRef.current = null
   }, [])
 
+  // In the desktop pet window a drag moves the window, so the character stays
+  // whole at every screen edge.
+  const windowDrag = layout === 'pet' && isDesktop()
+  const dragBridge = windowDrag ? getDesktopBridge() : null
+  const windowDragProps: Partial<CharacterStageProps> = windowDrag
+    ? {
+        moveWindowOnDrag: true,
+        onWindowDragStart: () => dragBridge?.beginPetDrag(),
+        onWindowDragEnd: () => dragBridge?.endPetDrag(),
+      }
+    : {}
+
+  // A pet window reads the look of its own instance. The page layout reads the
+  // look of the instance the chat talks to.
+  const activeAppearance: CharacterAppearance = instance?.appearance
+    ?? primaryInstance?.appearance
+    ?? activeCharacter?.appearance
+    ?? activePack?.profile.appearance
+    ?? defaultCharacterAppearance
+
+  // The pet window is the character frame, so the scale resizes the window and
+  // the whole character stays visible at its largest setting.
+  useEffect(() => {
+    if (layout !== 'pet')
+      return
+
+    getDesktopBridge()?.setPetScale(activeAppearance.scale)
+  }, [layout, activeAppearance.scale])
+
+  const characterView = (
+    <div className={[
+      'relative flex w-full items-center justify-center',
+      // The pet window is shorter than some packs, so the stage must shrink to
+      // the window height. That needs a definite height on this wrapper.
+      layout === 'pet' ? 'h-full items-end' : '',
+    ].join(' ')}
+    >
+      {activeCharacter
+        ? (
+            <CharacterStage
+              {...windowDragProps}
+              manifestUrl={characterManifestUrl(activeCharacter)}
+              appearance={activeAppearance}
+              onController={handleController}
+              onSnapshot={handleSnapshot}
+              onUserClick={handleUserClick}
+              onReady={handleReady}
+              onClipEnded={ambient.handleClipEnded}
+              onError={handleError}
+              speechText={speechBubble}
+            />
+          )
+        : activePack
+          ? (
+              <CharacterStage
+                {...windowDragProps}
+                pack={activePack}
+                appearance={activeAppearance}
+                onController={handleController}
+                onSnapshot={handleSnapshot}
+                onUserClick={handleUserClick}
+                onReady={handleReady}
+                onClipEnded={ambient.handleClipEnded}
+                onError={handleError}
+                speechText={speechBubble}
+              />
+            )
+          : (
+              <CharacterStage
+                {...windowDragProps}
+                manifestUrl={demoManifestUrl}
+                appearance={activeAppearance}
+                onController={handleController}
+                onSnapshot={handleSnapshot}
+                onUserClick={handleUserClick}
+                onReady={handleReady}
+                onClipEnded={ambient.handleClipEnded}
+                onError={handleError}
+                speechText={speechBubble}
+              />
+            )}
+
+      {beatRunning && beats > 0 && <div key={beats} className="aipets-beat-ring" />}
+    </div>
+  )
+
+  // The desktop pet window ignores the pointer outside the character, so the
+  // desktop below keeps its clicks. The character box follows the pack and the
+  // window size, so report it again on a slow timer.
+  useEffect(() => {
+    if (layout !== 'pet')
+      return
+
+    const bridge = getDesktopBridge()
+    if (!bridge)
+      return
+
+    const report = () => {
+      const stage = document.querySelector('[data-aipets-stage]')
+      if (!stage)
+        return
+
+      const rect = stage.getBoundingClientRect()
+      bridge.reportPetHitbox({ x: rect.x, y: rect.y, width: rect.width, height: rect.height })
+    }
+
+    report()
+    window.addEventListener('resize', report)
+    const timer = setInterval(report, 500)
+
+    return () => {
+      window.removeEventListener('resize', report)
+      clearInterval(timer)
+    }
+  }, [layout])
+
+  // The desktop pet window shows the character and nothing else.
+  if (layout === 'pet') {
+    return (
+      <div className={[
+        'relative h-screen w-screen select-none overflow-hidden',
+        isDesktop() ? 'bg-transparent' : 'bg-[var(--aipets-bg)]',
+      ].join(' ')}
+      >
+        <div className="h-full w-full flex items-end justify-center">
+          {characterView}
+        </div>
+
+        {error && (
+          <p className="absolute inset-x-0 top-3 px-4 text-center text-xs text-rose-400">{error}</p>
+        )}
+      </div>
+    )
+  }
+
   return (
     <div
       className={[
@@ -763,22 +723,11 @@ export function StagePage() {
         isDesktop() ? 'bg-transparent' : 'bg-[var(--aipets-bg)]',
       ].join(' ')}
     >
-      {background && (
-        <>
-          <div
-            className="pointer-events-none absolute inset-0 bg-cover bg-center"
-            style={{ backgroundImage: `url(${background})` }}
-          />
-          <div className="pointer-events-none absolute inset-0 bg-[var(--aipets-bg)]/60" />
-        </>
-      )}
-
       <div className="relative mx-auto max-w-[1440px] flex flex-col gap-6 px-6 py-8 lg:h-screen">
         <header className="flex items-start justify-between gap-4">
           <div className="flex flex-col gap-1">
             <p className="text-xs text-[var(--aipets-muted)] tracking-[0.3em] uppercase">aipets</p>
             <h1 className="text-2xl font-semibold">aipets Stage</h1>
-            <p className="text-sm text-[var(--aipets-muted)]">{packLabel}</p>
           </div>
 
           <Link
@@ -796,118 +745,45 @@ export function StagePage() {
         <ConfigurationHint />
 
         <div className="min-h-0 flex flex-1 flex-col gap-6 lg:flex-row">
-          <main className="flex flex-1 flex-col items-center justify-center gap-6">
-            {characters.length > 0 && (
-              <div className="flex flex-wrap items-center justify-center gap-2">
-                {characters.map((character) => {
-                  const active = character.id === activeCharacterId
+          <main className="flex flex-1 flex-col items-center justify-center gap-4">
+            <div className="min-h-0 w-full flex flex-1 flex-wrap items-center justify-center gap-4">
+              {enabledInstances.length > 0
+                ? enabledInstances.map((entry, index) => {
+                    const character = characters.find(item => item.id === entry.characterId)
+                    if (!character)
+                      return null
 
-                  return (
-                    <button
-                      key={character.id}
-                      type="button"
-                      onClick={() => selectCharacter(character)}
-                      style={active ? { borderColor: character.accent, color: character.accent } : undefined}
-                      className={[
-                        'rounded-full border px-4 py-1.5 text-xs transition',
-                        active
-                          ? 'bg-[var(--aipets-card)]'
-                          : 'border-[var(--aipets-border)] bg-[var(--aipets-card)] text-[var(--aipets-fg)] hover:bg-[var(--aipets-hover)]',
-                      ].join(' ')}
-                    >
-                      {character.name}
-                    </button>
-                  )
-                })}
-              </div>
-            )}
+                    const isPrimary = primaryInstance?.id === entry.id
+                    const single = enabledInstances.length === 1
 
-            <div className="relative w-full flex items-center justify-center">
-              {!characterEnabled
-                ? (
-                    <p className="max-w-md text-center text-sm text-[var(--aipets-muted)]">
-                      {t('settings.reactShell.stageCharacterHidden', {
-                        defaultValue: 'The character is hidden. Enable it on the Card settings page.',
-                      })}
-                    </p>
-                  )
-                : activeCharacter
-                  ? (
-                      <CharacterStage
-                        manifestUrl={characterManifestUrl(activeCharacter)}
-                        appearance={withAppearanceOverride(activeCharacter.appearance, appearanceOverride)}
-                        onController={handleController}
-                        onSnapshot={handleSnapshot}
-                        onUserClick={handleUserClick}
-                        onReady={handleReady}
-                        onClipEnded={ambient.handleClipEnded}
-                        onError={handleError}
-                        speechText={speechBubble}
-                      />
+                    return (
+                      <div
+                        key={entry.id}
+                        className={[
+                          'relative flex flex-col gap-1',
+                          single ? 'h-[56vh] w-[min(100%,420px)]' : 'h-[42vh] w-[min(100%,320px)]',
+                        ].join(' ')}
+                        // A smaller number wins when two pets overlap.
+                        style={{ zIndex: enabledInstances.length - index }}
+                      >
+                        <div className="relative min-h-0 flex flex-1 items-center justify-center">
+                          {isPrimary
+                            ? characterView
+                            : (
+                                <CharacterStage
+                                  manifestUrl={characterManifestUrl(character)}
+                                  appearance={entry.appearance}
+                                  onError={handleError}
+                                />
+                              )}
+                        </div>
+                      </div>
                     )
-                  : activePack
-                    ? (
-                        <CharacterStage
-                          pack={activePack}
-                          appearance={withAppearanceOverride(activePack.profile.appearance, appearanceOverride)}
-                          onController={handleController}
-                          onSnapshot={handleSnapshot}
-                          onUserClick={handleUserClick}
-                          onReady={handleReady}
-                          onClipEnded={ambient.handleClipEnded}
-                          onError={handleError}
-                          speechText={speechBubble}
-                        />
-                      )
-                    : (
-                        <CharacterStage
-                          manifestUrl={demoManifestUrl}
-                          appearance={withAppearanceOverride(defaultCharacterAppearance, appearanceOverride)}
-                          onController={handleController}
-                          onSnapshot={handleSnapshot}
-                          onUserClick={handleUserClick}
-                          onReady={handleReady}
-                          onClipEnded={ambient.handleClipEnded}
-                          onError={handleError}
-                          speechText={speechBubble}
-                        />
-                      )}
-
-              {beatRunning && beats > 0 && <div key={beats} className="aipets-beat-ring" />}
+                  })
+                : characterView}
             </div>
 
-            {error
-              ? <p className="max-w-md text-center text-sm text-rose-400">{error}</p>
-              : (
-                  <p className="text-xs text-[var(--aipets-muted)]">
-                    chain
-                    {' '}
-                    <span className="text-[var(--aipets-fg)]">{snapshot.base}</span>
-                    {' · '}
-                    clip
-                    {' '}
-                    <span className="text-[var(--aipets-fg)]">{snapshot.clipId ?? 'none'}</span>
-                  </p>
-                )}
-
-            <div className="flex flex-wrap items-center justify-center gap-3">
-              <button type="button" className={buttonClass} onClick={backToIdle}>Idle</button>
-              <button type="button" className={buttonClass} onClick={toggleSpeaking}>
-                {speaking ? 'Stop talking' : 'Talk'}
-              </button>
-              <button type="button" className={buttonClass} onClick={toggleThinking}>
-                {thinking ? 'Stop thinking' : 'Think'}
-              </button>
-              <button type="button" className={buttonClass} onClick={() => send({ type: 'emotion', emotion: 'happy', intensity: 0.9 })}>
-                Happy
-              </button>
-              <button type="button" className={buttonClass} onClick={() => send({ type: 'click', area: 'body' })}>
-                Poke
-              </button>
-              <button type="button" className={buttonClass} onClick={togglePaused}>
-                {paused ? 'Resume' : 'Pause'}
-              </button>
-            </div>
+            {error && <p className="max-w-md text-center text-sm text-rose-400">{error}</p>}
 
             <div className="flex flex-wrap items-center justify-center gap-2 text-xs text-[var(--aipets-muted)]">
               <span className="tracking-[0.2em] uppercase">
@@ -967,109 +843,6 @@ export function StagePage() {
             </div>
 
             {beatError && <p className="text-xs text-rose-400">{beatError}</p>}
-
-            <details className={[
-              'w-full max-w-xl rounded-2xl border p-4 text-sm',
-              'border-[var(--aipets-border)] bg-[var(--aipets-card)]/80',
-            ].join(' ')}
-            >
-              <summary className="cursor-pointer text-[var(--aipets-muted)]">
-                Animation plan debug
-                {' · '}
-                {catalog ? `${catalog.clips.length} semantic clips` : 'no catalog'}
-              </summary>
-
-              <div className="mt-3 flex flex-col gap-3">
-                <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-[var(--aipets-muted)]">
-                  <span>
-                    mood
-                    {' '}
-                    <span className="text-[var(--aipets-fg)]">{affect.state?.label ?? 'none'}</span>
-                  </span>
-                  <span>
-                    v
-                    {' '}
-                    {affect.state ? affect.state.valence.toFixed(2) : '—'}
-                  </span>
-                  <span>
-                    a
-                    {' '}
-                    {affect.state ? affect.state.arousal.toFixed(2) : '—'}
-                  </span>
-                  <span>
-                    affinity
-                    {' '}
-                    {affect.state ? Math.round(affect.state.affinity) : '—'}
-                  </span>
-                </div>
-
-                <div className="flex flex-wrap items-center gap-2">
-                  <button type="button" className={debugButtonClass} onClick={() => affectStore.applyEvent('praise')}>
-                    Praise
-                  </button>
-                  <button type="button" className={debugButtonClass} onClick={() => affectStore.applyEvent('insult')}>
-                    Scold
-                  </button>
-                  <button type="button" className={debugButtonClass} onClick={() => affectStore.reset()}>
-                    Reset mood
-                  </button>
-                </div>
-
-                <textarea
-                  className={[
-                    'min-h-40 w-full resize-y rounded-xl border p-3 font-mono text-xs',
-                    'border-[var(--aipets-border)] bg-[var(--aipets-bg)] text-[var(--aipets-fg)]',
-                  ].join(' ')}
-                  value={planText}
-                  onChange={event => setPlanText(event.target.value)}
-                  spellCheck={false}
-                  placeholder={catalog ? 'Paste a performance plan JSON' : 'Load a pack with catalog.json'}
-                  disabled={!catalog}
-                />
-
-                <div className="flex flex-wrap items-center gap-2">
-                  <button type="button" className={debugButtonClass} onClick={runPlan} disabled={!catalog}>
-                    Run plan
-                  </button>
-                  <button type="button" className={debugButtonClass} onClick={stopPlan}>
-                    Stop plan
-                  </button>
-                </div>
-
-                <div className="flex flex-wrap items-center gap-2">
-                  <input
-                    className="w-36 border border-[var(--aipets-border)] rounded-xl bg-[var(--aipets-bg)] px-3 py-2 text-xs text-[var(--aipets-fg)] font-mono"
-                    value={longActionName}
-                    onChange={event => setLongActionName(event.target.value)}
-                    placeholder="Long action name"
-                    spellCheck={false}
-                  />
-                  <input
-                    className="w-24 border border-[var(--aipets-border)] rounded-xl bg-[var(--aipets-bg)] px-3 py-2 text-xs text-[var(--aipets-fg)] font-mono"
-                    value={longActionDurationMs}
-                    onChange={event => setLongActionDurationMs(event.target.value)}
-                    inputMode="numeric"
-                  />
-                  <button type="button" className={debugButtonClass} onClick={runLongAction} disabled={!catalog}>
-                    Run long action
-                  </button>
-                  <button type="button" className={debugButtonClass} onClick={() => send({ type: 'longActionStop' })}>
-                    Stop long action
-                  </button>
-                </div>
-
-                {planIssues.length > 0 && (
-                  <ul className="flex flex-col gap-1 text-xs text-rose-400">
-                    {planIssues.map((issue, index) => (
-                      <li key={`${index}-${issue}`}>{issue}</li>
-                    ))}
-                  </ul>
-                )}
-              </div>
-            </details>
-
-            <AnimationLogPanel />
-            <DirectorMonitorPanel />
           </main>
 
           <aside className={[

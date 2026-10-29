@@ -1,5 +1,5 @@
-import en from '@proj-airi/i18n/locales/en'
-import zhHans from '@proj-airi/i18n/locales/zh-Hans'
+import en from '@proj-aipets/i18n/locales/en'
+import zhHans from '@proj-aipets/i18n/locales/zh-Hans'
 import i18n from 'i18next'
 
 import { initReactI18next } from 'react-i18next'

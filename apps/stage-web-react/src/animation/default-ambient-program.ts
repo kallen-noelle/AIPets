@@ -1,4 +1,4 @@
-import type { AmbientProgram } from '@proj-airi/character-animation'
+import type { AmbientProgram } from '@proj-aipets/character-animation'
 
 const hour = 3_600_000
 

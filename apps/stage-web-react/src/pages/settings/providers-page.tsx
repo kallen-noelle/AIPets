@@ -1,6 +1,6 @@
-import type { ProviderDefinition } from '@proj-airi/provider-inference'
+import type { ProviderDefinition } from '@proj-aipets/provider-inference'
 
-import { portableProviderDefinitions } from '@proj-airi/provider-inference'
+import { portableProviderDefinitions } from '@proj-aipets/provider-inference'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'

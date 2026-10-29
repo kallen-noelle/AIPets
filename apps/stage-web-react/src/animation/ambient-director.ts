@@ -1,9 +1,9 @@
-import type { AmbientPhase, AmbientProgram, CharacterCatalog } from '@proj-airi/character-animation'
+import type { AmbientPhase, AmbientProgram, CharacterCatalog } from '@proj-aipets/character-animation'
 
 import type { DirectorLongAction } from './director'
 
-import { parseAmbientProgram } from '@proj-airi/character-animation'
-import { portableProviderDefinitions } from '@proj-airi/provider-inference'
+import { parseAmbientProgram } from '@proj-aipets/character-animation'
+import { portableProviderDefinitions } from '@proj-aipets/provider-inference'
 
 import { requestChatCompletion } from '../chat/client'
 import { chatModelKey, chatProviderKey } from '../chat/types'

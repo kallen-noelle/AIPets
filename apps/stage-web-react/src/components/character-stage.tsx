@@ -1,4 +1,4 @@
-import type { AnimationCommand, AnimationEvent, CharacterCatalog, ClickArea, LoadedPack } from '@proj-airi/character-animation'
+import type { AnimationCommand, AnimationEvent, CharacterCatalog, ClickArea, LoadedPack } from '@proj-aipets/character-animation'
 import type { MouseEvent } from 'react'
 
 import type { LocalAnimationPack } from '../animation/pack'
@@ -7,7 +7,7 @@ import type { LoadedZipPack } from '../animation/zip-pack'
 import type { CharacterAppearance } from '../character/characters'
 
 import { errorMessageFrom } from '@moeru/std'
-import { AnimationController } from '@proj-airi/character-animation'
+import { AnimationController } from '@proj-aipets/character-animation'
 import { useCallback, useEffect, useRef, useState } from 'react'
 
 import { animationLog } from '../animation/animation-log'
@@ -38,6 +38,10 @@ export interface CharacterStageProps {
   onUserClick?: (area: ClickArea) => void
   onError?: (message: string) => void
   onController?: (dispatch: (event: AnimationEvent) => void) => void
+  /** Moves the desktop window with the pointer instead of the sprite. */
+  moveWindowOnDrag?: boolean
+  onWindowDragStart?: () => void
+  onWindowDragEnd?: () => void
 }
 
 /**
@@ -45,9 +49,9 @@ export interface CharacterStageProps {
  * animation controller.
  *
  * The React layer only owns DOM playback and input. Clip choice, chain
- * weights, and one-shot recovery stay inside `@proj-airi/character-animation`.
+ * weights, and one-shot recovery stay inside `@proj-aipets/character-animation`.
  */
-export function CharacterStage({ manifestUrl, pack, appearance, speechText, onReady, onSnapshot, onClipEnded, onUserClick, onError, onController }: CharacterStageProps) {
+export function CharacterStage({ manifestUrl, pack, appearance, speechText, onReady, onSnapshot, onClipEnded, onUserClick, onError, onController, moveWindowOnDrag, onWindowDragStart, onWindowDragEnd }: CharacterStageProps) {
   const videoARef = useRef<HTMLVideoElement>(null)
   const videoBRef = useRef<HTMLVideoElement>(null)
   const stageRef = useRef<HTMLDivElement>(null)
@@ -56,7 +60,11 @@ export function CharacterStage({ manifestUrl, pack, appearance, speechText, onRe
   const remotePackRef = useRef<LocalAnimationPack | null>(null)
   const resolveRef = useRef<(src: string) => string>(src => src)
   const onClipEndedRef = useRef(onClipEnded)
-  const drag = useDragPhysics(stageRef)
+  const drag = useDragPhysics(stageRef, {
+    moveWindow: moveWindowOnDrag,
+    onDragStart: onWindowDragStart,
+    onDragEnd: onWindowDragEnd,
+  })
   const view = appearance ?? defaultCharacterAppearance
 
   const [slot, setSlot] = useState<VideoSlot>('a')
@@ -272,14 +280,19 @@ export function CharacterStage({ manifestUrl, pack, appearance, speechText, onRe
   }
 
   const frame = naturalSize ?? canvas
+  // The stage box grows with the scale instead of scaling its content inside a
+  // clipped box. The pet window then sizes itself to this box.
+  const scale = Math.max(0.1, view.scale)
 
   return (
     <div
       ref={stageRef}
+      data-aipets-stage
       className="relative touch-none select-none overflow-hidden bg-transparent"
       style={{
-        width: `${frame.width}px`,
+        width: `${Math.round(frame.width * scale)}px`,
         maxWidth: '100%',
+        maxHeight: '100%',
         aspectRatio: `${frame.width} / ${frame.height}`,
         transform: `translate3d(${drag.offset.x}px, ${drag.offset.y}px, 0) scale(${drag.dragging ? 0.97 : 1})`,
         cursor: drag.dragging ? 'grabbing' : 'grab',
@@ -290,7 +303,7 @@ export function CharacterStage({ manifestUrl, pack, appearance, speechText, onRe
       <div
         className="pointer-events-none absolute inset-0"
         style={{
-          transform: `translate(${view.offsetX}%, ${view.offsetY}%) scale(${view.scale})${view.mirror ? ' scaleX(-1)' : ''}`,
+          transform: view.mirror ? 'scaleX(-1)' : undefined,
         }}
       >
         <video

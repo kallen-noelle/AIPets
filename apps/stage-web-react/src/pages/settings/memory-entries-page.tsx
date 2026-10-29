@@ -1,7 +1,13 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { characterNameKey } from '../../chat/types'
+import {
+  chatInstanceKey,
+  instanceNumber,
+  instancePersonaId,
+  resolveChatInstance,
+  useCharacterInstances,
+} from '../../character/instances'
 import { PageHeader, SectionCard, TextField } from '../../components/fields'
 import {
   forgetMemory,
@@ -34,7 +40,12 @@ const dangerButtonClass = [
 export function MemoryEntriesPage() {
   const { t } = useTranslation()
   const { entries } = useMemoryState()
-  const [characterName] = useStoredValue(characterNameKey, 'aipetdex')
+  const [instances] = useCharacterInstances()
+  const [chatInstanceId] = useStoredValue(chatInstanceKey, '')
+  // New entries belong to the instance the chat talks to. Every instance keeps
+  // its own memories, and the same character id and number keep the label.
+  const instance = resolveChatInstance(instances, chatInstanceId)
+  const personaId = instance ? instancePersonaId(instance.characterId, instanceNumber(instances, instance)) : ''
   const [name, setName] = useState('')
   const [description, setDescription] = useState('')
   const [body, setBody] = useState('')
@@ -48,7 +59,7 @@ export function MemoryEntriesPage() {
       return
     }
 
-    writeMemory({ name, description, body }, characterName)
+    writeMemory({ name, description, body }, personaId)
     setFormError(null)
     setName('')
     setDescription('')

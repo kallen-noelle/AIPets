@@ -15,8 +15,8 @@ body,
 }
 
 :root[data-theme='light'] {
-  --aipets-bg: #f5f6fa;
-  --aipets-stage-bg: #f4f5f9;
+  --aipets-bg: #ffffff;
+  --aipets-stage-bg: #ffffff;
   --aipets-fg: #0f172a;
   --aipets-muted: #64748b;
   --aipets-card: rgb(15 23 42 / 4%);
@@ -30,6 +30,15 @@ body {
   color: var(--aipets-fg);
   font-family: Nunito, 'Segoe UI', system-ui, sans-serif;
   transition: background-color 200ms ease, color 200ms ease;
+}
+
+/*
+ * The closed select stays transparent, but the browser draws its option list
+ * in a native popup. Give the list the theme colors.
+ */
+select option {
+  background-color: var(--aipets-bg);
+  color: var(--aipets-fg);
 }
 
 /*

@@ -1,4 +1,4 @@
-import type { NormalizedClip } from '@proj-airi/character-animation'
+import type { NormalizedClip } from '@proj-aipets/character-animation'
 
 export type VideoSlot = 'a' | 'b'
 
