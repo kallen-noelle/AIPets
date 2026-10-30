@@ -20,7 +20,7 @@ export const settingsEntries: SettingsEntry[] = [
     id: 'card',
     path: '/settings/card',
     titleKey: 'settings.pages.card.title',
-    icon: 'i-solar:emoji-funny-square-bold-duotone',
+    icon: 'icon-[solar--emoji-funny-square-bold-duotone]',
     status: 'ready',
   },
   {
@@ -28,7 +28,7 @@ export const settingsEntries: SettingsEntry[] = [
     path: '/settings/data',
     titleKey: 'settings.pages.data.title',
     descriptionKey: 'settings.pages.data.description',
-    icon: 'i-solar:database-bold-duotone',
+    icon: 'icon-[solar--database-bold-duotone]',
     status: 'ready',
   },
   {
@@ -37,28 +37,28 @@ export const settingsEntries: SettingsEntry[] = [
     titleKey: 'settings.pages.models.title',
     // The shared locale still describes Live2D and VRM, which this app dropped.
     descriptionKey: 'settings.reactShell.modelsDescription',
-    icon: 'i-solar:box-bold-duotone',
+    icon: 'icon-[solar--box-bold-duotone]',
     status: 'ready',
   },
   {
     id: 'providers',
     path: '/settings/providers',
     titleKey: 'settings.pages.providers.title',
-    icon: 'i-solar:cloud-bold-duotone',
+    icon: 'icon-[solar--cloud-bold-duotone]',
     status: 'ready',
   },
   {
     id: 'modules',
     path: '/settings/modules',
     titleKey: 'settings.pages.modules.title',
-    icon: 'i-solar:widget-4-bold-duotone',
+    icon: 'icon-[solar--widget-4-bold-duotone]',
     status: 'ready',
   },
   {
     id: 'connection',
     path: '/settings/connection',
     titleKey: 'settings.pages.connection.title',
-    icon: 'i-solar:server-bold-duotone',
+    icon: 'icon-[solar--server-bold-duotone]',
     status: 'ready',
   },
   {
@@ -66,7 +66,7 @@ export const settingsEntries: SettingsEntry[] = [
     path: '/settings/desktop',
     titleKey: 'settings.reactShell.desktopTitle',
     descriptionKey: 'settings.reactShell.desktopDescription',
-    icon: 'i-solar:monitor-bold-duotone',
+    icon: 'icon-[solar--monitor-bold-duotone]',
     status: 'ready',
   },
   {
@@ -74,14 +74,14 @@ export const settingsEntries: SettingsEntry[] = [
     path: '/settings/plugins',
     titleKey: 'settings.reactShell.pluginsTitle',
     descriptionKey: 'settings.reactShell.pluginsDescription',
-    icon: 'i-solar:plug-circle-bold-duotone',
+    icon: 'icon-[solar--plug-circle-bold-duotone]',
     status: 'ready',
   },
   {
     id: 'system',
     path: '/settings/system',
     titleKey: 'settings.pages.system.title',
-    icon: 'i-solar:settings-bold-duotone',
+    icon: 'icon-[solar--settings-bold-duotone]',
     status: 'ready',
   },
 ]

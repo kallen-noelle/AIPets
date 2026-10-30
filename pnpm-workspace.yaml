@@ -74,6 +74,7 @@ catalog:
   '@hono/otel': ^1.1.2
   '@iconify-json/simple-icons': ^1.2.93
   '@iconify-json/solar': ^1.2.9
+  '@iconify/tailwind4': ^1.2.3
   '@iconify/utils': ^3.1.4
   '@laplace.live/event-bridge-sdk': ^1.1.0
   '@laplace.live/event-types': ^2.0.21
@@ -101,10 +102,10 @@ catalog:
   '@opentelemetry/sdk-trace-node': ^2.10.0
   '@opentelemetry/semantic-conventions': ^1.43.0
   '@pixiv/three-vrm': ^3.5.5
-  '@proj-airi/unocss-preset-chromatic': ^1.1.4
   '@proj-airi/unplugin-fetch': ^0.2.3
   '@sherpaw/asr': 0.3.0
   '@sherpaw/xsai-transcription': 0.3.0
+  '@tailwindcss/vite': ^4.3.3
   '@types/audioworklet': ^0.0.100
   '@types/hast': ^3.0.5
   '@types/ioredis-mock': ^8.2.8
@@ -118,11 +119,6 @@ catalog:
   '@types/unist': ^3.0.3
   '@types/w3c-web-hid': ^1.0.7
   '@types/ws': ^8.18.1
-  '@unocss/eslint-config': 66.7.5
-  '@unocss/eslint-plugin': 66.7.5
-  '@unocss/preset-mini': 66.7.5
-  '@unocss/preset-web-fonts': 66.7.5
-  '@unocss/reset': 66.7.5
   '@vishot/cli': ^0.2.0
   '@vitejs/plugin-react': ^6.1.2
   '@xsai-ext/providers': 0.5.1
@@ -207,6 +203,7 @@ catalog:
   stockfish: ^18.0.8
   stripe: ^22.5.0
   superjson: ^2.2.6
+  tailwindcss: ^4.3.3
   taze: ^21.1.0
   three: ^0.185.1
   tinyexec: ^1.3.0
@@ -217,8 +214,6 @@ catalog:
   uncrypto: ^0.1.3
   unified: ^11.0.5
   unist-util-visit: ^5.1.0
-  unocss: 66.7.5
-  unocss-preset-scrollbar: ^4.0.0
   unplugin-basemove: 0.0.1
   unplugin-lightningcss: ^0.5.0
   unplugin-raw: ^0.7.0

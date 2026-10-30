@@ -3,7 +3,7 @@
     "antfu.goto-alias",
     "antfu.iconify",
     "antfu.pnpm-catalog-lens",
-    "antfu.unocss",
+    "bradlc.vscode-tailwindcss",
     "dbaeumer.vscode-eslint",
     "EditorConfig.EditorConfig",
     "lokalise.i18n-ally",

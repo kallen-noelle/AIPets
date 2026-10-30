@@ -4,8 +4,8 @@ import { cpSync, createReadStream, existsSync, statSync } from 'node:fs'
 import { extname, resolve, sep } from 'node:path'
 import { fileURLToPath, URL } from 'node:url'
 
+import tailwindcss from '@tailwindcss/vite'
 import react from '@vitejs/plugin-react'
-import UnoCSS from 'unocss/vite'
 
 import { defineConfig } from 'vite'
 
@@ -63,7 +63,7 @@ export default defineConfig({
   base: './',
   plugins: [
     react(),
-    UnoCSS(),
+    tailwindcss(),
     characterAssets(),
   ],
   resolve: {

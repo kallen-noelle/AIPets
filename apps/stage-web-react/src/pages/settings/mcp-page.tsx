@@ -64,7 +64,7 @@ export function McpPage() {
           disabled={testing || !url.trim()}
           onClick={() => void test()}
         >
-          <span className="i-solar:plug-circle-bold-duotone" />
+          <span className="icon-[solar--plug-circle-bold-duotone]" />
           {' '}
           {testing
             ? t('settings.reactShell.mcpTesting', { defaultValue: 'Connecting...' })

@@ -81,7 +81,7 @@ export function PluginsPage() {
 
       {bridge && (
         <button type="button" className={`${buttonClass} self-start`} disabled={installing} onClick={() => void install()}>
-          <span className="i-solar:folder-with-files-bold-duotone" />
+          <span className="icon-[solar--folder-with-files-bold-duotone]" />
           {' '}
           {t('settings.reactShell.installPlugin', { defaultValue: 'Install folder' })}
         </button>

@@ -8,8 +8,7 @@ import { router } from './router'
 import { initializePreferences } from './settings/preferences'
 
 import './i18n'
-import '@unocss/reset/tailwind.css'
-import 'uno.css'
+import './styles/tailwind.css'
 import './styles/main.css'
 
 seedDevSettings()

@@ -87,7 +87,7 @@ export function StickersPage() {
           className="self-start border border-[var(--aipets-border)] rounded-xl px-3 py-1.5 text-xs transition hover:bg-[var(--aipets-hover)]"
           onClick={() => inputRef.current?.click()}
         >
-          <span className="i-solar:add-circle-bold-duotone" />
+          <span className="icon-[solar--add-circle-bold-duotone]" />
           {' '}
           {t('settings.reactShell.stickersAdd', { defaultValue: 'Add stickers' })}
         </button>

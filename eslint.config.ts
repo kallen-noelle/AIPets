@@ -10,7 +10,7 @@ export default defineConfig({
   sonarjs: false,
   sortPackageJsonScripts: false,
   typescript: true,
-  unocss: true,
+  unocss: false,
   vue: true,
 }, {
   ignores: [

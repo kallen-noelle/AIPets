@@ -737,7 +737,7 @@ export function StagePage({ layout = 'page', instance = null }: StagePageProps) 
               'bg-[var(--aipets-card)] text-[var(--aipets-fg)] hover:bg-[var(--aipets-hover)]',
             ].join(' ')}
           >
-            <span className="i-solar:settings-bold-duotone" />
+            <span className="icon-[solar--settings-bold-duotone]" />
             {t('settings.reactShell.openSettings', { defaultValue: 'Settings' })}
           </Link>
         </header>
@@ -809,7 +809,7 @@ export function StagePage({ layout = 'page', instance = null }: StagePageProps) 
                 disabled={beatStarting}
                 onClick={() => void startBeats('microphone')}
               >
-                <span className="i-solar:microphone-bold-duotone" />
+                <span className="icon-[solar--microphone-bold-duotone]" />
                 {' '}
                 {t('settings.reactShell.beatSyncMic', { defaultValue: 'Microphone' })}
               </button>
@@ -820,14 +820,14 @@ export function StagePage({ layout = 'page', instance = null }: StagePageProps) 
                 disabled={beatStarting}
                 onClick={() => beatFileRef.current?.click()}
               >
-                <span className="i-solar:music-note-bold-duotone" />
+                <span className="icon-[solar--music-note-bold-duotone]" />
                 {' '}
                 {t('settings.reactShell.beatSyncFile', { defaultValue: 'Audio file' })}
               </button>
 
               {beatRunning && (
                 <button type="button" className={buttonClass} onClick={stopBeats}>
-                  <span className="i-solar:stop-bold-duotone" />
+                  <span className="icon-[solar--stop-bold-duotone]" />
                   {' '}
                   {t('settings.reactShell.beatSyncStop', { defaultValue: 'Stop' })}
                 </button>

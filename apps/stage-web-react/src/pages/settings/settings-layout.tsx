@@ -51,7 +51,7 @@ export function SettingsLayout() {
               to="/"
               className="inline-flex items-center gap-2 text-sm text-[var(--aipets-muted)] hover:text-[var(--aipets-fg)]"
             >
-              <span className="i-solar:alt-arrow-left-line-duotone" />
+              <span className="icon-[solar--alt-arrow-left-line-duotone]" />
               {t('settings.reactShell.backToStage', { defaultValue: 'Back to stage' })}
             </Link>
           </div>

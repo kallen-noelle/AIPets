@@ -27,7 +27,6 @@
     "@proj-aipets/character-animation": "workspace:^",
     "@proj-aipets/i18n": "workspace:^",
     "@proj-aipets/provider-inference": "workspace:^",
-    "@unocss/reset": "catalog:",
     "i18next": "catalog:",
     "idb-keyval": "catalog:",
     "jszip": "catalog:",
@@ -39,13 +38,15 @@
   "devDependencies": {
     "@iconify-json/simple-icons": "catalog:",
     "@iconify-json/solar": "catalog:",
+    "@iconify/tailwind4": "catalog:",
+    "@tailwindcss/vite": "catalog:",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
     "@vitejs/plugin-react": "catalog:",
     "electron": "catalog:",
     "electron-builder": "catalog:",
+    "tailwindcss": "catalog:",
     "typescript": "catalog:",
-    "unocss": "catalog:",
     "vite": "catalog:"
   }
 }

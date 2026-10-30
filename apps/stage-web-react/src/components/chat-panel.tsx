@@ -1032,7 +1032,7 @@ function ChatPanelBody({
       {!compact && (
         <aside className="w-56 shrink-0 flex-col gap-2 border-r border-[var(--aipets-border)] p-3 hidden sm:flex">
           <Link to="/" className="text-sm text-[var(--aipets-muted)] hover:text-[var(--aipets-fg)]">
-            <span className="i-solar:alt-arrow-left-line-duotone" />
+            <span className="icon-[solar--alt-arrow-left-line-duotone]" />
             {' '}
             {t('settings.reactShell.backToStage', { defaultValue: 'Back to stage' })}
           </Link>
@@ -1067,7 +1067,7 @@ function ChatPanelBody({
                   aria-label={t('settings.reactShell.chatDelete', { defaultValue: 'Delete' })}
                   onClick={() => deleteSession(session.id)}
                 >
-                  <span className="i-solar:trash-bin-trash-bold-duotone" />
+                  <span className="icon-[solar--trash-bin-trash-bold-duotone]" />
                 </button>
               </div>
             ))}
@@ -1255,10 +1255,9 @@ function ChatPanelBody({
               onClick={() => void toggleRecording()}
             >
               <span className={[
-                'i-solar:',
                 recording || starting || transcribing
-                  ? 'microphone-off-bold-duotone'
-                  : 'microphone-bold-duotone',
+                  ? 'icon-[solar--muted-bold-duotone]'
+                  : 'icon-[solar--microphone-bold-duotone]',
               ].join('')}
               />
               {transcribing
@@ -1276,7 +1275,7 @@ function ChatPanelBody({
               disabled={!ready || sending}
               onClick={() => imageInputRef.current?.click()}
             >
-              <span className="i-solar:gallery-bold-duotone" />
+              <span className="icon-[solar--gallery-bold-duotone]" />
               {t('settings.reactShell.chatAttach', { defaultValue: 'Image' })}
             </button>
 
@@ -1287,7 +1286,7 @@ function ChatPanelBody({
                 disabled={!ready || sending}
                 onClick={() => setStickerPickerOpen(open => !open)}
               >
-                <span className="i-solar:sticker-smile-circle-bold-duotone" />
+                <span className="icon-[solar--sticker-smile-circle-bold-duotone]" />
                 {t('settings.reactShell.chatSticker', { defaultValue: 'Sticker' })}
               </button>
             )}
@@ -1298,7 +1297,7 @@ function ChatPanelBody({
               disabled={!ready || sending || drawing || !input.trim()}
               onClick={() => void draw()}
             >
-              <span className="i-solar:palette-bold-duotone" />
+              <span className="icon-[solar--palette-bold-duotone]" />
               {drawing
                 ? t('settings.reactShell.chatDrawing', { defaultValue: 'Drawing...' })
                 : t('settings.reactShell.chatDraw', { defaultValue: 'Draw' })}
@@ -1312,14 +1311,14 @@ function ChatPanelBody({
                 defaultValue: 'Fly a kite for me.',
               }))}
             >
-              <span className="i-solar:magic-stick-3-bold-duotone" />
+              <span className="icon-[solar--magic-stick-3-bold-duotone]" />
               {t('settings.reactShell.chatKite', { defaultValue: 'Fly a kite' })}
             </button>
 
             {sending
               ? (
                   <button type="button" className={toolButtonClass} onClick={stop}>
-                    <span className="i-solar:stop-bold-duotone" />
+                    <span className="icon-[solar--stop-bold-duotone]" />
                     {t('settings.reactShell.chatStop', { defaultValue: 'Stop' })}
                   </button>
                 )
@@ -1330,7 +1329,7 @@ function ChatPanelBody({
                     disabled={!ready || messages.length === 0}
                     onClick={regenerate}
                   >
-                    <span className="i-solar:refresh-bold-duotone" />
+                    <span className="icon-[solar--refresh-bold-duotone]" />
                     {t('settings.reactShell.chatRegenerate', { defaultValue: 'Regenerate' })}
                   </button>
                 )}
@@ -1341,7 +1340,7 @@ function ChatPanelBody({
               disabled={!active || messages.length === 0}
               onClick={() => active && patchSession(active.id, session => ({ ...session, messages: [] }))}
             >
-              <span className="i-solar:trash-bin-trash-bold-duotone" />
+              <span className="icon-[solar--trash-bin-trash-bold-duotone]" />
               {t('settings.reactShell.chatClear', { defaultValue: 'Clear' })}
             </button>
           </div>
@@ -1395,7 +1394,7 @@ function ChatPanelBody({
               onClick={() => send()}
               className="rounded-xl bg-[var(--aipets-fg)] px-4 py-2 text-sm text-[var(--aipets-bg)] font-medium disabled:opacity-40"
             >
-              <span className="i-solar:send-bold-duotone" />
+              <span className="icon-[solar--plain-2-bold-duotone]" />
               {' '}
               {t('settings.reactShell.chatSend', { defaultValue: 'Send' })}
             </button>

@@ -1,0 +1,5 @@
+@import 'tailwindcss';
+
+@plugin './tailwind-iconify.js';
+
+@source '../**/*.{ts,tsx}';

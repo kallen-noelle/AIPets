@@ -32,7 +32,7 @@ function priorityIndex(id: string): number {
 function providerIcon(definition: ProviderDefinition): string {
   // Lobe icon packs are not installed in this app yet.
   if (!definition.icon || definition.icon.startsWith('i-lobe-icons'))
-    return 'i-solar:cloud-bold-duotone'
+    return 'icon-[solar--cloud-bold-duotone]'
 
   return definition.icon
 }

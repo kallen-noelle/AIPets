@@ -250,7 +250,7 @@ export function DesktopPage() {
               className={buttonClass}
               onClick={() => void applyWindows(() => bridge.openWindow('widget'))}
             >
-              <span className="i-solar:widget-4-bold-duotone" />
+              <span className="icon-[solar--widget-4-bold-duotone]" />
               {' '}
               {t('settings.reactShell.openWidgetWindow', { defaultValue: 'Open widget window' })}
             </button>
@@ -259,7 +259,7 @@ export function DesktopPage() {
               className={buttonClass}
               onClick={() => void applyWindows(() => bridge.openWindow('settings'))}
             >
-              <span className="i-solar:settings-bold-duotone" />
+              <span className="icon-[solar--settings-bold-duotone]" />
               {' '}
               {t('settings.reactShell.openSettingsWindow', { defaultValue: 'Open settings window' })}
             </button>
